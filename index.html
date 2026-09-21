@@ -1258,13 +1258,18 @@ function updateLoginIcon(){
   const icon = document.getElementById('loginIcon');
   if(!icon) return;
   if(currentUser && !currentUser.isAnonymous){
+    const initial = (currentUser.displayName || currentUser.email || 'U').charAt(0).toUpperCase();
     if(currentUser.photoURL){
-      icon.innerHTML = `<img src="${currentUser.photoURL}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit">`;
+      icon.innerHTML = `<img src="${currentUser.photoURL}" referrerpolicy="no-referrer" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" onerror="this.outerHTML='<span style=\\'font-weight:700;color:#7c3aed;font-size:14px\\'>${initial}</span>'">`;
     } else {
-      icon.textContent = '✅';
+      icon.innerHTML = `<span style="font-weight:700;color:#7c3aed;font-size:14px">${initial}</span>`;
     }
+    icon.style.background = '#ede9fe';
+    icon.style.borderColor = '#7c3aed';
   } else {
-    icon.textContent = '👤';
+    icon.innerHTML = '👤';
+    icon.style.background = '#f5f4fa';
+    icon.style.borderColor = '#ece9f7';
   }
 }
 
@@ -1293,21 +1298,24 @@ function loginWithGoogle(){
   showToast('Membuka login Google...');
   fbAuth.signInWithPopup(provider).then(result=>{
     if(result && result.user){
+      currentUser = result.user;
+      updateLoginIcon();
       closeLoginModal();
       showToast('Berhasil login sebagai ' + (result.user.displayName || 'pengguna'));
+      if(!result.user.isAnonymous && !userDataLoaded){
+        userDataLoaded = true;
+        loadUserDataFromCloud(result.user.uid);
+      }
     }
   }).catch(e=>{
     console.error('Login popup error:', e);
     if(e && e.code === 'auth/popup-blocked'){
-      showToast('Popup diblokir browser, mencoba metode redirect...');
-      fbAuth.signInWithRedirect(provider).catch(err=>{
-        console.error('Login redirect gagal:', err);
-        showToast('Login gagal: ' + (err.message || err.code));
-      });
+      showToast('Popup diblokir! Izinkan pop-up / matikan Brave Shields untuk domain ini');
     } else if(e && e.code === 'auth/popup-closed-by-user'){
       showToast('Login dibatalkan');
     } else if(e && e.code === 'auth/unauthorized-domain'){
-      showToast('Domain ini belum diizinkan di Firebase Console > Authorized Domains');
+      const currentHost = window.location.hostname;
+      alert('⚠️ Domain Belum Diizinkan di Firebase!\n\nDomain: ' + currentHost + ' belum didaftarkan di Firebase Console.\n\nCara mengatasi:\n1. Buka console.firebase.google.com\n2. Pilih proyek norxstore-id\n3. Masuk ke Authentication > Settings > Authorized domains\n4. Klik "Add domain" lalu masukkan: ' + currentHost);
     } else {
       showToast('Login gagal: ' + (e.message || e.code));
     }
