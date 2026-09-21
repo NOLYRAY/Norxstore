@@ -1289,10 +1289,28 @@ function closeLoginModal(e){
 function loginWithGoogle(){
   if(!window.fbAvailable){ showToast('Firebase tidak tersedia, login tidak bisa dipakai sekarang'); return; }
   const provider = new firebase.auth.GoogleAuthProvider();
-  showToast('Mengarahkan ke halaman login Google...');
-  fbAuth.signInWithRedirect(provider).catch(e=>{
-    console.error('Login gagal:', e);
-    showToast('Login gagal: coba lagi (' + e.code + ')');
+  provider.setCustomParameters({ prompt: 'select_account' });
+  showToast('Membuka login Google...');
+  fbAuth.signInWithPopup(provider).then(result=>{
+    if(result && result.user){
+      closeLoginModal();
+      showToast('Berhasil login sebagai ' + (result.user.displayName || 'pengguna'));
+    }
+  }).catch(e=>{
+    console.error('Login popup error:', e);
+    if(e && e.code === 'auth/popup-blocked'){
+      showToast('Popup diblokir browser, mencoba metode redirect...');
+      fbAuth.signInWithRedirect(provider).catch(err=>{
+        console.error('Login redirect gagal:', err);
+        showToast('Login gagal: ' + (err.message || err.code));
+      });
+    } else if(e && e.code === 'auth/popup-closed-by-user'){
+      showToast('Login dibatalkan');
+    } else if(e && e.code === 'auth/unauthorized-domain'){
+      showToast('Domain ini belum diizinkan di Firebase Console > Authorized Domains');
+    } else {
+      showToast('Login gagal: ' + (e.message || e.code));
+    }
   });
 }
 function logoutUser(){
