@@ -1831,6 +1831,16 @@ function createOrder(items, total, paymentMethod, adminName){
   addMyOrderId(orderId);
   return orderId;
 }
+function removeMyOrder(orderId, event){
+  if(event) event.stopPropagation();
+  if(!confirm('Hapus riwayat pesanan ini dari daftar Anda?')) return;
+  const filtered = getMyOrderIds().filter(id => id !== orderId);
+  safeSetItem('norxstore_my_orders', JSON.stringify(filtered));
+  syncOrderIdsToCloud();
+  renderMyOrders();
+  showToast('Riwayat pesanan dihapus');
+}
+
 function renderMyOrders(){
   const section = document.getElementById('myOrdersSection');
   if(!section) return;
@@ -1844,8 +1854,9 @@ function renderMyOrders(){
     else if(o.status === 'processing') statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
     else statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
     return `
-    <div class="my-order-card">
-      <p class="my-order-items">${itemsText}</p>
+    <div class="my-order-card" style="position:relative">
+      <button onclick="removeMyOrder('${o.id}', event)" title="Hapus riwayat pesanan" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:14px;padding:4px;line-height:1">✕</button>
+      <p class="my-order-items" style="padding-right:20px">${itemsText}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
       ${statusBadge}
     </div>`;
@@ -1973,8 +1984,15 @@ function loadUserDataFromCloud(uid){
       saveCart();
       updateCartBadge();
       renderCart();
-    } else if(cart.length > 0){
-      syncCartToCloud();
+      renderProducts();
+    } else if(cloudCart === null || (Array.isArray(cloudCart) && cloudCart.length === 0)){
+      if(cart.length > 0){
+        cart = [];
+        safeSetItem('norxstore_cart', '[]');
+        updateCartBadge();
+        renderCart();
+        renderProducts();
+      }
     }
   }).catch(e=>console.error(e));
   fbDB.ref('norxstore/users/' + uid + '/myOrderIds').once('value').then(snap=>{
@@ -1988,7 +2006,7 @@ function loadUserDataFromCloud(uid){
 }
 function syncCartToCloud(){
   if(currentUser && !currentUser.isAnonymous){
-    fbDB.ref('norxstore/users/' + currentUser.uid + '/cart').set(cart).catch(e=>console.error(e));
+    fbDB.ref('norxstore/users/' + currentUser.uid + '/cart').set(cart && cart.length > 0 ? cart : null).catch(e=>console.error(e));
   }
 }
 function syncOrderIdsToCloud(){
@@ -2044,8 +2062,22 @@ function completeOrderStatus(id){
 }
 function deleteOrder(id){
   if(!confirm('Hapus riwayat pesanan ini?')) return;
+  const o = allOrders[id];
+  if(o && o.customerUid){
+    fbDB.ref('norxstore/users/' + o.customerUid + '/myOrderIds').once('value').then(snap=>{
+      const ids = snap.val();
+      if(Array.isArray(ids)){
+        const filtered = ids.filter(x => x !== id);
+        fbDB.ref('norxstore/users/' + o.customerUid + '/myOrderIds').set(filtered).catch(e=>console.error(e));
+      }
+    }).catch(e=>console.error(e));
+  }
+  const localIds = getMyOrderIds().filter(x => x !== id);
+  safeSetItem('norxstore_my_orders', JSON.stringify(localIds));
   fbDB.ref('norxstore/orders/' + id).remove().catch(e=>console.error(e));
   showToast('Riwayat pesanan dihapus');
+  renderMyOrders();
+  renderProducts();
 }
 
 function updateCartBadge(){
@@ -2060,9 +2092,14 @@ function addToCart(id, event){
   const product = products.find(p=>p.id===id);
   if(!product) return;
   normalizeCartItems();
-  const existing = cart.find(item=>item.id===id);
-  if(existing){
-    showToast('⚠️ ' + product.name + ' sudah ada di keranjang! Silakan pilih produk lain.');
+  const existingIdx = cart.findIndex(item=>item.id===id);
+  if(existingIdx > -1){
+    cart.splice(existingIdx, 1);
+    saveCart();
+    updateCartBadge();
+    renderCart();
+    renderProducts();
+    showToast('🗑️ ' + product.name + ' dihapus dari keranjang');
     return;
   }
   cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, cat:product.cat, qty:1});
@@ -2254,6 +2291,7 @@ function checkoutCart(){
   saveCart();
   updateCartBadge();
   renderCart();
+  renderProducts();
   renderMyOrders();
   closeCartCheckoutStep();
   showToast('Mengarahkan ke WhatsApp...');
@@ -2983,7 +3021,7 @@ function renderProductCard(p, discount, idx){
           : `<button class="buy-now-btn" onclick="openModal(${p.id})">🛒 Beli</button>
              ${p.isAccount ? '' : (
                cart.some(item => item.id === p.id)
-                 ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="Sudah di keranjang" style="background:#f3f4f6;color:#6b7280;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>Keranjang</button>`
+                 ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="Sudah di keranjang (klik untuk batalkan/hapus)" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>Keranjang</button>`
                  : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>Keranjang</button>`
              )}`
         }
@@ -3239,6 +3277,14 @@ function sendWA(){
     renderProducts();
   }
   if(selectedProduct){
+    const inCartIdx = cart.findIndex(it => it.id === selectedProduct.id);
+    if(inCartIdx > -1){
+      cart.splice(inCartIdx, 1);
+      saveCart();
+      updateCartBadge();
+      renderCart();
+    }
+    renderProducts();
     const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
     const adminObj = WA_NUMBERS.find(a => a.number === selectedModalAdmin);
     createOrder(
@@ -3248,6 +3294,7 @@ function sendWA(){
       adminObj ? adminObj.name : ''
     );
     renderMyOrders();
+    closeModal();
   }
   showToast('Mengarahkan ke WhatsApp...');
   setTimeout(()=>openWhatsApp(url),800);
