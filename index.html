@@ -4254,6 +4254,7 @@ let currentOnlineCount = 1;
 let myPresenceConnRef = null;
 let presenceHeartbeatInterval = null;
 
+// Unique per-tab session ID
 const SESSION_ID = (function(){
   try {
     let sid = sessionStorage.getItem('norx_presence_session_id');
@@ -4286,12 +4287,16 @@ function attachUserPresence(uid){
       try { myPresenceConnRef.remove(); } catch(e){}
     }
 
-    // Menggunakan path norxstore/users/{uid}/connections/{SESSION_ID} yang memiliki hak izin tulis penuh
+    // Bersihkan data presence lama jika ada di norxstore/users/{uid}/presence
+    fbDB.ref('norxstore/users/' + uid + '/presence').remove().catch(function(){});
+
+    // Menggunakan path norxstore/users/{uid}/connections/{SESSION_ID}
     myPresenceConnRef = fbDB.ref('norxstore/users/' + uid + '/connections/' + SESSION_ID);
     const connectedRef = fbDB.ref('.info/connected');
 
     connectedRef.on('value', function(snap){
       if(snap && snap.val() === true && myPresenceConnRef){
+        // Otomatis hapus saat koneksi socket terputus
         myPresenceConnRef.onDisconnect().remove().catch(function(){});
         myPresenceConnRef.set({
           online: true,
@@ -4300,15 +4305,16 @@ function attachUserPresence(uid){
       }
     });
 
+    // Heartbeat berkala tiap 10 detik agar realtime dan tidak ada ghost count
     if(presenceHeartbeatInterval) clearInterval(presenceHeartbeatInterval);
     presenceHeartbeatInterval = setInterval(function(){
-      if(myPresenceConnRef){
+      if(myPresenceConnRef && document.visibilityState !== 'hidden'){
         myPresenceConnRef.update({
           online: true,
           lastSeen: Date.now()
         }).catch(function(){});
       }
-    }, 30000);
+    }, 10000);
   } catch(err) {
     console.warn('attachUserPresence error:', err);
   }
@@ -4326,46 +4332,39 @@ function initPresenceSystem(){
   }
 
   try {
-    // Dengarkan data norxstore/users secara real-time untuk menghitung total pengunjung di semua device
+    // Dengarkan data norxstore/users secara real-time
     fbDB.ref('norxstore/users').on('value', function(snap){
-      let count = 0;
+      let activeUsers = 0;
       if(snap && snap.exists()){
         const users = snap.val();
         if(users && typeof users === 'object'){
           const now = Date.now();
+          // Hitung jumlah PENGGUNA UNIK (device/akun) yang aktif dalam 25 detik terakhir
+          // bukan jumlah tab atau sesi kadaluwarsa, sehingga angka tidak acak/melompat
           Object.keys(users).forEach(function(uid){
             const u = users[uid];
-            if(!u) return;
-
-            // 1. Cek semua koneksi aktif perangkat di connections
-            if(u.connections && typeof u.connections === 'object'){
-              Object.keys(u.connections).forEach(function(sId){
-                const conn = u.connections[sId];
-                if(conn && conn.online !== false){
-                  const lastSeen = typeof conn.lastSeen === 'number' ? conn.lastSeen : now;
-                  if((now - lastSeen) < 3 * 60 * 1000){
-                    count++;
-                  }
-                }
-              });
-            } else if(u.presence && typeof u.presence === 'object'){
-              // 2. Fallback jika ada data presence langsung
-              const p = u.presence;
-              if(p && p.online !== false){
-                const lastSeen = typeof p.lastSeen === 'number' ? p.lastSeen : now;
-                if((now - lastSeen) < 3 * 60 * 1000){
-                  count++;
+            if(!u || !u.connections || typeof u.connections !== 'object') return;
+            let isUserOnline = false;
+            Object.keys(u.connections).forEach(function(sId){
+              const conn = u.connections[sId];
+              if(conn && conn.online === true && typeof conn.lastSeen === 'number'){
+                // Ambang batas keaktifan 25 detik (jika tab ditutup/dikunci, langsung lepas)
+                if((now - conn.lastSeen) <= 25000){
+                  isUserOnline = true;
                 }
               }
+            });
+            if(isUserOnline){
+              activeUsers++;
             }
           });
         }
       }
-      // Selalu minimal 1 karena pengguna di tab ini sedang aktif melihat toko
-      updateOnlineCountersUI(Math.max(count, 1));
+      // Minimal 1 karena pengunjung di layar ini sedang aktif
+      updateOnlineCountersUI(Math.max(activeUsers, 1));
     });
 
-    // Lepas sesi saat tab ditutup atau berpindah halaman
+    // Bersihkan sesi aktif saat tab ditutup atau disembunyikan
     const cleanupSession = function(){
       if(myPresenceConnRef){
         try { myPresenceConnRef.remove(); } catch(e){}
@@ -4373,6 +4372,16 @@ function initPresenceSystem(){
     };
     window.addEventListener('beforeunload', cleanupSession);
     window.addEventListener('pagehide', cleanupSession);
+
+    // Saat tab aktif kembali, kirim sinyal heartbeat langsung
+    document.addEventListener('visibilitychange', function(){
+      if(document.visibilityState === 'visible' && myPresenceConnRef){
+        myPresenceConnRef.update({
+          online: true,
+          lastSeen: Date.now()
+        }).catch(function(){});
+      }
+    });
   } catch(err) {
     console.warn('Presence system error:', err);
   }
