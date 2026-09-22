@@ -346,6 +346,50 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .bulk-sub-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;background:#ede9fe;color:#6d28d9;text-transform:uppercase}
 .bulk-sub-none{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600;background:#f3f4f6;color:#9ca3af}
 
+/* ============ POPUP SUB-KATEGORI KATALOG (RESPONSIVE & COMPACT) ============ */
+.subgroup-popup-overlay{position:fixed;inset:0;background:rgba(15,10,25,.65);display:none;align-items:flex-end;justify-content:center;z-index:250;backdrop-filter:blur(5px);-webkit-tap-highlight-color:transparent}
+.subgroup-popup-overlay.open{display:flex}
+.subgroup-popup-box{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:440px;overflow:hidden;animation:slideUp .24s cubic-bezier(.16,1,.3,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.22)}
+@media (min-width:768px){
+  .subgroup-popup-overlay{align-items:center;padding:20px}
+  .subgroup-popup-box{border-radius:20px;animation:popIn .2s ease;box-shadow:0 16px 50px rgba(0,0,0,.28)}
+}
+.sg-pop-handle{width:38px;height:4px;border-radius:4px;background:#e2e2ea;margin:10px auto 4px}
+@media (min-width:768px){ .sg-pop-handle{display:none} }
+.sg-pop-header{padding:10px 18px 14px;border-bottom:1px solid #f1f0f6;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#faf8ff 0%,#f4f0fd 100%)}
+.sg-pop-title-wrap{display:flex;flex-direction:column;gap:2px}
+.sg-pop-title{font-size:15px;font-weight:800;color:#1a1a1a;margin:0;display:flex;align-items:center;gap:6px}
+.sg-pop-subtitle{font-size:11px;color:#6b7280;margin:0}
+.sg-pop-close{width:32px;height:32px;border-radius:50%;border:1px solid #e5e5eb;background:#fff;color:#666;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease}
+.sg-pop-close:hover{background:#fee2e2;color:#ef4444;border-color:#fca5a5}
+.sg-pop-body{padding:12px 14px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
+.sg-pop-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:#faf9fd;border:1.5px solid #ece8f8;cursor:pointer;transition:all .18s ease;user-select:none;-webkit-tap-highlight-color:transparent}
+.sg-pop-item:hover{background:#f5f3ff;border-color:#c4b5fd;transform:translateY(-1px)}
+.sg-pop-item.active{background:#f5f0ff;border-color:#7c3aed;box-shadow:0 4px 14px rgba(124,58,237,.14)}
+.sg-pop-item-left{display:flex;align-items:center;gap:11px}
+.sg-pop-icon{font-size:17px;width:34px;height:34px;border-radius:10px;background:#fff;border:1px solid #eee;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sg-pop-item.active .sg-pop-icon{background:#ede9fe;border-color:#c4b5fd}
+.sg-pop-name{font-size:13px;font-weight:700;color:#1a1a1a;margin:0}
+.sg-pop-item.active .sg-pop-name{color:#6d28d9}
+.sg-pop-desc{font-size:10px;color:#888;margin:2px 0 0}
+.sg-pop-item-right{display:flex;align-items:center;gap:8px}
+.sg-pop-count{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px;background:#edeaf7;color:#5b5575}
+.sg-pop-item.active .sg-pop-count{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff}
+.sg-pop-radio{width:18px;height:18px;border-radius:50%;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;transition:all .15s ease;background:#fff}
+.sg-pop-item.active .sg-pop-radio{border-color:#7c3aed;background:#7c3aed}
+.sg-pop-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;opacity:0;transform:scale(0);transition:all .15s ease}
+.sg-pop-item.active .sg-pop-radio::after{opacity:1;transform:scale(1)}
+
+/* ============ ACTIVE SUB-FILTER BAR (COMPACT) ============ */
+.catalog-subfilter-bar{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;gap:8px;animation:fadeIn .2s ease}
+@media (min-width:768px){.catalog-subfilter-bar{padding:0 32px 14px}}
+.csb-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.csb-label{font-size:11px;font-weight:600;color:#888}
+.csb-active-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;background:linear-gradient(135deg,#f5f3ff,#ede9fe);color:#7c3aed;border:1.5px solid #c4b5fd;cursor:pointer;transition:all .15s ease}
+.csb-active-chip:hover{background:#ede9fe;border-color:#a78bfa;transform:translateY(-1px)}
+.csb-reset-btn{font-size:11px;color:#888;background:none;border:none;padding:4px 6px;cursor:pointer;font-weight:600;transition:color .15s ease}
+.csb-reset-btn:hover{color:#ef4444}
+
 /* ============ PERLINDUNGAN ANTI-DOWNLOAD & PENCURIAN GAMBAR ============ */
 img, 
 .product-img-slide img, 
@@ -620,14 +664,15 @@ button{cursor:pointer;font-family:inherit}
 <h2 class="section-title">🛒 Katalog Layanan</h2>
 <span class="section-link" onclick="showAllProducts()">Lihat semua →</span>
 </div>
-<div class="cat-chips">
-<button class="cat-chip active" onclick="filterCat('all',this)">Semua</button>
-<button class="cat-chip" onclick="filterCat('genshin',this)">Genshin</button>
-<button class="cat-chip" onclick="filterCat('hsr',this)">HSR</button>
-<button class="cat-chip" onclick="filterCat('wuwa',this)">WuWa</button>
-<button class="cat-chip" onclick="filterCat('nte',this)">NTE</button>
-<button class="cat-chip" onclick="filterCat('lainnya',this)">🔑 Jual Akun</button>
+<div class="cat-chips" id="catChips">
+<button class="cat-chip active" id="chip_all" data-cat="all" onclick="filterCat('all',this)">Semua</button>
+<button class="cat-chip" id="chip_genshin" data-cat="genshin" onclick="filterCat('genshin',this)">Genshin</button>
+<button class="cat-chip" id="chip_hsr" data-cat="hsr" onclick="filterCat('hsr',this)">HSR</button>
+<button class="cat-chip" id="chip_wuwa" data-cat="wuwa" onclick="filterCat('wuwa',this)">WuWa</button>
+<button class="cat-chip" id="chip_nte" data-cat="nte" onclick="filterCat('nte',this)">NTE</button>
+<button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 Jual Akun</button>
 </div>
+<div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
 <div class="product-grid" id="productGrid">
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
@@ -980,6 +1025,23 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </div>
 
+<!-- ============ POPUP PILIH SUB-KATEGORI KATALOG (POP-UP EFISIEN) ============ -->
+<div class="subgroup-popup-overlay" id="subgroupPopupOverlay" onclick="closeSubgroupPopup(event)">
+  <div class="subgroup-popup-box" onclick="event.stopPropagation()">
+    <div class="sg-pop-handle"></div>
+    <div class="sg-pop-header">
+      <div class="sg-pop-title-wrap">
+        <h4 class="sg-pop-title" id="sgPopTitle">🏷️ Pilih Sub-Kategori</h4>
+        <p class="sg-pop-subtitle" id="sgPopSubtitle">Pilih jenis layanan yang ingin ditampilkan</p>
+      </div>
+      <button type="button" class="sg-pop-close" onclick="closeSubgroupPopup()">×</button>
+    </div>
+    <div class="sg-pop-body" id="sgPopList">
+      <!-- Otomatis diisi berdasarkan sub-kategori produk -->
+    </div>
+  </div>
+</div>
+
 <div class="review-photo-overlay" id="reviewPhotoOverlay" onclick="closeReviewPhoto()">
   <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;max-width:100%;max-height:100%">
     <img id="reviewPhotoFull" src="" alt="Foto preview" draggable="false">
@@ -993,15 +1055,15 @@ button{cursor:pointer;font-family:inherit}
 <script>
 
 const DEFAULT_PRODUCTS = [
-{id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID',cat:'genshin'},
-{id:2,name:'Welkin Moon',price:15000,badge:'BEST',icon:'🌙',desc:'30 hari',cat:'genshin'},
-{id:3,name:'Joki Spiral Abyss',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star F12',cat:'genshin'},
-{id:4,name:'Joki MoC Full Star',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos',cat:'hsr'},
-{id:5,name:'Joki PF Full Star',price:25000,badge:'',icon:'🔥',desc:'Pure Fiction',cat:'hsr'},
-{id:6,name:'Joki Tower WuWa',price:40000,badge:'PRO',icon:'🌊',desc:'Tower of Adversity',cat:'wuwa'},
-{id:7,name:'Joki Weekly Boss',price:20000,badge:'',icon:'👹',desc:'All weekly bosses',cat:'wuwa'},
-{id:8,name:'Joki NTE Story',price:25000,badge:'NEW',icon:'🔮',desc:'Story progression',cat:'nte'},
-{id:9,name:'Joki Anomaly Clear',price:30000,badge:'',icon:'✨',desc:'Anomaly farming',cat:'nte'}
+{id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID',cat:'genshin',subgroup:'Top-Up'},
+{id:2,name:'Welkin Moon',price:15000,badge:'BEST',icon:'🌙',desc:'30 hari',cat:'genshin',subgroup:'Top-Up'},
+{id:3,name:'Joki Spiral Abyss',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star F12',cat:'genshin',subgroup:'Joki'},
+{id:4,name:'Joki MoC Full Star',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos',cat:'hsr',subgroup:'Joki'},
+{id:5,name:'Joki PF Full Star',price:25000,badge:'',icon:'🔥',desc:'Pure Fiction',cat:'hsr',subgroup:'Joki'},
+{id:6,name:'Joki Tower WuWa',price:40000,badge:'PRO',icon:'🌊',desc:'Tower of Adversity',cat:'wuwa',subgroup:'Joki'},
+{id:7,name:'Joki Weekly Boss',price:20000,badge:'',icon:'👹',desc:'All weekly bosses',cat:'wuwa',subgroup:'Joki'},
+{id:8,name:'Joki NTE Story',price:25000,badge:'NEW',icon:'🔮',desc:'Story progression',cat:'nte',subgroup:'Joki'},
+{id:9,name:'Joki Anomaly Clear',price:30000,badge:'',icon:'✨',desc:'Anomaly farming',cat:'nte',subgroup:'Joki'}
 ];
 
 const DEFAULT_CAROUSEL = [
@@ -2216,7 +2278,220 @@ function toggleMode(){
   }
 }
 
+// ==================== METADATA KATEGORI & SUB-FILTER ENGINE ====================
+const CAT_INFO = {
+  all: { name: 'Semua Layanan', shortName: 'Semua', icon: '🛒' },
+  genshin: { name: 'Genshin Impact', shortName: 'Genshin', icon: '✨' },
+  hsr: { name: 'Honkai: Star Rail', shortName: 'HSR', icon: '🚀' },
+  wuwa: { name: 'Wuthering Waves', shortName: 'WuWa', icon: '🌊' },
+  nte: { name: 'Neverness to Everness', shortName: 'NTE', icon: '🔮' },
+  lainnya: { name: 'Jual Beli Akun', shortName: '🔑 Jual Akun', icon: '🔑' }
+};
+
 let currentCatFilter = 'all';
+let currentSubgroupFilter = 'all';
+
+function getExistingSubgroups(cat){
+  const set = new Set();
+  (products || []).forEach(p => {
+    if((!cat || p.cat === cat) && p.subgroup && p.subgroup.trim()){
+      set.add(p.subgroup.trim());
+    }
+  });
+  return Array.from(set);
+}
+
+function openSubgroupPopup(cat){
+  const targetCat = cat || currentCatFilter;
+  if(!targetCat || targetCat === 'all') return;
+  const info = CAT_INFO[targetCat] || { name: targetCat, shortName: targetCat, icon: '🎮' };
+  
+  const titleEl = document.getElementById('sgPopTitle');
+  const subtitleEl = document.getElementById('sgPopSubtitle');
+  if(titleEl) titleEl.innerHTML = `${info.icon} Sub-Kategori ${info.shortName}`;
+  if(subtitleEl) subtitleEl.textContent = `Pilih sub-kategori untuk ${info.name}`;
+  
+  const catProds = (products || []).filter(p => p.cat === targetCat);
+  const totalCatCount = catProds.length;
+  
+  const subCounts = {};
+  let noneCount = 0;
+  catProds.forEach(p => {
+    const s = (p.subgroup || '').trim();
+    if(s){
+      subCounts[s] = (subCounts[s] || 0) + 1;
+    } else {
+      noneCount++;
+    }
+  });
+  
+  const uniqueSubgroups = Object.keys(subCounts);
+  const listEl = document.getElementById('sgPopList');
+  if(!listEl) return;
+  
+  let html = '';
+  
+  // Opsi 1: Semua layanan dalam kategori ini
+  const isAllActive = (currentCatFilter === targetCat && currentSubgroupFilter === 'all');
+  html += `
+    <div class="sg-pop-item ${isAllActive ? 'active' : ''}" onclick="selectSubgroupFilter('all')">
+      <div class="sg-pop-item-left">
+        <div class="sg-pop-icon">🌟</div>
+        <div>
+          <div class="sg-pop-name">Semua ${info.shortName}</div>
+          <div class="sg-pop-desc">Tampilkan seluruh varian & paket</div>
+        </div>
+      </div>
+      <div class="sg-pop-item-right">
+        <span class="sg-pop-count">${totalCatCount} produk</span>
+        <div class="sg-pop-radio"></div>
+      </div>
+    </div>
+  `;
+  
+  // Opsi sub-kategori yang terisi otomatis
+  uniqueSubgroups.forEach(sub => {
+    const isActive = (currentCatFilter === targetCat && currentSubgroupFilter.toLowerCase() === sub.toLowerCase());
+    let subIcon = '🏷️';
+    const subLower = sub.toLowerCase();
+    if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('crystal') || subLower.includes('gem') || subLower.includes('primogem') || subLower.includes('oneiric')) subIcon = '💎';
+    else if(subLower.includes('joki') || subLower.includes('quest') || subLower.includes('abyss') || subLower.includes('boss') || subLower.includes('farming')) subIcon = '⚔️';
+    else if(subLower.includes('akun') || subLower.includes('account') || subLower.includes('starter') || subLower.includes('reroll')) subIcon = '🔑';
+    else if(subLower.includes('item') || subLower.includes('pass') || subLower.includes('welkin') || subLower.includes('express')) subIcon = '🌙';
+    else if(subLower.includes('event') || subLower.includes('misi')) subIcon = '🎯';
+
+    html += `
+      <div class="sg-pop-item ${isActive ? 'active' : ''}" onclick="selectSubgroupFilter('${sub.replace(/'/g, "\\'")}')">
+        <div class="sg-pop-item-left">
+          <div class="sg-pop-icon">${subIcon}</div>
+          <div>
+            <div class="sg-pop-name">${sub}</div>
+            <div class="sg-pop-desc">Layanan kategori ${sub}</div>
+          </div>
+        </div>
+        <div class="sg-pop-item-right">
+          <span class="sg-pop-count">${subCounts[sub]} produk</span>
+          <div class="sg-pop-radio"></div>
+        </div>
+      </div>
+    `;
+  });
+  
+  if(noneCount > 0 && uniqueSubgroups.length > 0){
+    const isNoneActive = (currentCatFilter === targetCat && currentSubgroupFilter === '__none__');
+    html += `
+      <div class="sg-pop-item ${isNoneActive ? 'active' : ''}" onclick="selectSubgroupFilter('__none__')">
+        <div class="sg-pop-item-left">
+          <div class="sg-pop-icon">📦</div>
+          <div>
+            <div class="sg-pop-name">Lainnya / Reguler</div>
+            <div class="sg-pop-desc">Layanan reguler tanpa sub-kategori</div>
+          </div>
+        </div>
+        <div class="sg-pop-item-right">
+          <span class="sg-pop-count">${noneCount} produk</span>
+          <div class="sg-pop-radio"></div>
+        </div>
+      </div>
+    `;
+  }
+  
+  listEl.innerHTML = html;
+  
+  const modal = document.getElementById('subgroupPopupOverlay');
+  if(modal) modal.classList.add('open');
+}
+
+function closeSubgroupPopup(e){
+  if(e && e.target && e.target !== document.getElementById('subgroupPopupOverlay')) return;
+  const modal = document.getElementById('subgroupPopupOverlay');
+  if(modal) modal.classList.remove('open');
+}
+
+function selectSubgroupFilter(sub){
+  currentSubgroupFilter = sub;
+  const modal = document.getElementById('subgroupPopupOverlay');
+  if(modal) modal.classList.remove('open');
+  
+  const searchInput = document.getElementById('searchInput');
+  if(searchInput) searchInput.value = '';
+  
+  renderProducts(currentCatFilter, currentSubgroupFilter);
+  
+  const catObj = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
+  const label = sub === 'all' ? ('Semua ' + catObj.shortName) : (sub === '__none__' ? 'Reguler' : sub);
+  showToast('Menampilkan: ' + label);
+  
+  const grid = document.getElementById('productGrid');
+  if(grid){
+    grid.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+function updateCategoryChipsUI(){
+  const chips = document.querySelectorAll('.cat-chip');
+  chips.forEach(chip => {
+    let cat = chip.getAttribute('data-cat');
+    if(!cat){
+      const t = chip.textContent.trim().toLowerCase();
+      if(t.includes('genshin')) cat = 'genshin';
+      else if(t.includes('hsr')) cat = 'hsr';
+      else if(t.includes('wuwa')) cat = 'wuwa';
+      else if(t.includes('nte')) cat = 'nte';
+      else if(t.includes('akun')) cat = 'lainnya';
+      else cat = 'all';
+      chip.setAttribute('data-cat', cat);
+    }
+    
+    const info = CAT_INFO[cat] || { shortName: cat };
+    const hasSubs = cat !== 'all' && getExistingSubgroups(cat).length > 0;
+    
+    if(cat === currentCatFilter){
+      chip.classList.add('active');
+      if(hasSubs){
+        if(currentSubgroupFilter && currentSubgroupFilter !== 'all'){
+          const subLabel = currentSubgroupFilter === '__none__' ? 'Reguler' : currentSubgroupFilter;
+          chip.innerHTML = `${info.shortName}: <b>${subLabel}</b> ▾`;
+        } else {
+          chip.innerHTML = `${info.shortName} ▾`;
+        }
+      } else {
+        chip.innerHTML = info.shortName;
+      }
+    } else {
+      chip.classList.remove('active');
+      if(hasSubs){
+        chip.innerHTML = `${info.shortName} ▾`;
+      } else {
+        chip.innerHTML = info.shortName;
+      }
+    }
+  });
+  
+  const subBar = document.getElementById('catalogSubFilterBar');
+  if(subBar){
+    if(currentCatFilter !== 'all' && currentSubgroupFilter && currentSubgroupFilter !== 'all'){
+      const info = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
+      const subLabel = currentSubgroupFilter === '__none__' ? 'Reguler' : currentSubgroupFilter;
+      subBar.style.display = 'flex';
+      subBar.innerHTML = `
+        <div class="csb-left">
+          <span class="csb-label">Sub-Kategori:</span>
+          <button type="button" class="csb-active-chip" onclick="openSubgroupPopup('${currentCatFilter}')">
+            🏷️ ${subLabel} ▾ <span style="font-size:9px;opacity:.75;margin-left:2px">Ganti</span>
+          </button>
+        </div>
+        <button type="button" class="csb-reset-btn" onclick="selectSubgroupFilter('all')">
+          ✕ Semua ${info.shortName}
+        </button>
+      `;
+    } else {
+      subBar.style.display = 'none';
+      subBar.innerHTML = '';
+    }
+  }
+}
+
 function renderProductCard(p, discount, idx){
   const discPrice = getDiscountedPrice(p.price);
   const hasDisc = discount > 0;
@@ -2277,26 +2552,42 @@ function renderProductCard(p, discount, idx){
   `;
 }
 
-function renderProducts(filter){
+function renderProducts(filter, subFilter){
   if(filter !== undefined) currentCatFilter = filter;
+  if(subFilter !== undefined) currentSubgroupFilter = subFilter;
   autoReleaseExpiredReservations();
   const grid=document.getElementById('productGrid');
   const searchInput = document.getElementById('searchInput');
   const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
   let filtered = currentCatFilter==='all' ? products : products.filter(p=>p.cat===currentCatFilter);
+
+  // Filter berdasarkan sub-kategori jika bukan 'all'
+  if(currentCatFilter !== 'all' && currentSubgroupFilter && currentSubgroupFilter !== 'all'){
+    if(currentSubgroupFilter === '__none__'){
+      filtered = filtered.filter(p => !p.subgroup || !p.subgroup.trim());
+    } else {
+      filtered = filtered.filter(p => p.subgroup && p.subgroup.trim().toLowerCase() === currentSubgroupFilter.toLowerCase());
+    }
+  }
+
   if(query){
     filtered = filtered.filter(p =>
       p.name.toLowerCase().includes(query) ||
-      (p.desc||'').toLowerCase().includes(query)
+      (p.desc||'').toLowerCase().includes(query) ||
+      (p.subgroup||'').toLowerCase().includes(query)
     );
   }
+
+  updateCategoryChipsUI();
+
   const discount = getDiscount();
   if(filtered.length === 0){
     grid.innerHTML = `<div class="search-empty"><span>🔍</span><p>Tidak ada layanan yang cocok${query ? ' dengan "' + query + '"' : ''}.</p></div>`;
     return;
   }
 
-  const shouldGroup = currentCatFilter !== 'all' && !query && filtered.some(p => p.subgroup && p.subgroup.trim());
+  const isSpecificSubActive = currentSubgroupFilter && currentSubgroupFilter !== 'all';
+  const shouldGroup = !isSpecificSubActive && currentCatFilter !== 'all' && !query && filtered.some(p => p.subgroup && p.subgroup.trim());
   let cardIdx = 0;
   if(shouldGroup){
     const groups = [];
@@ -2373,22 +2664,43 @@ function scrollProdImg(pid, idx, event){
 }
 
 function filterCat(cat,btn){
-  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
   const searchInput = document.getElementById('searchInput');
   if(searchInput) searchInput.value = '';
-  renderProducts(cat);
+
+  if(cat === 'all'){
+    currentCatFilter = 'all';
+    currentSubgroupFilter = 'all';
+    renderProducts('all', 'all');
+    return;
+  }
+
+  const existingSubs = getExistingSubgroups(cat);
+
+  // Jika mengklik kategori yang sedang aktif dan ada sub-kategori -> buka pop-up
+  if(currentCatFilter === cat && existingSubs.length > 0){
+    openSubgroupPopup(cat);
+    return;
+  }
+
+  // Pindah ke kategori yang dipilih
+  currentCatFilter = cat;
+  currentSubgroupFilter = 'all';
+  renderProducts(cat, 'all');
+
+  // Jika kategori ini memiliki sub-kategori -> otomatis buka pop-up pemilihan
+  if(existingSubs.length > 0){
+    openSubgroupPopup(cat);
+  }
 }
 function handleSearch(){
   renderProducts();
 }
 function showAllProducts(){
-  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
-  const allChip = document.querySelector('.cat-chip');
-  if(allChip) allChip.classList.add('active');
+  currentCatFilter = 'all';
+  currentSubgroupFilter = 'all';
   const searchInput = document.getElementById('searchInput');
   if(searchInput) searchInput.value = '';
-  renderProducts('all');
+  renderProducts('all', 'all');
   document.getElementById('productGrid').scrollIntoView({behavior:'smooth', block:'start'});
 }
 function renderReviews(){
@@ -2668,16 +2980,6 @@ function saveCarouselSlide(index){
 }
 
 // ==================== SUBGROUP & BULK HELPERS ====================
-
-function getExistingSubgroups(cat){
-  const set = new Set();
-  (products || []).forEach(p => {
-    if((!cat || p.cat === cat) && p.subgroup && p.subgroup.trim()){
-      set.add(p.subgroup.trim());
-    }
-  });
-  return Array.from(set);
-}
 
 function refreshSubgroupFormUI(){
   const catEl = document.getElementById('newProdCat');
