@@ -3363,6 +3363,67 @@ function deleteProduct(id){
   showToast('Produk dihapus');
 }
 
+function duplicateProduct(id){
+  const p = products.find(p => p.id === id);
+  if(!p) return;
+
+  const newId = getNextProductId();
+  const copyName = p.name + ' (Salinan)';
+  const newProduct = {
+    id: newId,
+    name: copyName,
+    price: p.price,
+    cat: p.cat,
+    subgroup: p.subgroup || '',
+    desc: p.desc || '',
+    badge: p.badge || '',
+    icon: p.icon || '💎',
+    isAccount: !!p.isAccount
+  };
+
+  // Salin gambar produk jika produk sumber memiliki gambar
+  const existingImgs = getImagesForProduct(p.id);
+  if(existingImgs && existingImgs.length > 0){
+    const allImgs = getProductImages();
+    allImgs[newId] = [...existingImgs];
+    setProductImages(allImgs);
+  }
+
+  // Sisipkan produk baru tepat setelah produk sumber agar posisinya berdekatan
+  const origIndex = products.findIndex(item => item.id === id);
+  if(origIndex !== -1){
+    products.splice(origIndex + 1, 0, newProduct);
+  } else {
+    products.push(newProduct);
+  }
+
+  setProducts(products);
+  renderProducts();
+  renderAdminProductList();
+  refreshSubgroupFormUI();
+
+  // Perbarui dropdown pilih produk pada admin foto produk
+  const sel = document.getElementById('imgProductSelect');
+  if(sel){
+    sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
+      products.map(prod => `<option value="${prod.id}">${prod.icon} ${prod.name}</option>`).join('');
+  }
+
+  // Langsung buka form edit untuk produk salinan tersebut agar gampang diubah tanpa menulis ulang
+  editProduct(newId);
+
+  // Focus ke input nama produk dan seleksi teks
+  setTimeout(()=>{
+    const nameInput = document.getElementById('newProdName');
+    if(nameInput){
+      nameInput.focus();
+      nameInput.select();
+    }
+  }, 100);
+
+  showToast('📋 Produk "' + p.name + '" berhasil digandakan! Silakan sesuaikan data & simpan.');
+}
+
 function renderAdminProductList(){
   const list = document.getElementById('adminProductList');
 
@@ -3397,8 +3458,11 @@ function renderAdminProductList(){
         <p class="p-price">${formatPrice(p.price)}</p>
         ${statusLine}
       </div>
-      <button class="admin-btn-sm" style="background:#7c3aed" onclick="editProduct(${p.id})">✏️</button>
-      ${isDefault ? '' : `<button class="admin-btn-sm" onclick="deleteProduct(${p.id})">🗑</button>`}
+      <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+        <button class="admin-btn-sm" style="background:#7c3aed;padding:8px 10px" onclick="editProduct(${p.id})" title="Edit Produk">✏️</button>
+        <button class="admin-btn-sm" style="background:#0284c7;padding:8px 10px" onclick="duplicateProduct(${p.id})" title="Gandakan Produk">📋</button>
+        ${isDefault ? '' : `<button class="admin-btn-sm" style="padding:8px 10px" onclick="deleteProduct(${p.id})" title="Hapus Produk">🗑</button>`}
+      </div>
       ${statusButtons ? `<div style="width:100%;display:flex;gap:6px;margin-top:6px">${statusButtons}</div>` : ''}
     </div>
   `; }).join('');
