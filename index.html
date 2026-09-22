@@ -50,6 +50,58 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .toggle-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .toggle-switch.on .toggle-knob{transform:translateX(20px)}
 
+/* ============ LIVE ONLINE INDICATOR ============ */
+.live-pulse-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#22c55e;
+  display:inline-block;
+  flex-shrink:0;
+  box-shadow:0 0 0 0 rgba(34,197,94,0.7);
+  animation:livePulseDot 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+@keyframes livePulseDot{
+  0%{ box-shadow:0 0 0 0 rgba(34,197,94,0.7); transform:scale(0.95); }
+  70%{ box-shadow:0 0 0 7px rgba(34,197,94,0); transform:scale(1); }
+  100%{ box-shadow:0 0 0 0 rgba(34,197,94,0); transform:scale(0.95); }
+}
+.live-pill-mode{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  background:#f0fdf4;
+  border:1.5px solid #bbf7d0;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  color:#15803d;
+  box-shadow:0 2px 6px rgba(34,197,94,.12);
+  user-select:none;
+  transition:background 0.3s ease,border-color 0.3s ease,color 0.3s ease;
+  margin-left:4px;
+}
+body.dark-mode .live-pill-mode{
+  background:rgba(34,197,94,.12);
+  border-color:rgba(34,197,94,.3);
+  color:#4ade80;
+  box-shadow:0 2px 8px rgba(34,197,94,.08);
+}
+.live-pill-header{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:2px 8px;
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  border-radius:12px;
+  font-size:10px;
+  font-weight:600;
+  color:#16a34a;
+  vertical-align:middle;
+}
+
 .mode-wrapper{position:relative;width:100%}
 .light-section,.dark-section{width:100%;transition:opacity 0.45s cubic-bezier(0.4,0,0.2,1),transform 0.45s cubic-bezier(0.4,0,0.2,1)}
 .light-section{opacity:1;transform:translateY(0);position:relative}
@@ -662,12 +714,19 @@ button{cursor:pointer;font-family:inherit}
 <div class="toggle-knob"></div>
 </button>
 <span class="mode-label" id="lblDark">🌙 Testimoni</span>
+<div class="live-pill-mode" title="Pengunjung aktif di website saat ini">
+  <span class="live-pulse-dot"></span>
+  <span class="online-user-count">1</span> Online
+</div>
 </div>
 
 <div class="mode-wrapper">
 <section class="light-section" id="lightSection">
 <div class="section-header">
-<h2 class="section-title">🛒 Katalog Layanan</h2>
+<div style="display:flex;align-items:center;gap:8px">
+  <h2 class="section-title">🛒 Katalog Layanan</h2>
+  <span class="live-pill-header" title="Pengunjung aktif online saat ini"><span class="live-pulse-dot"></span><span class="online-user-count">1</span> online</span>
+</div>
 <span class="section-link" onclick="showAllProducts()">Lihat semua →</span>
 </div>
 <div class="cat-chips" id="catChips">
@@ -692,7 +751,7 @@ button{cursor:pointer;font-family:inherit}
 <section class="dark-section" id="darkSection">
 <div class="dark-hero">
 <h2>⭐ Testimoni Pelanggan</h2>
-<p>5.000+ order berhasil diselesaikan</p>
+<p>5.000+ order berhasil diselesaikan · <span style="display:inline-flex;align-items:center;gap:5px;color:#4ade80"><span class="live-pulse-dot" style="background:#4ade80"></span><span class="online-user-count">1</span> online</span></p>
 </div>
 
 <div class="review-list" id="reviewList">
@@ -706,7 +765,13 @@ button{cursor:pointer;font-family:inherit}
 </section>
 </div>
 
-<footer class="footer">© 2026 NORXSTORE — Genshin · HSR · WuWa · NTE</footer>
+<footer class="footer">
+  <div style="margin-bottom:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:#cbd5e1;background:rgba(255,255,255,.07);padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1)">
+    <span class="live-pulse-dot" style="background:#22c55e"></span>
+    <span><strong class="online-user-count">1</strong> Orang Sedang Online di Web</span>
+  </div>
+  <div>© 2026 NORXSTORE — Genshin · HSR · WuWa · NTE</div>
+</footer>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
 <div class="modal-box" onclick="event.stopPropagation()">
@@ -830,7 +895,13 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-overlay" id="adminOverlay" onclick="closeAdmin(event)">
 <div class="admin-box" onclick="event.stopPropagation()">
 <div class="admin-header">
-<h4>⚙️ Panel Admin</h4>
+<div>
+  <h4 style="margin:0">⚙️ Panel Admin</h4>
+  <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#16a34a;margin-top:2px">
+    <span class="live-pulse-dot"></span>
+    <span id="adminOnlineStatusText">1 pengunjung online</span>
+  </div>
+</div>
 <button class="admin-close" onclick="closeAdmin()">×</button>
 </div>
 <div class="admin-body">
@@ -1972,6 +2043,7 @@ function openAdmin(){
     products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
   document.getElementById('imgAdminSection').style.display = 'none';
 
+  updateOnlineCountersUI(currentOnlineCount);
   document.getElementById('adminOverlay').classList.add('open');
 }
 function closeAdmin(e){
@@ -2288,6 +2360,7 @@ function toggleMode(){
   const darkSec = document.getElementById('darkSection');
 
   if(!isDark){
+    document.body.classList.add('dark-mode');
     sw.classList.add('on');
     lblLight.classList.remove('active');
     lblDark.classList.add('active');
@@ -2303,6 +2376,7 @@ function toggleMode(){
       modeTransitioning = false;
     }, 450);
   } else {
+    document.body.classList.remove('dark-mode');
     sw.classList.remove('on');
     lblLight.classList.add('active');
     lblDark.classList.remove('active');
@@ -3468,6 +3542,87 @@ function renderAdminProductList(){
   `; }).join('');
 }
 
+// ==================== LIVE ONLINE USERS PRESENCE ====================
+let currentOnlineCount = 1;
+const SESSION_ID = (function(){
+  try {
+    let sid = sessionStorage.getItem('norx_presence_session_id');
+    if(!sid){
+      sid = 'usr_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+      sessionStorage.setItem('norx_presence_session_id', sid);
+    }
+    return sid;
+  } catch(e) {
+    return 'usr_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+  }
+})();
+
+function updateOnlineCountersUI(count){
+  currentOnlineCount = Math.max(1, count);
+  const els = document.querySelectorAll('.online-user-count');
+  els.forEach(el => {
+    el.textContent = currentOnlineCount;
+  });
+  const adminEl = document.getElementById('adminOnlineStatusText');
+  if(adminEl){
+    adminEl.textContent = currentOnlineCount + ' pengunjung online';
+  }
+}
+
+function initPresenceSystem(){
+  updateOnlineCountersUI(1);
+  if(!window.fbAvailable || typeof firebase === 'undefined' || !fbDB) {
+    return;
+  }
+
+  try {
+    const mySessionRef = fbDB.ref('norxstore/online_users/' + SESSION_ID);
+    const connectedRef = fbDB.ref('.info/connected');
+
+    connectedRef.on('value', function(snap){
+      if(snap && snap.val() === true){
+        mySessionRef.onDisconnect().remove().catch(function(){});
+        mySessionRef.set({
+          online: true,
+          lastSeen: Date.now()
+        }).catch(function(){});
+      }
+    });
+
+    // Dengarkan pembaruan total pengunjung aktif real-time dari Firebase
+    fbDB.ref('norxstore/online_users').on('value', function(snap){
+      let count = 0;
+      if(snap && snap.exists()){
+        const val = snap.val();
+        if(val && typeof val === 'object'){
+          const now = Date.now();
+          Object.keys(val).forEach(function(key){
+            const item = val[key];
+            if(item && (typeof item.lastSeen !== 'number' || (now - item.lastSeen) < 10 * 60 * 1000)){
+              count++;
+            }
+          });
+        }
+      }
+      updateOnlineCountersUI(Math.max(count, 1));
+    });
+
+    // Bersihkan sesi saat tab ditutup
+    window.addEventListener('beforeunload', function(){
+      try { mySessionRef.remove(); } catch(e){}
+    });
+
+    // Heartbeat berkala tiap 60 detik untuk menjaga sesi tetap segar
+    setInterval(function(){
+      try {
+        mySessionRef.update({ lastSeen: Date.now() }).catch(function(){});
+      } catch(e){}
+    }, 60000);
+  } catch(err) {
+    console.warn('Presence system error:', err);
+  }
+}
+
 // ==================== INIT ====================
 // Render langsung dari cache lokal saat inisialisasi agar semua banner, produk, gambar,
 // dan testimoni langsung muncul seketika tanpa delay begitu loading web selesai.
@@ -3475,6 +3630,7 @@ renderCarousel();
 renderProducts();
 renderReviews();
 applyPaymentIcons();
+initPresenceSystem();
 
 if(!window.fbAvailable){
   hideSplash();
