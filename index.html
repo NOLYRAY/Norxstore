@@ -1904,8 +1904,9 @@ function saveCart(){
 let allOrders = {};
 
 function getActiveOrderForProduct(productId){
-  // Hanya berlaku jika pengguna saat ini (perangkat/akun ini) memiliki pesanan aktif yang belum selesai
-  // untuk produk tersebut. Pengunjung lain yang belum pesan apa-apa TIDAK akan terblokir!
+  // Hanya kunci produk jika pesanan pengguna ini SUDAH DISETUJUI & SEDANG DIPROSES ('processing') oleh Admin/Booster.
+  // Status 'pending' (baru klik WhatsApp / belum ditransfer / belum disetujui) TIDAK MENGUNCI produk,
+  // sehingga pelanggan yang tidak memesan atau belum diverifikasi tetap bisa memesan dengan bebas.
   const prod = products.find(p => p.id === productId);
   if(!prod || !allOrders || typeof allOrders !== 'object') return null;
 
@@ -1913,31 +1914,29 @@ function getActiveOrderForProduct(productId){
   const myIds = getMyOrderIds();
   for(const ordId of myIds){
     const ord = allOrders[ordId];
-    if(!ord || !ord.status) continue;
-    if(ord.status === 'pending' || ord.status === 'processing'){
-      if(Array.isArray(ord.items)){
-        const hasItem = ord.items.some(it => {
-          if(it.id !== undefined && it.id !== null && it.id !== ''){
-            return Number(it.id) === Number(productId);
-          }
-          if(it.name && prod.name){
-            return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
-          }
-          return false;
-        });
-        if(hasItem) return ord;
-      }
+    if(!ord || ord.status !== 'processing') continue;
+    if(Array.isArray(ord.items)){
+      const hasItem = ord.items.some(it => {
+        if(it.id !== undefined && it.id !== null && it.id !== ''){
+          return Number(it.id) === Number(productId);
+        }
+        if(it.name && prod.name){
+          return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+        }
+        return false;
+      });
+      if(hasItem) return ord;
     }
   }
 
-  // 2. Jika user sedang login dengan Google, cek juga pesanan milik akun ini di Firebase
+  // 2. Jika user sedang login dengan Google, cek juga pesanan yang sedang diproses milik akun ini di Firebase
   if(currentUser && !currentUser.isAnonymous){
     for(const ordId in allOrders){
       const ord = allOrders[ordId];
-      if(!ord || !ord.status) continue;
+      if(!ord || ord.status !== 'processing') continue;
       const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
                      (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
-      if(isMine && (ord.status === 'pending' || ord.status === 'processing')){
+      if(isMine){
         if(Array.isArray(ord.items)){
           const hasItem = ord.items.some(it => {
             if(it.id !== undefined && it.id !== null && it.id !== ''){
@@ -3289,10 +3288,8 @@ function renderProductCard(p, discount, idx){
   const isSold = acctStatus === 'sold';
   const isReserved = acctStatus === 'reserved';
   const activeOrder = getActiveOrderForProduct(p.id);
-  const isOrderProcessing = activeOrder && activeOrder.status === 'processing';
-  const isOrderPending = activeOrder && activeOrder.status === 'pending';
-  const isOrderBusy = isOrderProcessing || isOrderPending;
-  const isLocked = isSold || isReserved || isOrderBusy;
+  const isOrderProcessing = !!activeOrder;
+  const isLocked = isSold || isReserved || isOrderProcessing;
 
   let busyBadge = '';
   if(isSold){
@@ -3301,8 +3298,6 @@ function renderProductCard(p, discount, idx){
     busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 DIPESAN · ${getReserveMinutesLeft(p)} mnt</span>`;
   } else if(isOrderProcessing){
     busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">🔵 SEDANG DIPROSES${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
-  } else if(isOrderPending){
-    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 PESANAN ANDA AKTIF</span>`;
   } else if(p.isAccount){
     busyBadge = `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">🔑 STOK 1</span>`;
   }
@@ -3311,7 +3306,6 @@ function renderProductCard(p, discount, idx){
   if(isSold) lockedBtnText = '🔴 Terjual';
   else if(isReserved) lockedBtnText = '🟡 Dipesan';
   else if(isOrderProcessing) lockedBtnText = '🔵 Pesanan Anda Sedang Diproses';
-  else if(isOrderPending) lockedBtnText = '⏳ Pesanan Anda Belum Selesai';
 
   return `
   <div class="product-card" style="${isLocked ? 'opacity:.72' : ''}">
