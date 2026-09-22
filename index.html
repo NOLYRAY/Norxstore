@@ -1113,12 +1113,18 @@ const DEFAULT_PASSWORD = 'norxstore2026';
 
 function safeSetItem(key, value){
   try { localStorage.setItem(key, value); return true; }
-  catch(e) { console.error('Storage error:', e); showToast('Gagal menyimpan: ' + e.message); return false; }
+  catch(e) { console.warn('Storage quota/access warning:', e); return false; }
 }
 function safeGetItem(key, fallback){
   try { return localStorage.getItem(key) || fallback; }
   catch(e) { return fallback; }
 }
+
+// Bersihkan cache gambar base64 besar dari localStorage agar tidak melebihi kuota 5MB browser
+try {
+  localStorage.removeItem('norxstore_images_cache');
+  localStorage.removeItem('norxstore_reviews_cache');
+} catch(e){}
 
 function mergeProductsData(parsed){
   if(!Array.isArray(parsed) || parsed.length === 0) return [...DEFAULT_PRODUCTS];
@@ -1232,7 +1238,6 @@ function getProductImages(){
 }
 function setProductImages(data){
   productImagesCache = data;
-  safeSetItem('norxstore_images_cache', JSON.stringify(data));
   fbDB.ref('norxstore/images').set(data).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
 }
 function getImagesForProduct(id){
@@ -1314,39 +1319,9 @@ let carouselConfig = (function(){
 })();
 
 let discountVal = 0;
-
-let productImagesCache = (function(){
-  try {
-    const raw = safeGetItem('norxstore_images_cache', null);
-    if(raw){
-      const parsed = JSON.parse(raw);
-      if(parsed && typeof parsed === 'object') return parsed;
-    }
-  }catch(e){}
-  return {};
-})();
-
-let reviewPhotosCache = (function(){
-  try {
-    const raw = safeGetItem('norxstore_reviews_cache', null);
-    if(raw){
-      const parsed = JSON.parse(raw);
-      if(Array.isArray(parsed)) return parsed;
-    }
-  }catch(e){}
-  return [];
-})();
-
-let paymentIconsCache = (function(){
-  try {
-    const raw = safeGetItem('norxstore_payicons_cache', null);
-    if(raw){
-      const parsed = JSON.parse(raw);
-      if(parsed && typeof parsed === 'object') return parsed;
-    }
-  }catch(e){}
-  return {};
-})();
+let productImagesCache = {};
+let reviewPhotosCache = [];
+let paymentIconsCache = {};
 
 let adminPasswordCache = DEFAULT_PASSWORD;
 let pwEnabledCache = true;
@@ -1368,10 +1343,12 @@ function hideSplash(){
 function tryHideSplash(){
   if(productsDataReady && imagesDataReady){
     renderProducts();
-    hideSplash();
+    requestAnimationFrame(()=>{
+      hideSplash();
+    });
   }
 }
-setTimeout(hideSplash, 1200);
+setTimeout(hideSplash, 2500);
 
 fbDB.ref('norxstore/products').on('value', snap=>{
   products = mergeProductsData(snap.val());
@@ -1400,7 +1377,6 @@ fbDB.ref('norxstore/discount').on('value', snap=>{
 });
 fbDB.ref('norxstore/images').on('value', snap=>{
   productImagesCache = snap.val() || {};
-  safeSetItem('norxstore_images_cache', JSON.stringify(productImagesCache));
   imagesDataReady = true;
   renderProducts();
   tryHideSplash();
@@ -1408,7 +1384,6 @@ fbDB.ref('norxstore/images').on('value', snap=>{
 fbDB.ref('norxstore/reviewPhotos').on('value', snap=>{
   const val = snap.val();
   reviewPhotosCache = Array.isArray(val) ? val : [];
-  safeSetItem('norxstore_reviews_cache', JSON.stringify(reviewPhotosCache));
   renderReviews();
   if(isAdminOpen()) renderAdminReviewList();
 });
