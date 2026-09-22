@@ -325,6 +325,27 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .pw-toggle-switch.on .pw-toggle-knob{transform:translateX(20px)}
 .pw-section-disabled{opacity:0.45;pointer-events:none;filter:grayscale(0.6)}
 
+/* ============ BULK SUBGROUP & CHIPS ============ */
+.subgroup-quick-chip{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:14px;font-size:11px;font-weight:600;background:#f5f3ff;color:#7c3aed;border:1px solid #ddd6fe;cursor:pointer;transition:all .15s ease;line-height:1}
+.subgroup-quick-chip:hover{background:#ede9fe;border-color:#c4b5fd}
+.subgroup-quick-chip.active{background:#7c3aed;color:#fff;border-color:#7c3aed}
+.bulk-trigger-btn{padding:4px 10px;font-size:11px;font-weight:700;color:#7c3aed;background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:8px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .15s ease}
+.bulk-trigger-btn:hover{background:#ede9fe;border-color:#c4b5fd}
+.bulk-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);display:none;align-items:center;justify-content:center;z-index:350;backdrop-filter:blur(4px);padding:14px}
+.bulk-overlay.open{display:flex}
+.bulk-box{background:#fff;border-radius:16px;width:100%;max-width:440px;overflow:hidden;animation:popIn .2s ease;max-height:92vh;display:flex;flex-direction:column}
+.bulk-header{padding:14px 16px;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#1f1535,#311854);color:#fff}
+.bulk-body{padding:16px;overflow-y:auto;flex:1}
+.bulk-prod-list{max-height:220px;overflow-y:auto;border:1.5px solid #e5e5e5;border-radius:10px;padding:6px;background:#fafafa;display:flex;flex-direction:column;gap:6px}
+.bulk-prod-row{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:#fff;border:1px solid #eee;cursor:pointer;transition:all .15s ease;user-select:none}
+.bulk-prod-row:hover{border-color:#c4b5fd;background:#faf5ff}
+.bulk-prod-row.selected{border-color:#7c3aed;background:#f5f3ff}
+.bulk-prod-cb{width:18px;height:18px;accent-color:#7c3aed;cursor:pointer;flex-shrink:0}
+.bulk-prod-title{font-size:12px;font-weight:600;color:#1a1a1a;margin:0;line-height:1.3}
+.bulk-prod-meta{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:10px;color:#888}
+.bulk-sub-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;background:#ede9fe;color:#6d28d9;text-transform:uppercase}
+.bulk-sub-none{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600;background:#f3f4f6;color:#9ca3af}
+
 /* ============ POLESAN INTERAKTIF (semua ukuran layar) ============ */
 button{cursor:pointer;font-family:inherit}
 .navbar{box-shadow:0 1px 6px rgba(0,0,0,.05)}
@@ -738,16 +759,21 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-label" style="margin-top:10px">Harga (Rp)</div>
 <input class="admin-input" type="number" id="newProdPrice" placeholder="Contoh: 100000">
 <div class="admin-label" style="margin-top:10px">Kategori</div>
-<select class="admin-select" id="newProdCat">
+<select class="admin-select" id="newProdCat" onchange="refreshSubgroupFormUI()">
   <option value="genshin">Genshin Impact</option>
   <option value="hsr">Honkai: Star Rail</option>
   <option value="wuwa">Wuthering Waves</option>
   <option value="nte">Neverness to Everness</option>
   <option value="lainnya">🔑 Jual Akun</option>
 </select>
-<div class="admin-label" style="margin-top:10px">Sub-Kategori (opsional)</div>
-<input class="admin-input" type="text" id="newProdSubgroup" placeholder="Contoh: Top-Up, Joki, Boost">
-<p class="admin-hint">Untuk mengelompokkan produk sejenis dalam 1 kategori (misal Genshin → Top-Up & Joki dipisah).</p>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px">
+  <div class="admin-label" style="margin-bottom:0">Sub-Kategori (opsional)</div>
+  <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Pilih Banyak Produk</button>
+</div>
+<input class="admin-input" type="text" id="newProdSubgroup" list="subgroupListDatalist" placeholder="Contoh: Top-Up, Joki, Boost" oninput="highlightActiveSubgroupChip()">
+<datalist id="subgroupListDatalist"></datalist>
+<div id="subgroupQuickChips" style="display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px"></div>
+<p class="admin-hint" style="margin-top:4px">Klik pilihan cepat di atas, atau gunakan <b>⚡ Pilih Banyak Produk</b> agar bisa memilih beberapa produk sekaligus tanpa nulis satu-satu.</p>
 <div class="admin-label" style="margin-top:10px">Deskripsi</div>
 <input class="admin-input" type="text" id="newProdDesc" placeholder="Contoh: Top-up via UID langsung">
 <div class="admin-label" style="margin-top:10px">Badge (opsional)</div>
@@ -769,7 +795,10 @@ button{cursor:pointer;font-family:inherit}
   <button class="admin-btn-sm" id="prodFormCancel" style="display:none;background:#888" onclick="cancelEditProduct()">✕ Batal</button>
 </div>
 
-<div class="admin-label" style="margin-top:16px">Daftar Produk</div>
+<div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:6px">
+  <div class="admin-label" style="margin-bottom:0">Daftar Produk</div>
+  <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Atur Sub-Kategori Massal</button>
+</div>
 <div class="admin-product-list" id="adminProductList"></div>
 
 <div class="admin-divider"></div>
@@ -840,6 +869,61 @@ button{cursor:pointer;font-family:inherit}
 
 </div>
 </div>
+</div>
+
+<!-- ============ MODAL ATUR SUB-KATEGORI MASSAL ============ -->
+<div class="bulk-overlay" id="bulkSubgroupOverlay" onclick="closeBulkSubgroupModal(event)">
+  <div class="bulk-box" onclick="event.stopPropagation()">
+    <div class="bulk-header">
+      <div>
+        <h4 style="margin:0;font-size:15px;font-weight:700;color:#fff">🏷️ Atur Sub-Kategori Massal</h4>
+        <p style="margin:2px 0 0;font-size:11px;color:#c4b5fd">Samakan sub-kategori ke beberapa produk sekaligus</p>
+      </div>
+      <button class="admin-close" onclick="closeBulkSubgroupModal()">×</button>
+    </div>
+    
+    <div class="bulk-body">
+      <!-- 1. Kategori -->
+      <div class="admin-label">1. Pilih Kategori Game</div>
+      <select class="admin-select" id="bulkCatSelect" onchange="onBulkCatChange()">
+        <option value="genshin">Genshin Impact</option>
+        <option value="hsr">Honkai: Star Rail</option>
+        <option value="wuwa">Wuthering Waves</option>
+        <option value="nte">Neverness to Everness</option>
+        <option value="lainnya">🔑 Jual Akun</option>
+      </select>
+
+      <!-- 2. Sub-Kategori Target -->
+      <div class="admin-label" style="margin-top:12px">2. Sub-Kategori Yang Diterapkan</div>
+      <div style="position:relative">
+        <input class="admin-input" type="text" id="bulkSubgroupTarget" placeholder="Ketik nama sub-kategori baru, contoh: Top-Up" oninput="updateBulkSelectionCounter()" style="padding-right:75px">
+        <button type="button" onclick="setBulkTargetValue('')" style="position:absolute;right:6px;top:6px;height:32px;padding:0 8px;font-size:11px;font-weight:600;border-radius:6px;border:1px solid #e5e5e5;background:#f5f5f5;color:#666">✕ Reset</button>
+      </div>
+      <div style="font-size:11px;color:#888;margin:6px 0 4px">💡 Atau klik sub-kategori yang sudah ada:</div>
+      <div id="bulkExistingChips" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px"></div>
+
+      <!-- 3. Centang Produk -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;margin-bottom:6px">
+        <div class="admin-label" style="margin:0">3. Centang Produk Target</div>
+        <span id="bulkSelectionCounter" style="font-size:11px;font-weight:700;color:#7c3aed;background:#f5f3ff;border:1px solid #ddd6fe;padding:2px 8px;border-radius:10px">0 dipilih</span>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input class="admin-input" type="text" id="bulkProductSearch" placeholder="🔍 Cari nama produk..." style="height:36px;font-size:12px;margin:0;flex:1" oninput="filterBulkProductList()">
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:0 10px;height:36px;white-space:nowrap;font-weight:700" onclick="toggleSelectAllBulk()">Pilih Semua</button>
+      </div>
+
+      <div class="bulk-prod-list" id="bulkProductCheckList">
+        <!-- Terisi otomatis lewat JavaScript -->
+      </div>
+
+      <!-- Tombol Aksi -->
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="admin-btn" style="flex:1" id="bulkApplyBtn" onclick="applyBulkSubcategory()">💾 Terapkan Sub-Kategori</button>
+        <button class="admin-btn-secondary" style="width:75px" onclick="closeBulkSubgroupModal()">Batal</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="review-photo-overlay" id="reviewPhotoOverlay" onclick="closeReviewPhoto()">
@@ -1720,6 +1804,7 @@ function openAdmin(){
   renderPayIconAdminList();
   renderAdminReviewList();
   renderAdminOrders();
+  refreshSubgroupFormUI();
 
   const sel = document.getElementById('imgProductSelect');
   sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
@@ -2522,6 +2607,238 @@ function saveCarouselSlide(index){
   showToast('Slide ' + (index+1) + ' berhasil diperbarui!');
 }
 
+// ==================== SUBGROUP & BULK HELPERS ====================
+
+function getExistingSubgroups(cat){
+  const set = new Set();
+  (products || []).forEach(p => {
+    if((!cat || p.cat === cat) && p.subgroup && p.subgroup.trim()){
+      set.add(p.subgroup.trim());
+    }
+  });
+  return Array.from(set);
+}
+
+function refreshSubgroupFormUI(){
+  const catEl = document.getElementById('newProdCat');
+  if(!catEl) return;
+  const cat = catEl.value;
+  const currentVal = (document.getElementById('newProdSubgroup') ? document.getElementById('newProdSubgroup').value : '').trim();
+  const existing = getExistingSubgroups(cat);
+  
+  // Datalist autocomplete
+  const dl = document.getElementById('subgroupListDatalist');
+  if(dl){
+    dl.innerHTML = existing.map(s => `<option value="${s.replace(/"/g, '&quot;')}">`).join('');
+  }
+  
+  // Quick clickable chips
+  const chipsEl = document.getElementById('subgroupQuickChips');
+  if(chipsEl){
+    if(existing.length === 0){
+      const defaults = ['Top-Up', 'Joki', 'Akun', 'Item'];
+      chipsEl.innerHTML = defaults.map(s => `
+        <button type="button" class="subgroup-quick-chip ${currentVal.toLowerCase() === s.toLowerCase() ? 'active' : ''}" onclick="selectSubgroupChip('${s}')">+ ${s}</button>
+      `).join('');
+    } else {
+      chipsEl.innerHTML = existing.map(s => `
+        <button type="button" class="subgroup-quick-chip ${currentVal.toLowerCase() === s.toLowerCase() ? 'active' : ''}" onclick="selectSubgroupChip('${s.replace(/'/g, "\\'")}')">${s}</button>
+      `).join('');
+    }
+  }
+}
+
+function selectSubgroupChip(val){
+  const input = document.getElementById('newProdSubgroup');
+  if(!input) return;
+  if(input.value.trim().toLowerCase() === val.toLowerCase()){
+    input.value = '';
+  } else {
+    input.value = val;
+  }
+  refreshSubgroupFormUI();
+}
+
+function highlightActiveSubgroupChip(){
+  const currentVal = (document.getElementById('newProdSubgroup') ? document.getElementById('newProdSubgroup').value : '').trim();
+  const chips = document.querySelectorAll('#subgroupQuickChips .subgroup-quick-chip');
+  chips.forEach(c => {
+    const text = c.textContent.replace(/^\+\s*/, '').trim();
+    c.classList.toggle('active', text.toLowerCase() === currentVal.toLowerCase());
+  });
+}
+
+// Bulk Modal State & Functions
+let bulkSelectedProdIds = new Set();
+
+function openBulkSubgroupModal(){
+  const currentCat = document.getElementById('newProdCat') ? document.getElementById('newProdCat').value : 'genshin';
+  const bulkCatSelect = document.getElementById('bulkCatSelect');
+  if(bulkCatSelect) bulkCatSelect.value = currentCat;
+  
+  const currentFormSub = document.getElementById('newProdSubgroup') ? document.getElementById('newProdSubgroup').value.trim() : '';
+  const bulkTargetInput = document.getElementById('bulkSubgroupTarget');
+  if(bulkTargetInput) bulkTargetInput.value = currentFormSub;
+  
+  bulkSelectedProdIds.clear();
+  const searchInput = document.getElementById('bulkProductSearch');
+  if(searchInput) searchInput.value = '';
+  
+  renderBulkModalUI();
+  document.getElementById('bulkSubgroupOverlay').classList.add('open');
+}
+
+function closeBulkSubgroupModal(e){
+  if(!e || e.target === document.getElementById('bulkSubgroupOverlay') || (e.target && e.target.classList.contains('admin-close'))){
+    document.getElementById('bulkSubgroupOverlay').classList.remove('open');
+  }
+}
+
+function onBulkCatChange(){
+  bulkSelectedProdIds.clear();
+  renderBulkModalUI();
+}
+
+function renderBulkModalUI(){
+  const cat = document.getElementById('bulkCatSelect').value;
+  const currentTarget = (document.getElementById('bulkSubgroupTarget') ? document.getElementById('bulkSubgroupTarget').value : '').trim();
+  const existing = getExistingSubgroups(cat);
+  
+  const chipsContainer = document.getElementById('bulkExistingChips');
+  if(chipsContainer){
+    const pool = existing.length > 0 ? existing : ['Top-Up', 'Joki', 'Akun Starter', 'Monthly Pass'];
+    chipsContainer.innerHTML = pool.map(s => `
+      <button type="button" class="subgroup-quick-chip ${currentTarget.toLowerCase() === s.toLowerCase() ? 'active' : ''}" onclick="setBulkTargetValue('${s.replace(/'/g, "\\'")}')">${s}</button>
+    `).join('') + `
+      <button type="button" class="subgroup-quick-chip" style="color:#ef4444;border-color:#fca5a5;background:#fef2f2" onclick="setBulkTargetValue('')">✕ Kosongkan</button>
+    `;
+  }
+  
+  filterBulkProductList();
+  updateBulkSelectionCounter();
+}
+
+function setBulkTargetValue(val){
+  const input = document.getElementById('bulkSubgroupTarget');
+  if(input) input.value = val;
+  renderBulkModalUI();
+}
+
+function filterBulkProductList(){
+  const cat = document.getElementById('bulkCatSelect').value;
+  const query = (document.getElementById('bulkProductSearch') ? document.getElementById('bulkProductSearch').value : '').toLowerCase().trim();
+  const container = document.getElementById('bulkProductCheckList');
+  if(!container) return;
+  
+  let catProds = products.filter(p => p.cat === cat);
+  if(query){
+    catProds = catProds.filter(p => p.name.toLowerCase().includes(query) || (p.subgroup||'').toLowerCase().includes(query));
+  }
+  
+  if(catProds.length === 0){
+    container.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:16px 8px">Tidak ada produk dalam kategori ini.</p>';
+    return;
+  }
+  
+  container.innerHTML = catProds.map(p => {
+    const isChecked = bulkSelectedProdIds.has(p.id);
+    const subLabel = p.subgroup && p.subgroup.trim() ? 
+      `<span class="bulk-sub-tag">${p.subgroup}</span>` : 
+      `<span class="bulk-sub-none">Tanpa sub-kategori</span>`;
+      
+    return `
+      <div class="bulk-prod-row ${isChecked ? 'selected' : ''}" onclick="toggleBulkProdItem(${p.id})">
+        <input type="checkbox" class="bulk-prod-cb" value="${p.id}" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); toggleBulkProdItem(${p.id});">
+        <span style="font-size:18px">${p.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div class="bulk-prod-title">${p.name}${p.isAccount ? ' 🔑' : ''}</div>
+          <div class="bulk-prod-meta">
+            <span>${formatPrice(p.price)}</span>
+            <span>•</span>
+            ${subLabel}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleBulkProdItem(pid){
+  if(bulkSelectedProdIds.has(pid)){
+    bulkSelectedProdIds.delete(pid);
+  } else {
+    bulkSelectedProdIds.add(pid);
+  }
+  filterBulkProductList();
+  updateBulkSelectionCounter();
+}
+
+function toggleSelectAllBulk(){
+  const cat = document.getElementById('bulkCatSelect').value;
+  const catProds = products.filter(p => p.cat === cat);
+  const allSelected = catProds.length > 0 && catProds.every(p => bulkSelectedProdIds.has(p.id));
+  
+  if(allSelected){
+    catProds.forEach(p => bulkSelectedProdIds.delete(p.id));
+  } else {
+    catProds.forEach(p => bulkSelectedProdIds.add(p.id));
+  }
+  filterBulkProductList();
+  updateBulkSelectionCounter();
+}
+
+function updateBulkSelectionCounter(){
+  const count = bulkSelectedProdIds.size;
+  const counterEl = document.getElementById('bulkSelectionCounter');
+  if(counterEl) counterEl.textContent = `${count} dipilih`;
+  
+  const applyBtn = document.getElementById('bulkApplyBtn');
+  if(applyBtn){
+    const targetVal = (document.getElementById('bulkSubgroupTarget') ? document.getElementById('bulkSubgroupTarget').value : '').trim();
+    if(count > 0){
+      applyBtn.textContent = targetVal ? 
+        `💾 Terapkan "${targetVal}" ke ${count} Produk` : 
+        `💾 Kosongkan Sub-Kategori ${count} Produk`;
+      applyBtn.disabled = false;
+      applyBtn.style.opacity = '1';
+    } else {
+      applyBtn.textContent = `💾 Terapkan Sub-Kategori (Pilih Produk)`;
+      applyBtn.disabled = true;
+      applyBtn.style.opacity = '0.6';
+    }
+  }
+}
+
+function applyBulkSubcategory(){
+  const count = bulkSelectedProdIds.size;
+  if(count === 0){
+    showToast('Pilih minimal 1 produk terlebih dahulu!');
+    return;
+  }
+  
+  const targetSubgroup = (document.getElementById('bulkSubgroupTarget') ? document.getElementById('bulkSubgroupTarget').value : '').trim();
+  
+  let updatedCount = 0;
+  products = products.map(p => {
+    if(bulkSelectedProdIds.has(p.id)){
+      updatedCount++;
+      return { ...p, subgroup: targetSubgroup };
+    }
+    return p;
+  });
+  
+  setProducts(products);
+  renderProducts();
+  renderAdminProductList();
+  refreshSubgroupFormUI();
+  
+  closeBulkSubgroupModal();
+  showToast(targetSubgroup ? 
+    `✅ Berhasil! Sub-kategori "${targetSubgroup}" diterapkan ke ${updatedCount} produk.` : 
+    `✅ Berhasil mengosongkan sub-kategori pada ${updatedCount} produk.`
+  );
+}
+
 // ==================== PRODUCT ADMIN ====================
 
 let editingProductId = null;
@@ -2578,6 +2895,7 @@ function addNewProduct(){
 
   renderProducts();
   renderAdminProductList();
+  refreshSubgroupFormUI();
 
   const sel = document.getElementById('imgProductSelect');
   sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
@@ -2599,6 +2917,7 @@ function editProduct(id){
   document.getElementById('prodFormTitle').textContent = '✏️ Edit Produk';
   document.getElementById('prodFormBtn').textContent = '💾 Simpan Perubahan';
   document.getElementById('prodFormCancel').style.display = 'block';
+  refreshSubgroupFormUI();
   document.getElementById('prodFormTitle').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
@@ -2615,6 +2934,7 @@ function cancelEditProduct(){
   document.getElementById('prodFormTitle').textContent = '➕ Tambah Produk Baru';
   document.getElementById('prodFormBtn').textContent = '➕ Tambah Produk';
   document.getElementById('prodFormCancel').style.display = 'none';
+  refreshSubgroupFormUI();
 }
 
 function deleteProduct(id){
@@ -2632,6 +2952,7 @@ function deleteProduct(id){
 
   renderProducts();
   renderAdminProductList();
+  refreshSubgroupFormUI();
 
   const sel = document.getElementById('imgProductSelect');
   sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
@@ -2670,7 +2991,7 @@ function renderAdminProductList(){
       <div class="p-icon">${p.icon}</div>
       <div class="p-info">
         <p class="p-name">${p.name}${p.isAccount ? ' 🔑' : ''}</p>
-        <p class="p-cat">${p.cat.toUpperCase()}</p>
+        <p class="p-cat">${p.cat.toUpperCase()}${p.subgroup ? ` • <span class="bulk-sub-tag">${p.subgroup}</span>` : ''}</p>
         <p class="p-price">${formatPrice(p.price)}</p>
         ${statusLine}
       </div>
