@@ -324,10 +324,10 @@ body.dark-mode .live-pill-mode{
 .admin-status.show{display:block}
 .admin-current{font-size:13px;color:#555;text-align:center;margin-bottom:16px}
 .admin-current span{color:#ef4444;font-weight:700}
-.admin-discount-summary-box{background:#fdf2f8;border:1.5px solid #fbcfe8;border-radius:12px;padding:10px 14px;margin-bottom:14px;text-align:center}
-.admin-discount-status-pill{font-size:12px;font-weight:700;line-height:1.4;display:inline-block;padding:4px 10px;border-radius:20px}
-.discount-mode-tabs{display:flex;gap:6px;background:#f3f0fb;padding:4px;border-radius:12px;margin-bottom:14px}
-.discount-mode-tab{flex:1;padding:9px 10px;font-size:12px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#6b7280;cursor:pointer;transition:all .2s ease;text-align:center;white-space:nowrap}
+.admin-discount-summary-box{background:#fdf4ff;border:1.5px solid #f5d0fe;border-radius:12px;padding:10px 12px;margin-bottom:14px;text-align:center;box-sizing:border-box}
+.admin-discount-status-pill{font-size:12px;font-weight:700;line-height:1.4;display:inline-block;padding:5px 12px;border-radius:20px;max-width:100%;word-break:break-word}
+.discount-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f3f0fb;padding:4px;border-radius:12px;margin-bottom:14px;box-sizing:border-box;width:100%}
+.discount-mode-tab{width:100%;min-width:0;padding:10px 6px;font-size:12px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#6b7280;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;white-space:nowrap}
 .discount-mode-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(124,58,237,.14)}
 .discount-tab-panel{animation:popIn .2s ease}
 .discount-cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
@@ -933,10 +933,10 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="discount-mode-tabs">
   <button type="button" class="discount-mode-tab active" id="tabDiscAll" onclick="switchDiscountTab('all')">
-    🌐 Semua Produk (All)
+    <span>🌐</span><span>Semua Produk</span>
   </button>
   <button type="button" class="discount-mode-tab" id="tabDiscCat" onclick="switchDiscountTab('category')">
-    🏷️ Per Kategori Produk
+    <span>🏷️</span><span>Per Kategori</span>
   </button>
 </div>
 
@@ -1778,7 +1778,23 @@ fbDB.ref('norxstore/pwEnabled').on('value', snap=>{
 });
 let cart = JSON.parse(safeGetItem('norxstore_cart', '[]'));
 
+function normalizeCartItems(){
+  if(!Array.isArray(cart)) { cart = []; return; }
+  const seen = new Set();
+  const clean = [];
+  cart.forEach(item => {
+    if(item && item.id !== undefined && !seen.has(item.id)){
+      seen.add(item.id);
+      item.qty = 1;
+      clean.push(item);
+    }
+  });
+  cart = clean;
+}
+normalizeCartItems();
+
 function saveCart(){
+  normalizeCartItems();
   safeSetItem('norxstore_cart', JSON.stringify(cart));
   syncCartToCloud();
 }
@@ -2043,15 +2059,17 @@ function addToCart(id, event){
   if(event) event.stopPropagation();
   const product = products.find(p=>p.id===id);
   if(!product) return;
+  normalizeCartItems();
   const existing = cart.find(item=>item.id===id);
   if(existing){
-    existing.qty += 1;
-  } else {
-    cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, cat:product.cat, qty:1});
+    showToast('⚠️ ' + product.name + ' sudah ada di keranjang! Silakan pilih produk lain.');
+    return;
   }
+  cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, cat:product.cat, qty:1});
   saveCart();
   updateCartBadge();
-  showToast(product.name + ' ditambahkan ke keranjang');
+  renderProducts();
+  showToast('✅ ' + product.name + ' ditambahkan ke keranjang');
 }
 
 function removeFromCart(id){
@@ -2059,19 +2077,20 @@ function removeFromCart(id){
   saveCart();
   updateCartBadge();
   renderCart();
+  renderProducts();
 }
 
 function changeQty(id, delta){
   const item = cart.find(item=>item.id===id);
   if(!item) return;
-  item.qty += delta;
-  if(item.qty <= 0){
+  if(delta > 0){
+    showToast('⚠️ Maksimal 1 pesanan untuk produk ini. Silakan pilih produk lain!');
+    return;
+  }
+  if(delta < 0){
     removeFromCart(id);
     return;
   }
-  saveCart();
-  updateCartBadge();
-  renderCart();
 }
 
 function clearCart(){
@@ -2082,12 +2101,14 @@ function clearCart(){
   saveCart();
   updateCartBadge();
   renderCart();
+  renderProducts();
   closeCartCheckoutStep();
   document.querySelectorAll('#adminGridCart .admin-option').forEach(opt=>opt.classList.remove('selected'));
   showToast('Keranjang dikosongkan');
 }
 
 function renderCart(){
+  normalizeCartItems();
   const body = document.getElementById('cartItemsList');
   const footer = document.getElementById('cartFooter');
   if(cart.length===0){
@@ -2100,14 +2121,14 @@ function renderCart(){
     footer.style.display = 'none';
     return;
   }
-  const subtotal = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
+  const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
   let totalDiscountAmount = 0;
 
   body.innerHTML = cart.map(item=>{
     const prod = products.find(p => p.id === item.id);
     const itemCat = item.cat || (prod ? prod.cat : '');
     const itemDisc = getDiscount(itemCat);
-    const itemSub = item.price * item.qty;
+    const itemSub = item.price * 1;
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
     const itemFinal = itemSub - itemDiscAmount;
@@ -2124,13 +2145,12 @@ function renderCart(){
           <span class="${hasDisc ? 'cart-item-price-discount' : 'cart-item-price'}">${formatPrice(itemFinal)}</span>
           ${hasDisc ? `<span style="font-size:10px;color:#ef4444;font-weight:700">-${itemDisc}%</span>` : ''}
         </div>
-        <div class="cart-item-qty">
-          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        <div class="cart-item-qty" style="margin-top:5px;display:flex;align-items:center;gap:6px">
+          <span style="font-size:11px;font-weight:700;color:#6b7280;background:#f3f4f6;padding:3px 8px;border-radius:6px;border:1px solid #e5e7eb">Jumlah: 1</span>
+          <span style="font-size:10px;color:#9ca3af">• Maksimal 1 per layanan</span>
         </div>
       </div>
-      <button class="cart-item-remove" onclick="removeFromCart(${item.id})">🗑</button>
+      <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Hapus dari keranjang">🗑</button>
     </div>
   `}).join('');
 
@@ -2197,20 +2217,21 @@ function openWhatsApp(url){
 }
 
 function checkoutCart(){
+  normalizeCartItems();
   if(cart.length===0) return;
   if(!selectedCartPayment){ showToast('Pilih metode pembayaran dulu!'); return; }
   if(!selectedCartAdmin){ showToast('Pilih admin tujuan chat dulu!'); return; }
-  const subtotal = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
+  const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
   let totalDiscountAmount = 0;
   const itemsText = cart.map(item=>{
     const prod = products.find(p => p.id === item.id);
     const itemCat = item.cat || (prod ? prod.cat : '');
     const itemDisc = getDiscount(itemCat);
-    const itemSub = item.price * item.qty;
+    const itemSub = item.price * 1;
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
     const itemFinal = itemSub - itemDiscAmount;
-    return `• ${item.name} x${item.qty} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (Diskon ${itemDisc}%)` : ''}`;
+    return `• ${item.name} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (Diskon ${itemDisc}%)` : ''}`;
   }).join('\n');
   const total = subtotal - totalDiscountAmount;
   let text = `Halo Admin NORXSTORE, saya ingin memesan:\n\n${itemsText}\n\n`;
@@ -2960,7 +2981,11 @@ function renderProductCard(p, discount, idx){
         ${isLocked
           ? `<button class="buy-now-btn" style="background:#aaa;cursor:not-allowed" disabled>${isSold ? '🔴 Terjual' : '🟡 Dipesan'}</button>`
           : `<button class="buy-now-btn" onclick="openModal(${p.id})">🛒 Beli</button>
-             ${p.isAccount ? '' : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>Keranjang</button>`}`
+             ${p.isAccount ? '' : (
+               cart.some(item => item.id === p.id)
+                 ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="Sudah di keranjang" style="background:#f3f4f6;color:#6b7280;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>Keranjang</button>`
+                 : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>Keranjang</button>`
+             )}`
         }
       </div>
     </div>
