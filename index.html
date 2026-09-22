@@ -11,11 +11,14 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:pan-y}
 html,body{width:100%;min-height:100dvh;overflow-x:hidden;font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f4fa;color:#1a1a1a}
 body{transition:background-color 0.5s ease,color 0.5s ease}
-.navbar{display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06)}
-.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:4px}
+.navbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06)}
+.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0}
 .logo::before{content:'💠';font-size:16px}
 .logo span{background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;background-clip:text;color:transparent}
-.search-bar{flex:1;height:38px;border:1.5px solid #ece9f7;border-radius:12px;background:#f5f4fa;padding:0 14px;font-size:13px;color:#888;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease}
+.search-bar-wrap{flex:1;display:flex;align-items:center;position:relative;min-width:0}
+.search-bar-icon{position:absolute;left:12px;font-size:13px;color:#9ca3af;pointer-events:none;z-index:2;line-height:1}
+.search-bar{width:100%;height:38px;border:1.5px solid #ece9f7;border-radius:12px;background:#f5f4fa;padding:0 14px 0 34px;font-size:13px;color:#1a1a1a;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease,box-shadow 0.3s ease}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
 .nav-icon{width:38px;height:38px;border-radius:12px;background:#f5f4fa;border:1.5px solid #ece9f7;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease}
 .nav-icon:active{background:#e5e5e5}
 .nav-icon-wrap{position:relative;flex-shrink:0}
@@ -565,9 +568,14 @@ button{cursor:pointer;font-family:inherit}
 /* ============ RESPONSIVE: DESKTOP (>=900px) ============ */
 @media (min-width:900px){
   body{background:#f1f1f5}
-  .navbar{max-width:1200px;margin:16px auto 0;padding:14px 28px;border-radius:14px;position:sticky;top:16px;z-index:60}
-  .search-bar{max-width:420px}
-  .logo{font-size:22px}
+  .navbar{max-width:1200px;width:calc(100% - 32px);margin:16px auto 0;padding:12px 24px;border-radius:16px;position:sticky;top:16px;z-index:60;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(124,58,237,.08)}
+  .logo{font-size:22px;flex-shrink:0}
+  .search-bar-wrap{flex:1;max-width:none;margin:0}
+  .search-bar{height:42px;font-size:13.5px;padding:0 16px 0 38px;border-radius:14px}
+  .search-bar-icon{left:14px;font-size:14px}
+  .nav-actions{gap:12px;margin-left:auto}
+  .nav-icon{width:42px;height:42px;font-size:18px;border-radius:12px}
+  .nav-icon:hover{background:#ede9fe;border-color:#c4b5fd;transform:translateY(-1px);box-shadow:0 3px 8px rgba(124,58,237,.1)}
 
   .carousel-wrap{max-width:1200px;width:calc(100% - 32px);margin:20px auto 0;border-radius:18px;left:auto;transform:none}
   .carousel-slide{height:400px}
@@ -711,10 +719,15 @@ button{cursor:pointer;font-family:inherit}
   <div class="splash-dots"><span></span><span></span><span></span></div>
 </div>
 <nav class="navbar">
-<div class="logo" id="logo">NORX<span>STORE</span></div>
-<input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()">
-<div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()">👤</div>
-<div class="nav-icon-wrap"><div class="nav-icon" onclick="openCart()">🛒</div><span class="cart-badge" id="cartBadge">0</span></div>
+<div class="logo" id="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">NORX<span>STORE</span></div>
+<div class="search-bar-wrap">
+  <span class="search-bar-icon">🔍</span>
+  <input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()">
+</div>
+<div class="nav-actions">
+  <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
+  <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang"><div class="nav-icon">🛒</div><span class="cart-badge" id="cartBadge">0</span></div>
+</div>
 </nav>
 
 <div class="carousel-wrap">
@@ -1305,11 +1318,44 @@ function safeGetItem(key, fallback){
   catch(e) { return fallback; }
 }
 
-// Bersihkan cache gambar base64 besar dari localStorage agar tidak melebihi kuota 5MB browser
-try {
-  localStorage.removeItem('norxstore_images_cache');
-  localStorage.removeItem('norxstore_reviews_cache');
-} catch(e){}
+// ============ SISTEM CACHE PERSISTEN GAMBAR (IndexedDB + LocalStorage) ============
+// Memastikan gambar produk langsung muncul seketika tanpa menunggu koneksi Firebase
+const NORX_IDB_NAME = 'norxstore_idb';
+const NORX_IDB_STORE = 'images';
+function openNorxIDB(){
+  return new Promise(resolve => {
+    if(!window.indexedDB) return resolve(null);
+    try {
+      const req = indexedDB.open(NORX_IDB_NAME, 1);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if(!db.objectStoreNames.contains(NORX_IDB_STORE)){
+          db.createObjectStore(NORX_IDB_STORE);
+        }
+      };
+      req.onsuccess = e => resolve(e.target.result);
+      req.onerror = () => resolve(null);
+    } catch(e){ resolve(null); }
+  });
+}
+function saveImagesCache(data){
+  if(!data || typeof data !== 'object') return;
+  try {
+    const serialized = JSON.stringify(data);
+    // Simpan ke localStorage jika aman (< 3MB) untuk akses instan 0ms saat refresh
+    if(serialized.length < 3 * 1024 * 1024){
+      safeSetItem('norxstore_images_cache', serialized);
+    }
+  } catch(e){}
+  // Selalu simpan ke IndexedDB (kapasitas puluhan MB tanpa batasan 5MB browser)
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
+      tx.objectStore(NORX_IDB_STORE).put(data, 'productImages');
+    } catch(e){}
+  });
+}
 
 function mergeProductsData(parsed){
   if(!Array.isArray(parsed) || parsed.length === 0) return [...DEFAULT_PRODUCTS];
@@ -1611,6 +1657,7 @@ function getProductImages(){
 }
 function setProductImages(data){
   productImagesCache = data;
+  saveImagesCache(data);
   fbDB.ref('norxstore/images').set(data).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
 }
 function getImagesForProduct(id){
@@ -1691,7 +1738,16 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
-let productImagesCache = {};
+let productImagesCache = (function(){
+  try {
+    const raw = safeGetItem('norxstore_images_cache', null);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object') return parsed;
+    }
+  }catch(e){}
+  return {};
+})();
 let reviewPhotosCache = [];
 let paymentIconsCache = {};
 
@@ -1704,8 +1760,50 @@ function isAdminOpen(){
 }
 
 let splashHidden = false;
-let productsDataReady = false;
-let imagesDataReady = false;
+let productsDataReady = Array.isArray(products) && products.length > 0;
+let imagesDataReady = Object.keys(productImagesCache).length > 0;
+
+function preloadProductImages(){
+  try {
+    const all = productImagesCache || {};
+    for(const id in all){
+      const urls = all[id];
+      if(Array.isArray(urls)){
+        urls.forEach(url => {
+          if(url && typeof url === 'string'){
+            const img = new Image();
+            img.decoding = 'async';
+            img.src = url;
+          }
+        });
+      }
+    }
+  } catch(e){}
+}
+preloadProductImages();
+
+(function initImagesFromIDB(){
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const tx = db.transaction(NORX_IDB_STORE, 'readonly');
+      const req = tx.objectStore(NORX_IDB_STORE).get('productImages');
+      req.onsuccess = () => {
+        const idbData = req.result;
+        if(idbData && typeof idbData === 'object' && Object.keys(idbData).length > 0){
+          const wasEmpty = Object.keys(productImagesCache).length === 0;
+          productImagesCache = Object.assign({}, idbData, productImagesCache);
+          imagesDataReady = true;
+          preloadProductImages();
+          if(wasEmpty){
+            renderProducts();
+          }
+        }
+      };
+    } catch(e){}
+  });
+})();
+
 function hideSplash(){
   if(splashHidden) return;
   splashHidden = true;
@@ -1751,8 +1849,11 @@ fbDB.ref('norxstore/discount').on('value', snap=>{
   if(isAdminOpen()) renderDiscountAdminUI();
 });
 fbDB.ref('norxstore/images').on('value', snap=>{
-  productImagesCache = snap.val() || {};
+  const val = snap.val() || {};
+  productImagesCache = val;
   imagesDataReady = true;
+  saveImagesCache(val);
+  preloadProductImages();
   renderProducts();
   tryHideSplash();
 });
@@ -2973,14 +3074,17 @@ function renderProductCard(p, discount, idx){
   const hasDisc = disc > 0;
   const imgs = getImagesForProduct(p.id);
   const hasImgs = imgs.length > 0;
+  const isAboveFold = (idx === undefined || idx < 8);
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
     <div class="product-img-slide" data-index="${i}">
-      <img src="${url}" alt="${p.name}" draggable="false" loading="eager" decoding="async">
+      <img src="${url}" alt="${p.name}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}">
       <div class="slide-protect-shield" onclick="openImageViewer('${url}');event.stopPropagation()"></div>
     </div>
-  `).join('') : `
+  `).join('') : (!imagesDataReady ? `
+    <div class="product-img-slide"><div class="skel" style="width:100%;height:100%;position:absolute;inset:0"></div></div>
+  ` : `
     <div class="product-img-slide"><span class="emoji-fallback">${p.icon}</span></div>
-  `;
+  `);
   const imgDots = hasImgs && imgs.length > 1 ? `
     <div class="img-nav-dots">${imgs.map((_,i)=>`<button class="img-nav-dot ${i===0?'active':''}" onclick="scrollProdImg(${p.id},${i},event)"></button>`).join('')}</div>
   ` : '';
