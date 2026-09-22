@@ -324,6 +324,21 @@ body.dark-mode .live-pill-mode{
 .admin-status.show{display:block}
 .admin-current{font-size:13px;color:#555;text-align:center;margin-bottom:16px}
 .admin-current span{color:#ef4444;font-weight:700}
+.admin-discount-summary-box{background:#fdf2f8;border:1.5px solid #fbcfe8;border-radius:12px;padding:10px 14px;margin-bottom:14px;text-align:center}
+.admin-discount-status-pill{font-size:12px;font-weight:700;line-height:1.4;display:inline-block;padding:4px 10px;border-radius:20px}
+.discount-mode-tabs{display:flex;gap:6px;background:#f3f0fb;padding:4px;border-radius:12px;margin-bottom:14px}
+.discount-mode-tab{flex:1;padding:9px 10px;font-size:12px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#6b7280;cursor:pointer;transition:all .2s ease;text-align:center;white-space:nowrap}
+.discount-mode-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(124,58,237,.14)}
+.discount-tab-panel{animation:popIn .2s ease}
+.discount-cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.discount-cat-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#faf9ff;border:1.5px solid #ece7fa;border-radius:12px;gap:10px}
+.discount-cat-label{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.discount-cat-icon{font-size:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);flex-shrink:0}
+.discount-cat-label strong{display:block;font-size:12px;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.discount-cat-label small{display:block;font-size:10px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.discount-cat-input-wrap{display:flex;align-items:center;gap:4px;width:85px;flex-shrink:0}
+.discount-cat-input-wrap input{margin-bottom:0 !important;padding:6px 8px !important;height:34px;text-align:center;font-weight:700;font-size:13px}
+.discount-cat-input-wrap span{font-size:13px;font-weight:700;color:#7c3aed}
 .admin-divider{height:1px;background:#e5e5e5;margin:16px 0}
 .admin-section-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
 .admin-img-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -909,12 +924,114 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-divider"></div>
 
 <div class="admin-section-title">🏷️ Pengaturan Diskon</div>
-<p class="admin-current">Diskon aktif: <span id="adminCurrentDiscount">0%</span></p>
-<div class="admin-label">Persentase Diskon (%)</div>
-<input class="admin-input" type="number" id="discountInput" min="0" max="100" placeholder="Contoh: 15">
-<p class="admin-hint">Masukkan angka 0–100. 0 = nonaktifkan diskon.</p>
-<button class="admin-btn" onclick="saveDiscount()">💾 Simpan Diskon</button>
-<div class="admin-status" id="adminStatus">✅ Diskon berhasil diperbarui!</div>
+<div class="admin-discount-summary-box">
+  <div style="font-size:11px;color:#888;margin-bottom:4px;font-weight:600">Status Diskon Saat Ini:</div>
+  <div class="admin-discount-status-pill" id="adminDiscountStatusPill">
+    <span id="adminCurrentDiscount">0%</span>
+  </div>
+</div>
+
+<div class="discount-mode-tabs">
+  <button type="button" class="discount-mode-tab active" id="tabDiscAll" onclick="switchDiscountTab('all')">
+    🌐 Semua Produk (All)
+  </button>
+  <button type="button" class="discount-mode-tab" id="tabDiscCat" onclick="switchDiscountTab('category')">
+    🏷️ Per Kategori Produk
+  </button>
+</div>
+
+<!-- PANEL MODE 1: DISKON SEMUA PRODUK (GLOBAL) -->
+<div id="panelDiscAll" class="discount-tab-panel">
+  <div class="admin-label">Persentase Diskon Semua Produk (%)</div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <input class="admin-input" type="number" id="discountGlobalInput" min="0" max="100" placeholder="Contoh: 15" style="margin-bottom:0;flex:1">
+    <span style="font-weight:700;font-size:16px;color:#7c3aed">%</span>
+  </div>
+  <p class="admin-hint" style="margin-top:6px">Diskon ini otomatis berlaku merata ke seluruh produk di semua kategori dan jual akun.</p>
+</div>
+
+<!-- PANEL MODE 2: DISKON TERPISAH PER KATEGORI -->
+<div id="panelDiscCat" class="discount-tab-panel" style="display:none">
+  <p class="admin-hint" style="margin-bottom:10px">Atur persentase diskon yang berbeda untuk tiap kategori (isi 0 jika tidak ada diskon):</p>
+  
+  <div class="discount-cat-list">
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">✨</span>
+        <div>
+          <strong>Genshin Impact</strong>
+          <small>Layanan Joki Genshin</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_genshin" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🚀</span>
+        <div>
+          <strong>Honkai: Star Rail</strong>
+          <small>Layanan Joki HSR</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_hsr" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🌊</span>
+        <div>
+          <strong>Wuthering Waves</strong>
+          <small>Layanan Joki WuWa</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_wuwa" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🔮</span>
+        <div>
+          <strong>Neverness to Everness</strong>
+          <small>Layanan Joki NTE</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_nte" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🔑</span>
+        <div>
+          <strong>Jual Beli Akun</strong>
+          <small>Stok Akun Game</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_lainnya" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;gap:8px;margin-top:14px">
+  <button class="admin-btn" style="flex:2" onclick="saveDiscountSettings()">💾 Simpan Diskon</button>
+  <button class="admin-btn" style="flex:1;background:#ef4444" onclick="resetAllDiscounts()">🔄 Reset (0%)</button>
+</div>
+<div class="admin-status" id="adminStatus">✅ Pengaturan diskon berhasil diperbarui!</div>
 
 <div class="admin-divider"></div>
 
@@ -1283,19 +1400,207 @@ function setAdminPassword(pass){
   return true;
 }
 
-function getDiscount(){
-  return discountVal;
+// ==================== DISCOUNT ENGINE (GLOBAL & PER-CATEGORY) ====================
+const DEFAULT_DISCOUNT_CONFIG = {
+  mode: 'all', // 'all' (semua produk) atau 'category' (per kategori)
+  global: 0,
+  categories: {
+    genshin: 0,
+    hsr: 0,
+    wuwa: 0,
+    nte: 0,
+    lainnya: 0
+  }
+};
+
+function normalizeDiscountConfig(raw){
+  if(typeof raw === 'number'){
+    return {
+      mode: 'all',
+      global: Math.max(0, Math.min(100, parseInt(raw) || 0)),
+      categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 }
+    };
+  }
+  if(!raw || typeof raw !== 'object'){
+    return JSON.parse(JSON.stringify(DEFAULT_DISCOUNT_CONFIG));
+  }
+  const mode = (raw.mode === 'category') ? 'category' : 'all';
+  const global = Math.max(0, Math.min(100, parseInt(raw.global) || 0));
+  const rawCats = (raw.categories && typeof raw.categories === 'object') ? raw.categories : {};
+  const categories = {
+    genshin: Math.max(0, Math.min(100, parseInt(rawCats.genshin) || 0)),
+    hsr: Math.max(0, Math.min(100, parseInt(rawCats.hsr) || 0)),
+    wuwa: Math.max(0, Math.min(100, parseInt(rawCats.wuwa) || 0)),
+    nte: Math.max(0, Math.min(100, parseInt(rawCats.nte) || 0)),
+    lainnya: Math.max(0, Math.min(100, parseInt(rawCats.lainnya) || 0))
+  };
+  return { mode, global, categories };
 }
-function setDiscount(pct){
-  const val = Math.max(0, Math.min(100, parseInt(pct) || 0));
-  discountVal = val;
-  fbDB.ref('norxstore/discount').set(val).catch(e=>console.error(e));
-  return val;
+
+let discountConfig = (function(){
+  try {
+    const cached = safeGetItem('norxstore_discount_config_cache', null);
+    if(cached){
+      const parsed = JSON.parse(cached);
+      if(parsed) return normalizeDiscountConfig(parsed);
+    }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_DISCOUNT_CONFIG));
+})();
+
+let discountVal = discountConfig.global;
+
+function getDiscount(cat){
+  if(!discountConfig) return 0;
+  if(discountConfig.mode === 'all'){
+    return discountConfig.global || 0;
+  }
+  if(cat && discountConfig.categories && typeof discountConfig.categories[cat] === 'number'){
+    return discountConfig.categories[cat] || 0;
+  }
+  if(!cat){
+    const vals = Object.values(discountConfig.categories || {});
+    return vals.length ? Math.max(...vals, 0) : 0;
+  }
+  return 0;
 }
-function getDiscountedPrice(price){
-  const d = getDiscount();
+
+function getDiscountedPrice(price, cat){
+  const d = getDiscount(cat);
   if(d <= 0) return price;
   return Math.round(price * (100 - d) / 100);
+}
+
+function setDiscount(pct){
+  const val = Math.max(0, Math.min(100, parseInt(pct) || 0));
+  discountConfig.mode = 'all';
+  discountConfig.global = val;
+  discountVal = val;
+  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  return val;
+}
+
+function setDiscountConfig(cfg){
+  discountConfig = normalizeDiscountConfig(cfg);
+  discountVal = discountConfig.global;
+  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  return discountConfig;
+}
+
+function getDiscountSummaryText(){
+  if(!discountConfig) return 'Nonaktif (0%)';
+  if(discountConfig.mode === 'all'){
+    const g = discountConfig.global || 0;
+    return g > 0 ? `🔥 Diskon Global: ${g}% (Semua Produk)` : 'Nonaktif (0%)';
+  } else {
+    const cats = discountConfig.categories || {};
+    const active = [];
+    if(cats.genshin > 0) active.push(`Genshin ${cats.genshin}%`);
+    if(cats.hsr > 0) active.push(`HSR ${cats.hsr}%`);
+    if(cats.wuwa > 0) active.push(`WuWa ${cats.wuwa}%`);
+    if(cats.nte > 0) active.push(`NTE ${cats.nte}%`);
+    if(cats.lainnya > 0) active.push(`Jual Akun ${cats.lainnya}%`);
+    return active.length > 0 ? `🏷️ Diskon Kategori: ${active.join(' • ')}` : 'Nonaktif (0%)';
+  }
+}
+
+let currentDiscountTab = 'all';
+function switchDiscountTab(tab){
+  currentDiscountTab = tab;
+  const tabAll = document.getElementById('tabDiscAll');
+  const tabCat = document.getElementById('tabDiscCat');
+  const panelAll = document.getElementById('panelDiscAll');
+  const panelCat = document.getElementById('panelDiscCat');
+  if(tabAll) tabAll.classList.toggle('active', tab === 'all');
+  if(tabCat) tabCat.classList.toggle('active', tab === 'category');
+  if(panelAll) panelAll.style.display = tab === 'all' ? 'block' : 'none';
+  if(panelCat) panelCat.style.display = tab === 'category' ? 'block' : 'none';
+}
+
+function renderDiscountAdminUI(){
+  if(!discountConfig) return;
+  const mode = discountConfig.mode || 'all';
+  switchDiscountTab(mode);
+
+  const gInput = document.getElementById('discountGlobalInput');
+  if(gInput) gInput.value = discountConfig.global > 0 ? discountConfig.global : '';
+
+  const cats = discountConfig.categories || {};
+  ['genshin', 'hsr', 'wuwa', 'nte', 'lainnya'].forEach(k => {
+    const el = document.getElementById('discCat_' + k);
+    if(el) el.value = (cats[k] && cats[k] > 0) ? cats[k] : '';
+  });
+
+  const pill = document.getElementById('adminDiscountStatusPill');
+  const currEl = document.getElementById('adminCurrentDiscount');
+  const text = getDiscountSummaryText();
+  const isActive = text !== 'Nonaktif (0%)';
+  if(pill){
+    pill.textContent = text;
+    pill.style.color = isActive ? '#b91c1c' : '#6b7280';
+    pill.style.background = isActive ? '#fef2f2' : '#f3f4f6';
+    pill.style.border = isActive ? '1px solid #fecaca' : '1px solid #e5e7eb';
+  }
+  if(currEl){
+    currEl.textContent = text;
+  }
+}
+
+function saveDiscountSettings(){
+  const mode = currentDiscountTab;
+  const globalVal = Math.max(0, Math.min(100, parseInt(document.getElementById('discountGlobalInput').value) || 0));
+  const catVals = {
+    genshin: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_genshin').value) || 0)),
+    hsr: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_hsr').value) || 0)),
+    wuwa: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_wuwa').value) || 0)),
+    nte: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_nte').value) || 0)),
+    lainnya: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_lainnya').value) || 0))
+  };
+
+  const newConfig = {
+    mode: mode,
+    global: globalVal,
+    categories: catVals
+  };
+
+  setDiscountConfig(newConfig);
+  renderDiscountAdminUI();
+  products = getProducts();
+  renderProducts();
+  if(cart.length > 0) renderCart();
+
+  const statusEl = document.getElementById('adminStatus');
+  if(statusEl){
+    statusEl.textContent = '✅ Pengaturan diskon berhasil diperbarui!';
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 2500);
+  }
+}
+
+function resetAllDiscounts(){
+  const newConfig = {
+    mode: 'all',
+    global: 0,
+    categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 }
+  };
+  setDiscountConfig(newConfig);
+  renderDiscountAdminUI();
+  products = getProducts();
+  renderProducts();
+  if(cart.length > 0) renderCart();
+
+  const statusEl = document.getElementById('adminStatus');
+  if(statusEl){
+    statusEl.textContent = '🔄 Semua diskon berhasil direset ke 0%';
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 2500);
+  }
+}
+
+function saveDiscount(){
+  saveDiscountSettings();
 }
 function formatPrice(p){
   return 'Rp' + p.toLocaleString('id-ID');
@@ -1386,7 +1691,6 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
-let discountVal = 0;
 let productImagesCache = {};
 let reviewPhotosCache = [];
 let paymentIconsCache = {};
@@ -1439,9 +1743,12 @@ fbDB.ref('norxstore/carousel').on('value', snap=>{
 });
 fbDB.ref('norxstore/discount').on('value', snap=>{
   const val = snap.val();
-  discountVal = typeof val === 'number' ? val : 0;
+  discountConfig = normalizeDiscountConfig(val);
+  discountVal = discountConfig.global;
+  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
   renderProducts();
   if(cart.length > 0) renderCart();
+  if(isAdminOpen()) renderDiscountAdminUI();
 });
 fbDB.ref('norxstore/images').on('value', snap=>{
   productImagesCache = snap.val() || {};
@@ -1740,7 +2047,7 @@ function addToCart(id, event){
   if(existing){
     existing.qty += 1;
   } else {
-    cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, qty:1});
+    cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, cat:product.cat, qty:1});
   }
   saveCart();
   updateCartBadge();
@@ -1783,7 +2090,6 @@ function clearCart(){
 function renderCart(){
   const body = document.getElementById('cartItemsList');
   const footer = document.getElementById('cartFooter');
-  const discount = getDiscount();
   if(cart.length===0){
     body.innerHTML = `
       <div class="cart-empty">
@@ -1795,14 +2101,17 @@ function renderCart(){
     return;
   }
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
-  const discountAmount = Math.round(subtotal * discount / 100);
-  const total = subtotal - discountAmount;
+  let totalDiscountAmount = 0;
 
   body.innerHTML = cart.map(item=>{
+    const prod = products.find(p => p.id === item.id);
+    const itemCat = item.cat || (prod ? prod.cat : '');
+    const itemDisc = getDiscount(itemCat);
     const itemSub = item.price * item.qty;
-    const itemDisc = Math.round(itemSub * discount / 100);
-    const itemFinal = itemSub - itemDisc;
-    const hasDisc = discount > 0;
+    const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
+    totalDiscountAmount += itemDiscAmount;
+    const itemFinal = itemSub - itemDiscAmount;
+    const hasDisc = itemDisc > 0;
     const imgs = getImagesForProduct(item.id);
     const thumb = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:20px">${item.icon}</span>`;
     return `
@@ -1813,7 +2122,7 @@ function renderCart(){
         <div class="cart-item-price-row">
           ${hasDisc ? `<span class="cart-item-price-old">${formatPrice(itemSub)}</span>` : ''}
           <span class="${hasDisc ? 'cart-item-price-discount' : 'cart-item-price'}">${formatPrice(itemFinal)}</span>
-          ${hasDisc ? `<span style="font-size:10px;color:#ef4444;font-weight:700">-${discount}%</span>` : ''}
+          ${hasDisc ? `<span style="font-size:10px;color:#ef4444;font-weight:700">-${itemDisc}%</span>` : ''}
         </div>
         <div class="cart-item-qty">
           <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
@@ -1825,18 +2134,22 @@ function renderCart(){
     </div>
   `}).join('');
 
+  const total = subtotal - totalDiscountAmount;
   document.getElementById('cartSubtotal').textContent = formatPrice(subtotal);
   document.getElementById('cartTotal').textContent = formatPrice(total);
   const totalEl = document.getElementById('cartTotal');
-  totalEl.className = discount > 0 ? 'cart-total-price-discount' : 'cart-total-price';
+  totalEl.className = totalDiscountAmount > 0 ? 'cart-total-price-discount' : 'cart-total-price';
 
   const subRow = document.getElementById('cartSubtotalRow');
   const discRow = document.getElementById('cartDiscountRow');
-  if(discount > 0){
+  if(totalDiscountAmount > 0){
     subRow.style.display = 'flex';
     discRow.style.display = 'flex';
-    document.getElementById('cartDiscountLabel').textContent = discount + '%';
-    document.getElementById('cartDiscountAmount').textContent = '-' + formatPrice(discountAmount);
+    const discLabel = (discountConfig && discountConfig.mode === 'all')
+      ? `${discountConfig.global}%`
+      : 'Hemat';
+    document.getElementById('cartDiscountLabel').textContent = discLabel;
+    document.getElementById('cartDiscountAmount').textContent = '-' + formatPrice(totalDiscountAmount);
   } else {
     subRow.style.display = 'none';
     discRow.style.display = 'none';
@@ -1887,18 +2200,23 @@ function checkoutCart(){
   if(cart.length===0) return;
   if(!selectedCartPayment){ showToast('Pilih metode pembayaran dulu!'); return; }
   if(!selectedCartAdmin){ showToast('Pilih admin tujuan chat dulu!'); return; }
-  const discount = getDiscount();
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
-  const discountAmount = Math.round(subtotal * discount / 100);
-  const total = subtotal - discountAmount;
+  let totalDiscountAmount = 0;
   const itemsText = cart.map(item=>{
+    const prod = products.find(p => p.id === item.id);
+    const itemCat = item.cat || (prod ? prod.cat : '');
+    const itemDisc = getDiscount(itemCat);
     const itemSub = item.price * item.qty;
-    const itemFinal = discount > 0 ? Math.round(itemSub * (100-discount)/100) : itemSub;
-    return `• ${item.name} x${item.qty} = ${formatPrice(itemFinal)}`;
+    const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
+    totalDiscountAmount += itemDiscAmount;
+    const itemFinal = itemSub - itemDiscAmount;
+    return `• ${item.name} x${item.qty} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (Diskon ${itemDisc}%)` : ''}`;
   }).join('\n');
+  const total = subtotal - totalDiscountAmount;
   let text = `Halo Admin NORXSTORE, saya ingin memesan:\n\n${itemsText}\n\n`;
-  if(discount > 0){
-    text += `Subtotal: ${formatPrice(subtotal)}\nDiskon: -${formatPrice(discountAmount)} (${discount}%)\n`;
+  if(totalDiscountAmount > 0){
+    const discSummary = (discountConfig && discountConfig.mode === 'all') ? ` (${discountConfig.global}%)` : '';
+    text += `Subtotal: ${formatPrice(subtotal)}\nTotal Diskon: -${formatPrice(totalDiscountAmount)}${discSummary}\n`;
   }
   text += `Total: ${formatPrice(total)}\nMetode Pembayaran: ${selectedCartPayment}\n\nMohon konfirmasi ketersediaannya, terima kasih!`;
   const url = getWaLink(text, selectedCartAdmin);
@@ -2015,9 +2333,7 @@ document.getElementById('pwInput').addEventListener('keydown', function(e){
 });
 
 function openAdmin(){
-  const d = getDiscount();
-  document.getElementById('discountInput').value = d > 0 ? d : '';
-  document.getElementById('adminCurrentDiscount').textContent = d + '%';
+  renderDiscountAdminUI();
   document.getElementById('adminStatus').classList.remove('show');
   document.getElementById('passStatus').classList.remove('show');
   document.getElementById('passStatusDisable').style.display = 'none';
@@ -2047,18 +2363,6 @@ function closeAdmin(e){
   if(!e || e.target === document.getElementById('adminOverlay')){
     document.getElementById('adminOverlay').classList.remove('open');
   }
-}
-function saveDiscount(){
-  const val = document.getElementById('discountInput').value;
-  const newDiscount = setDiscount(val);
-  document.getElementById('adminCurrentDiscount').textContent = newDiscount + '%';
-  document.getElementById('adminStatus').classList.add('show');
-  products = getProducts();
-  renderProducts();
-  if(cart.length > 0) renderCart();
-  setTimeout(()=>{
-    document.getElementById('adminStatus').classList.remove('show');
-  }, 2000);
 }
 function isPwProtectionEnabled(){
   return pwEnabledCache;
@@ -2605,8 +2909,9 @@ function updateCategoryChipsUI(){
 }
 
 function renderProductCard(p, discount, idx){
-  const discPrice = getDiscountedPrice(p.price);
-  const hasDisc = discount > 0;
+  const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p.cat);
+  const discPrice = getDiscountedPrice(p.price, p.cat);
+  const hasDisc = disc > 0;
   const imgs = getImagesForProduct(p.id);
   const hasImgs = imgs.length > 0;
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
@@ -2636,7 +2941,7 @@ function renderProductCard(p, discount, idx){
   <div class="product-card" style="${isLocked ? 'opacity:.6' : ''}">
     <div class="product-img-wrap" id="prodImgWrap_${p.id}" onclick="openModal(${p.id})">
       ${!isLocked && !p.isAccount && p.badge?`<span class="product-badge">${p.badge}</span>`:''}
-      ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${discount}%</span>`:''}
+      ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
       ${acctBadge}
       ${imgCount}
       <div class="product-img-track" id="prodImgTrack_${p.id}" onscroll="onProdImgScroll(${p.id})" onclick="event.stopPropagation()">
@@ -2691,7 +2996,6 @@ function renderProducts(filter, subFilter){
 
   updateCategoryChipsUI();
 
-  const discount = getDiscount();
   if(filtered.length === 0){
     grid.innerHTML = `<div class="search-empty"><span>🔍</span><p>Tidak ada layanan yang cocok${query ? ' dengan "' + query + '"' : ''}.</p></div>`;
     return;
@@ -2710,10 +3014,10 @@ function renderProducts(filter, subFilter){
     });
     grid.innerHTML = groups.map(g => `
       <div class="subgroup-heading">${g.name}</div>
-      ${g.items.map(p => renderProductCard(p, discount, cardIdx++)).join('')}
+      ${g.items.map(p => renderProductCard(p, getDiscount(p.cat), cardIdx++)).join('')}
     `).join('');
   } else {
-    grid.innerHTML = filtered.map((p,i) => renderProductCard(p, discount, i)).join('');
+    grid.innerHTML = filtered.map((p,i) => renderProductCard(p, getDiscount(p.cat), i)).join('');
   }
   setTimeout(()=>filtered.forEach(p=>initProdTouch(p.id)), 50);
 }
@@ -2855,8 +3159,8 @@ function openModal(id){
     if(eff === 'sold'){ showToast('Akun ini sudah terjual'); return; }
     if(eff === 'reserved'){ showToast('Akun ini sedang dipesan orang lain, coba lagi nanti'); return; }
   }
-  const discount = getDiscount();
-  const discPrice = getDiscountedPrice(selectedProduct.price);
+  const discount = getDiscount(selectedProduct ? selectedProduct.cat : null);
+  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct ? selectedProduct.cat : null);
   const hasDisc = discount > 0;
   const imgs = getImagesForProduct(id);
   const thumbImg = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
@@ -2891,8 +3195,8 @@ function selectAdminModal(el,number){
 }
 function updateWA(){
   if(!selectedProduct||!selectedPayment||!selectedModalAdmin)return;
-  const discount = getDiscount();
-  const discPrice = getDiscountedPrice(selectedProduct.price);
+  const discount = getDiscount(selectedProduct.cat);
+  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
   let text=`Halo Admin NORXSTORE, saya ingin memesan ${selectedProduct.name}`;
   if(discount > 0){
     text += ` (diskon ${discount}%)`;
@@ -2910,7 +3214,7 @@ function sendWA(){
     renderProducts();
   }
   if(selectedProduct){
-    const discPrice = getDiscountedPrice(selectedProduct.price);
+    const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
     const adminObj = WA_NUMBERS.find(a => a.number === selectedModalAdmin);
     createOrder(
       [{name:selectedProduct.name, qty:1, price:selectedProduct.price}],
