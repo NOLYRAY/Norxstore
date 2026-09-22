@@ -1904,12 +1904,66 @@ function saveCart(){
 let allOrders = {};
 
 function getActiveOrderForProduct(productId){
+  // Hanya berlaku jika pengguna saat ini (perangkat/akun ini) memiliki pesanan aktif yang belum selesai
+  // untuk produk tersebut. Pengunjung lain yang belum pesan apa-apa TIDAK akan terblokir!
+  const prod = products.find(p => p.id === productId);
+  if(!prod || !allOrders || typeof allOrders !== 'object') return null;
+
+  // 1. Cek pesanan yang tersimpan di perangkat ini (localStorage)
+  const myIds = getMyOrderIds();
+  for(const ordId of myIds){
+    const ord = allOrders[ordId];
+    if(!ord || !ord.status) continue;
+    if(ord.status === 'pending' || ord.status === 'processing'){
+      if(Array.isArray(ord.items)){
+        const hasItem = ord.items.some(it => {
+          if(it.id !== undefined && it.id !== null && it.id !== ''){
+            return Number(it.id) === Number(productId);
+          }
+          if(it.name && prod.name){
+            return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+          }
+          return false;
+        });
+        if(hasItem) return ord;
+      }
+    }
+  }
+
+  // 2. Jika user sedang login dengan Google, cek juga pesanan milik akun ini di Firebase
+  if(currentUser && !currentUser.isAnonymous){
+    for(const ordId in allOrders){
+      const ord = allOrders[ordId];
+      if(!ord || !ord.status) continue;
+      const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
+                     (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
+      if(isMine && (ord.status === 'pending' || ord.status === 'processing')){
+        if(Array.isArray(ord.items)){
+          const hasItem = ord.items.some(it => {
+            if(it.id !== undefined && it.id !== null && it.id !== ''){
+              return Number(it.id) === Number(productId);
+            }
+            if(it.name && prod.name){
+              return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+            }
+            return false;
+          });
+          if(hasItem) return ord;
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+// Untuk panel Admin: mengecek apakah ada pesanan aktif toko secara keseluruhan
+function getGlobalActiveOrderForProduct(productId){
   if(!allOrders || typeof allOrders !== 'object') return null;
   const prod = products.find(p => p.id === productId);
   for(const ordId in allOrders){
     const ord = allOrders[ordId];
     if(!ord || !ord.status) continue;
-    // Pesanan dianggap belum selesai jika statusnya 'pending' (menunggu) atau 'processing' (sedang diproses)
     if(ord.status === 'pending' || ord.status === 'processing'){
       if(Array.isArray(ord.items)){
         const hasItem = ord.items.some(it => {
@@ -1971,7 +2025,19 @@ function removeMyOrder(orderId, event){
   safeSetItem('norxstore_my_orders', JSON.stringify(filtered));
   syncOrderIdsToCloud();
   renderMyOrders();
+  renderProducts();
   showToast('Riwayat pesanan dihapus');
+}
+function cancelMyOrder(orderId, event){
+  if(event) event.stopPropagation();
+  if(!confirm('Batalkan pesanan ini? Layanan akan langsung kembali bisa dipesan.')) return;
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/' + orderId).update({status: 'cancelled', cancelledAt: Date.now()}).catch(e=>console.error(e));
+  }
+  if(allOrders[orderId]) allOrders[orderId].status = 'cancelled';
+  renderMyOrders();
+  renderProducts();
+  showToast('Pesanan berhasil dibatalkan. Layanan kembali bisa dipesan.');
 }
 
 function renderMyOrders(){
@@ -1983,7 +2049,11 @@ function renderMyOrders(){
   section.innerHTML = '<div class="my-orders-title">📦 Pesanan Saya</div>' + myOrders.map(o => {
     const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
     let statusBadge = '';
-    if(o.status === 'pending') statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
+    let cancelAction = '';
+    if(o.status === 'pending'){
+      statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
+      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Batalkan Pesanan">✕ Batalkan</button>`;
+    }
     else if(o.status === 'processing') statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
     else if(o.status === 'cancelled') statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
     else statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
@@ -1992,7 +2062,10 @@ function renderMyOrders(){
       <button onclick="removeMyOrder('${o.id}', event)" title="Hapus riwayat pesanan" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:14px;padding:4px;line-height:1">✕</button>
       <p class="my-order-items" style="padding-right:20px">${itemsText}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
-      ${statusBadge}
+      <div style="display:flex;align-items:center;margin-top:4px">
+        ${statusBadge}
+        ${cancelAction}
+      </div>
     </div>`;
   }).join('');
 }
@@ -2022,6 +2095,9 @@ if(window.fbAvailable && fbAuth.onAuthStateChanged){
     }
     currentUser = user;
     updateLoginIcon();
+    if(typeof attachUserPresence === 'function'){
+      attachUserPresence(user.uid);
+    }
     if(!user.isAnonymous && !userDataLoaded){
       userDataLoaded = true;
       loadUserDataFromCloud(user.uid);
@@ -3224,9 +3300,9 @@ function renderProductCard(p, discount, idx){
   } else if(isReserved){
     busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 DIPESAN · ${getReserveMinutesLeft(p)} mnt</span>`;
   } else if(isOrderProcessing){
-    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">🔵 DIPROSES${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">🔵 SEDANG DIPROSES${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
   } else if(isOrderPending){
-    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 SEDANG DIPESAN</span>`;
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 PESANAN ANDA AKTIF</span>`;
   } else if(p.isAccount){
     busyBadge = `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">🔑 STOK 1</span>`;
   }
@@ -3234,8 +3310,8 @@ function renderProductCard(p, discount, idx){
   let lockedBtnText = '';
   if(isSold) lockedBtnText = '🔴 Terjual';
   else if(isReserved) lockedBtnText = '🟡 Dipesan';
-  else if(isOrderProcessing) lockedBtnText = '🔵 Sedang Diproses';
-  else if(isOrderPending) lockedBtnText = '⏳ Sedang Dipesan';
+  else if(isOrderProcessing) lockedBtnText = '🔵 Pesanan Anda Sedang Diproses';
+  else if(isOrderPending) lockedBtnText = '⏳ Pesanan Anda Belum Selesai';
 
   return `
   <div class="product-card" style="${isLocked ? 'opacity:.72' : ''}">
@@ -4153,12 +4229,12 @@ function renderAdminProductList(){
         statusButtons = `<button class="admin-btn-sm" style="background:#ef4444" onclick="setAccountStatus(${p.id},'sold')">✅ Terjual</button>`;
       }
     }
-    const activeOrd = getActiveOrderForProduct(p.id);
+    const activeOrd = getGlobalActiveOrderForProduct(p.id);
     if(activeOrd){
       const ordStBadge = activeOrd.status === 'processing'
         ? `<span style="color:#2563eb">🔵 SEDANG DIPROSES${activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : ''}</span>`
         : `<span style="color:#d97706">🟡 MENUNGGU PENGERJAAN</span>`;
-      statusLine += `<p style="font-size:10px;font-weight:700;margin-top:2px">⏳ Pesanan Aktif: ${ordStBadge} · Belum bisa dipesan lagi</p>`;
+      statusLine += `<p style="font-size:10px;font-weight:700;margin-top:2px">⏳ Pesanan Aktif Toko: ${ordStBadge}</p>`;
     }
     return `
     <div class="admin-product-item" style="flex-wrap:wrap">
@@ -4181,6 +4257,9 @@ function renderAdminProductList(){
 
 // ==================== LIVE ONLINE USERS PRESENCE ====================
 let currentOnlineCount = 1;
+let myPresenceConnRef = null;
+let presenceHeartbeatInterval = null;
+
 const SESSION_ID = (function(){
   try {
     let sid = sessionStorage.getItem('norx_presence_session_id');
@@ -4206,55 +4285,100 @@ function updateOnlineCountersUI(count){
   }
 }
 
+function attachUserPresence(uid){
+  if(!window.fbAvailable || typeof firebase === 'undefined' || !fbDB || !uid) return;
+  try {
+    if(myPresenceConnRef){
+      try { myPresenceConnRef.remove(); } catch(e){}
+    }
+
+    // Menggunakan path norxstore/users/{uid}/connections/{SESSION_ID} yang memiliki hak izin tulis penuh
+    myPresenceConnRef = fbDB.ref('norxstore/users/' + uid + '/connections/' + SESSION_ID);
+    const connectedRef = fbDB.ref('.info/connected');
+
+    connectedRef.on('value', function(snap){
+      if(snap && snap.val() === true && myPresenceConnRef){
+        myPresenceConnRef.onDisconnect().remove().catch(function(){});
+        myPresenceConnRef.set({
+          online: true,
+          lastSeen: Date.now()
+        }).catch(function(e){ console.warn('Set presence failed:', e); });
+      }
+    });
+
+    if(presenceHeartbeatInterval) clearInterval(presenceHeartbeatInterval);
+    presenceHeartbeatInterval = setInterval(function(){
+      if(myPresenceConnRef){
+        myPresenceConnRef.update({
+          online: true,
+          lastSeen: Date.now()
+        }).catch(function(){});
+      }
+    }, 30000);
+  } catch(err) {
+    console.warn('attachUserPresence error:', err);
+  }
+}
+
 function initPresenceSystem(){
   updateOnlineCountersUI(1);
   if(!window.fbAvailable || typeof firebase === 'undefined' || !fbDB) {
     return;
   }
 
+  // Jika currentUser sudah login/anonim saat fungsi ini dipanggil
+  if(currentUser && currentUser.uid){
+    attachUserPresence(currentUser.uid);
+  }
+
   try {
-    const mySessionRef = fbDB.ref('norxstore/online_users/' + SESSION_ID);
-    const connectedRef = fbDB.ref('.info/connected');
-
-    connectedRef.on('value', function(snap){
-      if(snap && snap.val() === true){
-        mySessionRef.onDisconnect().remove().catch(function(){});
-        mySessionRef.set({
-          online: true,
-          lastSeen: Date.now()
-        }).catch(function(){});
-      }
-    });
-
-    // Dengarkan pembaruan total pengunjung aktif real-time dari Firebase
-    fbDB.ref('norxstore/online_users').on('value', function(snap){
+    // Dengarkan data norxstore/users secara real-time untuk menghitung total pengunjung di semua device
+    fbDB.ref('norxstore/users').on('value', function(snap){
       let count = 0;
       if(snap && snap.exists()){
-        const val = snap.val();
-        if(val && typeof val === 'object'){
+        const users = snap.val();
+        if(users && typeof users === 'object'){
           const now = Date.now();
-          Object.keys(val).forEach(function(key){
-            const item = val[key];
-            if(item && (typeof item.lastSeen !== 'number' || (now - item.lastSeen) < 10 * 60 * 1000)){
-              count++;
+          Object.keys(users).forEach(function(uid){
+            const u = users[uid];
+            if(!u) return;
+
+            // 1. Cek semua koneksi aktif perangkat di connections
+            if(u.connections && typeof u.connections === 'object'){
+              Object.keys(u.connections).forEach(function(sId){
+                const conn = u.connections[sId];
+                if(conn && conn.online !== false){
+                  const lastSeen = typeof conn.lastSeen === 'number' ? conn.lastSeen : now;
+                  if((now - lastSeen) < 3 * 60 * 1000){
+                    count++;
+                  }
+                }
+              });
+            } else if(u.presence && typeof u.presence === 'object'){
+              // 2. Fallback jika ada data presence langsung
+              const p = u.presence;
+              if(p && p.online !== false){
+                const lastSeen = typeof p.lastSeen === 'number' ? p.lastSeen : now;
+                if((now - lastSeen) < 3 * 60 * 1000){
+                  count++;
+                }
+              }
             }
           });
         }
       }
+      // Selalu minimal 1 karena pengguna di tab ini sedang aktif melihat toko
       updateOnlineCountersUI(Math.max(count, 1));
     });
 
-    // Bersihkan sesi saat tab ditutup
-    window.addEventListener('beforeunload', function(){
-      try { mySessionRef.remove(); } catch(e){}
-    });
-
-    // Heartbeat berkala tiap 60 detik untuk menjaga sesi tetap segar
-    setInterval(function(){
-      try {
-        mySessionRef.update({ lastSeen: Date.now() }).catch(function(){});
-      } catch(e){}
-    }, 60000);
+    // Lepas sesi saat tab ditutup atau berpindah halaman
+    const cleanupSession = function(){
+      if(myPresenceConnRef){
+        try { myPresenceConnRef.remove(); } catch(e){}
+      }
+    };
+    window.addEventListener('beforeunload', cleanupSession);
+    window.addEventListener('pagehide', cleanupSession);
   } catch(err) {
     console.warn('Presence system error:', err);
   }
