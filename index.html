@@ -853,7 +853,7 @@ button{cursor:pointer;font-family:inherit}
 <span class="cart-total-label">Total</span>
 <span class="cart-total-price" id="cartTotal">Rp0</span>
 </div>
-<button class="cart-checkout" style="margin-top:12px" onclick="openCartCheckoutStep()">💬 Checkout via WhatsApp</button>
+<button class="cart-checkout" id="cartCheckoutBtn" style="margin-top:12px" onclick="openCartCheckoutStep()">💬 Checkout via WhatsApp</button>
 <p class="cart-clear" onclick="clearCart()">Kosongkan Keranjang</p>
 </div>
 
@@ -1902,6 +1902,36 @@ function saveCart(){
 
 // ==================== ORDER TRACKING (Pesanan Saya) ====================
 let allOrders = {};
+
+function getActiveOrderForProduct(productId){
+  if(!allOrders || typeof allOrders !== 'object') return null;
+  const prod = products.find(p => p.id === productId);
+  for(const ordId in allOrders){
+    const ord = allOrders[ordId];
+    if(!ord || !ord.status) continue;
+    // Pesanan dianggap belum selesai jika statusnya 'pending' (menunggu) atau 'processing' (sedang diproses)
+    if(ord.status === 'pending' || ord.status === 'processing'){
+      if(Array.isArray(ord.items)){
+        const hasItem = ord.items.some(it => {
+          if(it.id !== undefined && it.id !== null && it.id !== ''){
+            return Number(it.id) === Number(productId);
+          }
+          if(prod && it.name && prod.name){
+            return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+          }
+          return false;
+        });
+        if(hasItem) return ord;
+      }
+    }
+  }
+  return null;
+}
+
+function isProductInUnfinishedOrder(productId){
+  return getActiveOrderForProduct(productId) !== null;
+}
+
 function getMyOrderIds(){
   try { const arr = JSON.parse(safeGetItem('norxstore_my_orders', '[]')); return Array.isArray(arr) ? arr : []; }
   catch(e){ return []; }
@@ -1928,8 +1958,10 @@ function createOrder(items, total, paymentMethod, adminName){
     customerName: isLoggedIn ? (currentUser.displayName || null) : null,
     customerEmail: isLoggedIn ? (currentUser.email || null) : null
   };
+  allOrders[orderId] = order;
   fbDB.ref('norxstore/orders/' + orderId).set(order).catch(e=>console.error(e));
   addMyOrderId(orderId);
+  renderProducts();
   return orderId;
 }
 function removeMyOrder(orderId, event){
@@ -1953,6 +1985,7 @@ function renderMyOrders(){
     let statusBadge = '';
     if(o.status === 'pending') statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
     else if(o.status === 'processing') statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
+    else if(o.status === 'cancelled') statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
     else statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
     return `
     <div class="my-order-card" style="position:relative">
@@ -1966,7 +1999,12 @@ function renderMyOrders(){
 fbDB.ref('norxstore/orders').on('value', snap=>{
   allOrders = snap.val() || {};
   renderMyOrders();
-  if(isAdminOpen()) renderAdminOrders();
+  renderProducts();
+  if(cart && cart.length > 0) renderCart();
+  if(isAdminOpen()){
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 });
 
 // ==================== LOGIN GOOGLE & SINKRONISASI LINTAS DEVICE ====================
@@ -2133,10 +2171,13 @@ function renderAdminOrders(){
     let statusBadge, actions;
     if(o.status === 'pending'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu</span>';
-      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="approveOrder('${o.id}')">✅ Setujui</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="approveOrder('${o.id}')">⏳ Proses</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'processing'){
       statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Diproses${o.estimate ? ' · '+o.estimate : ''}</span>`;
-      actions = `<button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+    } else if(o.status === 'cancelled'){
+      statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
+      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
     } else {
       statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
       actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
@@ -2147,7 +2188,7 @@ function renderAdminOrders(){
       <p class="my-order-items">${itemsText}</p>
       <p style="font-size:11px;color:#888;margin:0 0 4px">${o.adminName || ''} · ${o.paymentMethod || ''} · ${dateStr}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${statusBadge}${actions}</div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${statusBadge}${actions}</div>
     </div>`;
   }).join('');
 }
@@ -2155,11 +2196,40 @@ function approveOrder(id){
   const est = prompt('Berapa lama estimasi pengerjaan? (contoh: 2 jam, 1-2 hari)');
   if(est === null) return;
   fbDB.ref('norxstore/orders/' + id).update({status:'processing', estimate: est.trim() || null, approvedAt: Date.now()}).catch(e=>console.error(e));
-  showToast('Pesanan disetujui, pelanggan akan lihat estimasinya');
+  if(allOrders[id]){
+    allOrders[id].status = 'processing';
+    allOrders[id].estimate = est.trim() || null;
+  }
+  showToast('Pesanan disetujui, sedang diproses');
+  renderMyOrders();
+  renderProducts();
+  if(isAdminOpen()) {
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 }
 function completeOrderStatus(id){
-  fbDB.ref('norxstore/orders/' + id).update({status:'done'}).catch(e=>console.error(e));
-  showToast('Pesanan ditandai selesai');
+  fbDB.ref('norxstore/orders/' + id).update({status:'done', completedAt: Date.now()}).catch(e=>console.error(e));
+  if(allOrders[id]) allOrders[id].status = 'done';
+  showToast('✅ Pesanan selesai! Produk kini kembali bisa dipesan.');
+  renderMyOrders();
+  renderProducts();
+  if(isAdminOpen()) {
+    renderAdminOrders();
+    renderAdminProductList();
+  }
+}
+function cancelOrder(id){
+  if(!confirm('Batalkan pesanan ini? Produk akan otomatis kembali tersedia untuk dipesan pelanggan.')) return;
+  fbDB.ref('norxstore/orders/' + id).update({status:'cancelled', cancelledAt: Date.now()}).catch(e=>console.error(e));
+  if(allOrders[id]) allOrders[id].status = 'cancelled';
+  showToast('Pesanan dibatalkan. Produk kembali tersedia.');
+  renderMyOrders();
+  renderProducts();
+  if(isAdminOpen()) {
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 }
 function deleteOrder(id){
   if(!confirm('Hapus riwayat pesanan ini?')) return;
@@ -2175,10 +2245,15 @@ function deleteOrder(id){
   }
   const localIds = getMyOrderIds().filter(x => x !== id);
   safeSetItem('norxstore_my_orders', JSON.stringify(localIds));
+  delete allOrders[id];
   fbDB.ref('norxstore/orders/' + id).remove().catch(e=>console.error(e));
   showToast('Riwayat pesanan dihapus');
   renderMyOrders();
   renderProducts();
+  if(isAdminOpen()){
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 }
 
 function updateCartBadge(){
@@ -2201,6 +2276,15 @@ function addToCart(id, event){
     renderCart();
     renderProducts();
     showToast('🗑️ ' + product.name + ' dihapus dari keranjang');
+    return;
+  }
+  // Cegah jika produk masih dalam pesanan aktif yang belum selesai
+  const activeOrder = getActiveOrderForProduct(product.id);
+  if(activeOrder){
+    const stMsg = activeOrder.status === 'processing'
+      ? `Produk ini sedang dalam pengerjaan${activeOrder.estimate ? ' (estimasi ' + activeOrder.estimate + ')' : ''}`
+      : 'Produk ini sedang dalam antrean pesanan belum selesai';
+    showToast('⏳ ' + stMsg + '. Belum bisa dipesan lagi sampai selesai!');
     return;
   }
   cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, cat:product.cat, qty:1});
@@ -2273,8 +2357,15 @@ function renderCart(){
     const hasDisc = itemDisc > 0;
     const imgs = getImagesForProduct(item.id);
     const thumb = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:20px">${item.icon}</span>`;
+    const activeOrd = getActiveOrderForProduct(item.id);
+    const isBusy = !!activeOrd;
+    const busyWarning = isBusy ? `
+      <div style="font-size:10px;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:4px 7px;border-radius:6px;margin-top:5px;font-weight:600;display:flex;align-items:center;gap:4px">
+        <span>⏳</span> <span>Sedang diproses pesanan lain (${activeOrd.status === 'processing' ? 'Diproses' : 'Menunggu antrean'}). Harap tunggu selesai atau hapus dari keranjang.</span>
+      </div>
+    ` : '';
     return `
-    <div class="cart-item">
+    <div class="cart-item" style="${isBusy ? 'background:#fffbeb;border:1px solid #fde68a;' : ''}">
       <div class="cart-item-thumb">${thumb}</div>
       <div class="cart-item-info">
         <p class="cart-item-name">${item.name}</p>
@@ -2287,6 +2378,7 @@ function renderCart(){
           <span style="font-size:11px;font-weight:700;color:#6b7280;background:#f3f4f6;padding:3px 8px;border-radius:6px;border:1px solid #e5e7eb">Jumlah: 1</span>
           <span style="font-size:10px;color:#9ca3af">• Maksimal 1 per layanan</span>
         </div>
+        ${busyWarning}
       </div>
       <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Hapus dari keranjang">🗑</button>
     </div>
@@ -2312,6 +2404,23 @@ function renderCart(){
     subRow.style.display = 'none';
     discRow.style.display = 'none';
   }
+
+  const busyItems = cart.filter(it => isProductInUnfinishedOrder(it.id));
+  const checkoutBtn = document.getElementById('cartCheckoutBtn');
+  if(checkoutBtn){
+    if(busyItems.length > 0){
+      checkoutBtn.style.background = '#9ca3af';
+      checkoutBtn.style.cursor = 'not-allowed';
+      checkoutBtn.title = 'Hapus item yang sedang diproses untuk checkout';
+      checkoutBtn.innerHTML = `⏳ Ada ${busyItems.length} Produk Belum Selesai Dikerjakan`;
+    } else {
+      checkoutBtn.style.background = '';
+      checkoutBtn.style.cursor = '';
+      checkoutBtn.title = '';
+      checkoutBtn.innerHTML = `💬 Checkout via WhatsApp`;
+    }
+  }
+
   footer.style.display = 'block';
 }
 
@@ -2325,6 +2434,11 @@ function openCart(){
 }
 
 function openCartCheckoutStep(){
+  const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
+  if(busyItems.length > 0){
+    showToast(`⚠️ Produk "${busyItems[0].name}" sedang ada pesanan yang belum selesai. Hapus dulu dari keranjang untuk lanjut.`);
+    return;
+  }
   document.getElementById('cartTotalStep').textContent = document.getElementById('cartTotal').textContent;
   document.getElementById('cartBody').style.display = 'none';
   document.getElementById('cartFooter').style.display = 'none';
@@ -2357,6 +2471,11 @@ function openWhatsApp(url){
 function checkoutCart(){
   normalizeCartItems();
   if(cart.length===0) return;
+  const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
+  if(busyItems.length > 0){
+    showToast(`⚠️ Produk "${busyItems[0].name}" sedang ada pesanan yang belum selesai. Belum bisa dipesan lagi sampai selesai!`);
+    return;
+  }
   if(!selectedCartPayment){ showToast('Pilih metode pembayaran dulu!'); return; }
   if(!selectedCartAdmin){ showToast('Pilih admin tujuan chat dulu!'); return; }
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
@@ -2381,7 +2500,7 @@ function checkoutCart(){
   const url = getWaLink(text, selectedCartAdmin);
   const adminObj = WA_NUMBERS.find(a => a.number === selectedCartAdmin);
   createOrder(
-    cart.map(item => ({name:item.name, qty:item.qty, price:item.price})),
+    cart.map(item => ({id: item.id, name:item.name, qty:item.qty, price:item.price, cat: item.cat})),
     total,
     selectedCartPayment,
     adminObj ? adminObj.name : ''
@@ -3093,19 +3212,37 @@ function renderProductCard(p, discount, idx){
   const acctStatus = getEffectiveAccountStatus(p);
   const isSold = acctStatus === 'sold';
   const isReserved = acctStatus === 'reserved';
-  const isLocked = isSold || isReserved;
-  const acctBadge = isSold
-    ? `<span class="discount-badge" style="background:linear-gradient(135deg,#6b7280,#374151);left:8px;right:auto">🔴 TERJUAL</span>`
-    : isReserved
-    ? `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 DIPESAN · ${getReserveMinutesLeft(p)} mnt</span>`
-    : (p.isAccount ? `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">🔑 STOK 1</span>` : '');
+  const activeOrder = getActiveOrderForProduct(p.id);
+  const isOrderProcessing = activeOrder && activeOrder.status === 'processing';
+  const isOrderPending = activeOrder && activeOrder.status === 'pending';
+  const isOrderBusy = isOrderProcessing || isOrderPending;
+  const isLocked = isSold || isReserved || isOrderBusy;
+
+  let busyBadge = '';
+  if(isSold){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#6b7280,#374151);left:8px;right:auto">🔴 TERJUAL</span>`;
+  } else if(isReserved){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 DIPESAN · ${getReserveMinutesLeft(p)} mnt</span>`;
+  } else if(isOrderProcessing){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">🔵 DIPROSES${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
+  } else if(isOrderPending){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 SEDANG DIPESAN</span>`;
+  } else if(p.isAccount){
+    busyBadge = `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">🔑 STOK 1</span>`;
+  }
+
+  let lockedBtnText = '';
+  if(isSold) lockedBtnText = '🔴 Terjual';
+  else if(isReserved) lockedBtnText = '🟡 Dipesan';
+  else if(isOrderProcessing) lockedBtnText = '🔵 Sedang Diproses';
+  else if(isOrderPending) lockedBtnText = '⏳ Sedang Dipesan';
 
   return `
-  <div class="product-card" style="${isLocked ? 'opacity:.6' : ''}">
+  <div class="product-card" style="${isLocked ? 'opacity:.72' : ''}">
     <div class="product-img-wrap" id="prodImgWrap_${p.id}" onclick="openModal(${p.id})">
       ${!isLocked && !p.isAccount && p.badge?`<span class="product-badge">${p.badge}</span>`:''}
       ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
-      ${acctBadge}
+      ${busyBadge}
       ${imgCount}
       <div class="product-img-track" id="prodImgTrack_${p.id}" onscroll="onProdImgScroll(${p.id})" onclick="event.stopPropagation()">
         ${imgSlides}
@@ -3121,7 +3258,7 @@ function renderProductCard(p, discount, idx){
       <p class="product-meta">${p.desc}</p>
       <div class="product-btn-row">
         ${isLocked
-          ? `<button class="buy-now-btn" style="background:#aaa;cursor:not-allowed" disabled>${isSold ? '🔴 Terjual' : '🟡 Dipesan'}</button>`
+          ? `<button class="buy-now-btn" style="background:#9ca3af;cursor:not-allowed;opacity:.9" disabled>${lockedBtnText}</button>`
           : `<button class="buy-now-btn" onclick="openModal(${p.id})">🛒 Beli</button>
              ${p.isAccount ? '' : (
                cart.some(item => item.id === p.id)
@@ -3321,10 +3458,19 @@ function closeReviewPhoto(){
 
 function openModal(id){
   selectedProduct=products.find(p=>p.id===id);selectedPayment=null;
-  if(selectedProduct && selectedProduct.isAccount){
+  if(!selectedProduct) return;
+  if(selectedProduct.isAccount){
     const eff = getEffectiveAccountStatus(selectedProduct);
     if(eff === 'sold'){ showToast('Akun ini sudah terjual'); return; }
     if(eff === 'reserved'){ showToast('Akun ini sedang dipesan orang lain, coba lagi nanti'); return; }
+  }
+  const activeOrder = getActiveOrderForProduct(selectedProduct.id);
+  if(activeOrder){
+    const stName = activeOrder.status === 'processing'
+      ? `sedang diproses${activeOrder.estimate ? ' (estimasi ' + activeOrder.estimate + ')' : ''}`
+      : 'sedang dalam antrean pesanan belum selesai';
+    showToast(`⏳ Layanan ini ${stName}. Belum bisa dipesan lagi sampai selesai.`);
+    return;
   }
   const discount = getDiscount(selectedProduct ? selectedProduct.cat : null);
   const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct ? selectedProduct.cat : null);
@@ -3376,6 +3522,13 @@ function updateWA(){
 function sendWA(){
   const text=document.getElementById('waBtn').dataset.text;
   const url=getWaLink(text, selectedModalAdmin);
+  if(selectedProduct){
+    const activeOrder = getActiveOrderForProduct(selectedProduct.id);
+    if(activeOrder){
+      showToast('⚠️ Pesanan produk ini sebelumnya belum selesai dikerjakan. Belum bisa dipesan lagi!');
+      return;
+    }
+  }
   if(selectedProduct && selectedProduct.isAccount){
     reserveAccount(selectedProduct.id);
     renderProducts();
@@ -3392,7 +3545,7 @@ function sendWA(){
     const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
     const adminObj = WA_NUMBERS.find(a => a.number === selectedModalAdmin);
     createOrder(
-      [{name:selectedProduct.name, qty:1, price:selectedProduct.price}],
+      [{id: selectedProduct.id, name:selectedProduct.name, qty:1, price:selectedProduct.price, cat: selectedProduct.cat}],
       discPrice,
       selectedPayment,
       adminObj ? adminObj.name : ''
@@ -3999,6 +4152,13 @@ function renderAdminProductList(){
         statusLine = '<p style="font-size:10px;color:#22c55e;font-weight:700;margin-top:2px">🟢 TERSEDIA</p>';
         statusButtons = `<button class="admin-btn-sm" style="background:#ef4444" onclick="setAccountStatus(${p.id},'sold')">✅ Terjual</button>`;
       }
+    }
+    const activeOrd = getActiveOrderForProduct(p.id);
+    if(activeOrd){
+      const ordStBadge = activeOrd.status === 'processing'
+        ? `<span style="color:#2563eb">🔵 SEDANG DIPROSES${activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : ''}</span>`
+        : `<span style="color:#d97706">🟡 MENUNGGU PENGERJAAN</span>`;
+      statusLine += `<p style="font-size:10px;font-weight:700;margin-top:2px">⏳ Pesanan Aktif: ${ordStBadge} · Belum bisa dipesan lagi</p>`;
     }
     return `
     <div class="admin-product-item" style="flex-wrap:wrap">
