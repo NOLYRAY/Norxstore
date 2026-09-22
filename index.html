@@ -1904,39 +1904,40 @@ function saveCart(){
 let allOrders = {};
 
 function getActiveOrderForProduct(productId){
-  // Hanya kunci produk jika pesanan pengguna ini SUDAH DISETUJUI & SEDANG DIPROSES ('processing') oleh Admin/Booster.
-  // Status 'pending' (baru klik WhatsApp / belum ditransfer / belum disetujui) TIDAK MENGUNCI produk,
-  // sehingga pelanggan yang tidak memesan atau belum diverifikasi tetap bisa memesan dengan bebas.
+  // Kunci produk untuk akun pembeli ini jika memiliki pesanan aktif yang belum selesai ('pending' atau 'processing').
+  // Pengunjung/pelanggan lain yang tidak memesan produk ini TIDAK akan terblokir dan tetap bisa memesan.
   const prod = products.find(p => p.id === productId);
   if(!prod || !allOrders || typeof allOrders !== 'object') return null;
 
-  // 1. Cek pesanan yang tersimpan di perangkat ini (localStorage)
+  // 1. Cek pesanan aktif yang tersimpan di perangkat ini (localStorage / sessionStorage)
   const myIds = getMyOrderIds();
   for(const ordId of myIds){
     const ord = allOrders[ordId];
-    if(!ord || ord.status !== 'processing') continue;
-    if(Array.isArray(ord.items)){
-      const hasItem = ord.items.some(it => {
-        if(it.id !== undefined && it.id !== null && it.id !== ''){
-          return Number(it.id) === Number(productId);
-        }
-        if(it.name && prod.name){
-          return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
-        }
-        return false;
-      });
-      if(hasItem) return ord;
+    if(!ord) continue;
+    if(ord.status === 'pending' || ord.status === 'processing'){
+      if(Array.isArray(ord.items)){
+        const hasItem = ord.items.some(it => {
+          if(it.id !== undefined && it.id !== null && it.id !== ''){
+            return Number(it.id) === Number(productId);
+          }
+          if(it.name && prod.name){
+            return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+          }
+          return false;
+        });
+        if(hasItem) return ord;
+      }
     }
   }
 
-  // 2. Jika user sedang login dengan Google, cek juga pesanan yang sedang diproses milik akun ini di Firebase
+  // 2. Jika user sedang login dengan Google, cek juga pesanan aktif milik akun ini di Firebase
   if(currentUser && !currentUser.isAnonymous){
     for(const ordId in allOrders){
       const ord = allOrders[ordId];
-      if(!ord || ord.status !== 'processing') continue;
+      if(!ord) continue;
       const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
                      (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
-      if(isMine){
+      if(isMine && (ord.status === 'pending' || ord.status === 'processing')){
         if(Array.isArray(ord.items)){
           const hasItem = ord.items.some(it => {
             if(it.id !== undefined && it.id !== null && it.id !== ''){
@@ -2435,12 +2436,12 @@ function renderCart(){
     const activeOrd = getActiveOrderForProduct(item.id);
     const isBusy = !!activeOrd;
     const busyWarning = isBusy ? `
-      <div style="font-size:10px;color:#92400e;background:#fef3c7;border:1px solid #fde68a;padding:4px 7px;border-radius:6px;margin-top:5px;font-weight:600;display:flex;align-items:center;gap:4px">
-        <span>⏳</span> <span>Sedang diproses pesanan lain (${activeOrd.status === 'processing' ? 'Diproses' : 'Menunggu antrean'}). Harap tunggu selesai atau hapus dari keranjang.</span>
+      <div style="font-size:10px;color:#1e40af;background:#eff6ff;border:1px solid #bfdbfe;padding:4px 7px;border-radius:6px;margin-top:5px;font-weight:600;display:flex;align-items:center;gap:4px">
+        <span>🔵</span> <span>Sedang dalam proses pesanan Anda${activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : ''}. Harap tunggu sampai selesai atau hapus dari keranjang.</span>
       </div>
     ` : '';
     return `
-    <div class="cart-item" style="${isBusy ? 'background:#fffbeb;border:1px solid #fde68a;' : ''}">
+    <div class="cart-item" style="${isBusy ? 'background:#f8fafc;border:1px solid #bfdbfe;' : ''}">
       <div class="cart-item-thumb">${thumb}</div>
       <div class="cart-item-info">
         <p class="cart-item-name">${item.name}</p>
@@ -3303,12 +3304,18 @@ function renderProductCard(p, discount, idx){
   }
 
   let lockedBtnText = '';
-  if(isSold) lockedBtnText = '🔴 Terjual';
-  else if(isReserved) lockedBtnText = '🟡 Dipesan';
-  else if(isOrderProcessing) lockedBtnText = '🔵 Pesanan Anda Sedang Diproses';
+  let lockedBtnBg = '#9ca3af';
+  if(isSold){
+    lockedBtnText = '🔴 Terjual';
+  } else if(isReserved){
+    lockedBtnText = '🟡 Dipesan';
+  } else if(isOrderProcessing){
+    lockedBtnText = '🔵 Sedang Diproses';
+    lockedBtnBg = 'linear-gradient(135deg,#2563eb,#1d4ed8)';
+  }
 
   return `
-  <div class="product-card" style="${isLocked ? 'opacity:.72' : ''}">
+  <div class="product-card" style="${isLocked ? 'opacity:.82' : ''}">
     <div class="product-img-wrap" id="prodImgWrap_${p.id}" onclick="openModal(${p.id})">
       ${!isLocked && !p.isAccount && p.badge?`<span class="product-badge">${p.badge}</span>`:''}
       ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
@@ -3328,7 +3335,7 @@ function renderProductCard(p, discount, idx){
       <p class="product-meta">${p.desc}</p>
       <div class="product-btn-row">
         ${isLocked
-          ? `<button class="buy-now-btn" style="background:#9ca3af;cursor:not-allowed;opacity:.9" disabled>${lockedBtnText}</button>`
+          ? `<button class="buy-now-btn" style="background:${lockedBtnBg};cursor:not-allowed;color:#fff;font-weight:700;opacity:.95" disabled>${lockedBtnText}</button>`
           : `<button class="buy-now-btn" onclick="openModal(${p.id})">🛒 Beli</button>
              ${p.isAccount ? '' : (
                cart.some(item => item.id === p.id)
