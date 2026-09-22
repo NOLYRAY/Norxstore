@@ -346,6 +346,60 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .bulk-sub-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;background:#ede9fe;color:#6d28d9;text-transform:uppercase}
 .bulk-sub-none{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600;background:#f3f4f6;color:#9ca3af}
 
+/* ============ PERLINDUNGAN ANTI-DOWNLOAD & PENCURIAN GAMBAR ============ */
+img, 
+.product-img-slide img, 
+.review-photo img, 
+#reviewPhotoFull, 
+.carousel-slide, 
+.cart-item-thumb img, 
+.detail-thumb-img, 
+.pay-icon-btn img {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+  pointer-events: auto;
+}
+
+.slide-protect-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: pointer;
+  background: transparent;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+.img-protected-watermark {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 10, 25, 0.86);
+  color: #e2e8f0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 20;
+}
+
 /* ============ POLESAN INTERAKTIF (semua ukuran layar) ============ */
 button{cursor:pointer;font-family:inherit}
 .navbar{box-shadow:0 1px 6px rgba(0,0,0,.05)}
@@ -927,7 +981,11 @@ button{cursor:pointer;font-family:inherit}
 </div>
 
 <div class="review-photo-overlay" id="reviewPhotoOverlay" onclick="closeReviewPhoto()">
-<img id="reviewPhotoFull" src="" alt="Foto testimoni">
+  <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;max-width:100%;max-height:100%">
+    <img id="reviewPhotoFull" src="" alt="Foto preview" draggable="false">
+    <div class="slide-protect-shield" style="border-radius:14px"></div>
+  </div>
+  <div class="img-protected-watermark">🔒 Norxstore Official — Hak Cipta Dilindungi</div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -2166,7 +2224,8 @@ function renderProductCard(p, discount, idx){
   const hasImgs = imgs.length > 0;
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
     <div class="product-img-slide" data-index="${i}">
-      <img src="${url}" alt="${p.name}" onclick="openImageViewer('${url}');event.stopPropagation()">
+      <img src="${url}" alt="${p.name}" draggable="false">
+      <div class="slide-protect-shield" onclick="openImageViewer('${url}');event.stopPropagation()"></div>
     </div>
   `).join('') : `
     <div class="product-img-slide"><span class="emoji-fallback">${p.icon}</span></div>
@@ -2347,7 +2406,8 @@ function renderReviews(){
   }
   container.innerHTML = '<div class="review-photo-grid">' + photos.map((url, idx) => `
     <div class="review-photo" style="--i:${Math.min(idx,10)}" onclick="openReviewPhoto(${idx})">
-      <img src="${url}" alt="Foto testimoni ${idx+1}">
+      <img src="${url}" alt="Foto testimoni ${idx+1}" draggable="false">
+      <div class="slide-protect-shield"></div>
     </div>
   `).join('') + '</div>';
 }
@@ -3021,6 +3081,35 @@ setInterval(()=>{
   const hasReserved = products.some(p => p.isAccount && p.status === 'reserved');
   if(hasReserved) renderProducts();
 }, 30000);
+
+// ============ PERLINDUNGAN ANTI-DOWNLOAD & PENCURIAN GAMBAR ============
+(function initImageProtection(){
+  document.addEventListener('contextmenu', function(e){
+    const target = e.target;
+    if(target && (
+      target.tagName === 'IMG' || 
+      target.closest('img') || 
+      target.classList.contains('slide-protect-shield') || 
+      target.closest('.review-photo-overlay') || 
+      target.classList.contains('slide-bg') ||
+      target.closest('.product-img-wrap') ||
+      target.closest('.review-photo')
+    )){
+      e.preventDefault();
+      if(typeof showToast === 'function'){
+        showToast('🔒 Gambar dilindungi hak cipta Norxstore');
+      }
+      return false;
+    }
+  }, { passive: false });
+
+  document.addEventListener('dragstart', function(e){
+    if(e.target && (e.target.tagName === 'IMG' || e.target.closest('img'))){
+      e.preventDefault();
+      return false;
+    }
+  }, { passive: false });
+})();
 </script>
 </body>
 </html>
