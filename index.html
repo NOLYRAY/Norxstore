@@ -1153,38 +1153,43 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="admin-divider"></div>
 
-<div class="admin-section-title">🖼️ Foto Testimoni</div>
-<p class="admin-hint" style="margin-bottom:12px">Upload foto bukti testimoni (screenshot chat/transfer). Tampil sebagai galeri foto saja, tanpa komentar teks.</p>
+<div class="admin-section-title" style="color:#7c3aed">⭐ Galeri Foto Testimoni Pelanggan</div>
+<p class="admin-hint" style="margin-bottom:12px;background:#f5f3ff;border:1px solid #ddd6fe;padding:8px 10px;border-radius:8px;color:#5b21b6;font-size:11px">
+  📌 <strong>Khusus Testimoni:</strong> Foto screenshot chat/bukti transaksi ini <u>HANYA</u> tampil di bagian "⭐ Testimoni Pelanggan" di bawah katalog, dan <strong>tidak akan pernah</strong> dipasang ke gambar produk.
+</p>
 <div style="display:flex;gap:8px;margin-bottom:10px">
-  <button class="admin-btn" style="flex:1" onclick="triggerFileInput('reviewFileInput')">📁 Galeri</button>
-  <button class="admin-btn" style="flex:1;background:#1a1a1a" onclick="triggerFileInput('reviewCameraInput')">📷 Kamera</button>
+  <button class="admin-btn" style="flex:1;background:#7c3aed;color:#fff" onclick="triggerFileInput('reviewFileInput')">📁 Upload Testimoni</button>
+  <button class="admin-btn" style="flex:1;background:#1a1a1a;color:#fff" onclick="triggerFileInput('reviewCameraInput')">📷 Kamera Testimoni</button>
 </div>
-<input type="file" id="reviewFileInput" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none" onchange="handleReviewPhotoUpload(event)">
-<input type="file" id="reviewCameraInput" accept="image/*" capture="environment" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none" onchange="handleReviewPhotoUpload(event)">
+<input type="file" id="reviewFileInput" accept="image/*" style="display:none" onchange="handleReviewPhotoUpload(event)">
+<input type="file" id="reviewCameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleReviewPhotoUpload(event)">
 
 <div class="admin-label" style="margin-top:14px">Daftar Foto Testimoni</div>
 <div class="admin-img-list" id="adminReviewList"></div>
 
 <div class="admin-divider"></div>
 
-<div class="admin-section-title">🖼️ Gambar Produk</div>
-<div class="admin-label">Pilih Produk</div>
+<div class="admin-section-title" style="color:#2563eb">🛍️ Foto Khusus Produk (Pricelist / Akun)</div>
+<p class="admin-hint" style="margin-bottom:12px;background:#eff6ff;border:1px solid #bfdbfe;padding:8px 10px;border-radius:8px;color:#1e40af;font-size:11px">
+  📌 <strong>Foto Produk:</strong> Pilih produk terlebih dahulu di bawah ini, kemudian upload gambar yang sesuai khusus untuk produk tersebut.
+</p>
+<div class="admin-label">Pilih Produk Yang Ingin Diberi Gambar</div>
 <select class="admin-select" id="imgProductSelect" onchange="onImageProductChange()">
   <option value="">-- Pilih produk --</option>
 </select>
 
 <div id="imgAdminSection" style="display:none;margin-top:12px">
-  <div class="admin-label">Tambah Gambar</div>
+  <div class="admin-label">Tambah Gambar Produk</div>
   <div style="display:flex;gap:8px;margin-bottom:10px">
-    <button class="admin-btn" style="flex:1" onclick="triggerFileInput('imgFileInput')">📁 Galeri</button>
-    <button class="admin-btn" style="flex:1;background:#1a1a1a" onclick="triggerFileInput('imgCameraInput')">📷 Kamera</button>
+    <button class="admin-btn" style="flex:1;background:#2563eb;color:#fff" onclick="triggerFileInput('imgFileInput')">📁 Upload Foto Produk</button>
+    <button class="admin-btn" style="flex:1;background:#1a1a1a;color:#fff" onclick="triggerFileInput('imgCameraInput')">📷 Kamera</button>
   </div>
-  <input type="file" id="imgFileInput" accept="image/*" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none" onchange="handleImageUpload(event)">
-  <input type="file" id="imgCameraInput" accept="image/*" capture="environment" style="position:absolute;opacity:0;width:0;height:0;pointer-events:none" onchange="handleImageUpload(event)">
+  <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+  <input type="file" id="imgCameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
 
-  <div class="admin-label" style="margin-top:14px">Daftar Gambar</div>
+  <div class="admin-label" style="margin-top:14px">Daftar Gambar Produk Ini</div>
   <div class="admin-img-list" id="adminImgList"></div>
-  <p style="font-size:10px;color:#aaa;text-align:center;margin-top:6px">💡 Tips: URL = gambar dari internet. Galeri/Kamera = foto langsung dari HP.</p>
+  <p style="font-size:10px;color:#aaa;text-align:center;margin-top:6px">💡 Galeri/Kamera = foto langsung dari HP Anda.</p>
 </div>
 
 <div class="admin-divider"></div>
@@ -1757,9 +1762,24 @@ function setProductImages(data){
 }
 function getImagesForProduct(id){
   const all = getProductImages();
-  return all[id] || [];
+  const list = all[id] || [];
+  if(!Array.isArray(list) || list.length === 0) return [];
+  // ISOLASI KETAT: Foto testimoni pelanggan TIDAK AKAN PERNAH bocor ke gambar produk
+  const revPhotos = getReviewPhotos();
+  if(Array.isArray(revPhotos) && revPhotos.length > 0){
+    const revSet = new Set(revPhotos);
+    return list.filter(url => !revSet.has(url));
+  }
+  return list;
 }
 function addImageToProduct(id, url){
+  if(!url || !id) return;
+  // Tolak jika gambar ini adalah gambar testimoni pelanggan
+  const revPhotos = getReviewPhotos();
+  if(Array.isArray(revPhotos) && revPhotos.includes(url)){
+    showToast('⚠️ Gambar ini adalah foto testimoni, tidak dapat dipasang sebagai foto produk!');
+    return;
+  }
   const all = getProductImages();
   if(!all[id]) all[id] = [];
   if(!all[id].includes(url)) all[id].push(url);
@@ -1772,15 +1792,29 @@ function removeImageFromProduct(id, idx){
 }
 
 function getReviewPhotos(){
-  return reviewPhotosCache;
+  return reviewPhotosCache || [];
 }
 function setReviewPhotos(arr){
   reviewPhotosCache = arr;
   fbDB.ref('norxstore/reviewPhotos').set(arr).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
 }
 function addReviewPhoto(url){
+  if(!url) return;
+  // Pastikan URL testimoni baru ini tidak ada di data gambar produk manapun
+  const allImgs = getProductImages();
+  let modified = false;
+  for(const pid in allImgs){
+    if(Array.isArray(allImgs[pid]) && allImgs[pid].includes(url)){
+      allImgs[pid] = allImgs[pid].filter(u => u !== url);
+      modified = true;
+    }
+  }
+  if(modified){
+    setProductImages(allImgs);
+  }
+
   const arr = getReviewPhotos();
-  arr.push(url);
+  if(!arr.includes(url)) arr.push(url);
   setReviewPhotos(arr);
 }
 function removeReviewPhoto(idx){
@@ -1833,7 +1867,7 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
-const NORX_SYSTEM_VER = '2026.09.23.v6';
+const NORX_SYSTEM_VER = '2026.09.23.v7';
 (function checkSystemVersion(){
   try {
     const cur = safeGetItem('norx_sys_version', null);
@@ -2920,11 +2954,12 @@ function handleImageUpload(event){
 
   if(file.size > 5 * 1024 * 1024){
     showToast('Gambar terlalu besar! Max 5MB');
-    document.getElementById('imgFileInput').value = '';
+    const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
+    const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
     return;
   }
 
-  showToast('Mengompres gambar...');
+  showToast('Mengompres gambar produk...');
   const reader = new FileReader();
   reader.onload = function(e){
     const img = new Image();
@@ -2945,14 +2980,19 @@ function handleImageUpload(event){
         renderAdminImgList();
         products = getProducts();
         renderProducts();
-        showToast('Gambar berhasil diupload!');
+        showToast('✅ Foto produk berhasil diupload!');
       } catch(err) {
         showToast('Storage penuh! Hapus gambar lama dulu.');
         console.error(err);
       }
-      document.getElementById('imgFileInput').value = '';
+      const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
+      const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
     };
-    img.onerror = function(){ showToast('Gagal memuat gambar'); };
+    img.onerror = function(){ 
+      showToast('Gagal memuat gambar'); 
+      const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
+      const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
+    };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
@@ -2987,11 +3027,12 @@ function handleReviewPhotoUpload(event){
 
   if(file.size > 5 * 1024 * 1024){
     showToast('Gambar terlalu besar! Max 5MB');
-    event.target.value = '';
+    const rfi = document.getElementById('reviewFileInput'); if(rfi) rfi.value = '';
+    const rci = document.getElementById('reviewCameraInput'); if(rci) rci.value = '';
     return;
   }
 
-  showToast('Mengompres gambar...');
+  showToast('Mengompres foto testimoni...');
   const reader = new FileReader();
   reader.onload = function(e){
     const img = new Image();
@@ -3011,14 +3052,21 @@ function handleReviewPhotoUpload(event){
         addReviewPhoto(dataUrl);
         renderAdminReviewList();
         renderReviews();
-        showToast('Foto testimoni berhasil ditambahkan!');
+        // Hapus juga dari cache tampilan jika foto ini sebelumnya pernah keliru disimpan sebagai gambar produk
+        renderProducts();
+        showToast('⭐ Foto testimoni berhasil ditambahkan ke Galeri Testimoni!');
       } catch(err) {
         showToast('Storage penuh! Hapus foto lama dulu.');
         console.error(err);
       }
-      event.target.value = '';
+      const rfi = document.getElementById('reviewFileInput'); if(rfi) rfi.value = '';
+      const rci = document.getElementById('reviewCameraInput'); if(rci) rci.value = '';
     };
-    img.onerror = function(){ showToast('Gagal memuat gambar'); event.target.value=''; };
+    img.onerror = function(){ 
+      showToast('Gagal memuat gambar'); 
+      const rfi = document.getElementById('reviewFileInput'); if(rfi) rfi.value = '';
+      const rci = document.getElementById('reviewCameraInput'); if(rci) rci.value = '';
+    };
     img.src = e.target.result;
   };
   reader.readAsDataURL(file);
