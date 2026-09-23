@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>NORXSTORE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -11,11 +14,14 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:pan-y}
 html,body{width:100%;min-height:100dvh;overflow-x:hidden;font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f4fa;color:#1a1a1a}
 body{transition:background-color 0.5s ease,color 0.5s ease}
-.navbar{display:flex;align-items:center;gap:10px;padding:14px 16px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06)}
-.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:4px}
+.navbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06)}
+.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0}
 .logo::before{content:'💠';font-size:16px}
 .logo span{background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;background-clip:text;color:transparent}
-.search-bar{flex:1;height:38px;border:1.5px solid #ece9f7;border-radius:12px;background:#f5f4fa;padding:0 14px;font-size:13px;color:#888;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease}
+.search-bar-wrap{flex:1;display:flex;align-items:center;position:relative;min-width:0}
+.search-bar-icon{position:absolute;left:12px;font-size:13px;color:#9ca3af;pointer-events:none;z-index:2;line-height:1}
+.search-bar{width:100%;height:38px;border:1.5px solid #ece9f7;border-radius:12px;background:#f5f4fa;padding:0 14px 0 34px;font-size:13px;color:#1a1a1a;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease,box-shadow 0.3s ease}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
 .nav-icon{width:38px;height:38px;border-radius:12px;background:#f5f4fa;border:1.5px solid #ece9f7;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease}
 .nav-icon:active{background:#e5e5e5}
 .nav-icon-wrap{position:relative;flex-shrink:0}
@@ -50,6 +56,58 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .toggle-knob{position:absolute;top:2px;left:2px;width:20px;height:20px;border-radius:50%;background:#fff;transition:transform .3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .toggle-switch.on .toggle-knob{transform:translateX(20px)}
 
+/* ============ LIVE ONLINE INDICATOR ============ */
+.live-pulse-dot{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#22c55e;
+  display:inline-block;
+  flex-shrink:0;
+  box-shadow:0 0 0 0 rgba(34,197,94,0.7);
+  animation:livePulseDot 2s infinite cubic-bezier(0.66, 0, 0, 1);
+}
+@keyframes livePulseDot{
+  0%{ box-shadow:0 0 0 0 rgba(34,197,94,0.7); transform:scale(0.95); }
+  70%{ box-shadow:0 0 0 7px rgba(34,197,94,0); transform:scale(1); }
+  100%{ box-shadow:0 0 0 0 rgba(34,197,94,0); transform:scale(0.95); }
+}
+.live-pill-mode{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:4px 10px;
+  background:#f0fdf4;
+  border:1.5px solid #bbf7d0;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:700;
+  color:#15803d;
+  box-shadow:0 2px 6px rgba(34,197,94,.12);
+  user-select:none;
+  transition:background 0.3s ease,border-color 0.3s ease,color 0.3s ease;
+  margin-left:4px;
+}
+body.dark-mode .live-pill-mode{
+  background:rgba(34,197,94,.12);
+  border-color:rgba(34,197,94,.3);
+  color:#4ade80;
+  box-shadow:0 2px 8px rgba(34,197,94,.08);
+}
+.live-pill-header{
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  padding:2px 8px;
+  background:#f0fdf4;
+  border:1px solid #bbf7d0;
+  border-radius:12px;
+  font-size:10px;
+  font-weight:600;
+  color:#16a34a;
+  vertical-align:middle;
+}
+
 .mode-wrapper{position:relative;width:100%}
 .light-section,.dark-section{width:100%;transition:opacity 0.45s cubic-bezier(0.4,0,0.2,1),transform 0.45s cubic-bezier(0.4,0,0.2,1)}
 .light-section{opacity:1;transform:translateY(0);position:relative}
@@ -66,8 +124,7 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .cat-chip{padding:8px 17px;border-radius:20px;background:#f5f4fa;border:1px solid #ece9f7;font-size:12px;font-weight:600;color:#666;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease,color 0.3s ease,transform .15s ease}
 .cat-chip.active{background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(124,58,237,.3)}
 .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;width:100%}
-.product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;content-visibility:auto;contain-intrinsic-size:0 260px;contain:layout style paint;touch-action:pan-y;animation:cardEnter .35s ease backwards;animation-delay:calc(var(--i, 0) * 30ms)}
-@keyframes cardEnter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;touch-action:pan-y}
 .product-card:hover{transform:translateY(-4px)}
 
 .product-img-wrap{width:100%;aspect-ratio:1;position:relative;overflow:hidden;background:#f5f5f5}
@@ -83,20 +140,26 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .img-nav-dot.active{background:#fff;width:12px;border-radius:3px}
 .img-count{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.4);color:#fff;font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;z-index:3}
 
-.product-info{padding:10px;flex:1;display:flex;flex-direction:column}
+.product-info{padding:10px 8px 10px;flex:1;display:flex;flex-direction:column}
 .product-name{font-size:12px;font-weight:600;margin:0 0 3px;line-height:1.3;transition:color 0.4s ease}
 .price-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px}
 .product-price-old{font-size:11px;color:#aaa}
 .product-price{font-size:13px;font-weight:800;color:#7c3aed}
 .product-price-discount{font-size:13px;font-weight:800;color:#ef4444}
 .product-meta{font-size:10px;color:#aaa;margin-top:2px;flex:1;transition:color 0.4s ease}
-.product-btn-row{display:flex;gap:6px;margin-top:8px}
-.buy-now-btn{flex:1;padding:9px;border-radius:10px;border:none;background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:transform 0.2s ease,box-shadow 0.2s ease}
+.product-btn-row{display:flex;gap:5px;margin-top:8px;align-items:center;width:100%}
+.buy-now-btn,.add-cart-btn{height:35px;border-radius:10px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;box-sizing:border-box;text-decoration:none;user-select:none;overflow:hidden;transition:transform 0.2s ease,box-shadow 0.2s ease}
+.buy-now-btn{flex:0 0 auto;min-width:54px;padding:0 8px;background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff;font-size:11px;font-weight:700;gap:3px}
+.buy-now-btn:only-child{flex:1;width:100%}
 .buy-now-btn:active{transform:scale(.97)}
 .buy-now-btn:hover{box-shadow:0 4px 12px rgba(124,58,237,.3)}
-.add-cart-btn{flex:1;padding:9px;border-radius:10px;border:none;background:linear-gradient(135deg,#1a1a1a,#3d3d3d);color:#fff;font-size:11px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:4px;transition:transform 0.2s ease,box-shadow 0.2s ease}
+.add-cart-btn{flex:1;min-width:0;padding:0 6px;background:linear-gradient(135deg,#1a1a1a,#3d3d3d);color:#fff;font-size:10.5px;font-weight:700;letter-spacing:-0.2px;gap:2px}
 .add-cart-btn:active{transform:scale(.97)}
 .add-cart-btn:hover{box-shadow:0 4px 12px rgba(0,0,0,.25)}
+@media (max-width:360px){
+  .buy-now-btn{min-width:48px;padding:0 6px;font-size:10px}
+  .add-cart-btn{font-size:9.5px;padding:0 4px}
+}
 
 .dark-section{padding:0 0 30px}
 .dark-hero{height:150px;background:linear-gradient(145deg,#1a0b2e 0%,#3b1e6b 45%,#0f0a1e 100%);border-bottom:1px solid #2d1b4e;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100vw;position:relative;left:50%;transform:translateX(-50%)}
@@ -105,7 +168,7 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 
 .review-list{padding:0 16px}
 .review-photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.review-photo{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#12121a;border:1px solid #1a1a25;cursor:pointer;transition:transform .2s ease;content-visibility:auto;contain-intrinsic-size:0 200px;contain:layout style paint;touch-action:pan-y;animation:cardEnter .35s ease backwards;animation-delay:calc(var(--i, 0) * 30ms)}
+.review-photo{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#12121a;border:1px solid #1a1a25;cursor:pointer;transition:transform .2s ease;touch-action:pan-y}
 .review-photo:hover{transform:translateY(-3px)}
 .review-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .review-empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:#6b6b7b}
@@ -113,6 +176,31 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .review-photo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:260;padding:24px}
 .review-photo-overlay.open{display:flex}
 .review-photo-overlay img{max-width:100%;max-height:100%;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+
+.prod-photo-overlay{position:fixed;inset:0;background:rgba(10,10,18,0.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:270;padding:16px;animation:fadeIn .2s ease}
+.prod-photo-overlay.open{display:flex}
+.prod-photo-container{background:#181824;border:1px solid #2e2e42;border-radius:18px;max-width:480px;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.6);position:relative;animation:scaleUp .22s cubic-bezier(0.16,1,0.3,1)}
+@keyframes scaleUp{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+.prod-photo-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #262638;background:#14141f}
+.prod-photo-header-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.prod-photo-cat-tag{font-size:10px;font-weight:800;color:#a78bfa;letter-spacing:0.5px;text-transform:uppercase}
+.prod-photo-title{font-size:14px;font-weight:700;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-photo-close-btn{width:32px;height:32px;border-radius:50%;background:#262638;border:1px solid #3a3a52;color:#e2e8f0;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s ease}
+.prod-photo-close-btn:hover{background:#ef4444;color:#fff;border-color:#ef4444}
+.prod-photo-body{position:relative;display:flex;align-items:center;justify-content:center;padding:12px;min-height:260px;max-height:calc(92vh - 140px);background:#0d0d15;overflow:hidden}
+.prod-photo-img-wrap{position:relative;display:flex;align-items:center;justify-content:center;max-width:100%;max-height:100%}
+.prod-photo-img-wrap img{max-width:100%;max-height:58vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.5);display:block}
+.prod-photo-counter{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.75);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.15)}
+.prod-photo-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(20,20,32,0.85);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .15s ease;backdrop-filter:blur(4px)}
+.prod-photo-nav-btn:hover{background:#7c3aed;border-color:#7c3aed}
+.prod-photo-nav-btn.prev{left:12px}
+.prod-photo-nav-btn.next{right:12px}
+.prod-photo-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid #262638;background:#14141f;gap:12px}
+.prod-photo-price-box{display:flex;flex-direction:column}
+.prod-photo-price-old{font-size:11px;color:#94a3b8;text-decoration:line-through}
+.prod-photo-price{font-size:15px;font-weight:800;color:#10b981}
+.prod-photo-buy-btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(124,58,237,0.35);transition:all .15s ease;white-space:nowrap}
+.prod-photo-buy-btn:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6);transform:translateY(-1px)}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:100;backdrop-filter:blur(3px)}
 .modal-overlay.open{display:flex}
@@ -267,6 +355,21 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .admin-status.show{display:block}
 .admin-current{font-size:13px;color:#555;text-align:center;margin-bottom:16px}
 .admin-current span{color:#ef4444;font-weight:700}
+.admin-discount-summary-box{background:#fdf4ff;border:1.5px solid #f5d0fe;border-radius:12px;padding:10px 12px;margin-bottom:14px;text-align:center;box-sizing:border-box}
+.admin-discount-status-pill{font-size:12px;font-weight:700;line-height:1.4;display:inline-block;padding:5px 12px;border-radius:20px;max-width:100%;word-break:break-word}
+.discount-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f3f0fb;padding:4px;border-radius:12px;margin-bottom:14px;box-sizing:border-box;width:100%}
+.discount-mode-tab{width:100%;min-width:0;padding:10px 6px;font-size:12px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#6b7280;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;white-space:nowrap}
+.discount-mode-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(124,58,237,.14)}
+.discount-tab-panel{animation:popIn .2s ease}
+.discount-cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
+.discount-cat-item{display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:#faf9ff;border:1.5px solid #ece7fa;border-radius:12px;gap:10px}
+.discount-cat-label{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.discount-cat-icon{font-size:20px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.06);flex-shrink:0}
+.discount-cat-label strong{display:block;font-size:12px;color:#1a1a1a;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.discount-cat-label small{display:block;font-size:10px;color:#888;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.discount-cat-input-wrap{display:flex;align-items:center;gap:4px;width:85px;flex-shrink:0}
+.discount-cat-input-wrap input{margin-bottom:0 !important;padding:6px 8px !important;height:34px;text-align:center;font-weight:700;font-size:13px}
+.discount-cat-input-wrap span{font-size:13px;font-weight:700;color:#7c3aed}
 .admin-divider{height:1px;background:#e5e5e5;margin:16px 0}
 .admin-section-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
 .admin-img-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -283,13 +386,22 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .upload-zone-text{font-size:12px;color:#888}
 .upload-zone-icon{font-size:20px;margin-bottom:2px}
 
-.admin-product-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:200px;overflow-y:auto}
-.admin-product-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;background:#fafafa}
+.admin-product-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:440px;overflow-y:auto;padding-right:2px}
+.admin-product-item{display:flex;align-items:center;gap:8px;padding:10px;border:1.5px solid #e5e5e5;border-radius:10px;background:#fafafa;transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;position:relative}
+.admin-product-item.dragging{opacity:0.45;border:2px dashed #7c3aed;background:#f5f3ff}
+.admin-product-item.drag-over-top{border-top:3px solid #7c3aed !important}
+.admin-product-item.drag-over-bottom{border-bottom:3px solid #7c3aed !important}
 .admin-product-item .p-icon{width:36px;height:36px;border-radius:8px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .admin-product-item .p-info{flex:1;min-width:0}
 .admin-product-item .p-name{font-size:12px;font-weight:600;color:#1a1a1a;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .admin-product-item .p-cat{font-size:10px;color:#888;margin-top:1px}
 .admin-product-item .p-price{font-size:12px;font-weight:700;color:#7c3aed;margin-top:2px}
+
+.p-drag-handle{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:34px;height:48px;padding:4px;border-radius:8px;background:#f8fafc;border:1.5px solid #e2e8f0;cursor:grab;touch-action:none !important;-webkit-user-select:none;user-select:none;flex-shrink:0;transition:all .15s ease}
+.p-drag-handle:active{cursor:grabbing;background:#ede9fe;border-color:#a78bfa;box-shadow:0 2px 8px rgba(124,58,237,.2)}
+.p-order-num{font-size:10px;font-weight:800;color:#6366f1;line-height:1}
+.p-drag-dots{font-size:16px;color:#818cf8;line-height:1;font-weight:900;letter-spacing:-1px}
+.reorder-hint-banner{display:flex;align-items:center;gap:6px;background:#f5f3ff;border:1px solid #ddd6fe;color:#6d28d9;font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;margin-bottom:8px}
 
 .carousel-admin-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .carousel-admin-item{padding:12px;border:1px solid #e5e5e5;border-radius:10px;background:#fafafa}
@@ -346,6 +458,105 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .bulk-sub-tag{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:700;background:#ede9fe;color:#6d28d9;text-transform:uppercase}
 .bulk-sub-none{display:inline-block;padding:2px 6px;border-radius:4px;font-size:9px;font-weight:600;background:#f3f4f6;color:#9ca3af}
 
+/* ============ POPUP SUB-KATEGORI KATALOG (RESPONSIVE & COMPACT) ============ */
+.subgroup-popup-overlay{position:fixed;inset:0;background:rgba(15,10,25,.65);display:none;align-items:flex-end;justify-content:center;z-index:250;backdrop-filter:blur(5px);-webkit-tap-highlight-color:transparent}
+.subgroup-popup-overlay.open{display:flex}
+.subgroup-popup-box{background:#fff;border-radius:22px 22px 0 0;width:100%;max-width:440px;overflow:hidden;animation:slideUp .24s cubic-bezier(.16,1,.3,1);max-height:82vh;display:flex;flex-direction:column;box-shadow:0 -10px 40px rgba(0,0,0,.22)}
+@media (min-width:768px){
+  .subgroup-popup-overlay{align-items:center;padding:20px}
+  .subgroup-popup-box{border-radius:20px;animation:popIn .2s ease;box-shadow:0 16px 50px rgba(0,0,0,.28)}
+}
+.sg-pop-handle{width:38px;height:4px;border-radius:4px;background:#e2e2ea;margin:10px auto 4px}
+@media (min-width:768px){ .sg-pop-handle{display:none} }
+.sg-pop-header{padding:12px 18px 14px;border-bottom:1px solid #f1f0f6;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#faf8ff 0%,#f4f0fd 100%)}
+.sg-pop-title-wrap{display:flex;flex-direction:column;gap:3px;min-width:0}
+.sg-pop-title{font-size:15px;font-weight:800;color:#1a1a1a;margin:0;display:flex;align-items:center;gap:6px;line-height:1.3}
+.sg-pop-subtitle{font-size:11px;color:#6b7280;margin:0;line-height:1.3}
+.sg-pop-close{width:32px;height:32px;border-radius:50%;border:1px solid #e5e5eb;background:#fff;color:#666;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease;flex-shrink:0}
+.sg-pop-close:hover{background:#fee2e2;color:#ef4444;border-color:#fca5a5}
+.sg-pop-body{padding:12px 14px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
+.sg-pop-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:#faf9fd;border:1.5px solid #ece8f8;cursor:pointer;transition:all .18s ease;user-select:none;-webkit-tap-highlight-color:transparent;gap:12px}
+.sg-pop-item:hover{background:#f5f3ff;border-color:#c4b5fd;transform:translateY(-1px)}
+.sg-pop-item.active{background:#f5f0ff;border-color:#7c3aed;box-shadow:0 4px 14px rgba(124,58,237,.14)}
+.sg-pop-item-left{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
+.sg-pop-icon{font-size:17px;width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid #eee;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sg-pop-item.active .sg-pop-icon{background:#ede9fe;border-color:#c4b5fd}
+.sg-pop-text{min-width:0;flex:1;display:flex;flex-direction:column;justify-content:center}
+.sg-pop-name{font-size:13px;font-weight:700;color:#1a1a1a;margin:0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sg-pop-item.active .sg-pop-name{color:#6d28d9}
+.sg-pop-desc{font-size:11px;color:#888;margin:2px 0 0;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sg-pop-item-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
+.sg-pop-count{font-size:11px;font-weight:700;padding:5px 10px;border-radius:9999px;background:#edeaf7;color:#5b5575;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;line-height:1;min-width:74px;text-align:center;box-sizing:border-box}
+.sg-pop-item.active .sg-pop-count{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff}
+.sg-pop-radio{width:18px;height:18px;border-radius:50%;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;transition:all .15s ease;background:#fff;flex-shrink:0}
+.sg-pop-item.active .sg-pop-radio{border-color:#7c3aed;background:#7c3aed}
+.sg-pop-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;opacity:0;transform:scale(0);transition:all .15s ease}
+.sg-pop-item.active .sg-pop-radio::after{opacity:1;transform:scale(1)}
+
+/* ============ ACTIVE SUB-FILTER BAR (COMPACT) ============ */
+.catalog-subfilter-bar{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;gap:8px;animation:fadeIn .2s ease}
+@media (min-width:768px){.catalog-subfilter-bar{padding:0 32px 14px}}
+.csb-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.csb-label{font-size:11px;font-weight:600;color:#888}
+.csb-active-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;background:linear-gradient(135deg,#f5f3ff,#ede9fe);color:#7c3aed;border:1.5px solid #c4b5fd;cursor:pointer;transition:all .15s ease}
+.csb-active-chip:hover{background:#ede9fe;border-color:#a78bfa;transform:translateY(-1px)}
+.csb-reset-btn{font-size:11px;color:#888;background:none;border:none;padding:4px 6px;cursor:pointer;font-weight:600;transition:color .15s ease}
+.csb-reset-btn:hover{color:#ef4444}
+
+/* ============ PERLINDUNGAN ANTI-DOWNLOAD & PENCURIAN GAMBAR ============ */
+img, 
+.product-img-slide img, 
+.review-photo img, 
+#reviewPhotoFull, 
+.carousel-slide, 
+.cart-item-thumb img, 
+.detail-thumb-img, 
+.pay-icon-btn img {
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  -khtml-user-select: none !important;
+  -moz-user-select: none !important;
+  -ms-user-select: none !important;
+  user-select: none !important;
+  -webkit-user-drag: none !important;
+  user-drag: none !important;
+  pointer-events: auto;
+}
+
+.slide-protect-shield {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  cursor: pointer;
+  background: transparent;
+  -webkit-touch-callout: none !important;
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+
+.img-protected-watermark {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 10, 25, 0.86);
+  color: #e2e8f0;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  pointer-events: none;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  white-space: nowrap;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 20;
+}
+
 /* ============ POLESAN INTERAKTIF (semua ukuran layar) ============ */
 button{cursor:pointer;font-family:inherit}
 .navbar{box-shadow:0 1px 6px rgba(0,0,0,.05)}
@@ -394,9 +605,14 @@ button{cursor:pointer;font-family:inherit}
 /* ============ RESPONSIVE: DESKTOP (>=900px) ============ */
 @media (min-width:900px){
   body{background:#f1f1f5}
-  .navbar{max-width:1200px;margin:16px auto 0;padding:14px 28px;border-radius:14px;position:sticky;top:16px;z-index:60}
-  .search-bar{max-width:420px}
-  .logo{font-size:22px}
+  .navbar{max-width:1200px;width:calc(100% - 32px);margin:16px auto 0;padding:12px 24px;border-radius:16px;position:sticky;top:16px;z-index:60;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(124,58,237,.08)}
+  .logo{font-size:22px;flex-shrink:0}
+  .search-bar-wrap{flex:1;max-width:none;margin:0}
+  .search-bar{height:42px;font-size:13.5px;padding:0 16px 0 38px;border-radius:14px}
+  .search-bar-icon{left:14px;font-size:14px}
+  .nav-actions{gap:12px;margin-left:auto}
+  .nav-icon{width:42px;height:42px;font-size:18px;border-radius:12px}
+  .nav-icon:hover{background:#ede9fe;border-color:#c4b5fd;transform:translateY(-1px);box-shadow:0 3px 8px rgba(124,58,237,.1)}
 
   .carousel-wrap{max-width:1200px;width:calc(100% - 32px);margin:20px auto 0;border-radius:18px;left:auto;transform:none}
   .carousel-slide{height:400px}
@@ -421,7 +637,7 @@ button{cursor:pointer;font-family:inherit}
   .product-grid{grid-template-columns:repeat(4,1fr);gap:20px;padding:0 32px}
   .product-name{font-size:13px}
   .product-price,.product-price-discount{font-size:15px}
-  .add-cart-btn,.buy-now-btn{padding:10px;font-size:12px}
+  .add-cart-btn,.buy-now-btn{height:38px;padding:0 12px;font-size:12px}
 
   .footer{border-radius:16px 16px 0 0;margin-top:28px;padding:26px}
 
@@ -540,10 +756,15 @@ button{cursor:pointer;font-family:inherit}
   <div class="splash-dots"><span></span><span></span><span></span></div>
 </div>
 <nav class="navbar">
-<div class="logo" id="logo">NORX<span>STORE</span></div>
-<input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()">
-<div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()">👤</div>
-<div class="nav-icon-wrap"><div class="nav-icon" onclick="openCart()">🛒</div><span class="cart-badge" id="cartBadge">0</span></div>
+<div class="logo" id="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">NORX<span>STORE</span></div>
+<div class="search-bar-wrap">
+  <span class="search-bar-icon">🔍</span>
+  <input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()">
+</div>
+<div class="nav-actions">
+  <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
+  <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang"><div class="nav-icon">🛒</div><span class="cart-badge" id="cartBadge">0</span></div>
+</div>
 </nav>
 
 <div class="carousel-wrap">
@@ -558,6 +779,10 @@ button{cursor:pointer;font-family:inherit}
 <div class="toggle-knob"></div>
 </button>
 <span class="mode-label" id="lblDark">🌙 Testimoni</span>
+<div class="live-pill-mode" title="Pengunjung aktif di website saat ini">
+  <span class="live-pulse-dot"></span>
+  <span class="online-user-count">1</span> Online
+</div>
 </div>
 
 <div class="mode-wrapper">
@@ -566,14 +791,15 @@ button{cursor:pointer;font-family:inherit}
 <h2 class="section-title">🛒 Katalog Layanan</h2>
 <span class="section-link" onclick="showAllProducts()">Lihat semua →</span>
 </div>
-<div class="cat-chips">
-<button class="cat-chip active" onclick="filterCat('all',this)">Semua</button>
-<button class="cat-chip" onclick="filterCat('genshin',this)">Genshin</button>
-<button class="cat-chip" onclick="filterCat('hsr',this)">HSR</button>
-<button class="cat-chip" onclick="filterCat('wuwa',this)">WuWa</button>
-<button class="cat-chip" onclick="filterCat('nte',this)">NTE</button>
-<button class="cat-chip" onclick="filterCat('lainnya',this)">🔑 Jual Akun</button>
+<div class="cat-chips" id="catChips">
+<button class="cat-chip active" id="chip_all" data-cat="all" onclick="filterCat('all',this)">Semua</button>
+<button class="cat-chip" id="chip_genshin" data-cat="genshin" onclick="filterCat('genshin',this)">Genshin</button>
+<button class="cat-chip" id="chip_hsr" data-cat="hsr" onclick="filterCat('hsr',this)">HSR</button>
+<button class="cat-chip" id="chip_wuwa" data-cat="wuwa" onclick="filterCat('wuwa',this)">WuWa</button>
+<button class="cat-chip" id="chip_nte" data-cat="nte" onclick="filterCat('nte',this)">NTE</button>
+<button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 Jual Akun</button>
 </div>
+<div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
 <div class="product-grid" id="productGrid">
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
@@ -601,7 +827,13 @@ button{cursor:pointer;font-family:inherit}
 </section>
 </div>
 
-<footer class="footer">© 2026 NORXSTORE — Genshin · HSR · WuWa · NTE</footer>
+<footer class="footer">
+  <div style="margin-bottom:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:#cbd5e1;background:rgba(255,255,255,.07);padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1)">
+    <span class="live-pulse-dot" style="background:#22c55e"></span>
+    <span><strong class="online-user-count">1</strong> Orang Sedang Online di Web</span>
+  </div>
+  <div>© 2026 NORXSTORE — Genshin · HSR · WuWa · NTE</div>
+</footer>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
 <div class="modal-box" onclick="event.stopPropagation()">
@@ -658,7 +890,7 @@ button{cursor:pointer;font-family:inherit}
 <span class="cart-total-label">Total</span>
 <span class="cart-total-price" id="cartTotal">Rp0</span>
 </div>
-<button class="cart-checkout" style="margin-top:12px" onclick="openCartCheckoutStep()">💬 Checkout via WhatsApp</button>
+<button class="cart-checkout" id="cartCheckoutBtn" style="margin-top:12px" onclick="openCartCheckoutStep()">💬 Checkout via WhatsApp</button>
 <p class="cart-clear" onclick="clearCart()">Kosongkan Keranjang</p>
 </div>
 
@@ -725,7 +957,13 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-overlay" id="adminOverlay" onclick="closeAdmin(event)">
 <div class="admin-box" onclick="event.stopPropagation()">
 <div class="admin-header">
-<h4>⚙️ Panel Admin</h4>
+<div>
+  <h4 style="margin:0">⚙️ Panel Admin</h4>
+  <div style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:#16a34a;margin-top:2px">
+    <span class="live-pulse-dot"></span>
+    <span id="adminOnlineStatusText">1 pengunjung online</span>
+  </div>
+</div>
 <button class="admin-close" onclick="closeAdmin()">×</button>
 </div>
 <div class="admin-body">
@@ -736,12 +974,114 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-divider"></div>
 
 <div class="admin-section-title">🏷️ Pengaturan Diskon</div>
-<p class="admin-current">Diskon aktif: <span id="adminCurrentDiscount">0%</span></p>
-<div class="admin-label">Persentase Diskon (%)</div>
-<input class="admin-input" type="number" id="discountInput" min="0" max="100" placeholder="Contoh: 15">
-<p class="admin-hint">Masukkan angka 0–100. 0 = nonaktifkan diskon.</p>
-<button class="admin-btn" onclick="saveDiscount()">💾 Simpan Diskon</button>
-<div class="admin-status" id="adminStatus">✅ Diskon berhasil diperbarui!</div>
+<div class="admin-discount-summary-box">
+  <div style="font-size:11px;color:#888;margin-bottom:4px;font-weight:600">Status Diskon Saat Ini:</div>
+  <div class="admin-discount-status-pill" id="adminDiscountStatusPill">
+    <span id="adminCurrentDiscount">0%</span>
+  </div>
+</div>
+
+<div class="discount-mode-tabs">
+  <button type="button" class="discount-mode-tab active" id="tabDiscAll" onclick="switchDiscountTab('all')">
+    <span>🌐</span><span>Semua Produk</span>
+  </button>
+  <button type="button" class="discount-mode-tab" id="tabDiscCat" onclick="switchDiscountTab('category')">
+    <span>🏷️</span><span>Per Kategori</span>
+  </button>
+</div>
+
+<!-- PANEL MODE 1: DISKON SEMUA PRODUK (GLOBAL) -->
+<div id="panelDiscAll" class="discount-tab-panel">
+  <div class="admin-label">Persentase Diskon Semua Produk (%)</div>
+  <div style="display:flex;align-items:center;gap:8px">
+    <input class="admin-input" type="number" id="discountGlobalInput" min="0" max="100" placeholder="Contoh: 15" style="margin-bottom:0;flex:1">
+    <span style="font-weight:700;font-size:16px;color:#7c3aed">%</span>
+  </div>
+  <p class="admin-hint" style="margin-top:6px">Diskon ini otomatis berlaku merata ke seluruh produk di semua kategori dan jual akun.</p>
+</div>
+
+<!-- PANEL MODE 2: DISKON TERPISAH PER KATEGORI -->
+<div id="panelDiscCat" class="discount-tab-panel" style="display:none">
+  <p class="admin-hint" style="margin-bottom:10px">Atur persentase diskon yang berbeda untuk tiap kategori (isi 0 jika tidak ada diskon):</p>
+  
+  <div class="discount-cat-list">
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">✨</span>
+        <div>
+          <strong>Genshin Impact</strong>
+          <small>Layanan Joki Genshin</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_genshin" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🚀</span>
+        <div>
+          <strong>Honkai: Star Rail</strong>
+          <small>Layanan Joki HSR</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_hsr" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🌊</span>
+        <div>
+          <strong>Wuthering Waves</strong>
+          <small>Layanan Joki WuWa</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_wuwa" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🔮</span>
+        <div>
+          <strong>Neverness to Everness</strong>
+          <small>Layanan Joki NTE</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_nte" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+
+    <div class="discount-cat-item">
+      <div class="discount-cat-label">
+        <span class="discount-cat-icon">🔑</span>
+        <div>
+          <strong>Jual Beli Akun</strong>
+          <small>Stok Akun Game</small>
+        </div>
+      </div>
+      <div class="discount-cat-input-wrap">
+        <input class="admin-input" type="number" id="discCat_lainnya" min="0" max="100" placeholder="0">
+        <span>%</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="display:flex;gap:8px;margin-top:14px">
+  <button class="admin-btn" style="flex:2" onclick="saveDiscountSettings()">💾 Simpan Diskon</button>
+  <button class="admin-btn" style="flex:1;background:#ef4444" onclick="resetAllDiscounts()">🔄 Reset (0%)</button>
+</div>
+<div class="admin-status" id="adminStatus">✅ Pengaturan diskon berhasil diperbarui!</div>
 
 <div class="admin-divider"></div>
 
@@ -798,6 +1138,10 @@ button{cursor:pointer;font-family:inherit}
 <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:6px">
   <div class="admin-label" style="margin-bottom:0">Daftar Produk</div>
   <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Atur Sub-Kategori Massal</button>
+</div>
+<div class="reorder-hint-banner">
+  <span style="font-size:14px">↕️</span>
+  <span><b>Fitur Geser:</b> Tahan & geser ikon <b>⠿</b> ke atas/bawah untuk memindahkan posisi produk.</span>
 </div>
 <div class="admin-product-list" id="adminProductList"></div>
 
@@ -867,6 +1211,26 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-status" id="passStatus" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af">✅ Kata sandi berhasil diperbarui!</div>
 <div class="admin-status" id="passStatusDisable" style="background:#fef2f2;border-color:#fecaca;color:#991b1b;display:none">🔓 Proteksi kata sandi dinonaktifkan!</div>
 
+<div class="admin-divider"></div>
+
+<div class="admin-section-title">🚀 Update Hosting & Vercel</div>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:12px">
+  <p style="font-size:12px;color:#334155;margin:0 0 8px;line-height:1.5">
+    Setiap ada pembaruan fitur, perbaikan bug, atau tampilan baru, unduh file terbaru di bawah ini lalu unggah/deploy ke Vercel atau repository GitHub Anda:
+  </p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <a href="/download-html" download="index.html" class="admin-btn" style="flex:1;min-width:140px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#2563eb,#1d4ed8);font-size:12px">
+      📄 Unduh index.html
+    </a>
+    <a href="/download-zip" download="norxstore.zip" class="admin-btn" style="flex:1;min-width:140px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#6d28d9);font-size:12px">
+      📦 Unduh norxstore.zip
+    </a>
+  </div>
+  <p style="font-size:11px;color:#64748b;margin:8px 0 0;line-height:1.4">
+    💡 <strong>Cara update di Vercel:</strong> Buka GitHub atau Vercel Anda, lalu timpa/replace file <code>index.html</code> lama dengan file yang baru saja diunduh.
+  </p>
+</div>
+
 </div>
 </div>
 </div>
@@ -926,8 +1290,57 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </div>
 
+<!-- ============ POPUP PILIH SUB-KATEGORI KATALOG (POP-UP EFISIEN) ============ -->
+<div class="subgroup-popup-overlay" id="subgroupPopupOverlay" onclick="closeSubgroupPopup(event)">
+  <div class="subgroup-popup-box" onclick="event.stopPropagation()">
+    <div class="sg-pop-handle"></div>
+    <div class="sg-pop-header">
+      <div class="sg-pop-title-wrap">
+        <h4 class="sg-pop-title" id="sgPopTitle">🏷️ Pilih Sub-Kategori</h4>
+        <p class="sg-pop-subtitle" id="sgPopSubtitle">Pilih jenis layanan yang ingin ditampilkan</p>
+      </div>
+      <button type="button" class="sg-pop-close" onclick="closeSubgroupPopup()">×</button>
+    </div>
+    <div class="sg-pop-body" id="sgPopList">
+      <!-- Otomatis diisi berdasarkan sub-kategori produk -->
+    </div>
+  </div>
+</div>
+
 <div class="review-photo-overlay" id="reviewPhotoOverlay" onclick="closeReviewPhoto()">
-<img id="reviewPhotoFull" src="" alt="Foto testimoni">
+  <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;max-width:100%;max-height:100%">
+    <img id="reviewPhotoFull" src="" alt="Foto preview" draggable="false">
+    <div class="slide-protect-shield" style="border-radius:14px"></div>
+  </div>
+  <div class="img-protected-watermark">🔒 Norxstore Official — Hak Cipta Dilindungi</div>
+</div>
+
+<div class="prod-photo-overlay" id="prodPhotoOverlay" onclick="closeProductImageViewer(event)">
+  <div class="prod-photo-container" onclick="event.stopPropagation()">
+    <div class="prod-photo-header">
+      <div class="prod-photo-header-info">
+        <span class="prod-photo-cat-tag" id="prodPhotoCatTag">GENSHIN IMPACT</span>
+        <h4 class="prod-photo-title" id="prodPhotoTitle">Foto Produk</h4>
+      </div>
+      <button type="button" class="prod-photo-close-btn" onclick="closeProductImageViewer()" title="Tutup">✕</button>
+    </div>
+    <div class="prod-photo-body">
+      <button type="button" class="prod-photo-nav-btn prev" id="prodPhotoPrevBtn" onclick="navProductImage(-1)" title="Foto Sebelumnya">‹</button>
+      <div class="prod-photo-img-wrap">
+        <img id="prodPhotoFullImg" src="" alt="Foto Produk" draggable="false">
+        <div class="slide-protect-shield" style="border-radius:12px"></div>
+        <span class="prod-photo-counter" id="prodPhotoCounter">1 / 1</span>
+      </div>
+      <button type="button" class="prod-photo-nav-btn next" id="prodPhotoNextBtn" onclick="navProductImage(1)" title="Foto Selanjutnya">›</button>
+    </div>
+    <div class="prod-photo-footer">
+      <div class="prod-photo-price-box">
+        <span class="prod-photo-price-old" id="prodPhotoPriceOld" style="display:none"></span>
+        <span class="prod-photo-price" id="prodPhotoPrice"></span>
+      </div>
+      <button type="button" class="prod-photo-buy-btn" id="prodPhotoBuyBtn" onclick="buyFromProductImageViewer()">🛒 Pesan Sekarang</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -935,15 +1348,15 @@ button{cursor:pointer;font-family:inherit}
 <script>
 
 const DEFAULT_PRODUCTS = [
-{id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID',cat:'genshin'},
-{id:2,name:'Welkin Moon',price:15000,badge:'BEST',icon:'🌙',desc:'30 hari',cat:'genshin'},
-{id:3,name:'Joki Spiral Abyss',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star F12',cat:'genshin'},
-{id:4,name:'Joki MoC Full Star',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos',cat:'hsr'},
-{id:5,name:'Joki PF Full Star',price:25000,badge:'',icon:'🔥',desc:'Pure Fiction',cat:'hsr'},
-{id:6,name:'Joki Tower WuWa',price:40000,badge:'PRO',icon:'🌊',desc:'Tower of Adversity',cat:'wuwa'},
-{id:7,name:'Joki Weekly Boss',price:20000,badge:'',icon:'👹',desc:'All weekly bosses',cat:'wuwa'},
-{id:8,name:'Joki NTE Story',price:25000,badge:'NEW',icon:'🔮',desc:'Story progression',cat:'nte'},
-{id:9,name:'Joki Anomaly Clear',price:30000,badge:'',icon:'✨',desc:'Anomaly farming',cat:'nte'}
+{id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID',cat:'genshin',subgroup:'Top-Up'},
+{id:2,name:'Welkin Moon',price:15000,badge:'BEST',icon:'🌙',desc:'30 hari',cat:'genshin',subgroup:'Top-Up'},
+{id:3,name:'Joki Spiral Abyss',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star F12',cat:'genshin',subgroup:'Joki'},
+{id:4,name:'Joki MoC Full Star',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos',cat:'hsr',subgroup:'Joki'},
+{id:5,name:'Joki PF Full Star',price:25000,badge:'',icon:'🔥',desc:'Pure Fiction',cat:'hsr',subgroup:'Joki'},
+{id:6,name:'Joki Tower WuWa',price:40000,badge:'PRO',icon:'🌊',desc:'Tower of Adversity',cat:'wuwa',subgroup:'Joki'},
+{id:7,name:'Joki Weekly Boss',price:20000,badge:'',icon:'👹',desc:'All weekly bosses',cat:'wuwa',subgroup:'Joki'},
+{id:8,name:'Joki NTE Story',price:25000,badge:'NEW',icon:'🔮',desc:'Story progression',cat:'nte',subgroup:'Joki'},
+{id:9,name:'Joki Anomaly Clear',price:30000,badge:'',icon:'✨',desc:'Anomaly farming',cat:'nte',subgroup:'Joki'}
 ];
 
 const DEFAULT_CAROUSEL = [
@@ -987,22 +1400,67 @@ const DEFAULT_PASSWORD = 'norxstore2026';
 
 function safeSetItem(key, value){
   try { localStorage.setItem(key, value); return true; }
-  catch(e) { console.error('Storage error:', e); showToast('Gagal menyimpan: ' + e.message); return false; }
+  catch(e) { console.warn('Storage quota/access warning:', e); return false; }
 }
 function safeGetItem(key, fallback){
   try { return localStorage.getItem(key) || fallback; }
   catch(e) { return fallback; }
 }
 
+// ============ SISTEM CACHE PERSISTEN GAMBAR (IndexedDB + LocalStorage) ============
+// Memastikan gambar produk langsung muncul seketika tanpa menunggu koneksi Firebase
+const NORX_IDB_NAME = 'norxstore_idb';
+const NORX_IDB_STORE = 'images';
+function openNorxIDB(){
+  return new Promise(resolve => {
+    if(!window.indexedDB) return resolve(null);
+    try {
+      const req = indexedDB.open(NORX_IDB_NAME, 1);
+      req.onupgradeneeded = e => {
+        const db = e.target.result;
+        if(!db.objectStoreNames.contains(NORX_IDB_STORE)){
+          db.createObjectStore(NORX_IDB_STORE);
+        }
+      };
+      req.onsuccess = e => resolve(e.target.result);
+      req.onerror = () => resolve(null);
+    } catch(e){ resolve(null); }
+  });
+}
+function saveImagesCache(data){
+  if(!data || typeof data !== 'object') return;
+  try {
+    const serialized = JSON.stringify(data);
+    // Simpan ke localStorage jika aman (< 3MB) untuk akses instan 0ms saat refresh
+    if(serialized.length < 3 * 1024 * 1024){
+      safeSetItem('norxstore_images_cache', serialized);
+    }
+  } catch(e){}
+  // Selalu simpan ke IndexedDB (kapasitas puluhan MB tanpa batasan 5MB browser)
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
+      tx.objectStore(NORX_IDB_STORE).put(data, 'productImages');
+    } catch(e){}
+  });
+}
+
 function mergeProductsData(parsed){
   if(!Array.isArray(parsed) || parsed.length === 0) return [...DEFAULT_PRODUCTS];
-  const merged = DEFAULT_PRODUCTS.map(dp => {
-    const override = parsed.find(p => p.id === dp.id);
-    return override ? {...dp, ...override} : {...dp};
-  });
+  // Pertahankan urutan eksak sesuai yang diatur admin (drag & drop)
+  const merged = [];
+  const seenIds = new Set();
   parsed.forEach(p => {
-    if(!DEFAULT_PRODUCTS.find(dp => dp.id === p.id)){
-      merged.push(p);
+    if(!p || typeof p !== 'object' || p.id === undefined) return;
+    const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
+    merged.push(dp ? {...dp, ...p} : {...p});
+    seenIds.add(p.id);
+  });
+  DEFAULT_PRODUCTS.forEach(dp => {
+    if(!seenIds.has(dp.id)){
+      merged.push({...dp});
+      seenIds.add(dp.id);
     }
   });
   return merged;
@@ -1083,19 +1541,207 @@ function setAdminPassword(pass){
   return true;
 }
 
-function getDiscount(){
-  return discountVal;
+// ==================== DISCOUNT ENGINE (GLOBAL & PER-CATEGORY) ====================
+const DEFAULT_DISCOUNT_CONFIG = {
+  mode: 'all', // 'all' (semua produk) atau 'category' (per kategori)
+  global: 0,
+  categories: {
+    genshin: 0,
+    hsr: 0,
+    wuwa: 0,
+    nte: 0,
+    lainnya: 0
+  }
+};
+
+function normalizeDiscountConfig(raw){
+  if(typeof raw === 'number'){
+    return {
+      mode: 'all',
+      global: Math.max(0, Math.min(100, parseInt(raw) || 0)),
+      categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 }
+    };
+  }
+  if(!raw || typeof raw !== 'object'){
+    return JSON.parse(JSON.stringify(DEFAULT_DISCOUNT_CONFIG));
+  }
+  const mode = (raw.mode === 'category') ? 'category' : 'all';
+  const global = Math.max(0, Math.min(100, parseInt(raw.global) || 0));
+  const rawCats = (raw.categories && typeof raw.categories === 'object') ? raw.categories : {};
+  const categories = {
+    genshin: Math.max(0, Math.min(100, parseInt(rawCats.genshin) || 0)),
+    hsr: Math.max(0, Math.min(100, parseInt(rawCats.hsr) || 0)),
+    wuwa: Math.max(0, Math.min(100, parseInt(rawCats.wuwa) || 0)),
+    nte: Math.max(0, Math.min(100, parseInt(rawCats.nte) || 0)),
+    lainnya: Math.max(0, Math.min(100, parseInt(rawCats.lainnya) || 0))
+  };
+  return { mode, global, categories };
 }
-function setDiscount(pct){
-  const val = Math.max(0, Math.min(100, parseInt(pct) || 0));
-  discountVal = val;
-  fbDB.ref('norxstore/discount').set(val).catch(e=>console.error(e));
-  return val;
+
+let discountConfig = (function(){
+  try {
+    const cached = safeGetItem('norxstore_discount_config_cache', null);
+    if(cached){
+      const parsed = JSON.parse(cached);
+      if(parsed) return normalizeDiscountConfig(parsed);
+    }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_DISCOUNT_CONFIG));
+})();
+
+let discountVal = discountConfig.global;
+
+function getDiscount(cat){
+  if(!discountConfig) return 0;
+  if(discountConfig.mode === 'all'){
+    return discountConfig.global || 0;
+  }
+  if(cat && discountConfig.categories && typeof discountConfig.categories[cat] === 'number'){
+    return discountConfig.categories[cat] || 0;
+  }
+  if(!cat){
+    const vals = Object.values(discountConfig.categories || {});
+    return vals.length ? Math.max(...vals, 0) : 0;
+  }
+  return 0;
 }
-function getDiscountedPrice(price){
-  const d = getDiscount();
+
+function getDiscountedPrice(price, cat){
+  const d = getDiscount(cat);
   if(d <= 0) return price;
   return Math.round(price * (100 - d) / 100);
+}
+
+function setDiscount(pct){
+  const val = Math.max(0, Math.min(100, parseInt(pct) || 0));
+  discountConfig.mode = 'all';
+  discountConfig.global = val;
+  discountVal = val;
+  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  return val;
+}
+
+function setDiscountConfig(cfg){
+  discountConfig = normalizeDiscountConfig(cfg);
+  discountVal = discountConfig.global;
+  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  return discountConfig;
+}
+
+function getDiscountSummaryText(){
+  if(!discountConfig) return 'Nonaktif (0%)';
+  if(discountConfig.mode === 'all'){
+    const g = discountConfig.global || 0;
+    return g > 0 ? `🔥 Diskon Global: ${g}% (Semua Produk)` : 'Nonaktif (0%)';
+  } else {
+    const cats = discountConfig.categories || {};
+    const active = [];
+    if(cats.genshin > 0) active.push(`Genshin ${cats.genshin}%`);
+    if(cats.hsr > 0) active.push(`HSR ${cats.hsr}%`);
+    if(cats.wuwa > 0) active.push(`WuWa ${cats.wuwa}%`);
+    if(cats.nte > 0) active.push(`NTE ${cats.nte}%`);
+    if(cats.lainnya > 0) active.push(`Jual Akun ${cats.lainnya}%`);
+    return active.length > 0 ? `🏷️ Diskon Kategori: ${active.join(' • ')}` : 'Nonaktif (0%)';
+  }
+}
+
+let currentDiscountTab = 'all';
+function switchDiscountTab(tab){
+  currentDiscountTab = tab;
+  const tabAll = document.getElementById('tabDiscAll');
+  const tabCat = document.getElementById('tabDiscCat');
+  const panelAll = document.getElementById('panelDiscAll');
+  const panelCat = document.getElementById('panelDiscCat');
+  if(tabAll) tabAll.classList.toggle('active', tab === 'all');
+  if(tabCat) tabCat.classList.toggle('active', tab === 'category');
+  if(panelAll) panelAll.style.display = tab === 'all' ? 'block' : 'none';
+  if(panelCat) panelCat.style.display = tab === 'category' ? 'block' : 'none';
+}
+
+function renderDiscountAdminUI(){
+  if(!discountConfig) return;
+  const mode = discountConfig.mode || 'all';
+  switchDiscountTab(mode);
+
+  const gInput = document.getElementById('discountGlobalInput');
+  if(gInput) gInput.value = discountConfig.global > 0 ? discountConfig.global : '';
+
+  const cats = discountConfig.categories || {};
+  ['genshin', 'hsr', 'wuwa', 'nte', 'lainnya'].forEach(k => {
+    const el = document.getElementById('discCat_' + k);
+    if(el) el.value = (cats[k] && cats[k] > 0) ? cats[k] : '';
+  });
+
+  const pill = document.getElementById('adminDiscountStatusPill');
+  const currEl = document.getElementById('adminCurrentDiscount');
+  const text = getDiscountSummaryText();
+  const isActive = text !== 'Nonaktif (0%)';
+  if(pill){
+    pill.textContent = text;
+    pill.style.color = isActive ? '#b91c1c' : '#6b7280';
+    pill.style.background = isActive ? '#fef2f2' : '#f3f4f6';
+    pill.style.border = isActive ? '1px solid #fecaca' : '1px solid #e5e7eb';
+  }
+  if(currEl){
+    currEl.textContent = text;
+  }
+}
+
+function saveDiscountSettings(){
+  const mode = currentDiscountTab;
+  const globalVal = Math.max(0, Math.min(100, parseInt(document.getElementById('discountGlobalInput').value) || 0));
+  const catVals = {
+    genshin: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_genshin').value) || 0)),
+    hsr: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_hsr').value) || 0)),
+    wuwa: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_wuwa').value) || 0)),
+    nte: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_nte').value) || 0)),
+    lainnya: Math.max(0, Math.min(100, parseInt(document.getElementById('discCat_lainnya').value) || 0))
+  };
+
+  const newConfig = {
+    mode: mode,
+    global: globalVal,
+    categories: catVals
+  };
+
+  setDiscountConfig(newConfig);
+  renderDiscountAdminUI();
+  products = getProducts();
+  renderProducts();
+  if(cart.length > 0) renderCart();
+
+  const statusEl = document.getElementById('adminStatus');
+  if(statusEl){
+    statusEl.textContent = '✅ Pengaturan diskon berhasil diperbarui!';
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 2500);
+  }
+}
+
+function resetAllDiscounts(){
+  const newConfig = {
+    mode: 'all',
+    global: 0,
+    categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 }
+  };
+  setDiscountConfig(newConfig);
+  renderDiscountAdminUI();
+  products = getProducts();
+  renderProducts();
+  if(cart.length > 0) renderCart();
+
+  const statusEl = document.getElementById('adminStatus');
+  if(statusEl){
+    statusEl.textContent = '🔄 Semua diskon berhasil direset ke 0%';
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 2500);
+  }
+}
+
+function saveDiscount(){
+  saveDiscountSettings();
 }
 function formatPrice(p){
   return 'Rp' + p.toLocaleString('id-ID');
@@ -1106,6 +1752,7 @@ function getProductImages(){
 }
 function setProductImages(data){
   productImagesCache = data;
+  saveImagesCache(data);
   fbDB.ref('norxstore/images').set(data).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
 }
 function getImagesForProduct(id){
@@ -1164,12 +1811,62 @@ function applyPaymentIcons(){
   });
 }
 
-let products = [...DEFAULT_PRODUCTS];
-let carouselConfig = JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
-let discountVal = 0;
-let productImagesCache = {};
+let products = (function(){
+  try {
+    const raw = safeGetItem('norxstore_products_cache', null);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length > 0) return mergeProductsData(parsed);
+    }
+  }catch(e){}
+  return [...DEFAULT_PRODUCTS];
+})();
+
+let carouselConfig = (function(){
+  try {
+    const raw = safeGetItem('norxstore_carousel_cache', null);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length === 4) return parsed;
+    }
+  }catch(e){}
+  return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
+})();
+
+const NORX_SYSTEM_VER = '2026.09.23.v6';
+(function checkSystemVersion(){
+  try {
+    const cur = safeGetItem('norx_sys_version', null);
+    if(cur !== NORX_SYSTEM_VER){
+      safeRemoveItem('norxstore_images_cache');
+      safeRemoveItem('norxstore_products_cache');
+      safeSetItem('norx_sys_version', NORX_SYSTEM_VER);
+      openNorxIDB().then(db => {
+        if(!db) return;
+        try {
+          const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
+          tx.objectStore(NORX_IDB_STORE).clear();
+        } catch(e){}
+      });
+    }
+  } catch(e){}
+})();
+
+let productImagesCache = (function(){
+  try {
+    const cur = safeGetItem('norx_sys_version', null);
+    if(cur !== NORX_SYSTEM_VER) return {};
+    const raw = safeGetItem('norxstore_images_cache', null);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object') return parsed;
+    }
+  }catch(e){}
+  return {};
+})();
 let reviewPhotosCache = [];
 let paymentIconsCache = {};
+
 let adminPasswordCache = DEFAULT_PASSWORD;
 let pwEnabledCache = true;
 
@@ -1179,8 +1876,50 @@ function isAdminOpen(){
 }
 
 let splashHidden = false;
-let productsDataReady = false;
-let imagesDataReady = false;
+let productsDataReady = Array.isArray(products) && products.length > 0;
+let imagesDataReady = Object.keys(productImagesCache).length > 0;
+
+function preloadProductImages(){
+  try {
+    const all = productImagesCache || {};
+    for(const id in all){
+      const urls = all[id];
+      if(Array.isArray(urls)){
+        urls.forEach(url => {
+          if(url && typeof url === 'string'){
+            const img = new Image();
+            img.decoding = 'async';
+            img.src = url;
+          }
+        });
+      }
+    }
+  } catch(e){}
+}
+preloadProductImages();
+
+(function initImagesFromIDB(){
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const tx = db.transaction(NORX_IDB_STORE, 'readonly');
+      const req = tx.objectStore(NORX_IDB_STORE).get('productImages');
+      req.onsuccess = () => {
+        const idbData = req.result;
+        if(idbData && typeof idbData === 'object' && Object.keys(idbData).length > 0){
+          const wasEmpty = Object.keys(productImagesCache).length === 0;
+          productImagesCache = Object.assign({}, idbData, productImagesCache);
+          imagesDataReady = true;
+          preloadProductImages();
+          if(wasEmpty){
+            renderProducts();
+          }
+        }
+      };
+    } catch(e){}
+  });
+})();
+
 function hideSplash(){
   if(splashHidden) return;
   splashHidden = true;
@@ -1188,14 +1927,20 @@ function hideSplash(){
   if(el) el.classList.add('hide');
 }
 function tryHideSplash(){
-  if(productsDataReady && imagesDataReady) hideSplash();
+  if(productsDataReady && imagesDataReady){
+    renderProducts();
+    requestAnimationFrame(()=>{
+      hideSplash();
+    });
+  }
 }
-setTimeout(hideSplash, 2500); // jaring pengaman kalau Firebase lambat/offline
+setTimeout(hideSplash, 2500);
 
 fbDB.ref('norxstore/products').on('value', snap=>{
   products = mergeProductsData(snap.val());
+  safeSetItem('norxstore_products_cache', JSON.stringify(products));
   productsDataReady = true;
-  if(imagesDataReady || splashHidden) renderProducts();
+  renderProducts();
   tryHideSplash();
   if(isAdminOpen()){
     renderAdminProductList();
@@ -1206,19 +1951,26 @@ fbDB.ref('norxstore/products').on('value', snap=>{
 fbDB.ref('norxstore/carousel').on('value', snap=>{
   const val = snap.val();
   carouselConfig = (Array.isArray(val) && val.length === 4) ? val : JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
+  safeSetItem('norxstore_carousel_cache', JSON.stringify(carouselConfig));
   renderCarousel();
   if(isAdminOpen()) renderCarouselAdmin();
 });
 fbDB.ref('norxstore/discount').on('value', snap=>{
   const val = snap.val();
-  discountVal = typeof val === 'number' ? val : 0;
+  discountConfig = normalizeDiscountConfig(val);
+  discountVal = discountConfig.global;
+  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
   renderProducts();
   if(cart.length > 0) renderCart();
+  if(isAdminOpen()) renderDiscountAdminUI();
 });
 fbDB.ref('norxstore/images').on('value', snap=>{
-  productImagesCache = snap.val() || {};
+  const val = snap.val() || {};
+  productImagesCache = val;
   imagesDataReady = true;
-  if(productsDataReady || splashHidden) renderProducts();
+  saveImagesCache(val);
+  preloadProductImages();
+  renderProducts();
   tryHideSplash();
 });
 fbDB.ref('norxstore/reviewPhotos').on('value', snap=>{
@@ -1229,6 +1981,7 @@ fbDB.ref('norxstore/reviewPhotos').on('value', snap=>{
 });
 fbDB.ref('norxstore/paymentIcons').on('value', snap=>{
   paymentIconsCache = snap.val() || {};
+  safeSetItem('norxstore_payicons_cache', JSON.stringify(paymentIconsCache));
   applyPaymentIcons();
   if(isAdminOpen()) renderPayIconAdminList();
 });
@@ -1242,13 +1995,113 @@ fbDB.ref('norxstore/pwEnabled').on('value', snap=>{
 });
 let cart = JSON.parse(safeGetItem('norxstore_cart', '[]'));
 
+function normalizeCartItems(){
+  if(!Array.isArray(cart)) { cart = []; return; }
+  const seen = new Set();
+  const clean = [];
+  cart.forEach(item => {
+    if(item && item.id !== undefined && !seen.has(item.id)){
+      seen.add(item.id);
+      item.qty = 1;
+      clean.push(item);
+    }
+  });
+  cart = clean;
+}
+normalizeCartItems();
+
 function saveCart(){
+  normalizeCartItems();
   safeSetItem('norxstore_cart', JSON.stringify(cart));
   syncCartToCloud();
 }
 
 // ==================== ORDER TRACKING (Pesanan Saya) ====================
 let allOrders = {};
+
+function getActiveOrderForProduct(productId){
+  // Kunci produk untuk akun pembeli ini jika memiliki pesanan aktif yang belum selesai ('pending' atau 'processing').
+  // Pengunjung/pelanggan lain yang tidak memesan produk ini TIDAK akan terblokir dan tetap bisa memesan.
+  const prod = products.find(p => p.id === productId);
+  if(!prod || !allOrders || typeof allOrders !== 'object') return null;
+
+  // 1. Cek pesanan aktif yang tersimpan di perangkat ini (localStorage / sessionStorage)
+  const myIds = getMyOrderIds();
+  for(const ordId of myIds){
+    const ord = allOrders[ordId];
+    if(!ord) continue;
+    if(ord.status === 'pending' || ord.status === 'processing'){
+      if(Array.isArray(ord.items)){
+        const hasItem = ord.items.some(it => {
+          if(it.id !== undefined && it.id !== null && it.id !== ''){
+            return Number(it.id) === Number(productId);
+          }
+          if(it.name && prod.name){
+            return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+          }
+          return false;
+        });
+        if(hasItem) return ord;
+      }
+    }
+  }
+
+  // 2. Jika user sedang login dengan Google, cek juga pesanan aktif milik akun ini di Firebase
+  if(currentUser && !currentUser.isAnonymous){
+    for(const ordId in allOrders){
+      const ord = allOrders[ordId];
+      if(!ord) continue;
+      const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
+                     (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
+      if(isMine && (ord.status === 'pending' || ord.status === 'processing')){
+        if(Array.isArray(ord.items)){
+          const hasItem = ord.items.some(it => {
+            if(it.id !== undefined && it.id !== null && it.id !== ''){
+              return Number(it.id) === Number(productId);
+            }
+            if(it.name && prod.name){
+              return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+            }
+            return false;
+          });
+          if(hasItem) return ord;
+        }
+      }
+    }
+  }
+
+  return null;
+}
+
+// Untuk panel Admin: mengecek apakah ada pesanan aktif toko secara keseluruhan
+function getGlobalActiveOrderForProduct(productId){
+  if(!allOrders || typeof allOrders !== 'object') return null;
+  const prod = products.find(p => p.id === productId);
+  for(const ordId in allOrders){
+    const ord = allOrders[ordId];
+    if(!ord || !ord.status) continue;
+    if(ord.status === 'pending' || ord.status === 'processing'){
+      if(Array.isArray(ord.items)){
+        const hasItem = ord.items.some(it => {
+          if(it.id !== undefined && it.id !== null && it.id !== ''){
+            return Number(it.id) === Number(productId);
+          }
+          if(prod && it.name && prod.name){
+            return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+          }
+          return false;
+        });
+        if(hasItem) return ord;
+      }
+    }
+  }
+  return null;
+}
+
+function isProductInUnfinishedOrder(productId){
+  return getActiveOrderForProduct(productId) !== null;
+}
+
 function getMyOrderIds(){
   try { const arr = JSON.parse(safeGetItem('norxstore_my_orders', '[]')); return Array.isArray(arr) ? arr : []; }
   catch(e){ return []; }
@@ -1275,10 +2128,34 @@ function createOrder(items, total, paymentMethod, adminName){
     customerName: isLoggedIn ? (currentUser.displayName || null) : null,
     customerEmail: isLoggedIn ? (currentUser.email || null) : null
   };
+  allOrders[orderId] = order;
   fbDB.ref('norxstore/orders/' + orderId).set(order).catch(e=>console.error(e));
   addMyOrderId(orderId);
+  renderProducts();
   return orderId;
 }
+function removeMyOrder(orderId, event){
+  if(event) event.stopPropagation();
+  if(!confirm('Hapus riwayat pesanan ini dari daftar Anda?')) return;
+  const filtered = getMyOrderIds().filter(id => id !== orderId);
+  safeSetItem('norxstore_my_orders', JSON.stringify(filtered));
+  syncOrderIdsToCloud();
+  renderMyOrders();
+  renderProducts();
+  showToast('Riwayat pesanan dihapus');
+}
+function cancelMyOrder(orderId, event){
+  if(event) event.stopPropagation();
+  if(!confirm('Batalkan pesanan ini? Layanan akan langsung kembali bisa dipesan.')) return;
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/' + orderId).update({status: 'cancelled', cancelledAt: Date.now()}).catch(e=>console.error(e));
+  }
+  if(allOrders[orderId]) allOrders[orderId].status = 'cancelled';
+  renderMyOrders();
+  renderProducts();
+  showToast('Pesanan berhasil dibatalkan. Layanan kembali bisa dipesan.');
+}
+
 function renderMyOrders(){
   const section = document.getElementById('myOrdersSection');
   if(!section) return;
@@ -1288,21 +2165,35 @@ function renderMyOrders(){
   section.innerHTML = '<div class="my-orders-title">📦 Pesanan Saya</div>' + myOrders.map(o => {
     const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
     let statusBadge = '';
-    if(o.status === 'pending') statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
+    let cancelAction = '';
+    if(o.status === 'pending'){
+      statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
+      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Batalkan Pesanan">✕ Batalkan</button>`;
+    }
     else if(o.status === 'processing') statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
+    else if(o.status === 'cancelled') statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
     else statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
     return `
-    <div class="my-order-card">
-      <p class="my-order-items">${itemsText}</p>
+    <div class="my-order-card" style="position:relative">
+      <button onclick="removeMyOrder('${o.id}', event)" title="Hapus riwayat pesanan" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:14px;padding:4px;line-height:1">✕</button>
+      <p class="my-order-items" style="padding-right:20px">${itemsText}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
-      ${statusBadge}
+      <div style="display:flex;align-items:center;margin-top:4px">
+        ${statusBadge}
+        ${cancelAction}
+      </div>
     </div>`;
   }).join('');
 }
 fbDB.ref('norxstore/orders').on('value', snap=>{
   allOrders = snap.val() || {};
   renderMyOrders();
-  if(isAdminOpen()) renderAdminOrders();
+  renderProducts();
+  if(cart && cart.length > 0) renderCart();
+  if(isAdminOpen()){
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 });
 
 // ==================== LOGIN GOOGLE & SINKRONISASI LINTAS DEVICE ====================
@@ -1320,6 +2211,9 @@ if(window.fbAvailable && fbAuth.onAuthStateChanged){
     }
     currentUser = user;
     updateLoginIcon();
+    if(typeof attachUserPresence === 'function'){
+      attachUserPresence(user.uid);
+    }
     if(!user.isAnonymous && !userDataLoaded){
       userDataLoaded = true;
       loadUserDataFromCloud(user.uid);
@@ -1421,8 +2315,15 @@ function loadUserDataFromCloud(uid){
       saveCart();
       updateCartBadge();
       renderCart();
-    } else if(cart.length > 0){
-      syncCartToCloud();
+      renderProducts();
+    } else if(cloudCart === null || (Array.isArray(cloudCart) && cloudCart.length === 0)){
+      if(cart.length > 0){
+        cart = [];
+        safeSetItem('norxstore_cart', '[]');
+        updateCartBadge();
+        renderCart();
+        renderProducts();
+      }
     }
   }).catch(e=>console.error(e));
   fbDB.ref('norxstore/users/' + uid + '/myOrderIds').once('value').then(snap=>{
@@ -1436,7 +2337,7 @@ function loadUserDataFromCloud(uid){
 }
 function syncCartToCloud(){
   if(currentUser && !currentUser.isAnonymous){
-    fbDB.ref('norxstore/users/' + currentUser.uid + '/cart').set(cart).catch(e=>console.error(e));
+    fbDB.ref('norxstore/users/' + currentUser.uid + '/cart').set(cart && cart.length > 0 ? cart : null).catch(e=>console.error(e));
   }
 }
 function syncOrderIdsToCloud(){
@@ -1462,10 +2363,13 @@ function renderAdminOrders(){
     let statusBadge, actions;
     if(o.status === 'pending'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu</span>';
-      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="approveOrder('${o.id}')">✅ Setujui</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="approveOrder('${o.id}')">⏳ Proses</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'processing'){
       statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Diproses${o.estimate ? ' · '+o.estimate : ''}</span>`;
-      actions = `<button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+    } else if(o.status === 'cancelled'){
+      statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
+      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
     } else {
       statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
       actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
@@ -1476,7 +2380,7 @@ function renderAdminOrders(){
       <p class="my-order-items">${itemsText}</p>
       <p style="font-size:11px;color:#888;margin:0 0 4px">${o.adminName || ''} · ${o.paymentMethod || ''} · ${dateStr}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
-      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${statusBadge}${actions}</div>
+      <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${statusBadge}${actions}</div>
     </div>`;
   }).join('');
 }
@@ -1484,16 +2388,64 @@ function approveOrder(id){
   const est = prompt('Berapa lama estimasi pengerjaan? (contoh: 2 jam, 1-2 hari)');
   if(est === null) return;
   fbDB.ref('norxstore/orders/' + id).update({status:'processing', estimate: est.trim() || null, approvedAt: Date.now()}).catch(e=>console.error(e));
-  showToast('Pesanan disetujui, pelanggan akan lihat estimasinya');
+  if(allOrders[id]){
+    allOrders[id].status = 'processing';
+    allOrders[id].estimate = est.trim() || null;
+  }
+  showToast('Pesanan disetujui, sedang diproses');
+  renderMyOrders();
+  renderProducts();
+  if(isAdminOpen()) {
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 }
 function completeOrderStatus(id){
-  fbDB.ref('norxstore/orders/' + id).update({status:'done'}).catch(e=>console.error(e));
-  showToast('Pesanan ditandai selesai');
+  fbDB.ref('norxstore/orders/' + id).update({status:'done', completedAt: Date.now()}).catch(e=>console.error(e));
+  if(allOrders[id]) allOrders[id].status = 'done';
+  showToast('✅ Pesanan selesai! Produk kini kembali bisa dipesan.');
+  renderMyOrders();
+  renderProducts();
+  if(isAdminOpen()) {
+    renderAdminOrders();
+    renderAdminProductList();
+  }
+}
+function cancelOrder(id){
+  if(!confirm('Batalkan pesanan ini? Produk akan otomatis kembali tersedia untuk dipesan pelanggan.')) return;
+  fbDB.ref('norxstore/orders/' + id).update({status:'cancelled', cancelledAt: Date.now()}).catch(e=>console.error(e));
+  if(allOrders[id]) allOrders[id].status = 'cancelled';
+  showToast('Pesanan dibatalkan. Produk kembali tersedia.');
+  renderMyOrders();
+  renderProducts();
+  if(isAdminOpen()) {
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 }
 function deleteOrder(id){
   if(!confirm('Hapus riwayat pesanan ini?')) return;
+  const o = allOrders[id];
+  if(o && o.customerUid){
+    fbDB.ref('norxstore/users/' + o.customerUid + '/myOrderIds').once('value').then(snap=>{
+      const ids = snap.val();
+      if(Array.isArray(ids)){
+        const filtered = ids.filter(x => x !== id);
+        fbDB.ref('norxstore/users/' + o.customerUid + '/myOrderIds').set(filtered).catch(e=>console.error(e));
+      }
+    }).catch(e=>console.error(e));
+  }
+  const localIds = getMyOrderIds().filter(x => x !== id);
+  safeSetItem('norxstore_my_orders', JSON.stringify(localIds));
+  delete allOrders[id];
   fbDB.ref('norxstore/orders/' + id).remove().catch(e=>console.error(e));
   showToast('Riwayat pesanan dihapus');
+  renderMyOrders();
+  renderProducts();
+  if(isAdminOpen()){
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 }
 
 function updateCartBadge(){
@@ -1507,15 +2459,31 @@ function addToCart(id, event){
   if(event) event.stopPropagation();
   const product = products.find(p=>p.id===id);
   if(!product) return;
-  const existing = cart.find(item=>item.id===id);
-  if(existing){
-    existing.qty += 1;
-  } else {
-    cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, qty:1});
+  normalizeCartItems();
+  const existingIdx = cart.findIndex(item=>item.id===id);
+  if(existingIdx > -1){
+    cart.splice(existingIdx, 1);
+    saveCart();
+    updateCartBadge();
+    renderCart();
+    renderProducts();
+    showToast('🗑️ ' + product.name + ' dihapus dari keranjang');
+    return;
   }
+  // Cegah jika produk masih dalam pesanan aktif yang belum selesai
+  const activeOrder = getActiveOrderForProduct(product.id);
+  if(activeOrder){
+    const stMsg = activeOrder.status === 'processing'
+      ? `Produk ini sedang dalam pengerjaan${activeOrder.estimate ? ' (estimasi ' + activeOrder.estimate + ')' : ''}`
+      : 'Produk ini sedang dalam antrean pesanan belum selesai';
+    showToast('⏳ ' + stMsg + '. Belum bisa dipesan lagi sampai selesai!');
+    return;
+  }
+  cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, cat:product.cat, qty:1});
   saveCart();
   updateCartBadge();
-  showToast(product.name + ' ditambahkan ke keranjang');
+  renderProducts();
+  showToast('✅ ' + product.name + ' ditambahkan ke keranjang');
 }
 
 function removeFromCart(id){
@@ -1523,19 +2491,20 @@ function removeFromCart(id){
   saveCart();
   updateCartBadge();
   renderCart();
+  renderProducts();
 }
 
 function changeQty(id, delta){
   const item = cart.find(item=>item.id===id);
   if(!item) return;
-  item.qty += delta;
-  if(item.qty <= 0){
+  if(delta > 0){
+    showToast('⚠️ Maksimal 1 pesanan untuk produk ini. Silakan pilih produk lain!');
+    return;
+  }
+  if(delta < 0){
     removeFromCart(id);
     return;
   }
-  saveCart();
-  updateCartBadge();
-  renderCart();
 }
 
 function clearCart(){
@@ -1546,15 +2515,16 @@ function clearCart(){
   saveCart();
   updateCartBadge();
   renderCart();
+  renderProducts();
   closeCartCheckoutStep();
   document.querySelectorAll('#adminGridCart .admin-option').forEach(opt=>opt.classList.remove('selected'));
   showToast('Keranjang dikosongkan');
 }
 
 function renderCart(){
+  normalizeCartItems();
   const body = document.getElementById('cartItemsList');
   const footer = document.getElementById('cartFooter');
-  const discount = getDiscount();
   if(cart.length===0){
     body.innerHTML = `
       <div class="cart-empty">
@@ -1565,53 +2535,84 @@ function renderCart(){
     footer.style.display = 'none';
     return;
   }
-  const subtotal = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
-  const discountAmount = Math.round(subtotal * discount / 100);
-  const total = subtotal - discountAmount;
+  const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
+  let totalDiscountAmount = 0;
 
   body.innerHTML = cart.map(item=>{
-    const itemSub = item.price * item.qty;
-    const itemDisc = Math.round(itemSub * discount / 100);
-    const itemFinal = itemSub - itemDisc;
-    const hasDisc = discount > 0;
+    const prod = products.find(p => p.id === item.id);
+    const itemCat = item.cat || (prod ? prod.cat : '');
+    const itemDisc = getDiscount(itemCat);
+    const itemSub = item.price * 1;
+    const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
+    totalDiscountAmount += itemDiscAmount;
+    const itemFinal = itemSub - itemDiscAmount;
+    const hasDisc = itemDisc > 0;
     const imgs = getImagesForProduct(item.id);
     const thumb = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:20px">${item.icon}</span>`;
+    const activeOrd = getActiveOrderForProduct(item.id);
+    const isBusy = !!activeOrd;
+    const busyWarning = isBusy ? `
+      <div style="font-size:10px;color:#1e40af;background:#eff6ff;border:1px solid #bfdbfe;padding:4px 7px;border-radius:6px;margin-top:5px;font-weight:600;display:flex;align-items:center;gap:4px">
+        <span>🔵</span> <span>Sedang dalam proses pesanan Anda${activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : ''}. Harap tunggu sampai selesai atau hapus dari keranjang.</span>
+      </div>
+    ` : '';
     return `
-    <div class="cart-item">
+    <div class="cart-item" style="${isBusy ? 'background:#f8fafc;border:1px solid #bfdbfe;' : ''}">
       <div class="cart-item-thumb">${thumb}</div>
       <div class="cart-item-info">
         <p class="cart-item-name">${item.name}</p>
         <div class="cart-item-price-row">
           ${hasDisc ? `<span class="cart-item-price-old">${formatPrice(itemSub)}</span>` : ''}
           <span class="${hasDisc ? 'cart-item-price-discount' : 'cart-item-price'}">${formatPrice(itemFinal)}</span>
-          ${hasDisc ? `<span style="font-size:10px;color:#ef4444;font-weight:700">-${discount}%</span>` : ''}
+          ${hasDisc ? `<span style="font-size:10px;color:#ef4444;font-weight:700">-${itemDisc}%</span>` : ''}
         </div>
-        <div class="cart-item-qty">
-          <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
-          <span class="qty-num">${item.qty}</span>
-          <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
+        <div class="cart-item-qty" style="margin-top:5px;display:flex;align-items:center;gap:6px">
+          <span style="font-size:11px;font-weight:700;color:#6b7280;background:#f3f4f6;padding:3px 8px;border-radius:6px;border:1px solid #e5e7eb">Jumlah: 1</span>
+          <span style="font-size:10px;color:#9ca3af">• Maksimal 1 per layanan</span>
         </div>
+        ${busyWarning}
       </div>
-      <button class="cart-item-remove" onclick="removeFromCart(${item.id})">🗑</button>
+      <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Hapus dari keranjang">🗑</button>
     </div>
   `}).join('');
 
+  const total = subtotal - totalDiscountAmount;
   document.getElementById('cartSubtotal').textContent = formatPrice(subtotal);
   document.getElementById('cartTotal').textContent = formatPrice(total);
   const totalEl = document.getElementById('cartTotal');
-  totalEl.className = discount > 0 ? 'cart-total-price-discount' : 'cart-total-price';
+  totalEl.className = totalDiscountAmount > 0 ? 'cart-total-price-discount' : 'cart-total-price';
 
   const subRow = document.getElementById('cartSubtotalRow');
   const discRow = document.getElementById('cartDiscountRow');
-  if(discount > 0){
+  if(totalDiscountAmount > 0){
     subRow.style.display = 'flex';
     discRow.style.display = 'flex';
-    document.getElementById('cartDiscountLabel').textContent = discount + '%';
-    document.getElementById('cartDiscountAmount').textContent = '-' + formatPrice(discountAmount);
+    const discLabel = (discountConfig && discountConfig.mode === 'all')
+      ? `${discountConfig.global}%`
+      : 'Hemat';
+    document.getElementById('cartDiscountLabel').textContent = discLabel;
+    document.getElementById('cartDiscountAmount').textContent = '-' + formatPrice(totalDiscountAmount);
   } else {
     subRow.style.display = 'none';
     discRow.style.display = 'none';
   }
+
+  const busyItems = cart.filter(it => isProductInUnfinishedOrder(it.id));
+  const checkoutBtn = document.getElementById('cartCheckoutBtn');
+  if(checkoutBtn){
+    if(busyItems.length > 0){
+      checkoutBtn.style.background = '#9ca3af';
+      checkoutBtn.style.cursor = 'not-allowed';
+      checkoutBtn.title = 'Hapus item yang sedang diproses untuk checkout';
+      checkoutBtn.innerHTML = `⏳ Ada ${busyItems.length} Produk Belum Selesai Dikerjakan`;
+    } else {
+      checkoutBtn.style.background = '';
+      checkoutBtn.style.cursor = '';
+      checkoutBtn.title = '';
+      checkoutBtn.innerHTML = `💬 Checkout via WhatsApp`;
+    }
+  }
+
   footer.style.display = 'block';
 }
 
@@ -1625,6 +2626,11 @@ function openCart(){
 }
 
 function openCartCheckoutStep(){
+  const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
+  if(busyItems.length > 0){
+    showToast(`⚠️ Produk "${busyItems[0].name}" sedang ada pesanan yang belum selesai. Hapus dulu dari keranjang untuk lanjut.`);
+    return;
+  }
   document.getElementById('cartTotalStep').textContent = document.getElementById('cartTotal').textContent;
   document.getElementById('cartBody').style.display = 'none';
   document.getElementById('cartFooter').style.display = 'none';
@@ -1655,27 +2661,38 @@ function openWhatsApp(url){
 }
 
 function checkoutCart(){
+  normalizeCartItems();
   if(cart.length===0) return;
+  const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
+  if(busyItems.length > 0){
+    showToast(`⚠️ Produk "${busyItems[0].name}" sedang ada pesanan yang belum selesai. Belum bisa dipesan lagi sampai selesai!`);
+    return;
+  }
   if(!selectedCartPayment){ showToast('Pilih metode pembayaran dulu!'); return; }
   if(!selectedCartAdmin){ showToast('Pilih admin tujuan chat dulu!'); return; }
-  const discount = getDiscount();
-  const subtotal = cart.reduce((sum,item)=>sum+(item.price*item.qty),0);
-  const discountAmount = Math.round(subtotal * discount / 100);
-  const total = subtotal - discountAmount;
+  const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
+  let totalDiscountAmount = 0;
   const itemsText = cart.map(item=>{
-    const itemSub = item.price * item.qty;
-    const itemFinal = discount > 0 ? Math.round(itemSub * (100-discount)/100) : itemSub;
-    return `• ${item.name} x${item.qty} = ${formatPrice(itemFinal)}`;
+    const prod = products.find(p => p.id === item.id);
+    const itemCat = item.cat || (prod ? prod.cat : '');
+    const itemDisc = getDiscount(itemCat);
+    const itemSub = item.price * 1;
+    const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
+    totalDiscountAmount += itemDiscAmount;
+    const itemFinal = itemSub - itemDiscAmount;
+    return `• ${item.name} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (Diskon ${itemDisc}%)` : ''}`;
   }).join('\n');
+  const total = subtotal - totalDiscountAmount;
   let text = `Halo Admin NORXSTORE, saya ingin memesan:\n\n${itemsText}\n\n`;
-  if(discount > 0){
-    text += `Subtotal: ${formatPrice(subtotal)}\nDiskon: -${formatPrice(discountAmount)} (${discount}%)\n`;
+  if(totalDiscountAmount > 0){
+    const discSummary = (discountConfig && discountConfig.mode === 'all') ? ` (${discountConfig.global}%)` : '';
+    text += `Subtotal: ${formatPrice(subtotal)}\nTotal Diskon: -${formatPrice(totalDiscountAmount)}${discSummary}\n`;
   }
   text += `Total: ${formatPrice(total)}\nMetode Pembayaran: ${selectedCartPayment}\n\nMohon konfirmasi ketersediaannya, terima kasih!`;
   const url = getWaLink(text, selectedCartAdmin);
   const adminObj = WA_NUMBERS.find(a => a.number === selectedCartAdmin);
   createOrder(
-    cart.map(item => ({name:item.name, qty:item.qty, price:item.price})),
+    cart.map(item => ({id: item.id, name:item.name, qty:item.qty, price:item.price, cat: item.cat})),
     total,
     selectedCartPayment,
     adminObj ? adminObj.name : ''
@@ -1686,6 +2703,7 @@ function checkoutCart(){
   saveCart();
   updateCartBadge();
   renderCart();
+  renderProducts();
   renderMyOrders();
   closeCartCheckoutStep();
   showToast('Mengarahkan ke WhatsApp...');
@@ -1786,9 +2804,7 @@ document.getElementById('pwInput').addEventListener('keydown', function(e){
 });
 
 function openAdmin(){
-  const d = getDiscount();
-  document.getElementById('discountInput').value = d > 0 ? d : '';
-  document.getElementById('adminCurrentDiscount').textContent = d + '%';
+  renderDiscountAdminUI();
   document.getElementById('adminStatus').classList.remove('show');
   document.getElementById('passStatus').classList.remove('show');
   document.getElementById('passStatusDisable').style.display = 'none';
@@ -1811,24 +2827,13 @@ function openAdmin(){
     products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
   document.getElementById('imgAdminSection').style.display = 'none';
 
+  updateOnlineCountersUI(currentOnlineCount);
   document.getElementById('adminOverlay').classList.add('open');
 }
 function closeAdmin(e){
   if(!e || e.target === document.getElementById('adminOverlay')){
     document.getElementById('adminOverlay').classList.remove('open');
   }
-}
-function saveDiscount(){
-  const val = document.getElementById('discountInput').value;
-  const newDiscount = setDiscount(val);
-  document.getElementById('adminCurrentDiscount').textContent = newDiscount + '%';
-  document.getElementById('adminStatus').classList.add('show');
-  products = getProducts();
-  renderProducts();
-  if(cart.length > 0) renderCart();
-  setTimeout(()=>{
-    document.getElementById('adminStatus').classList.remove('show');
-  }, 2000);
 }
 function isPwProtectionEnabled(){
   return pwEnabledCache;
@@ -2127,6 +3132,7 @@ function toggleMode(){
   const darkSec = document.getElementById('darkSection');
 
   if(!isDark){
+    document.body.classList.add('dark-mode');
     sw.classList.add('on');
     lblLight.classList.remove('active');
     lblDark.classList.add('active');
@@ -2142,6 +3148,7 @@ function toggleMode(){
       modeTransitioning = false;
     }, 450);
   } else {
+    document.body.classList.remove('dark-mode');
     sw.classList.remove('on');
     lblLight.classList.add('active');
     lblDark.classList.remove('active');
@@ -2158,19 +3165,237 @@ function toggleMode(){
   }
 }
 
+// ==================== METADATA KATEGORI & SUB-FILTER ENGINE ====================
+const CAT_INFO = {
+  all: { name: 'Semua Layanan', shortName: 'Semua', icon: '🛒' },
+  genshin: { name: 'Genshin Impact', shortName: 'Genshin', icon: '✨' },
+  hsr: { name: 'Honkai: Star Rail', shortName: 'HSR', icon: '🚀' },
+  wuwa: { name: 'Wuthering Waves', shortName: 'WuWa', icon: '🌊' },
+  nte: { name: 'Neverness to Everness', shortName: 'NTE', icon: '🔮' },
+  lainnya: { name: 'Jual Beli Akun', shortName: '🔑 Jual Akun', icon: '🔑' }
+};
+
 let currentCatFilter = 'all';
+let currentSubgroupFilter = 'all';
+
+function getExistingSubgroups(cat){
+  const set = new Set();
+  (products || []).forEach(p => {
+    if((!cat || p.cat === cat) && p.subgroup && p.subgroup.trim()){
+      set.add(p.subgroup.trim());
+    }
+  });
+  return Array.from(set);
+}
+
+function openSubgroupPopup(cat){
+  const targetCat = cat || currentCatFilter;
+  if(!targetCat || targetCat === 'all') return;
+  const info = CAT_INFO[targetCat] || { name: targetCat, shortName: targetCat, icon: '🎮' };
+  
+  const titleEl = document.getElementById('sgPopTitle');
+  const subtitleEl = document.getElementById('sgPopSubtitle');
+  if(titleEl) titleEl.innerHTML = `${info.icon} Sub-Kategori ${info.shortName}`;
+  if(subtitleEl) subtitleEl.textContent = `Pilih sub-kategori untuk ${info.name}`;
+  
+  const catProds = (products || []).filter(p => p.cat === targetCat);
+  const totalCatCount = catProds.length;
+  
+  const subCounts = {};
+  let noneCount = 0;
+  catProds.forEach(p => {
+    const s = (p.subgroup || '').trim();
+    if(s){
+      subCounts[s] = (subCounts[s] || 0) + 1;
+    } else {
+      noneCount++;
+    }
+  });
+  
+  const uniqueSubgroups = Object.keys(subCounts);
+  const listEl = document.getElementById('sgPopList');
+  if(!listEl) return;
+  
+  let html = '';
+  
+  // Opsi 1: Semua layanan dalam kategori ini
+  const isAllActive = (currentCatFilter === targetCat && currentSubgroupFilter === 'all');
+  html += `
+    <div class="sg-pop-item ${isAllActive ? 'active' : ''}" onclick="selectSubgroupFilter('all')">
+      <div class="sg-pop-item-left">
+        <div class="sg-pop-icon">🌟</div>
+        <div class="sg-pop-text">
+          <div class="sg-pop-name">Semua ${info.shortName}</div>
+          <div class="sg-pop-desc">Tampilkan seluruh varian & paket</div>
+        </div>
+      </div>
+      <div class="sg-pop-item-right">
+        <span class="sg-pop-count">${totalCatCount} produk</span>
+        <div class="sg-pop-radio"></div>
+      </div>
+    </div>
+  `;
+  
+  // Opsi sub-kategori yang terisi otomatis
+  uniqueSubgroups.forEach(sub => {
+    const isActive = (currentCatFilter === targetCat && currentSubgroupFilter.toLowerCase() === sub.toLowerCase());
+    let subIcon = '🏷️';
+    const subLower = sub.toLowerCase();
+    if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('crystal') || subLower.includes('gem') || subLower.includes('primogem') || subLower.includes('oneiric')) subIcon = '💎';
+    else if(subLower.includes('joki') || subLower.includes('quest') || subLower.includes('abyss') || subLower.includes('boss') || subLower.includes('farming')) subIcon = '⚔️';
+    else if(subLower.includes('akun') || subLower.includes('account') || subLower.includes('starter') || subLower.includes('reroll')) subIcon = '🔑';
+    else if(subLower.includes('item') || subLower.includes('pass') || subLower.includes('welkin') || subLower.includes('express')) subIcon = '🌙';
+    else if(subLower.includes('event') || subLower.includes('misi')) subIcon = '🎯';
+
+    html += `
+      <div class="sg-pop-item ${isActive ? 'active' : ''}" onclick="selectSubgroupFilter('${sub.replace(/'/g, "\\'")}')">
+        <div class="sg-pop-item-left">
+          <div class="sg-pop-icon">${subIcon}</div>
+          <div class="sg-pop-text">
+            <div class="sg-pop-name">${sub}</div>
+            <div class="sg-pop-desc">Layanan kategori ${sub}</div>
+          </div>
+        </div>
+        <div class="sg-pop-item-right">
+          <span class="sg-pop-count">${subCounts[sub]} produk</span>
+          <div class="sg-pop-radio"></div>
+        </div>
+      </div>
+    `;
+  });
+  
+  if(noneCount > 0 && uniqueSubgroups.length > 0){
+    const isNoneActive = (currentCatFilter === targetCat && currentSubgroupFilter === '__none__');
+    html += `
+      <div class="sg-pop-item ${isNoneActive ? 'active' : ''}" onclick="selectSubgroupFilter('__none__')">
+        <div class="sg-pop-item-left">
+          <div class="sg-pop-icon">📦</div>
+          <div class="sg-pop-text">
+            <div class="sg-pop-name">Lainnya / Reguler</div>
+            <div class="sg-pop-desc">Layanan reguler tanpa sub-kategori</div>
+          </div>
+        </div>
+        <div class="sg-pop-item-right">
+          <span class="sg-pop-count">${noneCount} produk</span>
+          <div class="sg-pop-radio"></div>
+        </div>
+      </div>
+    `;
+  }
+  
+  listEl.innerHTML = html;
+  
+  const modal = document.getElementById('subgroupPopupOverlay');
+  if(modal) modal.classList.add('open');
+}
+
+function closeSubgroupPopup(e){
+  if(e && e.target && e.target !== document.getElementById('subgroupPopupOverlay')) return;
+  const modal = document.getElementById('subgroupPopupOverlay');
+  if(modal) modal.classList.remove('open');
+}
+
+function selectSubgroupFilter(sub){
+  currentSubgroupFilter = sub;
+  const modal = document.getElementById('subgroupPopupOverlay');
+  if(modal) modal.classList.remove('open');
+  
+  const searchInput = document.getElementById('searchInput');
+  if(searchInput) searchInput.value = '';
+  
+  renderProducts(currentCatFilter, currentSubgroupFilter);
+  
+  const catObj = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
+  const label = sub === 'all' ? ('Semua ' + catObj.shortName) : (sub === '__none__' ? 'Reguler' : sub);
+  showToast('Menampilkan: ' + label);
+  
+  const grid = document.getElementById('productGrid');
+  if(grid){
+    grid.scrollIntoView({behavior:'smooth', block:'start'});
+  }
+}
+
+function updateCategoryChipsUI(){
+  const chips = document.querySelectorAll('.cat-chip');
+  chips.forEach(chip => {
+    let cat = chip.getAttribute('data-cat');
+    if(!cat){
+      const t = chip.textContent.trim().toLowerCase();
+      if(t.includes('genshin')) cat = 'genshin';
+      else if(t.includes('hsr')) cat = 'hsr';
+      else if(t.includes('wuwa')) cat = 'wuwa';
+      else if(t.includes('nte')) cat = 'nte';
+      else if(t.includes('akun')) cat = 'lainnya';
+      else cat = 'all';
+      chip.setAttribute('data-cat', cat);
+    }
+    
+    const info = CAT_INFO[cat] || { shortName: cat };
+    const hasSubs = cat !== 'all' && getExistingSubgroups(cat).length > 0;
+    
+    if(cat === currentCatFilter){
+      chip.classList.add('active');
+      if(hasSubs){
+        if(currentSubgroupFilter && currentSubgroupFilter !== 'all'){
+          const subLabel = currentSubgroupFilter === '__none__' ? 'Reguler' : currentSubgroupFilter;
+          chip.innerHTML = `${info.shortName}: <b>${subLabel}</b> ▾`;
+        } else {
+          chip.innerHTML = `${info.shortName} ▾`;
+        }
+      } else {
+        chip.innerHTML = info.shortName;
+      }
+    } else {
+      chip.classList.remove('active');
+      if(hasSubs){
+        chip.innerHTML = `${info.shortName} ▾`;
+      } else {
+        chip.innerHTML = info.shortName;
+      }
+    }
+  });
+  
+  const subBar = document.getElementById('catalogSubFilterBar');
+  if(subBar){
+    if(currentCatFilter !== 'all' && currentSubgroupFilter && currentSubgroupFilter !== 'all'){
+      const info = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
+      const subLabel = currentSubgroupFilter === '__none__' ? 'Reguler' : currentSubgroupFilter;
+      subBar.style.display = 'flex';
+      subBar.innerHTML = `
+        <div class="csb-left">
+          <span class="csb-label">Sub-Kategori:</span>
+          <button type="button" class="csb-active-chip" onclick="openSubgroupPopup('${currentCatFilter}')">
+            🏷️ ${subLabel} ▾ <span style="font-size:9px;opacity:.75;margin-left:2px">Ganti</span>
+          </button>
+        </div>
+        <button type="button" class="csb-reset-btn" onclick="selectSubgroupFilter('all')">
+          ✕ Semua ${info.shortName}
+        </button>
+      `;
+    } else {
+      subBar.style.display = 'none';
+      subBar.innerHTML = '';
+    }
+  }
+}
+
 function renderProductCard(p, discount, idx){
-  const discPrice = getDiscountedPrice(p.price);
-  const hasDisc = discount > 0;
+  const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p.cat);
+  const discPrice = getDiscountedPrice(p.price, p.cat);
+  const hasDisc = disc > 0;
   const imgs = getImagesForProduct(p.id);
   const hasImgs = imgs.length > 0;
+  const isAboveFold = (idx === undefined || idx < 8);
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
-    <div class="product-img-slide" data-index="${i}">
-      <img src="${url}" alt="${p.name}" onclick="openImageViewer('${url}');event.stopPropagation()">
+    <div class="product-img-slide" data-index="${i}" onclick="openProductImageViewer(${p.id},${i},event)" style="cursor:zoom-in" title="Perbesar foto produk">
+      <img src="${url}" alt="${p.name}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}">
+      <div class="slide-protect-shield" onclick="openProductImageViewer(${p.id},${i},event)"></div>
     </div>
-  `).join('') : `
-    <div class="product-img-slide"><span class="emoji-fallback">${p.icon}</span></div>
-  `;
+  `).join('') : (!imagesDataReady ? `
+    <div class="product-img-slide"><div class="skel" style="width:100%;height:100%;position:absolute;inset:0"></div></div>
+  ` : `
+    <div class="product-img-slide" onclick="openModal(${p.id})"><span class="emoji-fallback">${p.icon}</span></div>
+  `);
   const imgDots = hasImgs && imgs.length > 1 ? `
     <div class="img-nav-dots">${imgs.map((_,i)=>`<button class="img-nav-dot ${i===0?'active':''}" onclick="scrollProdImg(${p.id},${i},event)"></button>`).join('')}</div>
   ` : '';
@@ -2179,38 +3404,60 @@ function renderProductCard(p, discount, idx){
   const acctStatus = getEffectiveAccountStatus(p);
   const isSold = acctStatus === 'sold';
   const isReserved = acctStatus === 'reserved';
-  const isLocked = isSold || isReserved;
-  const acctBadge = isSold
-    ? `<span class="discount-badge" style="background:linear-gradient(135deg,#6b7280,#374151);left:8px;right:auto">🔴 TERJUAL</span>`
-    : isReserved
-    ? `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 DIPESAN · ${getReserveMinutesLeft(p)} mnt</span>`
-    : (p.isAccount ? `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">🔑 STOK 1</span>` : '');
+  const activeOrder = getActiveOrderForProduct(p.id);
+  const isOrderProcessing = !!activeOrder;
+  const isLocked = isSold || isReserved || isOrderProcessing;
 
-  const capIdx = Math.min(idx || 0, 10);
+  let busyBadge = '';
+  if(isSold){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#6b7280,#374151);left:8px;right:auto">🔴 TERJUAL</span>`;
+  } else if(isReserved){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 DIPESAN · ${getReserveMinutesLeft(p)} mnt</span>`;
+  } else if(isOrderProcessing){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">🔵 SEDANG DIPROSES${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
+  } else if(p.isAccount){
+    busyBadge = `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">🔑 STOK 1</span>`;
+  }
+
+  let lockedBtnText = '';
+  let lockedBtnBg = '#9ca3af';
+  if(isSold){
+    lockedBtnText = '🔴 Terjual';
+  } else if(isReserved){
+    lockedBtnText = '🟡 Dipesan';
+  } else if(isOrderProcessing){
+    lockedBtnText = '🔵 Sedang Diproses';
+    lockedBtnBg = 'linear-gradient(135deg,#2563eb,#1d4ed8)';
+  }
+
   return `
-  <div class="product-card" style="--i:${capIdx};${isLocked ? 'opacity:.6' : ''}">
-    <div class="product-img-wrap" id="prodImgWrap_${p.id}" onclick="openModal(${p.id})">
+  <div class="product-card" style="${isLocked ? 'opacity:.82' : ''}">
+    <div class="product-img-wrap" id="prodImgWrap_${p.id}">
       ${!isLocked && !p.isAccount && p.badge?`<span class="product-badge">${p.badge}</span>`:''}
-      ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${discount}%</span>`:''}
-      ${acctBadge}
+      ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
+      ${busyBadge}
       ${imgCount}
-      <div class="product-img-track" id="prodImgTrack_${p.id}" onscroll="onProdImgScroll(${p.id})" onclick="event.stopPropagation()">
+      <div class="product-img-track" id="prodImgTrack_${p.id}" onscroll="onProdImgScroll(${p.id})">
         ${imgSlides}
       </div>
       ${imgDots}
     </div>
-    <div class="product-info">
+    <div class="product-info" onclick="openModal(${p.id})" style="cursor:pointer">
       <p class="product-name">${p.name}</p>
       <div class="price-row">
         ${hasDisc?`<span class="product-price-old">${formatPrice(p.price)}</span>`:''}
         <span class="${hasDisc?'product-price-discount':'product-price'}">${formatPrice(discPrice)}</span>
       </div>
       <p class="product-meta">${p.desc}</p>
-      <div class="product-btn-row">
+      <div class="product-btn-row" onclick="event.stopPropagation()">
         ${isLocked
-          ? `<button class="buy-now-btn" style="background:#aaa;cursor:not-allowed" disabled>${isSold ? '🔴 Terjual' : '🟡 Dipesan'}</button>`
+          ? `<button class="buy-now-btn" style="background:${lockedBtnBg};cursor:not-allowed;color:#fff;font-weight:700;opacity:.95" disabled>${lockedBtnText}</button>`
           : `<button class="buy-now-btn" onclick="openModal(${p.id})">🛒 Beli</button>
-             ${p.isAccount ? '' : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)">➕ Keranjang</button>`}`
+             ${p.isAccount ? '' : (
+               cart.some(item => item.id === p.id)
+                 ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="Sudah di keranjang (klik untuk batalkan/hapus)" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>Keranjang</button>`
+                 : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>Keranjang</button>`
+             )}`
         }
       </div>
     </div>
@@ -2218,26 +3465,41 @@ function renderProductCard(p, discount, idx){
   `;
 }
 
-function renderProducts(filter){
+function renderProducts(filter, subFilter){
   if(filter !== undefined) currentCatFilter = filter;
+  if(subFilter !== undefined) currentSubgroupFilter = subFilter;
   autoReleaseExpiredReservations();
   const grid=document.getElementById('productGrid');
   const searchInput = document.getElementById('searchInput');
   const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
   let filtered = currentCatFilter==='all' ? products : products.filter(p=>p.cat===currentCatFilter);
+
+  // Filter berdasarkan sub-kategori jika bukan 'all'
+  if(currentCatFilter !== 'all' && currentSubgroupFilter && currentSubgroupFilter !== 'all'){
+    if(currentSubgroupFilter === '__none__'){
+      filtered = filtered.filter(p => !p.subgroup || !p.subgroup.trim());
+    } else {
+      filtered = filtered.filter(p => p.subgroup && p.subgroup.trim().toLowerCase() === currentSubgroupFilter.toLowerCase());
+    }
+  }
+
   if(query){
     filtered = filtered.filter(p =>
       p.name.toLowerCase().includes(query) ||
-      (p.desc||'').toLowerCase().includes(query)
+      (p.desc||'').toLowerCase().includes(query) ||
+      (p.subgroup||'').toLowerCase().includes(query)
     );
   }
-  const discount = getDiscount();
+
+  updateCategoryChipsUI();
+
   if(filtered.length === 0){
     grid.innerHTML = `<div class="search-empty"><span>🔍</span><p>Tidak ada layanan yang cocok${query ? ' dengan "' + query + '"' : ''}.</p></div>`;
     return;
   }
 
-  const shouldGroup = currentCatFilter !== 'all' && !query && filtered.some(p => p.subgroup && p.subgroup.trim());
+  const isSpecificSubActive = currentSubgroupFilter && currentSubgroupFilter !== 'all';
+  const shouldGroup = !isSpecificSubActive && currentCatFilter !== 'all' && !query && filtered.some(p => p.subgroup && p.subgroup.trim());
   let cardIdx = 0;
   if(shouldGroup){
     const groups = [];
@@ -2249,10 +3511,10 @@ function renderProducts(filter){
     });
     grid.innerHTML = groups.map(g => `
       <div class="subgroup-heading">${g.name}</div>
-      ${g.items.map(p => renderProductCard(p, discount, cardIdx++)).join('')}
+      ${g.items.map(p => renderProductCard(p, getDiscount(p.cat), cardIdx++)).join('')}
     `).join('');
   } else {
-    grid.innerHTML = filtered.map((p,i) => renderProductCard(p, discount, i)).join('');
+    grid.innerHTML = filtered.map((p,i) => renderProductCard(p, getDiscount(p.cat), i)).join('');
   }
   setTimeout(()=>filtered.forEach(p=>initProdTouch(p.id)), 50);
 }
@@ -2314,22 +3576,43 @@ function scrollProdImg(pid, idx, event){
 }
 
 function filterCat(cat,btn){
-  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
-  btn.classList.add('active');
   const searchInput = document.getElementById('searchInput');
   if(searchInput) searchInput.value = '';
-  renderProducts(cat);
+
+  if(cat === 'all'){
+    currentCatFilter = 'all';
+    currentSubgroupFilter = 'all';
+    renderProducts('all', 'all');
+    return;
+  }
+
+  const existingSubs = getExistingSubgroups(cat);
+
+  // Jika mengklik kategori yang sedang aktif dan ada sub-kategori -> buka pop-up
+  if(currentCatFilter === cat && existingSubs.length > 0){
+    openSubgroupPopup(cat);
+    return;
+  }
+
+  // Pindah ke kategori yang dipilih
+  currentCatFilter = cat;
+  currentSubgroupFilter = 'all';
+  renderProducts(cat, 'all');
+
+  // Jika kategori ini memiliki sub-kategori -> otomatis buka pop-up pemilihan
+  if(existingSubs.length > 0){
+    openSubgroupPopup(cat);
+  }
 }
 function handleSearch(){
   renderProducts();
 }
 function showAllProducts(){
-  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
-  const allChip = document.querySelector('.cat-chip');
-  if(allChip) allChip.classList.add('active');
+  currentCatFilter = 'all';
+  currentSubgroupFilter = 'all';
   const searchInput = document.getElementById('searchInput');
   if(searchInput) searchInput.value = '';
-  renderProducts('all');
+  renderProducts('all', 'all');
   document.getElementById('productGrid').scrollIntoView({behavior:'smooth', block:'start'});
 }
 function renderReviews(){
@@ -2346,39 +3629,205 @@ function renderReviews(){
     return;
   }
   container.innerHTML = '<div class="review-photo-grid">' + photos.map((url, idx) => `
-    <div class="review-photo" style="--i:${Math.min(idx,10)}" onclick="openReviewPhoto(${idx})">
-      <img src="${url}" alt="Foto testimoni ${idx+1}">
+    <div class="review-photo" onclick="openReviewPhoto(${idx})">
+      <img src="${url}" alt="Foto testimoni ${idx+1}" draggable="false">
+      <div class="slide-protect-shield" onclick="openReviewPhoto(${idx})"></div>
     </div>
   `).join('') + '</div>';
 }
 function openImageViewer(url){
-  document.getElementById('reviewPhotoFull').src = url;
-  document.getElementById('reviewPhotoOverlay').classList.add('open');
+  if(!url) return;
+  // Jika URL ini adalah foto produk, alihkan ke viewer produk
+  if(Array.isArray(products)){
+    for(const p of products){
+      const imgs = getImagesForProduct(p.id);
+      const idx = imgs.indexOf(url);
+      if(idx !== -1){
+        openProductImageViewer(p.id, idx);
+        return;
+      }
+    }
+  }
+  // Jika URL ini memang foto testimoni pelanggan, buka di viewer testimoni
+  const photos = getReviewPhotos();
+  const revIdx = photos.indexOf(url);
+  if(revIdx !== -1){
+    openReviewPhoto(revIdx);
+    return;
+  }
+  // Fallback aman: jangan pernah buka modal testimoni dengan watermark untuk URL tidak dikenal
+  openProductImageViewer(null, 0, null, url);
 }
 function openReviewPhoto(idx){
+  // Pastikan penampil foto produk ditutup
+  const prodOverlay = document.getElementById('prodPhotoOverlay');
+  if(prodOverlay) prodOverlay.classList.remove('open');
+
   const photos = getReviewPhotos();
-  if(!photos[idx]) return;
-  document.getElementById('reviewPhotoFull').src = photos[idx];
-  document.getElementById('reviewPhotoOverlay').classList.add('open');
+  if(!photos || !photos[idx]) return;
+  const fullImg = document.getElementById('reviewPhotoFull');
+  if(fullImg) fullImg.src = photos[idx];
+  const overlay = document.getElementById('reviewPhotoOverlay');
+  if(overlay) overlay.classList.add('open');
 }
 function closeReviewPhoto(){
-  document.getElementById('reviewPhotoOverlay').classList.remove('open');
+  const overlay = document.getElementById('reviewPhotoOverlay');
+  if(overlay) overlay.classList.remove('open');
+  const imgEl = document.getElementById('reviewPhotoFull');
+  if(imgEl) imgEl.src = '';
+}
+
+// ============ DEDICATED PRODUCT PHOTO VIEWER ============
+let currentPhotoViewingProductId = null;
+let currentPhotoViewingIndex = 0;
+
+function openProductImageViewer(productId, imageIndex, event, fallbackUrl){
+  if(event) event.stopPropagation();
+  // Selalu pastikan review overlay tertutup agar tidak pernah tumpang tindih
+  closeReviewPhoto();
+
+  if(!productId && fallbackUrl){
+    currentPhotoViewingProductId = null;
+    currentPhotoViewingIndex = 0;
+    const fullImg = document.getElementById('prodPhotoFullImg');
+    if(fullImg) fullImg.src = fallbackUrl;
+    const catTag = document.getElementById('prodPhotoCatTag');
+    if(catTag) catTag.textContent = 'PREVIEW';
+    const title = document.getElementById('prodPhotoTitle');
+    if(title) title.textContent = 'Foto Produk';
+    const oldPrice = document.getElementById('prodPhotoPriceOld');
+    if(oldPrice) oldPrice.style.display = 'none';
+    const price = document.getElementById('prodPhotoPrice');
+    if(price) price.textContent = '';
+    const counterEl = document.getElementById('prodPhotoCounter');
+    if(counterEl) counterEl.style.display = 'none';
+    const prevBtn = document.getElementById('prodPhotoPrevBtn');
+    if(prevBtn) prevBtn.style.display = 'none';
+    const nextBtn = document.getElementById('prodPhotoNextBtn');
+    if(nextBtn) nextBtn.style.display = 'none';
+    const overlay = document.getElementById('prodPhotoOverlay');
+    if(overlay) overlay.classList.add('open');
+    return;
+  }
+
+  const prod = products.find(p => p.id === productId);
+  if(!prod) return;
+
+  const imgs = getImagesForProduct(productId);
+  if(!imgs || imgs.length === 0){
+    openModal(productId);
+    return;
+  }
+
+  currentPhotoViewingProductId = productId;
+  currentPhotoViewingIndex = (typeof imageIndex === 'number' && imageIndex >= 0 && imageIndex < imgs.length) ? imageIndex : 0;
+
+  updateProductImageViewerContent();
+  const overlay = document.getElementById('prodPhotoOverlay');
+  if(overlay) overlay.classList.add('open');
+}
+
+function updateProductImageViewerContent(){
+  if(currentPhotoViewingProductId === null || currentPhotoViewingProductId === undefined) return;
+  const prod = products.find(p => p.id === currentPhotoViewingProductId);
+  if(!prod) return;
+
+  const imgs = getImagesForProduct(prod.id);
+  if(!imgs || imgs.length === 0) return;
+
+  if(currentPhotoViewingIndex >= imgs.length) currentPhotoViewingIndex = 0;
+  if(currentPhotoViewingIndex < 0) currentPhotoViewingIndex = imgs.length - 1;
+
+  const catInfo = CAT_INFO[prod.cat] || { shortName: (prod.cat || 'PRODUK').toUpperCase() };
+  const catTagEl = document.getElementById('prodPhotoCatTag');
+  if(catTagEl) catTagEl.textContent = catInfo.shortName + (prod.subgroup ? ' • ' + prod.subgroup : '');
+
+  const titleEl = document.getElementById('prodPhotoTitle');
+  if(titleEl) titleEl.textContent = prod.name + (prod.isAccount ? ' 🔑' : '');
+
+  const disc = getDiscount(prod.cat);
+  const discPrice = getDiscountedPrice(prod.price, prod.cat);
+  const hasDisc = disc > 0;
+
+  const oldPriceEl = document.getElementById('prodPhotoPriceOld');
+  const priceEl = document.getElementById('prodPhotoPrice');
+  if(oldPriceEl){
+    oldPriceEl.textContent = hasDisc ? formatPrice(prod.price) : '';
+    oldPriceEl.style.display = hasDisc ? 'block' : 'none';
+  }
+  if(priceEl){
+    priceEl.textContent = formatPrice(discPrice) + (hasDisc ? ` (-${disc}%)` : '');
+  }
+
+  const fullImg = document.getElementById('prodPhotoFullImg');
+  if(fullImg) fullImg.src = imgs[currentPhotoViewingIndex];
+
+  const counterEl = document.getElementById('prodPhotoCounter');
+  if(counterEl){
+    counterEl.textContent = `${currentPhotoViewingIndex + 1} / ${imgs.length}`;
+    counterEl.style.display = imgs.length > 1 ? 'block' : 'none';
+  }
+
+  const prevBtn = document.getElementById('prodPhotoPrevBtn');
+  const nextBtn = document.getElementById('prodPhotoNextBtn');
+  if(prevBtn) prevBtn.style.display = imgs.length > 1 ? 'flex' : 'none';
+  if(nextBtn) nextBtn.style.display = imgs.length > 1 ? 'flex' : 'none';
+}
+
+function navProductImage(dir){
+  if(currentPhotoViewingProductId === null) return;
+  const imgs = getImagesForProduct(currentPhotoViewingProductId);
+  if(!imgs || imgs.length <= 1) return;
+  currentPhotoViewingIndex = (currentPhotoViewingIndex + dir + imgs.length) % imgs.length;
+  updateProductImageViewerContent();
+}
+
+function closeProductImageViewer(e){
+  if(!e || e.target === document.getElementById('prodPhotoOverlay') || (e.target && e.target.classList && e.target.classList.contains('prod-photo-close-btn'))){
+    const overlay = document.getElementById('prodPhotoOverlay');
+    if(overlay) overlay.classList.remove('open');
+    const fullImg = document.getElementById('prodPhotoFullImg');
+    if(fullImg) fullImg.src = '';
+    currentPhotoViewingProductId = null;
+  }
+}
+
+function buyFromProductImageViewer(){
+  const pid = currentPhotoViewingProductId;
+  const overlay = document.getElementById('prodPhotoOverlay');
+  if(overlay) overlay.classList.remove('open');
+  const fullImg = document.getElementById('prodPhotoFullImg');
+  if(fullImg) fullImg.src = '';
+  currentPhotoViewingProductId = null;
+  if(pid){
+    openModal(pid);
+  }
 }
 
 function openModal(id){
   selectedProduct=products.find(p=>p.id===id);selectedPayment=null;
-  if(selectedProduct && selectedProduct.isAccount){
+  if(!selectedProduct) return;
+  if(selectedProduct.isAccount){
     const eff = getEffectiveAccountStatus(selectedProduct);
     if(eff === 'sold'){ showToast('Akun ini sudah terjual'); return; }
     if(eff === 'reserved'){ showToast('Akun ini sedang dipesan orang lain, coba lagi nanti'); return; }
   }
-  const discount = getDiscount();
-  const discPrice = getDiscountedPrice(selectedProduct.price);
+  const activeOrder = getActiveOrderForProduct(selectedProduct.id);
+  if(activeOrder){
+    const stName = activeOrder.status === 'processing'
+      ? `sedang diproses${activeOrder.estimate ? ' (estimasi ' + activeOrder.estimate + ')' : ''}`
+      : 'sedang dalam antrean pesanan belum selesai';
+    showToast(`⏳ Layanan ini ${stName}. Belum bisa dipesan lagi sampai selesai.`);
+    return;
+  }
+  const discount = getDiscount(selectedProduct ? selectedProduct.cat : null);
+  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct ? selectedProduct.cat : null);
   const hasDisc = discount > 0;
   const imgs = getImagesForProduct(id);
-  const thumbImg = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
+  const hasProdImgs = imgs.length > 0;
+  const thumbImg = hasProdImgs ? `<img src="${imgs[0]}" alt="" title="Klik untuk lihat foto penuh">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
   document.getElementById('modalProduct').innerHTML=`
-    <div class="modal-thumb">${thumbImg}</div>
+    <div class="modal-thumb" ${hasProdImgs ? `onclick="openProductImageViewer(${id},0)" style="cursor:pointer" title="Klik untuk perbesar foto"` : ''}>${thumbImg}</div>
     <div class="modal-detail">
       <p class="name">${selectedProduct.name}</p>
       <div class="price-row">
@@ -2386,6 +3835,7 @@ function openModal(id){
         <p class="${hasDisc?'price-discount':'price'}">${formatPrice(discPrice)}</p>
         ${hasDisc?`<span class="discount-tag">-${discount}%</span>`:''}
       </div>
+      ${hasProdImgs ? `<div style="margin-top:3px"><span style="font-size:11px;color:#7c3aed;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px" onclick="openProductImageViewer(${id},0)">🔍 Lihat Foto Ukuran Penuh</span></div>` : ''}
     </div>`;
   document.querySelectorAll('#modalPayGrid .pay-option').forEach(el=>el.classList.remove('selected'));
   document.querySelectorAll('#adminGridModal .admin-option').forEach(el=>el.classList.remove('selected'));
@@ -2408,8 +3858,8 @@ function selectAdminModal(el,number){
 }
 function updateWA(){
   if(!selectedProduct||!selectedPayment||!selectedModalAdmin)return;
-  const discount = getDiscount();
-  const discPrice = getDiscountedPrice(selectedProduct.price);
+  const discount = getDiscount(selectedProduct.cat);
+  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
   let text=`Halo Admin NORXSTORE, saya ingin memesan ${selectedProduct.name}`;
   if(discount > 0){
     text += ` (diskon ${discount}%)`;
@@ -2422,20 +3872,36 @@ function updateWA(){
 function sendWA(){
   const text=document.getElementById('waBtn').dataset.text;
   const url=getWaLink(text, selectedModalAdmin);
+  if(selectedProduct){
+    const activeOrder = getActiveOrderForProduct(selectedProduct.id);
+    if(activeOrder){
+      showToast('⚠️ Pesanan produk ini sebelumnya belum selesai dikerjakan. Belum bisa dipesan lagi!');
+      return;
+    }
+  }
   if(selectedProduct && selectedProduct.isAccount){
     reserveAccount(selectedProduct.id);
     renderProducts();
   }
   if(selectedProduct){
-    const discPrice = getDiscountedPrice(selectedProduct.price);
+    const inCartIdx = cart.findIndex(it => it.id === selectedProduct.id);
+    if(inCartIdx > -1){
+      cart.splice(inCartIdx, 1);
+      saveCart();
+      updateCartBadge();
+      renderCart();
+    }
+    renderProducts();
+    const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
     const adminObj = WA_NUMBERS.find(a => a.number === selectedModalAdmin);
     createOrder(
-      [{name:selectedProduct.name, qty:1, price:selectedProduct.price}],
+      [{id: selectedProduct.id, name:selectedProduct.name, qty:1, price:selectedProduct.price, cat: selectedProduct.cat}],
       discPrice,
       selectedPayment,
       adminObj ? adminObj.name : ''
     );
     renderMyOrders();
+    closeModal();
   }
   showToast('Mengarahkan ke WhatsApp...');
   setTimeout(()=>openWhatsApp(url),800);
@@ -2456,11 +3922,9 @@ function renderCarousel(){
   track.innerHTML = config.map((slide, i) => {
     const isImg = slide.bgType === 'image';
     const bgStyle = isImg ? `background-image:url('${slide.bgValue}')` : `background:${slide.bgValue}`;
-    const cursorStyle = isImg ? ';cursor:pointer' : '';
-    const clickAttr = isImg ? `onclick="openImageViewer('${slide.bgValue}')"` : '';
     return `
     <div class="carousel-slide s${i+1}">
-      <div class="slide-bg" ${clickAttr} style="${bgStyle}${cursorStyle}">
+      <div class="slide-bg" style="${bgStyle}">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <span class="slide-tag" style="${slide.tagStyle}">${slide.tag}</span>
@@ -2608,16 +4072,6 @@ function saveCarouselSlide(index){
 }
 
 // ==================== SUBGROUP & BULK HELPERS ====================
-
-function getExistingSubgroups(cat){
-  const set = new Set();
-  (products || []).forEach(p => {
-    if((!cat || p.cat === cat) && p.subgroup && p.subgroup.trim()){
-      set.add(p.subgroup.trim());
-    }
-  });
-  return Array.from(set);
-}
 
 function refreshSubgroupFormUI(){
   const catEl = document.getElementById('newProdCat');
@@ -2961,15 +4415,77 @@ function deleteProduct(id){
   showToast('Produk dihapus');
 }
 
+function duplicateProduct(id){
+  const p = products.find(p => p.id === id);
+  if(!p) return;
+
+  const newId = getNextProductId();
+  const copyName = p.name + ' (Salinan)';
+  const newProduct = {
+    id: newId,
+    name: copyName,
+    price: p.price,
+    cat: p.cat,
+    subgroup: p.subgroup || '',
+    desc: p.desc || '',
+    badge: p.badge || '',
+    icon: p.icon || '💎',
+    isAccount: !!p.isAccount
+  };
+
+  // Salin gambar produk jika produk sumber memiliki gambar
+  const existingImgs = getImagesForProduct(p.id);
+  if(existingImgs && existingImgs.length > 0){
+    const allImgs = getProductImages();
+    allImgs[newId] = [...existingImgs];
+    setProductImages(allImgs);
+  }
+
+  // Sisipkan produk baru tepat setelah produk sumber agar posisinya berdekatan
+  const origIndex = products.findIndex(item => item.id === id);
+  if(origIndex !== -1){
+    products.splice(origIndex + 1, 0, newProduct);
+  } else {
+    products.push(newProduct);
+  }
+
+  setProducts(products);
+  renderProducts();
+  renderAdminProductList();
+  refreshSubgroupFormUI();
+
+  // Perbarui dropdown pilih produk pada admin foto produk
+  const sel = document.getElementById('imgProductSelect');
+  if(sel){
+    sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
+      products.map(prod => `<option value="${prod.id}">${prod.icon} ${prod.name}</option>`).join('');
+  }
+
+  // Langsung buka form edit untuk produk salinan tersebut agar gampang diubah tanpa menulis ulang
+  editProduct(newId);
+
+  // Focus ke input nama produk dan seleksi teks
+  setTimeout(()=>{
+    const nameInput = document.getElementById('newProdName');
+    if(nameInput){
+      nameInput.focus();
+      nameInput.select();
+    }
+  }, 100);
+
+  showToast('📋 Produk "' + p.name + '" berhasil digandakan! Silakan sesuaikan data & simpan.');
+}
+
 function renderAdminProductList(){
   const list = document.getElementById('adminProductList');
+  if(!list) return;
 
   if(products.length === 0){
     list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada produk.</p>';
     return;
   }
 
-  list.innerHTML = products.map(p => {
+  list.innerHTML = products.map((p, index) => {
     const isDefault = !!DEFAULT_PRODUCTS.find(dp => dp.id === p.id);
     let statusLine = '';
     let statusButtons = '';
@@ -2986,8 +4502,37 @@ function renderAdminProductList(){
         statusButtons = `<button class="admin-btn-sm" style="background:#ef4444" onclick="setAccountStatus(${p.id},'sold')">✅ Terjual</button>`;
       }
     }
+    const activeOrd = getGlobalActiveOrderForProduct(p.id);
+    if(activeOrd){
+      const ordStBadge = activeOrd.status === 'processing'
+        ? `<span style="color:#2563eb">🔵 SEDANG DIPROSES${activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : ''}</span>`
+        : `<span style="color:#d97706">🟡 MENUNGGU PENGERJAAN</span>`;
+      statusLine += `<p style="font-size:10px;font-weight:700;margin-top:2px">⏳ Pesanan Aktif Toko: ${ordStBadge}</p>`;
+    }
+
     return `
-    <div class="admin-product-item" style="flex-wrap:wrap">
+    <div class="admin-product-item"
+         id="adminProdItem_${p.id}"
+         data-prod-id="${p.id}"
+         data-prod-index="${index}"
+         draggable="true"
+         ondragstart="handleAdminProdDragStart(event, ${index})"
+         ondragover="handleAdminProdDragOver(event, ${index})"
+         ondragleave="handleAdminProdDragLeave(event)"
+         ondrop="handleAdminProdDrop(event, ${index})"
+         ondragend="handleAdminProdDragEnd(event)"
+         style="flex-wrap:wrap">
+      
+      <div class="p-drag-handle"
+           ontouchstart="handleAdminProdTouchStart(event, ${index})"
+           ontouchmove="handleAdminProdTouchMove(event)"
+           ontouchend="handleAdminProdTouchEnd(event)"
+           ontouchcancel="handleAdminProdTouchEnd(event)"
+           title="Tahan & geser untuk memindahkan posisi">
+        <span class="p-order-num">#${index + 1}</span>
+        <span class="p-drag-dots">⠿</span>
+      </div>
+
       <div class="p-icon">${p.icon}</div>
       <div class="p-info">
         <p class="p-name">${p.name}${p.isAccount ? ' 🔑' : ''}</p>
@@ -2995,23 +4540,350 @@ function renderAdminProductList(){
         <p class="p-price">${formatPrice(p.price)}</p>
         ${statusLine}
       </div>
-      <button class="admin-btn-sm" style="background:#7c3aed" onclick="editProduct(${p.id})">✏️</button>
-      ${isDefault ? '' : `<button class="admin-btn-sm" onclick="deleteProduct(${p.id})">🗑</button>`}
+      <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
+        <button class="admin-btn-sm" style="background:#7c3aed;padding:8px 10px" onclick="editProduct(${p.id})" title="Edit Produk">✏️</button>
+        <button class="admin-btn-sm" style="background:#0284c7;padding:8px 10px" onclick="duplicateProduct(${p.id})" title="Gandakan Produk">📋</button>
+        ${isDefault ? '' : `<button class="admin-btn-sm" style="padding:8px 10px" onclick="deleteProduct(${p.id})" title="Hapus Produk">🗑</button>`}
+      </div>
       ${statusButtons ? `<div style="width:100%;display:flex;gap:6px;margin-top:6px">${statusButtons}</div>` : ''}
     </div>
   `; }).join('');
 }
 
-// ==================== INIT ====================
-// renderCarousel(), renderProducts(), renderReviews(), applyPaymentIcons()
-// normalnya dipicu otomatis oleh listener Firebase di atas saat data pertama kali diterima.
-// Jika Firebase gagal dimuat (offline/diblokir), render manual dengan data default agar
-// skeleton loading tidak nyangkut selamanya.
-if(!window.fbAvailable){
-  renderCarousel();
+function reorderProduct(fromIndex, toIndex){
+  if(fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= products.length || toIndex >= products.length) return;
+  
+  const itemToMove = products.splice(fromIndex, 1)[0];
+  products.splice(toIndex, 0, itemToMove);
+  
+  setProducts([...products]);
+  safeSetItem('norxstore_products_cache', JSON.stringify(products));
+  renderAdminProductList();
   renderProducts();
-  renderReviews();
-  applyPaymentIcons();
+  showToast('✅ Urutan produk berhasil dipindahkan');
+}
+
+let adminDraggedProdIndex = null;
+
+function handleAdminProdDragStart(e, index){
+  adminDraggedProdIndex = index;
+  if(e.dataTransfer){
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
+  }
+  const target = e.currentTarget;
+  setTimeout(() => {
+    if(target) target.classList.add('dragging');
+  }, 0);
+}
+
+function handleAdminProdDragOver(e, index){
+  e.preventDefault();
+  if(e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+  const target = e.currentTarget;
+  if(adminDraggedProdIndex === null || adminDraggedProdIndex === index) return;
+  
+  const rect = target.getBoundingClientRect();
+  const midY = rect.top + rect.height / 2;
+  if(e.clientY < midY){
+    target.classList.add('drag-over-top');
+    target.classList.remove('drag-over-bottom');
+  } else {
+    target.classList.add('drag-over-bottom');
+    target.classList.remove('drag-over-top');
+  }
+}
+
+function handleAdminProdDragLeave(e){
+  const target = e.currentTarget;
+  if(target){
+    target.classList.remove('drag-over-top', 'drag-over-bottom');
+  }
+}
+
+function handleAdminProdDrop(e, index){
+  e.preventDefault();
+  const target = e.currentTarget;
+  if(target){
+    target.classList.remove('drag-over-top', 'drag-over-bottom');
+  }
+  
+  if(adminDraggedProdIndex === null || adminDraggedProdIndex === index) return;
+  
+  reorderProduct(adminDraggedProdIndex, index);
+  adminDraggedProdIndex = null;
+}
+
+function handleAdminProdDragEnd(e){
+  const target = e.currentTarget;
+  if(target) target.classList.remove('dragging');
+  document.querySelectorAll('.admin-product-item').forEach(el => {
+    el.classList.remove('drag-over-top', 'drag-over-bottom', 'dragging');
+  });
+  adminDraggedProdIndex = null;
+}
+
+let adminTouchDragState = null;
+
+function handleAdminProdTouchStart(e, index){
+  const touch = e.touches[0];
+  const itemEl = e.currentTarget.closest('.admin-product-item');
+  if(!itemEl) return;
+  
+  adminTouchDragState = {
+    index: index,
+    startX: touch.clientX,
+    startY: touch.clientY,
+    itemEl: itemEl,
+    isDragging: false
+  };
+}
+
+function handleAdminProdTouchMove(e){
+  if(!adminTouchDragState) return;
+  const touch = e.touches[0];
+  const deltaY = Math.abs(touch.clientY - adminTouchDragState.startY);
+  
+  if(deltaY > 6 || adminTouchDragState.isDragging){
+    if(e.cancelable) e.preventDefault();
+    adminTouchDragState.isDragging = true;
+    adminTouchDragState.itemEl.classList.add('dragging');
+    adminTouchDragState.itemEl.style.pointerEvents = 'none';
+    
+    // Auto-scroll list if near top or bottom
+    const listEl = document.getElementById('adminProductList');
+    if(listEl){
+      const listRect = listEl.getBoundingClientRect();
+      if(touch.clientY < listRect.top + 40){
+        listEl.scrollTop -= 8;
+      } else if(touch.clientY > listRect.bottom - 40){
+        listEl.scrollTop += 8;
+      }
+    }
+    
+    const allItems = Array.from(document.querySelectorAll('.admin-product-item'));
+    let targetItem = null;
+    let isTopHalf = false;
+    
+    for(const item of allItems){
+      if(item === adminTouchDragState.itemEl) continue;
+      const rect = item.getBoundingClientRect();
+      if(touch.clientY >= rect.top && touch.clientY <= rect.bottom){
+        targetItem = item;
+        const midY = rect.top + rect.height / 2;
+        isTopHalf = (touch.clientY < midY);
+        break;
+      }
+    }
+    
+    allItems.forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom');
+    });
+    
+    if(targetItem){
+      if(isTopHalf){
+        targetItem.classList.add('drag-over-top');
+      } else {
+        targetItem.classList.add('drag-over-bottom');
+      }
+    }
+  }
+}
+
+function handleAdminProdTouchEnd(e){
+  if(!adminTouchDragState) return;
+  const { index, isDragging, itemEl } = adminTouchDragState;
+  
+  if(itemEl){
+    itemEl.style.pointerEvents = '';
+    itemEl.classList.remove('dragging');
+  }
+  
+  if(isDragging){
+    const touch = e.changedTouches ? e.changedTouches[0] : null;
+    let targetIdx = -1;
+    
+    if(touch){
+      const allItems = Array.from(document.querySelectorAll('.admin-product-item'));
+      for(const item of allItems){
+        if(item === itemEl) continue;
+        const rect = item.getBoundingClientRect();
+        if(touch.clientY >= rect.top && touch.clientY <= rect.bottom){
+          targetIdx = parseInt(item.dataset.prodIndex, 10);
+          break;
+        }
+      }
+      if(targetIdx < 0 && allItems.length > 0){
+        const firstRect = allItems[0].getBoundingClientRect();
+        const lastRect = allItems[allItems.length - 1].getBoundingClientRect();
+        if(touch.clientY < firstRect.top){
+          targetIdx = 0;
+        } else if(touch.clientY > lastRect.bottom){
+          targetIdx = products.length - 1;
+        }
+      }
+    }
+    
+    document.querySelectorAll('.admin-product-item').forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom', 'dragging');
+    });
+    
+    if(targetIdx >= 0 && targetIdx !== index){
+      reorderProduct(index, targetIdx);
+    }
+  }
+  
+  adminTouchDragState = null;
+}
+
+// ==================== LIVE ONLINE USERS PRESENCE ====================
+let currentOnlineCount = 1;
+let myPresenceConnRef = null;
+let presenceHeartbeatInterval = null;
+
+// Unique per-tab session ID
+const SESSION_ID = (function(){
+  try {
+    let sid = sessionStorage.getItem('norx_presence_session_id');
+    if(!sid){
+      sid = 'usr_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+      sessionStorage.setItem('norx_presence_session_id', sid);
+    }
+    return sid;
+  } catch(e) {
+    return 'usr_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
+  }
+})();
+
+function updateOnlineCountersUI(count){
+  currentOnlineCount = Math.max(1, count);
+  const els = document.querySelectorAll('.online-user-count');
+  els.forEach(el => {
+    el.textContent = currentOnlineCount;
+  });
+  const adminEl = document.getElementById('adminOnlineStatusText');
+  if(adminEl){
+    adminEl.textContent = currentOnlineCount + ' pengunjung online';
+  }
+}
+
+function attachUserPresence(uid){
+  if(!window.fbAvailable || typeof firebase === 'undefined' || !fbDB || !uid) return;
+  try {
+    if(myPresenceConnRef){
+      try { myPresenceConnRef.remove(); } catch(e){}
+    }
+
+    // Bersihkan data presence lama jika ada di norxstore/users/{uid}/presence
+    fbDB.ref('norxstore/users/' + uid + '/presence').remove().catch(function(){});
+
+    // Menggunakan path norxstore/users/{uid}/connections/{SESSION_ID}
+    myPresenceConnRef = fbDB.ref('norxstore/users/' + uid + '/connections/' + SESSION_ID);
+    const connectedRef = fbDB.ref('.info/connected');
+
+    connectedRef.on('value', function(snap){
+      if(snap && snap.val() === true && myPresenceConnRef){
+        // Otomatis hapus saat koneksi socket terputus
+        myPresenceConnRef.onDisconnect().remove().catch(function(){});
+        myPresenceConnRef.set({
+          online: true,
+          lastSeen: Date.now()
+        }).catch(function(e){ console.warn('Set presence failed:', e); });
+      }
+    });
+
+    // Heartbeat berkala tiap 10 detik agar realtime dan tidak ada ghost count
+    if(presenceHeartbeatInterval) clearInterval(presenceHeartbeatInterval);
+    presenceHeartbeatInterval = setInterval(function(){
+      if(myPresenceConnRef && document.visibilityState !== 'hidden'){
+        myPresenceConnRef.update({
+          online: true,
+          lastSeen: Date.now()
+        }).catch(function(){});
+      }
+    }, 10000);
+  } catch(err) {
+    console.warn('attachUserPresence error:', err);
+  }
+}
+
+function initPresenceSystem(){
+  updateOnlineCountersUI(1);
+  if(!window.fbAvailable || typeof firebase === 'undefined' || !fbDB) {
+    return;
+  }
+
+  // Jika currentUser sudah login/anonim saat fungsi ini dipanggil
+  if(currentUser && currentUser.uid){
+    attachUserPresence(currentUser.uid);
+  }
+
+  try {
+    // Dengarkan data norxstore/users secara real-time
+    fbDB.ref('norxstore/users').on('value', function(snap){
+      let activeUsers = 0;
+      if(snap && snap.exists()){
+        const users = snap.val();
+        if(users && typeof users === 'object'){
+          const now = Date.now();
+          // Hitung jumlah PENGGUNA UNIK (device/akun) yang aktif dalam 25 detik terakhir
+          // bukan jumlah tab atau sesi kadaluwarsa, sehingga angka tidak acak/melompat
+          Object.keys(users).forEach(function(uid){
+            const u = users[uid];
+            if(!u || !u.connections || typeof u.connections !== 'object') return;
+            let isUserOnline = false;
+            Object.keys(u.connections).forEach(function(sId){
+              const conn = u.connections[sId];
+              if(conn && conn.online === true && typeof conn.lastSeen === 'number'){
+                // Ambang batas keaktifan 25 detik (jika tab ditutup/dikunci, langsung lepas)
+                if((now - conn.lastSeen) <= 25000){
+                  isUserOnline = true;
+                }
+              }
+            });
+            if(isUserOnline){
+              activeUsers++;
+            }
+          });
+        }
+      }
+      // Minimal 1 karena pengunjung di layar ini sedang aktif
+      updateOnlineCountersUI(Math.max(activeUsers, 1));
+    });
+
+    // Bersihkan sesi aktif saat tab ditutup atau disembunyikan
+    const cleanupSession = function(){
+      if(myPresenceConnRef){
+        try { myPresenceConnRef.remove(); } catch(e){}
+      }
+    };
+    window.addEventListener('beforeunload', cleanupSession);
+    window.addEventListener('pagehide', cleanupSession);
+
+    // Saat tab aktif kembali, kirim sinyal heartbeat langsung
+    document.addEventListener('visibilitychange', function(){
+      if(document.visibilityState === 'visible' && myPresenceConnRef){
+        myPresenceConnRef.update({
+          online: true,
+          lastSeen: Date.now()
+        }).catch(function(){});
+      }
+    });
+  } catch(err) {
+    console.warn('Presence system error:', err);
+  }
+}
+
+// ==================== INIT ====================
+// Render langsung dari cache lokal saat inisialisasi agar semua banner, produk, gambar,
+// dan testimoni langsung muncul seketika tanpa delay begitu loading web selesai.
+renderCarousel();
+renderProducts();
+renderReviews();
+applyPaymentIcons();
+initPresenceSystem();
+
+if(!window.fbAvailable){
   hideSplash();
 }
 
@@ -3021,6 +4893,74 @@ setInterval(()=>{
   const hasReserved = products.some(p => p.isAccount && p.status === 'reserved');
   if(hasReserved) renderProducts();
 }, 30000);
+
+// ============ PERLINDUNGAN ANTI-DOWNLOAD & PENCURIAN GAMBAR ============
+(function initImageProtection(){
+  document.addEventListener('contextmenu', function(e){
+    const target = e.target;
+    if(target && (
+      target.tagName === 'IMG' || 
+      target.closest('img') || 
+      target.classList.contains('slide-protect-shield') || 
+      target.closest('.review-photo-overlay') || 
+      target.closest('.prod-photo-overlay') || 
+      target.classList.contains('slide-bg') ||
+      target.closest('.product-img-wrap') ||
+      target.closest('.review-photo')
+    )){
+      e.preventDefault();
+      if(typeof showToast === 'function'){
+        showToast('🔒 Gambar dilindungi hak cipta Norxstore');
+      }
+      return false;
+    }
+  }, { passive: false });
+
+  document.addEventListener('dragstart', function(e){
+    if(e.target && (e.target.tagName === 'IMG' || e.target.closest('img'))){
+      e.preventDefault();
+      return false;
+    }
+  }, { passive: false });
+
+  // Keyboard navigation untuk Product Photo Viewer (Esc tutup, panah navigasi)
+  document.addEventListener('keydown', function(e){
+    const overlay = document.getElementById('prodPhotoOverlay');
+    if(!overlay || !overlay.classList.contains('open')) return;
+    if(e.key === 'Escape'){
+      closeProductImageViewer();
+    } else if(e.key === 'ArrowRight'){
+      navProductImage(1);
+    } else if(e.key === 'ArrowLeft'){
+      navProductImage(-1);
+    }
+  });
+
+  // Swipe navigation untuk Product Photo Viewer pada perangkat mobile
+  let pTouchStartX = 0;
+  let pTouchStartY = 0;
+  const prodOverlayEl = document.getElementById('prodPhotoOverlay');
+  if(prodOverlayEl){
+    prodOverlayEl.addEventListener('touchstart', function(e){
+      if(e.touches.length === 1){
+        pTouchStartX = e.touches[0].clientX;
+        pTouchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+    prodOverlayEl.addEventListener('touchend', function(e){
+      if(!currentPhotoViewingProductId) return;
+      const diffX = pTouchStartX - e.changedTouches[0].clientX;
+      const diffY = pTouchStartY - e.changedTouches[0].clientY;
+      if(Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY)){
+        if(diffX > 0){
+          navProductImage(1);
+        } else {
+          navProductImage(-1);
+        }
+      }
+    }, { passive: true });
+  }
+})();
 </script>
 </body>
 </html>

@@ -3,6 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <title>NORXSTORE</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -173,6 +176,31 @@ body.dark-mode .live-pill-mode{
 .review-photo-overlay{position:fixed;inset:0;background:rgba(0,0,0,.92);display:none;align-items:center;justify-content:center;z-index:260;padding:24px}
 .review-photo-overlay.open{display:flex}
 .review-photo-overlay img{max-width:100%;max-height:100%;border-radius:14px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+
+.prod-photo-overlay{position:fixed;inset:0;background:rgba(10,10,18,0.94);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:none;align-items:center;justify-content:center;z-index:270;padding:16px;animation:fadeIn .2s ease}
+.prod-photo-overlay.open{display:flex}
+.prod-photo-container{background:#181824;border:1px solid #2e2e42;border-radius:18px;max-width:480px;width:100%;max-height:92vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,0.6);position:relative;animation:scaleUp .22s cubic-bezier(0.16,1,0.3,1)}
+@keyframes scaleUp{from{transform:scale(0.92);opacity:0}to{transform:scale(1);opacity:1}}
+.prod-photo-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #262638;background:#14141f}
+.prod-photo-header-info{display:flex;flex-direction:column;gap:2px;min-width:0}
+.prod-photo-cat-tag{font-size:10px;font-weight:800;color:#a78bfa;letter-spacing:0.5px;text-transform:uppercase}
+.prod-photo-title{font-size:14px;font-weight:700;color:#fff;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod-photo-close-btn{width:32px;height:32px;border-radius:50%;background:#262638;border:1px solid #3a3a52;color:#e2e8f0;font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:all .15s ease}
+.prod-photo-close-btn:hover{background:#ef4444;color:#fff;border-color:#ef4444}
+.prod-photo-body{position:relative;display:flex;align-items:center;justify-content:center;padding:12px;min-height:260px;max-height:calc(92vh - 140px);background:#0d0d15;overflow:hidden}
+.prod-photo-img-wrap{position:relative;display:flex;align-items:center;justify-content:center;max-width:100%;max-height:100%}
+.prod-photo-img-wrap img{max-width:100%;max-height:58vh;object-fit:contain;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.5);display:block}
+.prod-photo-counter{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,0.75);color:#fff;font-size:10px;font-weight:700;padding:3px 8px;border-radius:20px;backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,0.15)}
+.prod-photo-nav-btn{position:absolute;top:50%;transform:translateY(-50%);width:38px;height:38px;border-radius:50%;background:rgba(20,20,32,0.85);border:1px solid rgba(255,255,255,0.15);color:#fff;font-size:22px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .15s ease;backdrop-filter:blur(4px)}
+.prod-photo-nav-btn:hover{background:#7c3aed;border-color:#7c3aed}
+.prod-photo-nav-btn.prev{left:12px}
+.prod-photo-nav-btn.next{right:12px}
+.prod-photo-footer{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-top:1px solid #262638;background:#14141f;gap:12px}
+.prod-photo-price-box{display:flex;flex-direction:column}
+.prod-photo-price-old{font-size:11px;color:#94a3b8;text-decoration:line-through}
+.prod-photo-price{font-size:15px;font-weight:800;color:#10b981}
+.prod-photo-buy-btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(124,58,237,0.35);transition:all .15s ease;white-space:nowrap}
+.prod-photo-buy-btn:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6);transform:translateY(-1px)}
 
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:100;backdrop-filter:blur(3px)}
 .modal-overlay.open{display:flex}
@@ -1183,6 +1211,26 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-status" id="passStatus" style="background:#eff6ff;border-color:#bfdbfe;color:#1e40af">✅ Kata sandi berhasil diperbarui!</div>
 <div class="admin-status" id="passStatusDisable" style="background:#fef2f2;border-color:#fecaca;color:#991b1b;display:none">🔓 Proteksi kata sandi dinonaktifkan!</div>
 
+<div class="admin-divider"></div>
+
+<div class="admin-section-title">🚀 Update Hosting & Vercel</div>
+<div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:12px">
+  <p style="font-size:12px;color:#334155;margin:0 0 8px;line-height:1.5">
+    Setiap ada pembaruan fitur, perbaikan bug, atau tampilan baru, unduh file terbaru di bawah ini lalu unggah/deploy ke Vercel atau repository GitHub Anda:
+  </p>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <a href="/download-html" download="index.html" class="admin-btn" style="flex:1;min-width:140px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#2563eb,#1d4ed8);font-size:12px">
+      📄 Unduh index.html
+    </a>
+    <a href="/download-zip" download="norxstore.zip" class="admin-btn" style="flex:1;min-width:140px;text-align:center;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;background:linear-gradient(135deg,#7c3aed,#6d28d9);font-size:12px">
+      📦 Unduh norxstore.zip
+    </a>
+  </div>
+  <p style="font-size:11px;color:#64748b;margin:8px 0 0;line-height:1.4">
+    💡 <strong>Cara update di Vercel:</strong> Buka GitHub atau Vercel Anda, lalu timpa/replace file <code>index.html</code> lama dengan file yang baru saja diunduh.
+  </p>
+</div>
+
 </div>
 </div>
 </div>
@@ -1265,6 +1313,34 @@ button{cursor:pointer;font-family:inherit}
     <div class="slide-protect-shield" style="border-radius:14px"></div>
   </div>
   <div class="img-protected-watermark">🔒 Norxstore Official — Hak Cipta Dilindungi</div>
+</div>
+
+<div class="prod-photo-overlay" id="prodPhotoOverlay" onclick="closeProductImageViewer(event)">
+  <div class="prod-photo-container" onclick="event.stopPropagation()">
+    <div class="prod-photo-header">
+      <div class="prod-photo-header-info">
+        <span class="prod-photo-cat-tag" id="prodPhotoCatTag">GENSHIN IMPACT</span>
+        <h4 class="prod-photo-title" id="prodPhotoTitle">Foto Produk</h4>
+      </div>
+      <button type="button" class="prod-photo-close-btn" onclick="closeProductImageViewer()" title="Tutup">✕</button>
+    </div>
+    <div class="prod-photo-body">
+      <button type="button" class="prod-photo-nav-btn prev" id="prodPhotoPrevBtn" onclick="navProductImage(-1)" title="Foto Sebelumnya">‹</button>
+      <div class="prod-photo-img-wrap">
+        <img id="prodPhotoFullImg" src="" alt="Foto Produk" draggable="false">
+        <div class="slide-protect-shield" style="border-radius:12px"></div>
+        <span class="prod-photo-counter" id="prodPhotoCounter">1 / 1</span>
+      </div>
+      <button type="button" class="prod-photo-nav-btn next" id="prodPhotoNextBtn" onclick="navProductImage(1)" title="Foto Selanjutnya">›</button>
+    </div>
+    <div class="prod-photo-footer">
+      <div class="prod-photo-price-box">
+        <span class="prod-photo-price-old" id="prodPhotoPriceOld" style="display:none"></span>
+        <span class="prod-photo-price" id="prodPhotoPrice"></span>
+      </div>
+      <button type="button" class="prod-photo-buy-btn" id="prodPhotoBuyBtn" onclick="buyFromProductImageViewer()">🛒 Pesan Sekarang</button>
+    </div>
+  </div>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -1757,8 +1833,29 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
+const NORX_SYSTEM_VER = '2026.09.23.v6';
+(function checkSystemVersion(){
+  try {
+    const cur = safeGetItem('norx_sys_version', null);
+    if(cur !== NORX_SYSTEM_VER){
+      safeRemoveItem('norxstore_images_cache');
+      safeRemoveItem('norxstore_products_cache');
+      safeSetItem('norx_sys_version', NORX_SYSTEM_VER);
+      openNorxIDB().then(db => {
+        if(!db) return;
+        try {
+          const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
+          tx.objectStore(NORX_IDB_STORE).clear();
+        } catch(e){}
+      });
+    }
+  } catch(e){}
+})();
+
 let productImagesCache = (function(){
   try {
+    const cur = safeGetItem('norx_sys_version', null);
+    if(cur !== NORX_SYSTEM_VER) return {};
     const raw = safeGetItem('norxstore_images_cache', null);
     if(raw){
       const parsed = JSON.parse(raw);
@@ -3290,14 +3387,14 @@ function renderProductCard(p, discount, idx){
   const hasImgs = imgs.length > 0;
   const isAboveFold = (idx === undefined || idx < 8);
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
-    <div class="product-img-slide" data-index="${i}">
+    <div class="product-img-slide" data-index="${i}" onclick="openProductImageViewer(${p.id},${i},event)" style="cursor:zoom-in" title="Perbesar foto produk">
       <img src="${url}" alt="${p.name}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}">
-      <div class="slide-protect-shield"></div>
+      <div class="slide-protect-shield" onclick="openProductImageViewer(${p.id},${i},event)"></div>
     </div>
   `).join('') : (!imagesDataReady ? `
     <div class="product-img-slide"><div class="skel" style="width:100%;height:100%;position:absolute;inset:0"></div></div>
   ` : `
-    <div class="product-img-slide"><span class="emoji-fallback">${p.icon}</span></div>
+    <div class="product-img-slide" onclick="openModal(${p.id})"><span class="emoji-fallback">${p.icon}</span></div>
   `);
   const imgDots = hasImgs && imgs.length > 1 ? `
     <div class="img-nav-dots">${imgs.map((_,i)=>`<button class="img-nav-dot ${i===0?'active':''}" onclick="scrollProdImg(${p.id},${i},event)"></button>`).join('')}</div>
@@ -3335,7 +3432,7 @@ function renderProductCard(p, discount, idx){
 
   return `
   <div class="product-card" style="${isLocked ? 'opacity:.82' : ''}">
-    <div class="product-img-wrap" id="prodImgWrap_${p.id}" onclick="openModal(${p.id})">
+    <div class="product-img-wrap" id="prodImgWrap_${p.id}">
       ${!isLocked && !p.isAccount && p.badge?`<span class="product-badge">${p.badge}</span>`:''}
       ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
       ${busyBadge}
@@ -3534,22 +3631,177 @@ function renderReviews(){
   container.innerHTML = '<div class="review-photo-grid">' + photos.map((url, idx) => `
     <div class="review-photo" onclick="openReviewPhoto(${idx})">
       <img src="${url}" alt="Foto testimoni ${idx+1}" draggable="false">
-      <div class="slide-protect-shield"></div>
+      <div class="slide-protect-shield" onclick="openReviewPhoto(${idx})"></div>
     </div>
   `).join('') + '</div>';
 }
 function openImageViewer(url){
-  document.getElementById('reviewPhotoFull').src = url;
-  document.getElementById('reviewPhotoOverlay').classList.add('open');
+  if(!url) return;
+  // Jika URL ini adalah foto produk, alihkan ke viewer produk
+  if(Array.isArray(products)){
+    for(const p of products){
+      const imgs = getImagesForProduct(p.id);
+      const idx = imgs.indexOf(url);
+      if(idx !== -1){
+        openProductImageViewer(p.id, idx);
+        return;
+      }
+    }
+  }
+  // Jika URL ini memang foto testimoni pelanggan, buka di viewer testimoni
+  const photos = getReviewPhotos();
+  const revIdx = photos.indexOf(url);
+  if(revIdx !== -1){
+    openReviewPhoto(revIdx);
+    return;
+  }
+  // Fallback aman: jangan pernah buka modal testimoni dengan watermark untuk URL tidak dikenal
+  openProductImageViewer(null, 0, null, url);
 }
 function openReviewPhoto(idx){
+  // Pastikan penampil foto produk ditutup
+  const prodOverlay = document.getElementById('prodPhotoOverlay');
+  if(prodOverlay) prodOverlay.classList.remove('open');
+
   const photos = getReviewPhotos();
-  if(!photos[idx]) return;
-  document.getElementById('reviewPhotoFull').src = photos[idx];
-  document.getElementById('reviewPhotoOverlay').classList.add('open');
+  if(!photos || !photos[idx]) return;
+  const fullImg = document.getElementById('reviewPhotoFull');
+  if(fullImg) fullImg.src = photos[idx];
+  const overlay = document.getElementById('reviewPhotoOverlay');
+  if(overlay) overlay.classList.add('open');
 }
 function closeReviewPhoto(){
-  document.getElementById('reviewPhotoOverlay').classList.remove('open');
+  const overlay = document.getElementById('reviewPhotoOverlay');
+  if(overlay) overlay.classList.remove('open');
+  const imgEl = document.getElementById('reviewPhotoFull');
+  if(imgEl) imgEl.src = '';
+}
+
+// ============ DEDICATED PRODUCT PHOTO VIEWER ============
+let currentPhotoViewingProductId = null;
+let currentPhotoViewingIndex = 0;
+
+function openProductImageViewer(productId, imageIndex, event, fallbackUrl){
+  if(event) event.stopPropagation();
+  // Selalu pastikan review overlay tertutup agar tidak pernah tumpang tindih
+  closeReviewPhoto();
+
+  if(!productId && fallbackUrl){
+    currentPhotoViewingProductId = null;
+    currentPhotoViewingIndex = 0;
+    const fullImg = document.getElementById('prodPhotoFullImg');
+    if(fullImg) fullImg.src = fallbackUrl;
+    const catTag = document.getElementById('prodPhotoCatTag');
+    if(catTag) catTag.textContent = 'PREVIEW';
+    const title = document.getElementById('prodPhotoTitle');
+    if(title) title.textContent = 'Foto Produk';
+    const oldPrice = document.getElementById('prodPhotoPriceOld');
+    if(oldPrice) oldPrice.style.display = 'none';
+    const price = document.getElementById('prodPhotoPrice');
+    if(price) price.textContent = '';
+    const counterEl = document.getElementById('prodPhotoCounter');
+    if(counterEl) counterEl.style.display = 'none';
+    const prevBtn = document.getElementById('prodPhotoPrevBtn');
+    if(prevBtn) prevBtn.style.display = 'none';
+    const nextBtn = document.getElementById('prodPhotoNextBtn');
+    if(nextBtn) nextBtn.style.display = 'none';
+    const overlay = document.getElementById('prodPhotoOverlay');
+    if(overlay) overlay.classList.add('open');
+    return;
+  }
+
+  const prod = products.find(p => p.id === productId);
+  if(!prod) return;
+
+  const imgs = getImagesForProduct(productId);
+  if(!imgs || imgs.length === 0){
+    openModal(productId);
+    return;
+  }
+
+  currentPhotoViewingProductId = productId;
+  currentPhotoViewingIndex = (typeof imageIndex === 'number' && imageIndex >= 0 && imageIndex < imgs.length) ? imageIndex : 0;
+
+  updateProductImageViewerContent();
+  const overlay = document.getElementById('prodPhotoOverlay');
+  if(overlay) overlay.classList.add('open');
+}
+
+function updateProductImageViewerContent(){
+  if(currentPhotoViewingProductId === null || currentPhotoViewingProductId === undefined) return;
+  const prod = products.find(p => p.id === currentPhotoViewingProductId);
+  if(!prod) return;
+
+  const imgs = getImagesForProduct(prod.id);
+  if(!imgs || imgs.length === 0) return;
+
+  if(currentPhotoViewingIndex >= imgs.length) currentPhotoViewingIndex = 0;
+  if(currentPhotoViewingIndex < 0) currentPhotoViewingIndex = imgs.length - 1;
+
+  const catInfo = CAT_INFO[prod.cat] || { shortName: (prod.cat || 'PRODUK').toUpperCase() };
+  const catTagEl = document.getElementById('prodPhotoCatTag');
+  if(catTagEl) catTagEl.textContent = catInfo.shortName + (prod.subgroup ? ' • ' + prod.subgroup : '');
+
+  const titleEl = document.getElementById('prodPhotoTitle');
+  if(titleEl) titleEl.textContent = prod.name + (prod.isAccount ? ' 🔑' : '');
+
+  const disc = getDiscount(prod.cat);
+  const discPrice = getDiscountedPrice(prod.price, prod.cat);
+  const hasDisc = disc > 0;
+
+  const oldPriceEl = document.getElementById('prodPhotoPriceOld');
+  const priceEl = document.getElementById('prodPhotoPrice');
+  if(oldPriceEl){
+    oldPriceEl.textContent = hasDisc ? formatPrice(prod.price) : '';
+    oldPriceEl.style.display = hasDisc ? 'block' : 'none';
+  }
+  if(priceEl){
+    priceEl.textContent = formatPrice(discPrice) + (hasDisc ? ` (-${disc}%)` : '');
+  }
+
+  const fullImg = document.getElementById('prodPhotoFullImg');
+  if(fullImg) fullImg.src = imgs[currentPhotoViewingIndex];
+
+  const counterEl = document.getElementById('prodPhotoCounter');
+  if(counterEl){
+    counterEl.textContent = `${currentPhotoViewingIndex + 1} / ${imgs.length}`;
+    counterEl.style.display = imgs.length > 1 ? 'block' : 'none';
+  }
+
+  const prevBtn = document.getElementById('prodPhotoPrevBtn');
+  const nextBtn = document.getElementById('prodPhotoNextBtn');
+  if(prevBtn) prevBtn.style.display = imgs.length > 1 ? 'flex' : 'none';
+  if(nextBtn) nextBtn.style.display = imgs.length > 1 ? 'flex' : 'none';
+}
+
+function navProductImage(dir){
+  if(currentPhotoViewingProductId === null) return;
+  const imgs = getImagesForProduct(currentPhotoViewingProductId);
+  if(!imgs || imgs.length <= 1) return;
+  currentPhotoViewingIndex = (currentPhotoViewingIndex + dir + imgs.length) % imgs.length;
+  updateProductImageViewerContent();
+}
+
+function closeProductImageViewer(e){
+  if(!e || e.target === document.getElementById('prodPhotoOverlay') || (e.target && e.target.classList && e.target.classList.contains('prod-photo-close-btn'))){
+    const overlay = document.getElementById('prodPhotoOverlay');
+    if(overlay) overlay.classList.remove('open');
+    const fullImg = document.getElementById('prodPhotoFullImg');
+    if(fullImg) fullImg.src = '';
+    currentPhotoViewingProductId = null;
+  }
+}
+
+function buyFromProductImageViewer(){
+  const pid = currentPhotoViewingProductId;
+  const overlay = document.getElementById('prodPhotoOverlay');
+  if(overlay) overlay.classList.remove('open');
+  const fullImg = document.getElementById('prodPhotoFullImg');
+  if(fullImg) fullImg.src = '';
+  currentPhotoViewingProductId = null;
+  if(pid){
+    openModal(pid);
+  }
 }
 
 function openModal(id){
@@ -3572,9 +3824,10 @@ function openModal(id){
   const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct ? selectedProduct.cat : null);
   const hasDisc = discount > 0;
   const imgs = getImagesForProduct(id);
-  const thumbImg = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
+  const hasProdImgs = imgs.length > 0;
+  const thumbImg = hasProdImgs ? `<img src="${imgs[0]}" alt="" title="Klik untuk lihat foto penuh">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
   document.getElementById('modalProduct').innerHTML=`
-    <div class="modal-thumb">${thumbImg}</div>
+    <div class="modal-thumb" ${hasProdImgs ? `onclick="openProductImageViewer(${id},0)" style="cursor:pointer" title="Klik untuk perbesar foto"` : ''}>${thumbImg}</div>
     <div class="modal-detail">
       <p class="name">${selectedProduct.name}</p>
       <div class="price-row">
@@ -3582,6 +3835,7 @@ function openModal(id){
         <p class="${hasDisc?'price-discount':'price'}">${formatPrice(discPrice)}</p>
         ${hasDisc?`<span class="discount-tag">-${discount}%</span>`:''}
       </div>
+      ${hasProdImgs ? `<div style="margin-top:3px"><span style="font-size:11px;color:#7c3aed;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px" onclick="openProductImageViewer(${id},0)">🔍 Lihat Foto Ukuran Penuh</span></div>` : ''}
     </div>`;
   document.querySelectorAll('#modalPayGrid .pay-option').forEach(el=>el.classList.remove('selected'));
   document.querySelectorAll('#adminGridModal .admin-option').forEach(el=>el.classList.remove('selected'));
@@ -3668,11 +3922,9 @@ function renderCarousel(){
   track.innerHTML = config.map((slide, i) => {
     const isImg = slide.bgType === 'image';
     const bgStyle = isImg ? `background-image:url('${slide.bgValue}')` : `background:${slide.bgValue}`;
-    const cursorStyle = isImg ? ';cursor:pointer' : '';
-    const clickAttr = isImg ? `onclick="openImageViewer('${slide.bgValue}')"` : '';
     return `
     <div class="carousel-slide s${i+1}">
-      <div class="slide-bg" ${clickAttr} style="${bgStyle}${cursorStyle}">
+      <div class="slide-bg" style="${bgStyle}">
         <div class="slide-overlay"></div>
         <div class="slide-content">
           <span class="slide-tag" style="${slide.tagStyle}">${slide.tag}</span>
@@ -4651,6 +4903,7 @@ setInterval(()=>{
       target.closest('img') || 
       target.classList.contains('slide-protect-shield') || 
       target.closest('.review-photo-overlay') || 
+      target.closest('.prod-photo-overlay') || 
       target.classList.contains('slide-bg') ||
       target.closest('.product-img-wrap') ||
       target.closest('.review-photo')
@@ -4669,6 +4922,44 @@ setInterval(()=>{
       return false;
     }
   }, { passive: false });
+
+  // Keyboard navigation untuk Product Photo Viewer (Esc tutup, panah navigasi)
+  document.addEventListener('keydown', function(e){
+    const overlay = document.getElementById('prodPhotoOverlay');
+    if(!overlay || !overlay.classList.contains('open')) return;
+    if(e.key === 'Escape'){
+      closeProductImageViewer();
+    } else if(e.key === 'ArrowRight'){
+      navProductImage(1);
+    } else if(e.key === 'ArrowLeft'){
+      navProductImage(-1);
+    }
+  });
+
+  // Swipe navigation untuk Product Photo Viewer pada perangkat mobile
+  let pTouchStartX = 0;
+  let pTouchStartY = 0;
+  const prodOverlayEl = document.getElementById('prodPhotoOverlay');
+  if(prodOverlayEl){
+    prodOverlayEl.addEventListener('touchstart', function(e){
+      if(e.touches.length === 1){
+        pTouchStartX = e.touches[0].clientX;
+        pTouchStartY = e.touches[0].clientY;
+      }
+    }, { passive: true });
+    prodOverlayEl.addEventListener('touchend', function(e){
+      if(!currentPhotoViewingProductId) return;
+      const diffX = pTouchStartX - e.changedTouches[0].clientX;
+      const diffY = pTouchStartY - e.changedTouches[0].clientY;
+      if(Math.abs(diffX) > 45 && Math.abs(diffX) > Math.abs(diffY)){
+        if(diffX > 0){
+          navProductImage(1);
+        } else {
+          navProductImage(-1);
+        }
+      }
+    }, { passive: true });
+  }
 })();
 </script>
 </body>
