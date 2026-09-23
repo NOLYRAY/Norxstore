@@ -369,14 +369,10 @@ body.dark-mode .live-pill-mode{
 .admin-product-item .p-cat{font-size:10px;color:#888;margin-top:1px}
 .admin-product-item .p-price{font-size:12px;font-weight:700;color:#7c3aed;margin-top:2px}
 
-.p-reorder-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex-shrink:0}
-.p-move-btn{width:26px;height:18px;padding:0;border-radius:4px;border:1px solid #cbd5e1;background:#fff;color:#475569;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
-.p-move-btn:hover:not(:disabled){background:#7c3aed;color:#fff;border-color:#7c3aed}
-.p-move-btn:active:not(:disabled){transform:scale(0.92)}
-.p-drag-handle{display:flex;align-items:center;justify-content:center;gap:2px;padding:2px 4px;border-radius:4px;background:#f1f5f9;cursor:grab;touch-action:none !important;-webkit-user-select:none;user-select:none}
-.p-drag-handle:active{cursor:grabbing;background:#e2e8f0}
-.p-order-num{font-size:9px;font-weight:700;color:#64748b;min-width:14px;text-align:center}
-.p-drag-dots{font-size:13px;color:#94a3b8;line-height:1;font-weight:900}
+.p-drag-handle{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:34px;height:48px;padding:4px;border-radius:8px;background:#f8fafc;border:1.5px solid #e2e8f0;cursor:grab;touch-action:none !important;-webkit-user-select:none;user-select:none;flex-shrink:0;transition:all .15s ease}
+.p-drag-handle:active{cursor:grabbing;background:#ede9fe;border-color:#a78bfa;box-shadow:0 2px 8px rgba(124,58,237,.2)}
+.p-order-num{font-size:10px;font-weight:800;color:#6366f1;line-height:1}
+.p-drag-dots{font-size:16px;color:#818cf8;line-height:1;font-weight:900;letter-spacing:-1px}
 .reorder-hint-banner{display:flex;align-items:center;gap:6px;background:#f5f3ff;border:1px solid #ddd6fe;color:#6d28d9;font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;margin-bottom:8px}
 
 .carousel-admin-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
@@ -1117,7 +1113,7 @@ button{cursor:pointer;font-family:inherit}
 </div>
 <div class="reorder-hint-banner">
   <span style="font-size:14px">↕️</span>
-  <span><b>Atur Urutan:</b> Geser ikon <b>⠿</b> atau klik tombol <b>▲ ▼</b> untuk memindahkan posisi produk di toko.</span>
+  <span><b>Fitur Geser:</b> Tahan & geser ikon <b>⠿</b> ke atas/bawah untuk memindahkan posisi produk.</span>
 </div>
 <div class="admin-product-list" id="adminProductList"></div>
 
@@ -3296,7 +3292,7 @@ function renderProductCard(p, discount, idx){
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
     <div class="product-img-slide" data-index="${i}">
       <img src="${url}" alt="${p.name}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}">
-      <div class="slide-protect-shield" onclick="openImageViewer('${url}');event.stopPropagation()"></div>
+      <div class="slide-protect-shield"></div>
     </div>
   `).join('') : (!imagesDataReady ? `
     <div class="product-img-slide"><div class="skel" style="width:100%;height:100%;position:absolute;inset:0"></div></div>
@@ -3344,19 +3340,19 @@ function renderProductCard(p, discount, idx){
       ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
       ${busyBadge}
       ${imgCount}
-      <div class="product-img-track" id="prodImgTrack_${p.id}" onscroll="onProdImgScroll(${p.id})" onclick="event.stopPropagation()">
+      <div class="product-img-track" id="prodImgTrack_${p.id}" onscroll="onProdImgScroll(${p.id})">
         ${imgSlides}
       </div>
       ${imgDots}
     </div>
-    <div class="product-info">
+    <div class="product-info" onclick="openModal(${p.id})" style="cursor:pointer">
       <p class="product-name">${p.name}</p>
       <div class="price-row">
         ${hasDisc?`<span class="product-price-old">${formatPrice(p.price)}</span>`:''}
         <span class="${hasDisc?'product-price-discount':'product-price'}">${formatPrice(discPrice)}</span>
       </div>
       <p class="product-meta">${p.desc}</p>
-      <div class="product-btn-row">
+      <div class="product-btn-row" onclick="event.stopPropagation()">
         ${isLocked
           ? `<button class="buy-now-btn" style="background:${lockedBtnBg};cursor:not-allowed;color:#fff;font-weight:700;opacity:.95" disabled>${lockedBtnText}</button>`
           : `<button class="buy-now-btn" onclick="openModal(${p.id})">🛒 Beli</button>
@@ -4262,9 +4258,6 @@ function renderAdminProductList(){
       statusLine += `<p style="font-size:10px;font-weight:700;margin-top:2px">⏳ Pesanan Aktif Toko: ${ordStBadge}</p>`;
     }
 
-    const isFirst = index === 0;
-    const isLast = index === products.length - 1;
-
     return `
     <div class="admin-product-item"
          id="adminProdItem_${p.id}"
@@ -4278,18 +4271,14 @@ function renderAdminProductList(){
          ondragend="handleAdminProdDragEnd(event)"
          style="flex-wrap:wrap">
       
-      <div class="p-reorder-col">
-        <button type="button" class="p-move-btn" onclick="moveProductOrder(${index}, -1, event)" title="Geser ke Atas" ${isFirst ? 'disabled style="opacity:0.25;cursor:not-allowed"' : ''}>▲</button>
-        <div class="p-drag-handle"
-             ontouchstart="handleAdminProdTouchStart(event, ${index})"
-             ontouchmove="handleAdminProdTouchMove(event)"
-             ontouchend="handleAdminProdTouchEnd(event)"
-             ontouchcancel="handleAdminProdTouchEnd(event)"
-             title="Tahan & geser untuk memindahkan posisi">
-          <span class="p-order-num">#${index + 1}</span>
-          <span class="p-drag-dots">⠿</span>
-        </div>
-        <button type="button" class="p-move-btn" onclick="moveProductOrder(${index}, 1, event)" title="Geser ke Bawah" ${isLast ? 'disabled style="opacity:0.25;cursor:not-allowed"' : ''}>▼</button>
+      <div class="p-drag-handle"
+           ontouchstart="handleAdminProdTouchStart(event, ${index})"
+           ontouchmove="handleAdminProdTouchMove(event)"
+           ontouchend="handleAdminProdTouchEnd(event)"
+           ontouchcancel="handleAdminProdTouchEnd(event)"
+           title="Tahan & geser untuk memindahkan posisi">
+        <span class="p-order-num">#${index + 1}</span>
+        <span class="p-drag-dots">⠿</span>
       </div>
 
       <div class="p-icon">${p.icon}</div>
@@ -4309,25 +4298,6 @@ function renderAdminProductList(){
   `; }).join('');
 }
 
-function moveProductOrder(index, direction, event){
-  if(event) {
-    event.stopPropagation();
-    event.preventDefault();
-  }
-  const targetIndex = index + direction;
-  if(targetIndex < 0 || targetIndex >= products.length) return;
-  
-  const temp = products[index];
-  products[index] = products[targetIndex];
-  products[targetIndex] = temp;
-  
-  setProducts([...products]);
-  safeSetItem('norxstore_products_cache', JSON.stringify(products));
-  renderAdminProductList();
-  renderProducts();
-  showToast('✅ Urutan produk berhasil dipindahkan');
-}
-
 function reorderProduct(fromIndex, toIndex){
   if(fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= products.length || toIndex >= products.length) return;
   
@@ -4338,7 +4308,7 @@ function reorderProduct(fromIndex, toIndex){
   safeSetItem('norxstore_products_cache', JSON.stringify(products));
   renderAdminProductList();
   renderProducts();
-  showToast('✅ Posisi produk #' + (toIndex + 1) + ' berhasil disimpan');
+  showToast('✅ Urutan produk berhasil dipindahkan');
 }
 
 let adminDraggedProdIndex = null;
@@ -4422,24 +4392,44 @@ function handleAdminProdTouchMove(e){
   const touch = e.touches[0];
   const deltaY = Math.abs(touch.clientY - adminTouchDragState.startY);
   
-  if(deltaY > 5 || adminTouchDragState.isDragging){
+  if(deltaY > 6 || adminTouchDragState.isDragging){
     if(e.cancelable) e.preventDefault();
     adminTouchDragState.isDragging = true;
     adminTouchDragState.itemEl.classList.add('dragging');
+    adminTouchDragState.itemEl.style.pointerEvents = 'none';
     
-    const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
-    const targetItem = elementUnderTouch ? elementUnderTouch.closest('.admin-product-item') : null;
-    
-    document.querySelectorAll('.admin-product-item').forEach(el => {
-      if(el !== adminTouchDragState.itemEl){
-        el.classList.remove('drag-over-top', 'drag-over-bottom');
+    // Auto-scroll list if near top or bottom
+    const listEl = document.getElementById('adminProductList');
+    if(listEl){
+      const listRect = listEl.getBoundingClientRect();
+      if(touch.clientY < listRect.top + 40){
+        listEl.scrollTop -= 8;
+      } else if(touch.clientY > listRect.bottom - 40){
+        listEl.scrollTop += 8;
       }
+    }
+    
+    const allItems = Array.from(document.querySelectorAll('.admin-product-item'));
+    let targetItem = null;
+    let isTopHalf = false;
+    
+    for(const item of allItems){
+      if(item === adminTouchDragState.itemEl) continue;
+      const rect = item.getBoundingClientRect();
+      if(touch.clientY >= rect.top && touch.clientY <= rect.bottom){
+        targetItem = item;
+        const midY = rect.top + rect.height / 2;
+        isTopHalf = (touch.clientY < midY);
+        break;
+      }
+    }
+    
+    allItems.forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom');
     });
     
-    if(targetItem && targetItem !== adminTouchDragState.itemEl){
-      const rect = targetItem.getBoundingClientRect();
-      const midY = rect.top + rect.height / 2;
-      if(touch.clientY < midY){
+    if(targetItem){
+      if(isTopHalf){
         targetItem.classList.add('drag-over-top');
       } else {
         targetItem.classList.add('drag-over-bottom');
@@ -4452,14 +4442,33 @@ function handleAdminProdTouchEnd(e){
   if(!adminTouchDragState) return;
   const { index, isDragging, itemEl } = adminTouchDragState;
   
+  if(itemEl){
+    itemEl.style.pointerEvents = '';
+    itemEl.classList.remove('dragging');
+  }
+  
   if(isDragging){
     const touch = e.changedTouches ? e.changedTouches[0] : null;
     let targetIdx = -1;
+    
     if(touch){
-      const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
-      const targetItem = elementUnderTouch ? elementUnderTouch.closest('.admin-product-item') : null;
-      if(targetItem && targetItem.dataset && targetItem.dataset.prodIndex !== undefined){
-        targetIdx = parseInt(targetItem.dataset.prodIndex, 10);
+      const allItems = Array.from(document.querySelectorAll('.admin-product-item'));
+      for(const item of allItems){
+        if(item === itemEl) continue;
+        const rect = item.getBoundingClientRect();
+        if(touch.clientY >= rect.top && touch.clientY <= rect.bottom){
+          targetIdx = parseInt(item.dataset.prodIndex, 10);
+          break;
+        }
+      }
+      if(targetIdx < 0 && allItems.length > 0){
+        const firstRect = allItems[0].getBoundingClientRect();
+        const lastRect = allItems[allItems.length - 1].getBoundingClientRect();
+        if(touch.clientY < firstRect.top){
+          targetIdx = 0;
+        } else if(touch.clientY > lastRect.bottom){
+          targetIdx = products.length - 1;
+        }
       }
     }
     
@@ -4472,7 +4481,6 @@ function handleAdminProdTouchEnd(e){
     }
   }
   
-  if(itemEl) itemEl.classList.remove('dragging');
   adminTouchDragState = null;
 }
 
