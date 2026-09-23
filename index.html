@@ -358,13 +358,26 @@ body.dark-mode .live-pill-mode{
 .upload-zone-text{font-size:12px;color:#888}
 .upload-zone-icon{font-size:20px;margin-bottom:2px}
 
-.admin-product-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:200px;overflow-y:auto}
-.admin-product-item{display:flex;align-items:center;gap:10px;padding:10px;border:1px solid #e5e5e5;border-radius:8px;background:#fafafa}
+.admin-product-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:440px;overflow-y:auto;padding-right:2px}
+.admin-product-item{display:flex;align-items:center;gap:8px;padding:10px;border:1.5px solid #e5e5e5;border-radius:10px;background:#fafafa;transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;position:relative}
+.admin-product-item.dragging{opacity:0.45;border:2px dashed #7c3aed;background:#f5f3ff}
+.admin-product-item.drag-over-top{border-top:3px solid #7c3aed !important}
+.admin-product-item.drag-over-bottom{border-bottom:3px solid #7c3aed !important}
 .admin-product-item .p-icon{width:36px;height:36px;border-radius:8px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
 .admin-product-item .p-info{flex:1;min-width:0}
 .admin-product-item .p-name{font-size:12px;font-weight:600;color:#1a1a1a;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .admin-product-item .p-cat{font-size:10px;color:#888;margin-top:1px}
 .admin-product-item .p-price{font-size:12px;font-weight:700;color:#7c3aed;margin-top:2px}
+
+.p-reorder-col{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;flex-shrink:0}
+.p-move-btn{width:26px;height:18px;padding:0;border-radius:4px;border:1px solid #cbd5e1;background:#fff;color:#475569;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s}
+.p-move-btn:hover:not(:disabled){background:#7c3aed;color:#fff;border-color:#7c3aed}
+.p-move-btn:active:not(:disabled){transform:scale(0.92)}
+.p-drag-handle{display:flex;align-items:center;justify-content:center;gap:2px;padding:2px 4px;border-radius:4px;background:#f1f5f9;cursor:grab;touch-action:none !important;-webkit-user-select:none;user-select:none}
+.p-drag-handle:active{cursor:grabbing;background:#e2e8f0}
+.p-order-num{font-size:9px;font-weight:700;color:#64748b;min-width:14px;text-align:center}
+.p-drag-dots{font-size:13px;color:#94a3b8;line-height:1;font-weight:900}
+.reorder-hint-banner{display:flex;align-items:center;gap:6px;background:#f5f3ff;border:1px solid #ddd6fe;color:#6d28d9;font-size:11px;font-weight:600;padding:6px 10px;border-radius:8px;margin-bottom:8px}
 
 .carousel-admin-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px}
 .carousel-admin-item{padding:12px;border:1px solid #e5e5e5;border-radius:10px;background:#fafafa}
@@ -1102,6 +1115,10 @@ button{cursor:pointer;font-family:inherit}
   <div class="admin-label" style="margin-bottom:0">Daftar Produk</div>
   <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Atur Sub-Kategori Massal</button>
 </div>
+<div class="reorder-hint-banner">
+  <span style="font-size:14px">↕️</span>
+  <span><b>Atur Urutan:</b> Geser ikon <b>⠿</b> atau klik tombol <b>▲ ▼</b> untuk memindahkan posisi produk di toko.</span>
+</div>
 <div class="admin-product-list" id="adminProductList"></div>
 
 <div class="admin-divider"></div>
@@ -1359,13 +1376,19 @@ function saveImagesCache(data){
 
 function mergeProductsData(parsed){
   if(!Array.isArray(parsed) || parsed.length === 0) return [...DEFAULT_PRODUCTS];
-  const merged = DEFAULT_PRODUCTS.map(dp => {
-    const override = parsed.find(p => p.id === dp.id);
-    return override ? {...dp, ...override} : {...dp};
-  });
+  // Pertahankan urutan eksak sesuai yang diatur admin (drag & drop)
+  const merged = [];
+  const seenIds = new Set();
   parsed.forEach(p => {
-    if(!DEFAULT_PRODUCTS.find(dp => dp.id === p.id)){
-      merged.push(p);
+    if(!p || typeof p !== 'object' || p.id === undefined) return;
+    const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
+    merged.push(dp ? {...dp, ...p} : {...p});
+    seenIds.add(p.id);
+  });
+  DEFAULT_PRODUCTS.forEach(dp => {
+    if(!seenIds.has(dp.id)){
+      merged.push({...dp});
+      seenIds.add(dp.id);
     }
   });
   return merged;
@@ -4207,13 +4230,14 @@ function duplicateProduct(id){
 
 function renderAdminProductList(){
   const list = document.getElementById('adminProductList');
+  if(!list) return;
 
   if(products.length === 0){
     list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada produk.</p>';
     return;
   }
 
-  list.innerHTML = products.map(p => {
+  list.innerHTML = products.map((p, index) => {
     const isDefault = !!DEFAULT_PRODUCTS.find(dp => dp.id === p.id);
     let statusLine = '';
     let statusButtons = '';
@@ -4237,8 +4261,37 @@ function renderAdminProductList(){
         : `<span style="color:#d97706">🟡 MENUNGGU PENGERJAAN</span>`;
       statusLine += `<p style="font-size:10px;font-weight:700;margin-top:2px">⏳ Pesanan Aktif Toko: ${ordStBadge}</p>`;
     }
+
+    const isFirst = index === 0;
+    const isLast = index === products.length - 1;
+
     return `
-    <div class="admin-product-item" style="flex-wrap:wrap">
+    <div class="admin-product-item"
+         id="adminProdItem_${p.id}"
+         data-prod-id="${p.id}"
+         data-prod-index="${index}"
+         draggable="true"
+         ondragstart="handleAdminProdDragStart(event, ${index})"
+         ondragover="handleAdminProdDragOver(event, ${index})"
+         ondragleave="handleAdminProdDragLeave(event)"
+         ondrop="handleAdminProdDrop(event, ${index})"
+         ondragend="handleAdminProdDragEnd(event)"
+         style="flex-wrap:wrap">
+      
+      <div class="p-reorder-col">
+        <button type="button" class="p-move-btn" onclick="moveProductOrder(${index}, -1, event)" title="Geser ke Atas" ${isFirst ? 'disabled style="opacity:0.25;cursor:not-allowed"' : ''}>▲</button>
+        <div class="p-drag-handle"
+             ontouchstart="handleAdminProdTouchStart(event, ${index})"
+             ontouchmove="handleAdminProdTouchMove(event)"
+             ontouchend="handleAdminProdTouchEnd(event)"
+             ontouchcancel="handleAdminProdTouchEnd(event)"
+             title="Tahan & geser untuk memindahkan posisi">
+          <span class="p-order-num">#${index + 1}</span>
+          <span class="p-drag-dots">⠿</span>
+        </div>
+        <button type="button" class="p-move-btn" onclick="moveProductOrder(${index}, 1, event)" title="Geser ke Bawah" ${isLast ? 'disabled style="opacity:0.25;cursor:not-allowed"' : ''}>▼</button>
+      </div>
+
       <div class="p-icon">${p.icon}</div>
       <div class="p-info">
         <p class="p-name">${p.name}${p.isAccount ? ' 🔑' : ''}</p>
@@ -4254,6 +4307,173 @@ function renderAdminProductList(){
       ${statusButtons ? `<div style="width:100%;display:flex;gap:6px;margin-top:6px">${statusButtons}</div>` : ''}
     </div>
   `; }).join('');
+}
+
+function moveProductOrder(index, direction, event){
+  if(event) {
+    event.stopPropagation();
+    event.preventDefault();
+  }
+  const targetIndex = index + direction;
+  if(targetIndex < 0 || targetIndex >= products.length) return;
+  
+  const temp = products[index];
+  products[index] = products[targetIndex];
+  products[targetIndex] = temp;
+  
+  setProducts([...products]);
+  safeSetItem('norxstore_products_cache', JSON.stringify(products));
+  renderAdminProductList();
+  renderProducts();
+  showToast('✅ Urutan produk berhasil dipindahkan');
+}
+
+function reorderProduct(fromIndex, toIndex){
+  if(fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= products.length || toIndex >= products.length) return;
+  
+  const itemToMove = products.splice(fromIndex, 1)[0];
+  products.splice(toIndex, 0, itemToMove);
+  
+  setProducts([...products]);
+  safeSetItem('norxstore_products_cache', JSON.stringify(products));
+  renderAdminProductList();
+  renderProducts();
+  showToast('✅ Posisi produk #' + (toIndex + 1) + ' berhasil disimpan');
+}
+
+let adminDraggedProdIndex = null;
+
+function handleAdminProdDragStart(e, index){
+  adminDraggedProdIndex = index;
+  if(e.dataTransfer){
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
+  }
+  const target = e.currentTarget;
+  setTimeout(() => {
+    if(target) target.classList.add('dragging');
+  }, 0);
+}
+
+function handleAdminProdDragOver(e, index){
+  e.preventDefault();
+  if(e.dataTransfer) e.dataTransfer.dropEffect = 'move';
+  const target = e.currentTarget;
+  if(adminDraggedProdIndex === null || adminDraggedProdIndex === index) return;
+  
+  const rect = target.getBoundingClientRect();
+  const midY = rect.top + rect.height / 2;
+  if(e.clientY < midY){
+    target.classList.add('drag-over-top');
+    target.classList.remove('drag-over-bottom');
+  } else {
+    target.classList.add('drag-over-bottom');
+    target.classList.remove('drag-over-top');
+  }
+}
+
+function handleAdminProdDragLeave(e){
+  const target = e.currentTarget;
+  if(target){
+    target.classList.remove('drag-over-top', 'drag-over-bottom');
+  }
+}
+
+function handleAdminProdDrop(e, index){
+  e.preventDefault();
+  const target = e.currentTarget;
+  if(target){
+    target.classList.remove('drag-over-top', 'drag-over-bottom');
+  }
+  
+  if(adminDraggedProdIndex === null || adminDraggedProdIndex === index) return;
+  
+  reorderProduct(adminDraggedProdIndex, index);
+  adminDraggedProdIndex = null;
+}
+
+function handleAdminProdDragEnd(e){
+  const target = e.currentTarget;
+  if(target) target.classList.remove('dragging');
+  document.querySelectorAll('.admin-product-item').forEach(el => {
+    el.classList.remove('drag-over-top', 'drag-over-bottom', 'dragging');
+  });
+  adminDraggedProdIndex = null;
+}
+
+let adminTouchDragState = null;
+
+function handleAdminProdTouchStart(e, index){
+  const touch = e.touches[0];
+  const itemEl = e.currentTarget.closest('.admin-product-item');
+  if(!itemEl) return;
+  
+  adminTouchDragState = {
+    index: index,
+    startX: touch.clientX,
+    startY: touch.clientY,
+    itemEl: itemEl,
+    isDragging: false
+  };
+}
+
+function handleAdminProdTouchMove(e){
+  if(!adminTouchDragState) return;
+  const touch = e.touches[0];
+  const deltaY = Math.abs(touch.clientY - adminTouchDragState.startY);
+  
+  if(deltaY > 5 || adminTouchDragState.isDragging){
+    if(e.cancelable) e.preventDefault();
+    adminTouchDragState.isDragging = true;
+    adminTouchDragState.itemEl.classList.add('dragging');
+    
+    const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+    const targetItem = elementUnderTouch ? elementUnderTouch.closest('.admin-product-item') : null;
+    
+    document.querySelectorAll('.admin-product-item').forEach(el => {
+      if(el !== adminTouchDragState.itemEl){
+        el.classList.remove('drag-over-top', 'drag-over-bottom');
+      }
+    });
+    
+    if(targetItem && targetItem !== adminTouchDragState.itemEl){
+      const rect = targetItem.getBoundingClientRect();
+      const midY = rect.top + rect.height / 2;
+      if(touch.clientY < midY){
+        targetItem.classList.add('drag-over-top');
+      } else {
+        targetItem.classList.add('drag-over-bottom');
+      }
+    }
+  }
+}
+
+function handleAdminProdTouchEnd(e){
+  if(!adminTouchDragState) return;
+  const { index, isDragging, itemEl } = adminTouchDragState;
+  
+  if(isDragging){
+    const touch = e.changedTouches ? e.changedTouches[0] : null;
+    let targetIdx = -1;
+    if(touch){
+      const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+      const targetItem = elementUnderTouch ? elementUnderTouch.closest('.admin-product-item') : null;
+      if(targetItem && targetItem.dataset && targetItem.dataset.prodIndex !== undefined){
+        targetIdx = parseInt(targetItem.dataset.prodIndex, 10);
+      }
+    }
+    
+    document.querySelectorAll('.admin-product-item').forEach(el => {
+      el.classList.remove('drag-over-top', 'drag-over-bottom', 'dragging');
+    });
+    
+    if(targetIdx >= 0 && targetIdx !== index){
+      reorderProduct(index, targetIdx);
+    }
+  }
+  
+  if(itemEl) itemEl.classList.remove('dragging');
+  adminTouchDragState = null;
 }
 
 // ==================== LIVE ONLINE USERS PRESENCE ====================
