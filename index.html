@@ -121,7 +121,7 @@ body.dark-mode .live-pill-mode{
 .section-link{font-size:12px;color:#888}
 .cat-chips{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y}
 .cat-chips::-webkit-scrollbar{display:none}
-.cat-chip{padding:8px 17px;border-radius:20px;background:#f5f4fa;border:1px solid #ece9f7;font-size:12px;font-weight:600;color:#666;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease,color 0.3s ease,transform .15s ease}
+.cat-chip{padding:8px 17px;border-radius:20px;background:#f5f4fa;border:1px solid #ece9f7;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#666;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease,color 0.3s ease,transform .15s ease}
 .cat-chip.active{background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(124,58,237,.3)}
 .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;width:100%}
 .product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;touch-action:pan-y}
@@ -792,12 +792,12 @@ button{cursor:pointer;font-family:inherit}
 <span class="section-link" onclick="showAllProducts()">Lihat semua →</span>
 </div>
 <div class="cat-chips" id="catChips">
-<button class="cat-chip active" id="chip_all" data-cat="all" onclick="filterCat('all',this)">Semua</button>
-<button class="cat-chip" id="chip_genshin" data-cat="genshin" onclick="filterCat('genshin',this)">Genshin</button>
+<button class="cat-chip active" id="chip_all" data-cat="all" onclick="filterCat('all',this)">SEMUA</button>
+<button class="cat-chip" id="chip_genshin" data-cat="genshin" onclick="filterCat('genshin',this)">GENSHIN</button>
 <button class="cat-chip" id="chip_hsr" data-cat="hsr" onclick="filterCat('hsr',this)">HSR</button>
-<button class="cat-chip" id="chip_wuwa" data-cat="wuwa" onclick="filterCat('wuwa',this)">WuWa</button>
+<button class="cat-chip" id="chip_wuwa" data-cat="wuwa" onclick="filterCat('wuwa',this)">WUWA</button>
 <button class="cat-chip" id="chip_nte" data-cat="nte" onclick="filterCat('nte',this)">NTE</button>
-<button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 Jual Akun</button>
+<button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 JUAL AKUN</button>
 </div>
 <div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
 <div class="product-grid" id="productGrid">
@@ -1867,7 +1867,7 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
-const NORX_SYSTEM_VER = '2026.09.23.v7';
+const NORX_SYSTEM_VER = '2026.09.23.v8';
 (function checkSystemVersion(){
   try {
     const cur = safeGetItem('norx_sys_version', null);
@@ -3215,12 +3215,12 @@ function toggleMode(){
 
 // ==================== METADATA KATEGORI & SUB-FILTER ENGINE ====================
 const CAT_INFO = {
-  all: { name: 'Semua Layanan', shortName: 'Semua', icon: '🛒' },
-  genshin: { name: 'Genshin Impact', shortName: 'Genshin', icon: '✨' },
+  all: { name: 'Semua Layanan', shortName: 'SEMUA', icon: '🛒' },
+  genshin: { name: 'Genshin Impact', shortName: 'GENSHIN', icon: '✨' },
   hsr: { name: 'Honkai: Star Rail', shortName: 'HSR', icon: '🚀' },
-  wuwa: { name: 'Wuthering Waves', shortName: 'WuWa', icon: '🌊' },
+  wuwa: { name: 'Wuthering Waves', shortName: 'WUWA', icon: '🌊' },
   nte: { name: 'Neverness to Everness', shortName: 'NTE', icon: '🔮' },
-  lainnya: { name: 'Jual Beli Akun', shortName: '🔑 Jual Akun', icon: '🔑' }
+  lainnya: { name: 'Jual Beli Akun', shortName: '🔑 JUAL AKUN', icon: '🔑' }
 };
 
 let currentCatFilter = 'all';
