@@ -27,6 +27,29 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .nav-icon-wrap{position:relative;flex-shrink:0}
 .cart-badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 5px;z-index:2}
 .cart-badge.show{display:flex}
+.order-notif-dot{position:absolute;top:-2px;left:-2px;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:none;box-shadow:0 0 8px rgba(34,197,94,0.9);animation:pulseNotifGreen 1.4s infinite;z-index:4}
+@keyframes pulseNotifGreen{0%{transform:scale(0.9);box-shadow:0 0 0 0 rgba(34,197,94,0.8)}70%{transform:scale(1.25);box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{transform:scale(0.9);box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+
+.order-notif-overlay{position:fixed;inset:0;background:rgba(10,10,20,0.85);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:350;padding:16px;animation:fadeIn .2s ease}
+.order-notif-overlay.open{display:flex}
+.order-notif-modal{background:linear-gradient(145deg,#1f1b2e 0%,#131120 100%);border:1.5px solid #8b5cf6;border-radius:22px;max-width:390px;width:100%;padding:26px 20px 22px;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 35px rgba(139,92,246,0.25);animation:scaleUp .25s cubic-bezier(0.16,1,0.3,1)}
+.order-notif-close-btn{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#cbd5e1;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease}
+.order-notif-close-btn:hover{background:#ef4444;color:#fff;border-color:#ef4444}
+.order-notif-icon-wrap{position:relative;width:68px;height:68px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.order-notif-pulse{position:absolute;inset:0;border-radius:50%;background:rgba(34,197,94,0.3);animation:pulseNotifGreen 1.6s infinite ease-out}
+.order-notif-icon{position:relative;font-size:38px;z-index:2}
+.order-notif-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;color:#86efac;background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);padding:4px 12px;border-radius:20px;margin-bottom:10px}
+.order-notif-title{font-size:18px;font-weight:800;color:#fff;margin:0 0 6px}
+.order-notif-subtitle{font-size:12px;color:#cbd5e1;margin:0 0 16px;line-height:1.45}
+.order-notif-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px 14px;text-align:left;margin-bottom:18px}
+.order-notif-item-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
+.order-notif-item-meta{font-size:11px;color:#a78bfa}
+.order-notif-actions{display:flex;flex-direction:column;gap:8px}
+.order-notif-btn{width:100%;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s ease;border:none}
+.order-notif-btn.primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.35)}
+.order-notif-btn.primary:hover{background:linear-gradient(135deg,#059669,#047857);transform:translateY(-1px)}
+.order-notif-btn.secondary{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;box-shadow:0 4px 15px rgba(124,58,237,0.3)}
+.order-notif-btn.secondary:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6);transform:translateY(-1px)}
 
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
 .carousel-track{display:flex;transition:transform .5s ease;width:100%}
@@ -763,7 +786,11 @@ button{cursor:pointer;font-family:inherit}
 </div>
 <div class="nav-actions">
   <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
-  <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang"><div class="nav-icon">🛒</div><span class="cart-badge" id="cartBadge">0</span></div>
+  <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang">
+    <div class="nav-icon">🛒</div>
+    <span class="order-notif-dot" id="orderNotifDot" title="Ada pesanan selesai!"></span>
+    <span class="cart-badge" id="cartBadge">0</span>
+  </div>
 </div>
 </nav>
 
@@ -1384,6 +1411,29 @@ button{cursor:pointer;font-family:inherit}
         <span class="prod-photo-price" id="prodPhotoPrice"></span>
       </div>
       <button type="button" class="prod-photo-buy-btn" id="prodPhotoBuyBtn" onclick="buyFromProductImageViewer()">🛒 Pesan Sekarang</button>
+    </div>
+  </div>
+</div>
+
+<div class="order-notif-overlay" id="orderNotifOverlay" onclick="closeOrderNotif(event)">
+  <div class="order-notif-modal" onclick="event.stopPropagation()">
+    <button type="button" class="order-notif-close-btn" onclick="closeOrderNotif()" title="Tutup">✕</button>
+    <div class="order-notif-icon-wrap">
+      <div class="order-notif-pulse"></div>
+      <span class="order-notif-icon" id="orderNotifIcon">🎉</span>
+    </div>
+    <span class="order-notif-badge">NOTIFIKASI PESANAN</span>
+    <h3 class="order-notif-title" id="orderNotifTitle">Pesanan Anda Telah Selesai!</h3>
+    <p class="order-notif-subtitle" id="orderNotifSubtitle">Admin telah menyelesaikan pengerjaan layanan Anda. Terima kasih telah mempercayakan transaksi di Norxstore!</p>
+    
+    <div class="order-notif-card" id="orderNotifCard">
+      <div class="order-notif-item-name" id="orderNotifItemName">Layanan Pesanan</div>
+      <div class="order-notif-item-meta" id="orderNotifItemMeta">Total: Rp0 · Status: 🟢 Selesai</div>
+    </div>
+
+    <div class="order-notif-actions">
+      <button type="button" class="order-notif-btn primary" onclick="onOrderNotifOpenCart()">🛒 Buka Keranjang</button>
+      <button type="button" class="order-notif-btn secondary" onclick="onOrderNotifOpenReview()">⭐ Lihat & Beri Testimoni</button>
     </div>
   </div>
 </div>
@@ -2309,7 +2359,10 @@ function createOrder(items, total, paymentMethod, adminName){
   allOrders[orderId] = order;
   fbDB.ref('norxstore/orders/' + orderId).set(order).catch(e=>console.error(e));
   addMyOrderId(orderId);
+  recordOrderNotifState(orderId, 'pending');
+  requestNotificationPermissionIfNeeded();
   renderProducts();
+  updateOrderNotifDot();
   return orderId;
 }
 function removeMyOrder(orderId, event){
@@ -2320,6 +2373,7 @@ function removeMyOrder(orderId, event){
   syncOrderIdsToCloud();
   renderMyOrders();
   renderProducts();
+  updateOrderNotifDot();
   showToast('Riwayat pesanan dihapus');
 }
 function cancelMyOrder(orderId, event){
@@ -2331,6 +2385,7 @@ function cancelMyOrder(orderId, event){
   if(allOrders[orderId]) allOrders[orderId].status = 'cancelled';
   renderMyOrders();
   renderProducts();
+  updateOrderNotifDot();
   showToast('Pesanan berhasil dibatalkan. Layanan kembali bisa dipesan.');
 }
 
@@ -2340,7 +2395,9 @@ function renderMyOrders(){
   const myIds = getMyOrderIds();
   const myOrders = myIds.map(id => allOrders[id]).filter(Boolean);
   if(myOrders.length === 0){ section.innerHTML = ''; return; }
-  section.innerHTML = '<div class="my-orders-title">📦 Pesanan Saya</div>' + myOrders.map(o => {
+  section.innerHTML = '<div class="my-orders-title">📦 Pesanan Saya</div>' + 
+    '<p style="font-size:10.5px;color:#6b7280;margin:2px 0 10px;line-height:1.4">🔔 Notifikasi aktif: suara & pop-up otomatis muncul saat pesanan selesai.</p>' +
+    myOrders.map(o => {
     const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
     let statusBadge = '';
     let cancelAction = '';
@@ -2350,7 +2407,10 @@ function renderMyOrders(){
     }
     else if(o.status === 'processing') statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
     else if(o.status === 'cancelled') statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
-    else statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
+    else {
+      statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">🟢 Selesai</span>';
+      cancelAction = `<button onclick="switchMode('dark');closeCart();" class="admin-btn-sm" style="background:#7c3aed;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Beri testimoni untuk layanan ini">⭐ Beri Testi</button>`;
+    }
     return `
     <div class="my-order-card" style="position:relative">
       <button onclick="removeMyOrder('${o.id}', event)" title="Hapus riwayat pesanan" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:14px;padding:4px;line-height:1">✕</button>
@@ -2363,8 +2423,212 @@ function renderMyOrders(){
     </div>`;
   }).join('');
 }
+
+// ==================== SISTEM NOTIFIKASI PESANAN (Suara, Pop-up, Web Push) ============
+function playNotificationChime(){
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if(!AudioCtx) return;
+    const ctx = new AudioCtx();
+    const now = ctx.currentTime;
+    
+    // Nada ceria 1: E5 (659.25Hz)
+    const osc1 = ctx.createOscillator();
+    const gain1 = ctx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(659.25, now);
+    gain1.gain.setValueAtTime(0.01, now);
+    gain1.gain.linearRampToValueAtTime(0.25, now + 0.04);
+    gain1.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+    osc1.connect(gain1);
+    gain1.connect(ctx.destination);
+    osc1.start(now);
+    osc1.stop(now + 0.35);
+    
+    // Nada ceria 2: B5 (987.77Hz)
+    const osc2 = ctx.createOscillator();
+    const gain2 = ctx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(987.77, now + 0.12);
+    gain2.gain.setValueAtTime(0.01, now + 0.12);
+    gain2.gain.linearRampToValueAtTime(0.3, now + 0.16);
+    gain2.gain.exponentialRampToValueAtTime(0.001, now + 0.65);
+    osc2.connect(gain2);
+    gain2.connect(ctx.destination);
+    osc2.start(now + 0.12);
+    osc2.stop(now + 0.65);
+  } catch(e){}
+}
+
+function sendBrowserNotification(title, body){
+  if(!("Notification" in window)) return;
+  if(Notification.permission === "granted"){
+    try {
+      new Notification(title, {
+        body: body,
+        icon: 'https://cdn-icons-png.flaticon.com/512/190/190411.png'
+      });
+    } catch(e){}
+  }
+}
+
+function requestNotificationPermissionIfNeeded(){
+  if(!("Notification" in window)) return;
+  if(Notification.permission === "default"){
+    try {
+      Notification.requestPermission();
+    } catch(e){}
+  }
+}
+
+function getNotifTrackerMap(){
+  try {
+    return JSON.parse(safeGetItem('norxstore_order_notifs_seen', '{}')) || {};
+  } catch(e){
+    return {};
+  }
+}
+
+function saveNotifTrackerMap(map){
+  safeSetItem('norxstore_order_notifs_seen', JSON.stringify(map));
+}
+
+function recordOrderNotifState(orderId, status){
+  const map = getNotifTrackerMap();
+  map[orderId] = status;
+  saveNotifTrackerMap(map);
+}
+
+function updateOrderNotifDot(){
+  const dot = document.getElementById('orderNotifDot');
+  if(!dot) return;
+  const myIds = getMyOrderIds();
+  let seenInCart = {};
+  try {
+    seenInCart = JSON.parse(safeGetItem('norxstore_orders_seen_in_cart', '{}')) || {};
+  } catch(e){}
+  
+  const hasUnseenFinishedOrder = myIds.some(id => {
+    const o = allOrders[id];
+    return o && o.status === 'done' && !seenInCart[id];
+  });
+  
+  dot.style.display = hasUnseenFinishedOrder ? 'block' : 'none';
+}
+
+function markFinishedOrdersAsSeenInCart(){
+  const myIds = getMyOrderIds();
+  let seenInCart = {};
+  try {
+    seenInCart = JSON.parse(safeGetItem('norxstore_orders_seen_in_cart', '{}')) || {};
+  } catch(e){}
+  
+  myIds.forEach(id => {
+    const o = allOrders[id];
+    if(o && o.status === 'done'){
+      seenInCart[id] = true;
+    }
+  });
+  safeSetItem('norxstore_orders_seen_in_cart', JSON.stringify(seenInCart));
+}
+
+let notifInitialLoadDone = false;
+function checkOrderNotifications(newOrders){
+  const myIds = getMyOrderIds();
+  if(!myIds || myIds.length === 0) return;
+  
+  const tracker = getNotifTrackerMap();
+  let modified = false;
+
+  myIds.forEach(id => {
+    const order = newOrders[id];
+    if(!order) return;
+    
+    const lastStatus = tracker[id];
+
+    // Status berubah jadi 'done' (pesanan selesai dikerjakan)
+    if(order.status === 'done' && lastStatus !== 'done'){
+      tracker[id] = 'done';
+      modified = true;
+      triggerOrderFinishedNotification(order);
+    }
+    // Status berubah jadi 'processing' (admin konfirmasi & input estimasi)
+    else if(order.status === 'processing' && lastStatus !== 'processing'){
+      tracker[id] = 'processing';
+      modified = true;
+      triggerOrderProcessingNotification(order);
+    }
+    // Rekam status awal jika pesanan baru
+    else if(!lastStatus){
+      tracker[id] = order.status;
+      modified = true;
+    }
+  });
+
+  if(modified){
+    saveNotifTrackerMap(tracker);
+  }
+  notifInitialLoadDone = true;
+}
+
+function triggerOrderFinishedNotification(order){
+  playNotificationChime();
+  sendBrowserNotification(
+    '🎉 Pesanan Anda Selesai! - Norxstore',
+    `Layanan "${order.items.map(i=>i.name).join(', ')}" telah selesai dikerjakan.`
+  );
+  
+  const itemsText = order.items.map(i => `${i.name} (x${i.qty})`).join(', ');
+  const titleEl = document.getElementById('orderNotifTitle');
+  const subEl = document.getElementById('orderNotifSubtitle');
+  const nameEl = document.getElementById('orderNotifItemName');
+  const metaEl = document.getElementById('orderNotifItemMeta');
+  const iconEl = document.getElementById('orderNotifIcon');
+  
+  if(iconEl) iconEl.textContent = '🎉';
+  if(titleEl) titleEl.textContent = 'Pesanan Anda Telah Selesai!';
+  if(subEl) subEl.textContent = 'Admin telah menyelesaikan pengerjaan layanan Anda. Terima kasih telah mempercayakan transaksi di Norxstore!';
+  if(nameEl) nameEl.textContent = itemsText;
+  if(metaEl) metaEl.textContent = `Total: ${formatPrice(order.total)} · Status: 🟢 Selesai`;
+  
+  const overlay = document.getElementById('orderNotifOverlay');
+  if(overlay) overlay.classList.add('open');
+  showToast('🎉 Pesanan Anda telah selesai dikerjakan!');
+  updateOrderNotifDot();
+}
+
+function triggerOrderProcessingNotification(order){
+  playNotificationChime();
+  const estText = order.estimate ? `Estimasi: ${order.estimate}` : 'Sedang diproses';
+  sendBrowserNotification(
+    '⚡ Pesanan Sedang Diproses - Norxstore',
+    `Layanan "${order.items.map(i=>i.name).join(', ')}" sedang diproses (${estText})`
+  );
+  showToast(`⚡ Pesanan sedang diproses! ${estText}`);
+}
+
+function closeOrderNotif(event){
+  if(event && event.target && event.target !== document.getElementById('orderNotifOverlay') && !event.target.classList.contains('order-notif-close-btn')) return;
+  const overlay = document.getElementById('orderNotifOverlay');
+  if(overlay) overlay.classList.remove('open');
+}
+
+function onOrderNotifOpenCart(){
+  closeOrderNotif();
+  openCart();
+}
+
+function onOrderNotifOpenReview(){
+  closeOrderNotif();
+  switchMode('dark');
+  const sec = document.getElementById('darkSection');
+  if(sec) sec.scrollIntoView({behavior:'smooth'});
+  showToast('⭐ Terima kasih! Silakan bagikan ulasan atau hubungi admin.');
+}
+
 fbDB.ref('norxstore/orders').on('value', snap=>{
   allOrders = snap.val() || {};
+  checkOrderNotifications(allOrders);
   renderMyOrders();
   renderProducts();
   if(cart && cart.length > 0) renderCart();
@@ -2372,6 +2636,7 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
     renderAdminOrders();
     renderAdminProductList();
   }
+  updateOrderNotifDot();
 });
 
 // ==================== LOGIN GOOGLE & SINKRONISASI LINTAS DEVICE ====================
@@ -2631,6 +2896,7 @@ function updateCartBadge(){
   const badge = document.getElementById('cartBadge');
   badge.textContent = totalQty;
   badge.classList.toggle('show', totalQty > 0);
+  updateOrderNotifDot();
 }
 
 function addToCart(id, event){
@@ -2795,6 +3061,8 @@ function renderCart(){
 }
 
 function openCart(){
+  markFinishedOrdersAsSeenInCart();
+  updateOrderNotifDot();
   renderCart();
   renderMyOrders();
   closeCartCheckoutStep();
