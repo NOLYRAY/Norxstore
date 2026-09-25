@@ -1912,9 +1912,11 @@ function setProductImages(data){
 }
 
 function getReviewPhotos(){
-  if(Array.isArray(reviewPhotosCache) && reviewPhotosCache.length > 0){
+  if(Array.isArray(reviewPhotosCache)){
     return reviewPhotosCache;
   }
+  const touched = safeGetItem('norxstore_reviews_touched', '0');
+  if(touched === '1') return [];
   return [...DEFAULT_REVIEW_PHOTOS];
 }
 
@@ -1984,12 +1986,16 @@ function removeImageFromProduct(id, idx){
 }
 
 function setReviewPhotos(arr){
-  reviewPhotosCache = Array.isArray(arr) && arr.length > 0 ? arr : [...DEFAULT_REVIEW_PHOTOS];
-  saveReviewsCache(reviewPhotosCache);
+  const cleanArr = Array.isArray(arr) ? arr.filter(Boolean) : [];
+  reviewPhotosCache = cleanArr;
+  safeSetItem('norxstore_reviews_touched', '1');
+  saveReviewsCache(cleanArr);
   purgeReviewPhotosFromProducts();
-  fbDB.ref('norxstore/reviewPhotos').set(reviewPhotosCache).catch(e=>{
-    console.warn('Sync notice: reviewPhotos disimpan di penyimpanan lokal');
-  });
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/reviewPhotos').set(cleanArr.length > 0 ? cleanArr : null).catch(e=>{
+      console.warn('Sync notice: reviewPhotos disimpan di penyimpanan lokal');
+    });
+  }
 }
 
 function addReviewPhoto(url){
@@ -2097,11 +2103,13 @@ let productImagesCache = (function(){
 let reviewPhotosCache = (function(){
   try {
     const raw = safeGetItem('norxstore_reviews_cache', null);
-    if(raw){
+    if(raw !== null){
       const parsed = JSON.parse(raw);
-      if(Array.isArray(parsed) && parsed.length > 0) return parsed;
+      if(Array.isArray(parsed)) return parsed;
     }
   }catch(e){}
+  const touched = safeGetItem('norxstore_reviews_touched', '0');
+  if(touched === '1') return [];
   return [...DEFAULT_REVIEW_PHOTOS];
 })();
 let paymentIconsCache = {};
@@ -2168,11 +2176,12 @@ preloadProductImages();
       const req = tx.objectStore(storeName).get('reviewPhotos');
       req.onsuccess = () => {
         const idbData = req.result;
-        if(Array.isArray(idbData) && idbData.length > 0){
+        if(Array.isArray(idbData)){
           reviewPhotosCache = idbData;
           renderReviews();
           purgeReviewPhotosFromProducts();
           renderProducts();
+          if(isAdminOpen()) renderAdminReviewList();
         }
       };
     } catch(e){}
@@ -2235,9 +2244,21 @@ fbDB.ref('norxstore/images').on('value', snap=>{
 });
 fbDB.ref('norxstore/reviewPhotos').on('value', snap=>{
   const val = snap.val();
-  if(Array.isArray(val) && val.length > 0){
-    reviewPhotosCache = val;
-    saveReviewsCache(val);
+  if(Array.isArray(val)){
+    reviewPhotosCache = val.filter(Boolean);
+    safeSetItem('norxstore_reviews_touched', '1');
+    saveReviewsCache(reviewPhotosCache);
+  } else if(val === null){
+    const touched = safeGetItem('norxstore_reviews_touched', '0');
+    if(touched === '1'){
+      reviewPhotosCache = [];
+      saveReviewsCache([]);
+    }
+  } else if(typeof val === 'object'){
+    const arr = Object.values(val).filter(Boolean);
+    reviewPhotosCache = arr;
+    safeSetItem('norxstore_reviews_touched', '1');
+    saveReviewsCache(arr);
   }
   purgeReviewPhotosFromProducts();
   renderReviews();
@@ -3725,16 +3746,27 @@ function deleteProductImage(id, idx){
 
 function renderAdminReviewList(){
   const list = document.getElementById('adminReviewList');
+  if(!list) return;
   const photos = getReviewPhotos();
   if(photos.length === 0){
-    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada foto testimoni. Upload sekarang!</p>';
+    list.innerHTML = `
+      <div style="text-align:center;padding:16px 12px;background:#f9fafb;border:1.5px dashed #e5e7eb;border-radius:12px;margin:8px 0">
+        <p style="font-size:12.5px;font-weight:700;color:#6b7280;margin-bottom:3px">Belum ada foto testimoni</p>
+        <p style="font-size:11px;color:#9ca3af;margin:0">Foto yang dihapus tidak akan muncul lagi. Silakan upload screenshot chat/bukti transfer baru di atas.</p>
+      </div>
+    `;
     return;
   }
-  list.innerHTML = photos.map((url, idx) => `
+  list.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:0 0 10px;padding:0 2px">
+      <span style="font-size:11px;color:#6b7280;font-weight:700">${photos.length} Foto Testimoni Tersimpan</span>
+      <button type="button" class="admin-btn-sm" style="background:#ef4444;font-size:10px;padding:4px 9px;border-radius:6px" onclick="clearAllReviewPhotosAdmin()" title="Hapus semua foto testimoni">🗑 Hapus Semua</button>
+    </div>
+  ` + photos.map((url, idx) => `
     <div class="admin-img-item">
-      <img src="${url}" alt="">
+      <img src="${url}" alt="Testimoni ${idx+1}" onerror="this.onerror=null;this.src='/icon-192.png';this.style.opacity='0.4';this.title='File gambar rusak atau tidak ditemukan';">
       <span>Foto testimoni ${idx+1}</span>
-      <button class="admin-btn-sm" onclick="deleteReviewPhotoAdmin(${idx})">🗑</button>
+      <button class="admin-btn-sm" style="background:#ef4444" onclick="deleteReviewPhotoAdmin(${idx})" title="Hapus foto testimoni ini">🗑</button>
     </div>
   `).join('');
 }
@@ -3789,11 +3821,18 @@ function handleReviewPhotoUpload(event){
   reader.readAsDataURL(file);
 }
 function deleteReviewPhotoAdmin(idx){
-  if(!confirm('Hapus foto testimoni ini?')) return;
+  if(!confirm(`Hapus foto testimoni ${idx+1}?`)) return;
   removeReviewPhoto(idx);
   renderAdminReviewList();
   renderReviews();
   showToast('Foto testimoni dihapus');
+}
+function clearAllReviewPhotosAdmin(){
+  if(!confirm('Hapus SEMUA foto testimoni? Galeri testimoni akan dikosongkan secara permanen.')) return;
+  setReviewPhotos([]);
+  renderAdminReviewList();
+  renderReviews();
+  showToast('Semua foto testimoni telah dikosongkan');
 }
 
 let payIconTarget = null;
