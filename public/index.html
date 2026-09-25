@@ -774,11 +774,11 @@ button{cursor:pointer;font-family:inherit}
 </div>
 
 <div class="mode-bar">
-<span class="mode-label active" id="lblLight">☀️ Katalog</span>
+<span class="mode-label active" id="lblLight" onclick="switchMode('light')" style="cursor:pointer">☀️ Katalog</span>
 <button class="toggle-switch" id="modeSwitch" onclick="toggleMode()">
 <div class="toggle-knob"></div>
 </button>
-<span class="mode-label" id="lblDark">🌙 Testimoni</span>
+<span class="mode-label" id="lblDark" onclick="switchMode('dark')" style="cursor:pointer">🌙 Testimoni</span>
 <div class="live-pill-mode" title="Pengunjung aktif di website saat ini">
   <span class="live-pulse-dot"></span>
   <span class="online-user-count">1</span> Online
@@ -808,6 +808,12 @@ button{cursor:pointer;font-family:inherit}
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
 </div>
+<div style="padding:16px 16px 8px;text-align:center">
+  <button type="button" class="testi-cta-banner-btn" onclick="switchMode('dark')" style="width:100%;max-width:540px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(124,58,237,0.3);transition:transform .15s ease">
+    <span>⭐ Lihat 5.000+ Bukti Testimoni Pelanggan</span>
+    <span style="font-size:14px">➔</span>
+  </button>
+</div>
 </section>
 
 <section class="dark-section" id="darkSection">
@@ -823,6 +829,13 @@ button{cursor:pointer;font-family:inherit}
     <div class="skel skel-review"></div>
     <div class="skel skel-review"></div>
   </div>
+</div>
+
+<div style="padding:16px 16px 24px;text-align:center">
+  <button type="button" class="testi-cta-banner-btn" onclick="switchMode('light')" style="width:100%;max-width:540px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.18);border-radius:12px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s ease">
+    <span>🛒 Kembali ke Katalog Layanan</span>
+    <span style="font-size:14px">➔</span>
+  </button>
 </div>
 </section>
 </div>
@@ -1153,43 +1166,54 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="admin-divider"></div>
 
-<div class="admin-section-title" style="color:#7c3aed">⭐ Galeri Foto Testimoni Pelanggan</div>
-<p class="admin-hint" style="margin-bottom:12px;background:#f5f3ff;border:1px solid #ddd6fe;padding:8px 10px;border-radius:8px;color:#5b21b6;font-size:11px">
-  📌 <strong>Khusus Testimoni:</strong> Foto screenshot chat/bukti transaksi ini <u>HANYA</u> tampil di bagian "⭐ Testimoni Pelanggan" di bawah katalog, dan <strong>tidak akan pernah</strong> dipasang ke gambar produk.
-</p>
-<div style="display:flex;gap:8px;margin-bottom:10px">
-  <button class="admin-btn" style="flex:1;background:#7c3aed;color:#fff" onclick="triggerFileInput('reviewFileInput')">📁 Upload Testimoni</button>
-  <button class="admin-btn" style="flex:1;background:#1a1a1a;color:#fff" onclick="triggerFileInput('reviewCameraInput')">📷 Kamera Testimoni</button>
-</div>
-<input type="file" id="reviewFileInput" accept="image/*" style="display:none" onchange="handleReviewPhotoUpload(event)">
-<input type="file" id="reviewCameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleReviewPhotoUpload(event)">
+<!-- ==================== BAGIAN KHUSUS TESTIMONI ==================== -->
+<div style="background:#fbf9ff;border:1.5px solid #d8b4fe;border-radius:12px;padding:14px;margin-bottom:18px">
+  <div class="admin-section-title" style="color:#6b21a8;margin-top:0;display:flex;align-items:center;gap:6px">
+    <span>⭐ Galeri Foto Testimoni Pelanggan</span>
+  </div>
+  <p class="admin-hint" style="margin-bottom:12px;background:#f3e8ff;border:1px solid #e9d5ff;padding:8px 10px;border-radius:8px;color:#581c87;font-size:11px">
+    📌 <strong>Zona Khusus Testimoni:</strong> Upload foto bukti transfer / screenshot chat pelanggan di sini. Foto ini <u>HANYA</u> tampil di tab Testimoni Pelanggan dan <strong>TIDAK AKAN PERNAH</strong> dipasang ke produk.
+  </p>
+  <div style="display:flex;gap:8px;margin-bottom:10px">
+    <button class="admin-btn" style="flex:1;background:#7c3aed;color:#fff;font-weight:700" onclick="triggerFileInput('reviewFileInput')">📁 Upload Foto Testimoni</button>
+    <button class="admin-btn" style="flex:1;background:#1a1a1a;color:#fff" onclick="triggerFileInput('reviewCameraInput')">📷 Kamera Testimoni</button>
+  </div>
+  <input type="file" id="reviewFileInput" accept="image/*" style="display:none" onchange="handleReviewPhotoUpload(event)">
+  <input type="file" id="reviewCameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleReviewPhotoUpload(event)">
 
-<div class="admin-label" style="margin-top:14px">Daftar Foto Testimoni</div>
-<div class="admin-img-list" id="adminReviewList"></div>
+  <div class="admin-label" style="margin-top:14px;color:#6b21a8">Daftar Foto Testimoni Pelanggan</div>
+  <div class="admin-img-list" id="adminReviewList"></div>
+</div>
 
 <div class="admin-divider"></div>
 
-<div class="admin-section-title" style="color:#2563eb">🛍️ Foto Khusus Produk (Pricelist / Akun)</div>
-<p class="admin-hint" style="margin-bottom:12px;background:#eff6ff;border:1px solid #bfdbfe;padding:8px 10px;border-radius:8px;color:#1e40af;font-size:11px">
-  📌 <strong>Foto Produk:</strong> Pilih produk terlebih dahulu di bawah ini, kemudian upload gambar yang sesuai khusus untuk produk tersebut.
-</p>
-<div class="admin-label">Pilih Produk Yang Ingin Diberi Gambar</div>
-<select class="admin-select" id="imgProductSelect" onchange="onImageProductChange()">
-  <option value="">-- Pilih produk --</option>
-</select>
-
-<div id="imgAdminSection" style="display:none;margin-top:12px">
-  <div class="admin-label">Tambah Gambar Produk</div>
-  <div style="display:flex;gap:8px;margin-bottom:10px">
-    <button class="admin-btn" style="flex:1;background:#2563eb;color:#fff" onclick="triggerFileInput('imgFileInput')">📁 Upload Foto Produk</button>
-    <button class="admin-btn" style="flex:1;background:#1a1a1a;color:#fff" onclick="triggerFileInput('imgCameraInput')">📷 Kamera</button>
+<!-- ==================== BAGIAN KHUSUS FOTO PRODUK ==================== -->
+<div style="background:#f0f9ff;border:1.5px solid #bae6fd;border-radius:12px;padding:14px;margin-bottom:18px">
+  <div class="admin-section-title" style="color:#0369a1;margin-top:0;display:flex;align-items:center;gap:6px">
+    <span>🛍️ Foto Khusus Produk (Bukan Testimoni)</span>
   </div>
-  <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
-  <input type="file" id="imgCameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
+  <p class="admin-hint" style="margin-bottom:12px;background:#e0f2fe;border:1px solid #bae6fd;padding:8px 10px;border-radius:8px;color:#075985;font-size:11px">
+    📌 <strong>Foto Produk:</strong> Pilih produk tujuan terlebih dahulu di bawah, lalu upload foto pricelist/akun khusus untuk produk tersebut. (Jika ingin upload screenshot chat bukti transaksi, gunakan kotak ungu <strong>Galeri Foto Testimoni</strong> di atas).
+  </p>
+  <div class="admin-label" style="color:#0369a1">Pilih Produk Yang Ingin Diberi Foto:</div>
+  <select class="admin-select" id="imgProductSelect" onchange="onImageProductChange()">
+    <option value="">-- Pilih produk terlebih dahulu --</option>
+  </select>
 
-  <div class="admin-label" style="margin-top:14px">Daftar Gambar Produk Ini</div>
-  <div class="admin-img-list" id="adminImgList"></div>
-  <p style="font-size:10px;color:#aaa;text-align:center;margin-top:6px">💡 Galeri/Kamera = foto langsung dari HP Anda.</p>
+  <div id="imgAdminSection" style="display:none;margin-top:14px;background:#fff;border:1px solid #e0f2fe;padding:12px;border-radius:10px">
+    <div id="selectedProdBanner" style="font-size:12px;font-weight:700;color:#0369a1;margin-bottom:10px;padding:6px 10px;background:#f0f9ff;border-radius:6px"></div>
+    <div class="admin-label">Upload Foto Khusus Produk Ini:</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <button class="admin-btn" style="flex:1;background:#0284c7;color:#fff;font-weight:700" onclick="triggerFileInput('imgFileInput')">📁 Upload Foto Produk</button>
+      <button class="admin-btn" style="flex:1;background:#1a1a1a;color:#fff" onclick="triggerFileInput('imgCameraInput')">📷 Kamera</button>
+    </div>
+    <input type="file" id="imgFileInput" accept="image/*" style="display:none" onchange="handleImageUpload(event)">
+    <input type="file" id="imgCameraInput" accept="image/*" capture="environment" style="display:none" onchange="handleImageUpload(event)">
+
+    <div class="admin-label" style="margin-top:14px">Daftar Foto Produk Terpilih:</div>
+    <div class="admin-img-list" id="adminImgList"></div>
+    <p style="font-size:10px;color:#64748b;text-align:center;margin-top:6px">💡 Tip: Jika ada foto testimoni yang keliru terpasang di produk ini, klik tombol <strong>"⭐ Pindah ke Testi"</strong> untuk memindahkannya.</p>
+  </div>
 </div>
 
 <div class="admin-divider"></div>
@@ -1312,12 +1336,28 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </div>
 
-<div class="review-photo-overlay" id="reviewPhotoOverlay" onclick="closeReviewPhoto()">
-  <div style="position:relative;display:inline-flex;align-items:center;justify-content:center;max-width:100%;max-height:100%">
-    <img id="reviewPhotoFull" src="" alt="Foto preview" draggable="false">
-    <div class="slide-protect-shield" style="border-radius:14px"></div>
+<div class="review-photo-overlay" id="reviewPhotoOverlay" onclick="closeReviewPhoto(event)">
+  <div class="prod-photo-container" onclick="event.stopPropagation()" style="max-width:440px">
+    <div class="prod-photo-header">
+      <div class="prod-photo-header-info">
+        <span class="prod-photo-cat-tag" style="background:rgba(124,58,237,0.2);color:#c4b5fd;border:1px solid rgba(124,58,237,0.4)">⭐ TESTIMONI PELANGGAN</span>
+        <h4 class="prod-photo-title" id="revPhotoTitle">Bukti Chat / Transaksi</h4>
+      </div>
+      <button type="button" class="prod-photo-close-btn" onclick="closeReviewPhoto()" title="Tutup">✕</button>
+    </div>
+    <div class="prod-photo-body">
+      <button type="button" class="prod-photo-nav-btn prev" id="revPhotoPrevBtn" onclick="navReviewPhoto(-1)" title="Foto Sebelumnya">‹</button>
+      <div class="prod-photo-img-wrap">
+        <img id="reviewPhotoFull" src="" alt="Foto Testimoni" draggable="false">
+        <div class="slide-protect-shield" style="border-radius:12px"></div>
+        <span class="prod-photo-counter" id="revPhotoCounter">1 / 5</span>
+      </div>
+      <button type="button" class="prod-photo-nav-btn next" id="revPhotoNextBtn" onclick="navReviewPhoto(1)" title="Foto Selanjutnya">›</button>
+    </div>
+    <div class="prod-photo-footer" style="text-align:center;padding:10px 14px">
+      <p style="font-size:11px;color:#9ca3af;margin:0">🔒 Bukti Transaksi Resmi Pelanggan Norxstore — 100% Amanah & Terpercaya</p>
+    </div>
   </div>
-  <div class="img-protected-watermark">🔒 Norxstore Official — Hak Cipta Dilindungi</div>
 </div>
 
 <div class="prod-photo-overlay" id="prodPhotoOverlay" onclick="closeProductImageViewer(event)">
@@ -1412,19 +1452,23 @@ function safeGetItem(key, fallback){
   catch(e) { return fallback; }
 }
 
-// ============ SISTEM CACHE PERSISTEN GAMBAR (IndexedDB + LocalStorage) ============
-// Memastikan gambar produk langsung muncul seketika tanpa menunggu koneksi Firebase
+// ============ SISTEM CACHE PERSISTEN GAMBAR & TESTIMONI (IndexedDB + LocalStorage) ============
+// Memastikan gambar produk & testimoni langsung muncul seketika tanpa menunggu koneksi Firebase
 const NORX_IDB_NAME = 'norxstore_idb';
 const NORX_IDB_STORE = 'images';
+const NORX_IDB_REVIEWS = 'reviews';
 function openNorxIDB(){
   return new Promise(resolve => {
     if(!window.indexedDB) return resolve(null);
     try {
-      const req = indexedDB.open(NORX_IDB_NAME, 1);
+      const req = indexedDB.open(NORX_IDB_NAME, 2);
       req.onupgradeneeded = e => {
         const db = e.target.result;
         if(!db.objectStoreNames.contains(NORX_IDB_STORE)){
           db.createObjectStore(NORX_IDB_STORE);
+        }
+        if(!db.objectStoreNames.contains(NORX_IDB_REVIEWS)){
+          db.createObjectStore(NORX_IDB_REVIEWS);
         }
       };
       req.onsuccess = e => resolve(e.target.result);
@@ -1447,6 +1491,23 @@ function saveImagesCache(data){
     try {
       const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
       tx.objectStore(NORX_IDB_STORE).put(data, 'productImages');
+    } catch(e){}
+  });
+}
+function saveReviewsCache(arr){
+  if(!Array.isArray(arr)) return;
+  try {
+    const serialized = JSON.stringify(arr);
+    if(serialized.length < 4 * 1024 * 1024){
+      safeSetItem('norxstore_reviews_cache', serialized);
+    }
+  } catch(e){}
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const storeName = db.objectStoreNames.contains(NORX_IDB_REVIEWS) ? NORX_IDB_REVIEWS : NORX_IDB_STORE;
+      const tx = db.transaction(storeName, 'readwrite');
+      tx.objectStore(storeName).put(arr, 'reviewPhotos');
     } catch(e){}
   });
 }
@@ -1752,32 +1813,75 @@ function formatPrice(p){
   return 'Rp' + p.toLocaleString('id-ID');
 }
 
+const DEFAULT_REVIEW_PHOTOS = ['/rev_0.jpg', '/rev_1.jpg', '/rev_2.jpg', '/rev_3.jpg', '/rev_4.jpg'];
+
 function getProductImages(){
   return productImagesCache;
 }
 function setProductImages(data){
   productImagesCache = data;
   saveImagesCache(data);
-  fbDB.ref('norxstore/images').set(data).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
+  fbDB.ref('norxstore/images').set(data).catch(e=>{ console.warn('Sync notice: images saved to storage:', e); });
 }
+
+function getReviewPhotos(){
+  if(Array.isArray(reviewPhotosCache) && reviewPhotosCache.length > 0){
+    return reviewPhotosCache;
+  }
+  return [...DEFAULT_REVIEW_PHOTOS];
+}
+
+function purgeReviewPhotosFromProducts(){
+  const revPhotos = getReviewPhotos();
+  const revSet = new Set(revPhotos);
+  DEFAULT_REVIEW_PHOTOS.forEach(u => revSet.add(u));
+
+  const all = getProductImages();
+  let modified = false;
+  for(const pid in all){
+    if(Array.isArray(all[pid])){
+      const origCount = all[pid].length;
+      all[pid] = all[pid].filter(url => {
+        if(!url) return false;
+        if(revSet.has(url)) return false;
+        if(typeof url === 'string' && (url.includes('rev_') || url.includes('testimoni'))) return false;
+        return true;
+      });
+      if(all[pid].length !== origCount){
+        modified = true;
+      }
+    }
+  }
+  if(modified){
+    productImagesCache = all;
+    saveImagesCache(all);
+  }
+}
+
 function getImagesForProduct(id){
   const all = getProductImages();
   const list = all[id] || [];
   if(!Array.isArray(list) || list.length === 0) return [];
-  // ISOLASI KETAT: Foto testimoni pelanggan TIDAK AKAN PERNAH bocor ke gambar produk
+  // ISOLASI KETAT & PERMANEN: Foto testimoni pelanggan TIDAK AKAN PERNAH bocor ke gambar produk
   const revPhotos = getReviewPhotos();
-  if(Array.isArray(revPhotos) && revPhotos.length > 0){
-    const revSet = new Set(revPhotos);
-    return list.filter(url => !revSet.has(url));
-  }
-  return list;
+  const revSet = new Set(revPhotos);
+  DEFAULT_REVIEW_PHOTOS.forEach(u => revSet.add(u));
+  return list.filter(url => {
+    if(!url) return false;
+    if(revSet.has(url)) return false;
+    if(typeof url === 'string' && (url.includes('rev_') || url.includes('testimoni'))) return false;
+    return true;
+  });
 }
+
 function addImageToProduct(id, url){
   if(!url || !id) return;
-  // Tolak jika gambar ini adalah gambar testimoni pelanggan
+  // Tolak keras jika gambar ini adalah foto testimoni pelanggan
   const revPhotos = getReviewPhotos();
-  if(Array.isArray(revPhotos) && revPhotos.includes(url)){
-    showToast('⚠️ Gambar ini adalah foto testimoni, tidak dapat dipasang sebagai foto produk!');
+  const revSet = new Set(revPhotos);
+  DEFAULT_REVIEW_PHOTOS.forEach(u => revSet.add(u));
+  if(revSet.has(url) || (typeof url === 'string' && (url.includes('rev_') || url.includes('testimoni')))){
+    showToast('⚠️ Gambar ini adalah foto testimoni! Foto testimoni hanya bisa diupload di Galeri Testimoni.');
     return;
   }
   const all = getProductImages();
@@ -1785,19 +1889,22 @@ function addImageToProduct(id, url){
   if(!all[id].includes(url)) all[id].push(url);
   setProductImages(all);
 }
+
 function removeImageFromProduct(id, idx){
   const all = getProductImages();
   if(all[id]){ all[id].splice(idx,1); if(all[id].length===0) delete all[id]; }
   setProductImages(all);
 }
 
-function getReviewPhotos(){
-  return reviewPhotosCache || [];
-}
 function setReviewPhotos(arr){
-  reviewPhotosCache = arr;
-  fbDB.ref('norxstore/reviewPhotos').set(arr).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
+  reviewPhotosCache = Array.isArray(arr) && arr.length > 0 ? arr : [...DEFAULT_REVIEW_PHOTOS];
+  saveReviewsCache(reviewPhotosCache);
+  purgeReviewPhotosFromProducts();
+  fbDB.ref('norxstore/reviewPhotos').set(reviewPhotosCache).catch(e=>{
+    console.warn('Sync notice: reviewPhotos disimpan di penyimpanan lokal');
+  });
 }
+
 function addReviewPhoto(url){
   if(!url) return;
   // Pastikan URL testimoni baru ini tidak ada di data gambar produk manapun
@@ -1813,12 +1920,14 @@ function addReviewPhoto(url){
     setProductImages(allImgs);
   }
 
-  const arr = getReviewPhotos();
+  const arr = [...getReviewPhotos()];
   if(!arr.includes(url)) arr.push(url);
   setReviewPhotos(arr);
+  purgeReviewPhotosFromProducts();
 }
+
 function removeReviewPhoto(idx){
-  const arr = getReviewPhotos();
+  const arr = [...getReviewPhotos()];
   arr.splice(idx,1);
   setReviewPhotos(arr);
 }
@@ -1867,7 +1976,7 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
-const NORX_SYSTEM_VER = '2026.09.23.v8';
+const NORX_SYSTEM_VER = '2026.09.25.v10';
 (function checkSystemVersion(){
   try {
     const cur = safeGetItem('norx_sys_version', null);
@@ -1898,7 +2007,16 @@ let productImagesCache = (function(){
   }catch(e){}
   return {};
 })();
-let reviewPhotosCache = [];
+let reviewPhotosCache = (function(){
+  try {
+    const raw = safeGetItem('norxstore_reviews_cache', null);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed) && parsed.length > 0) return parsed;
+    }
+  }catch(e){}
+  return [...DEFAULT_REVIEW_PHOTOS];
+})();
 let paymentIconsCache = {};
 
 let adminPasswordCache = DEFAULT_PASSWORD;
@@ -1954,6 +2072,26 @@ preloadProductImages();
   });
 })();
 
+(function initReviewsFromIDB(){
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const storeName = db.objectStoreNames.contains('reviews') ? 'reviews' : NORX_IDB_STORE;
+      const tx = db.transaction(storeName, 'readonly');
+      const req = tx.objectStore(storeName).get('reviewPhotos');
+      req.onsuccess = () => {
+        const idbData = req.result;
+        if(Array.isArray(idbData) && idbData.length > 0){
+          reviewPhotosCache = idbData;
+          renderReviews();
+          purgeReviewPhotosFromProducts();
+          renderProducts();
+        }
+      };
+    } catch(e){}
+  });
+})();
+
 function hideSplash(){
   if(splashHidden) return;
   splashHidden = true;
@@ -2002,15 +2140,21 @@ fbDB.ref('norxstore/images').on('value', snap=>{
   const val = snap.val() || {};
   productImagesCache = val;
   imagesDataReady = true;
-  saveImagesCache(val);
+  purgeReviewPhotosFromProducts();
+  saveImagesCache(productImagesCache);
   preloadProductImages();
   renderProducts();
   tryHideSplash();
 });
 fbDB.ref('norxstore/reviewPhotos').on('value', snap=>{
   const val = snap.val();
-  reviewPhotosCache = Array.isArray(val) ? val : [];
+  if(Array.isArray(val) && val.length > 0){
+    reviewPhotosCache = val;
+    saveReviewsCache(val);
+  }
+  purgeReviewPhotosFromProducts();
   renderReviews();
+  renderProducts();
   if(isAdminOpen()) renderAdminReviewList();
 });
 fbDB.ref('norxstore/paymentIcons').on('value', snap=>{
@@ -2924,33 +3068,64 @@ function triggerFileInput(inputId){
   if(input) input.click();
 }
 function onImageProductChange(){
-  const id = document.getElementById('imgProductSelect').value;
+  const sel = document.getElementById('imgProductSelect');
+  const id = sel ? parseInt(sel.value) : 0;
   const sec = document.getElementById('imgAdminSection');
-  if(!id){ sec.style.display = 'none'; return; }
-  sec.style.display = 'block';
+  const banner = document.getElementById('selectedProdBanner');
+  if(!id || isNaN(id)){
+    if(sec) sec.style.display = 'none';
+    return;
+  }
+  const prod = products.find(p => p.id === id);
+  if(banner && prod){
+    banner.textContent = `🎯 Produk Terpilih: ${prod.icon || '🛍️'} ${prod.name} (${formatPrice(prod.price)})`;
+  }
+  if(sec) sec.style.display = 'block';
   renderAdminImgList();
 }
 function renderAdminImgList(){
   const id = parseInt(document.getElementById('imgProductSelect').value);
   const list = document.getElementById('adminImgList');
+  if(!list) return;
   const imgs = getImagesForProduct(id);
-  if(imgs.length === 0){
-    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada gambar. Upload sekarang!</p>';
+  if(!imgs || imgs.length === 0){
+    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada foto untuk produk ini. Upload sekarang!</p>';
     return;
   }
   list.innerHTML = imgs.map((url, idx) => `
-    <div class="admin-img-item">
+    <div class="admin-img-item" style="flex-wrap:wrap;gap:6px">
       <img src="${url}" alt="">
-      <span>${url.substring(0,35)}${url.length>35?'...':''}</span>
-      <button class="admin-btn-sm" onclick="deleteProductImage(${id},${idx})">🗑</button>
+      <span style="flex:1;min-width:90px">Foto ${idx+1}</span>
+      <button type="button" class="admin-btn-sm" style="background:#7c3aed;color:#fff;font-size:11px" onclick="moveProductImgToReviews(${id},${idx})" title="Pindahkan foto ini ke Galeri Testimoni Pelanggan">⭐ Pindah ke Testi</button>
+      <button type="button" class="admin-btn-sm" onclick="deleteProductImage(${id},${idx})">🗑</button>
     </div>
   `).join('');
+}
+function moveProductImgToReviews(productId, imgIndex){
+  const all = getProductImages();
+  const list = all[productId];
+  if(!list || !list[imgIndex]) return;
+  const imgUrl = list[imgIndex];
+  if(!confirm('Pindahkan foto ini dari produk ke Galeri Testimoni Pelanggan?')) return;
+  removeImageFromProduct(productId, imgIndex);
+  addReviewPhoto(imgUrl);
+  renderAdminImgList();
+  renderAdminReviewList();
+  renderProducts();
+  renderReviews();
+  showToast('⭐ Foto berhasil dipindahkan ke Galeri Testimoni!');
 }
 function handleImageUpload(event){
   const file = event.target.files[0];
   if(!file) return;
-  const id = parseInt(document.getElementById('imgProductSelect').value);
-  if(!id) return;
+  const selEl = document.getElementById('imgProductSelect');
+  const id = parseInt(selEl ? selEl.value : 0);
+  if(!id){
+    showToast('⚠️ Silakan pilih produk terlebih dahulu sebelum upload foto!');
+    const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
+    const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
+    return;
+  }
 
   if(file.size > 5 * 1024 * 1024){
     showToast('Gambar terlalu besar! Max 5MB');
@@ -2964,6 +3139,38 @@ function handleImageUpload(event){
   reader.onload = function(e){
     const img = new Image();
     img.onload = function(){
+      // Deteksi jika gambar berformat portrait / screenshot HP (> 1.3)
+      const isPortraitScreen = (img.height / img.width) > 1.3;
+      if(isPortraitScreen){
+        const isTesti = confirm(
+          '⚠️ PERHATIAN ADMIN:\n' +
+          'Foto ini berformat memanjang / vertikal seperti screenshot chat WhatsApp atau bukti transfer.\n\n' +
+          '• Apakah ini FOTO TESTIMONI? Klik "OK" untuk menyimpannya sebagai Testimoni Pelanggan.\n' +
+          '• Klik "Cancel/Batal" jika ini benar-benar foto pricelist untuk produk: "' + (products.find(p=>p.id===id)?.name || 'Produk') + '".'
+        );
+        if(isTesti){
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          const maxSize = 1000;
+          let w = img.width, h = img.height;
+          if(w > h && w > maxSize){ h = Math.round(h * (maxSize/w)); w = maxSize; }
+          else if(h > maxSize){ w = Math.round(w * (maxSize/h)); h = maxSize; }
+          canvas.width = w; canvas.height = h;
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0,0,w,h);
+          ctx.drawImage(img, 0, 0, w, h);
+          const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+          addReviewPhoto(dataUrl);
+          renderAdminReviewList();
+          renderReviews();
+          renderProducts();
+          showToast('⭐ Foto berhasil dialihkan dan disimpan ke Galeri Testimoni!');
+          const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
+          const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
+          return;
+        }
+      }
+
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
       const maxSize = 1000;
@@ -3168,6 +3375,14 @@ function setSlide(index){
 function goSlide(dir){setSlide((currentSlide+dir+4)%4)}
 
 let modeTransitioning = false;
+function switchMode(target){
+  const isDark = document.getElementById('modeSwitch').classList.contains('on');
+  if(target === 'dark' && !isDark){
+    toggleMode();
+  } else if(target === 'light' && isDark){
+    toggleMode();
+  }
+}
 function toggleMode(){
   if(modeTransitioning) return;
   modeTransitioning = true;
@@ -3706,19 +3921,46 @@ function openImageViewer(url){
   // Fallback aman: jangan pernah buka modal testimoni dengan watermark untuk URL tidak dikenal
   openProductImageViewer(null, 0, null, url);
 }
+let currentReviewViewingIndex = 0;
 function openReviewPhoto(idx){
   // Pastikan penampil foto produk ditutup
   const prodOverlay = document.getElementById('prodPhotoOverlay');
   if(prodOverlay) prodOverlay.classList.remove('open');
 
   const photos = getReviewPhotos();
-  if(!photos || !photos[idx]) return;
-  const fullImg = document.getElementById('reviewPhotoFull');
-  if(fullImg) fullImg.src = photos[idx];
+  if(!photos || photos.length === 0) return;
+  currentReviewViewingIndex = (typeof idx === 'number' && idx >= 0 && idx < photos.length) ? idx : 0;
+  updateReviewPhotoModalUI();
   const overlay = document.getElementById('reviewPhotoOverlay');
   if(overlay) overlay.classList.add('open');
 }
-function closeReviewPhoto(){
+
+function updateReviewPhotoModalUI(){
+  const photos = getReviewPhotos();
+  if(!photos || photos.length === 0) return;
+  if(currentReviewViewingIndex >= photos.length) currentReviewViewingIndex = 0;
+  if(currentReviewViewingIndex < 0) currentReviewViewingIndex = photos.length - 1;
+  const fullImg = document.getElementById('reviewPhotoFull');
+  if(fullImg) fullImg.src = photos[currentReviewViewingIndex];
+  const title = document.getElementById('revPhotoTitle');
+  if(title) title.textContent = `Bukti Transaksi #${currentReviewViewingIndex + 1}`;
+  const counter = document.getElementById('revPhotoCounter');
+  if(counter) counter.textContent = `${currentReviewViewingIndex + 1} / ${photos.length}`;
+  const prevBtn = document.getElementById('revPhotoPrevBtn');
+  const nextBtn = document.getElementById('revPhotoNextBtn');
+  if(prevBtn) prevBtn.style.display = photos.length > 1 ? 'flex' : 'none';
+  if(nextBtn) nextBtn.style.display = photos.length > 1 ? 'flex' : 'none';
+}
+
+function navReviewPhoto(dir){
+  const photos = getReviewPhotos();
+  if(!photos || photos.length <= 1) return;
+  currentReviewViewingIndex = (currentReviewViewingIndex + dir + photos.length) % photos.length;
+  updateReviewPhotoModalUI();
+}
+
+function closeReviewPhoto(e){
+  if(e && e.target && e.target !== document.getElementById('reviewPhotoOverlay') && !e.target.classList.contains('prod-photo-close-btn')) return;
   const overlay = document.getElementById('reviewPhotoOverlay');
   if(overlay) overlay.classList.remove('open');
   const imgEl = document.getElementById('reviewPhotoFull');
@@ -4420,6 +4662,12 @@ function editProduct(id){
   document.getElementById('prodFormBtn').textContent = '💾 Simpan Perubahan';
   document.getElementById('prodFormCancel').style.display = 'block';
   refreshSubgroupFormUI();
+  // Sinkronkan pilihan foto produk dengan produk yang sedang diedit
+  const sel = document.getElementById('imgProductSelect');
+  if(sel){
+    sel.value = id;
+    onImageProductChange();
+  }
   document.getElementById('prodFormTitle').scrollIntoView({behavior:'smooth', block:'start'});
 }
 
