@@ -6,7 +6,17 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>NORXSTORE</title>
+<title>Norxstore — Top-Up & Joki Game Terpercaya</title>
+<meta name="description" content="Layanan Joki Genshin, Honkai Star Rail, Wuthering Waves, NTE dan Top-Up Game Terpercaya Norxstore.">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#7c3aed">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Norxstore">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
+<link rel="icon" type="image/svg+xml" href="/icon.svg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -50,6 +60,18 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .order-notif-btn.primary:hover{background:linear-gradient(135deg,#059669,#047857);transform:translateY(-1px)}
 .order-notif-btn.secondary{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;box-shadow:0 4px 15px rgba(124,58,237,0.3)}
 .order-notif-btn.secondary:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6);transform:translateY(-1px)}
+
+.phone-notif-banner{background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);border:1.5px solid #c4b5fd;border-radius:14px;padding:10px 12px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.phone-notif-btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(124,58,237,0.25);transition:all .15s ease;flex-shrink:0}
+.phone-notif-btn:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6)}
+.phone-notif-btn.active{background:#10b981;box-shadow:0 3px 10px rgba(16,185,129,0.25)}
+
+.pwa-install-pill{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border:none;padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(124,58,237,0.3);transition:all .15s ease;white-space:nowrap}
+.pwa-install-pill:hover{transform:scale(1.03)}
+
+.ios-install-modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:400;padding:20px}
+.ios-install-modal.open{display:flex}
+.ios-install-box{background:#fff;border-radius:20px;padding:24px 20px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.3);animation:scaleUp .25s ease}
 
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
 .carousel-track{display:flex;transition:transform .5s ease;width:100%}
@@ -785,6 +807,7 @@ button{cursor:pointer;font-family:inherit}
   <input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()">
 </div>
 <div class="nav-actions">
+  <button type="button" class="pwa-install-pill" id="pwaInstallBtn" onclick="triggerPWAInstall()" style="display:none" title="Pasang aplikasi di layar utama HP">📲 Pasang App</button>
   <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
   <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang">
     <div class="nav-icon">🛒</div>
@@ -1435,6 +1458,20 @@ button{cursor:pointer;font-family:inherit}
       <button type="button" class="order-notif-btn primary" onclick="onOrderNotifOpenCart()">🛒 Buka Keranjang</button>
       <button type="button" class="order-notif-btn secondary" onclick="onOrderNotifOpenReview()">⭐ Lihat & Beri Testimoni</button>
     </div>
+  </div>
+</div>
+
+<div class="ios-install-modal" id="iosInstallModal" onclick="closeIOSModal(event)">
+  <div class="ios-install-box" onclick="event.stopPropagation()">
+    <div style="font-size:36px;margin-bottom:8px">📲</div>
+    <h3 style="font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:6px">Pasang di iPhone / iPad</h3>
+    <p style="font-size:12px;color:#4b5563;line-height:1.55;margin-bottom:16px;text-align:left">
+      Agar notifikasi suara & getar tetap masuk saat Safari ditutup:
+      <br>1. Tekan tombol <strong>Bagikan / Share</strong> (ikon <span style="font-size:14px">⎙</span> kotak panah ke atas) di menu Safari bawah.
+      <br>2. Gulir ke bawah, lalu tekan <strong>Tambah ke Layar Utama (Add to Home Screen)</strong>.
+      <br>3. Buka Norxstore dari Layar Utama HP Anda.
+    </p>
+    <button type="button" class="order-notif-btn primary" onclick="closeIOSModal()">Mengerti</button>
   </div>
 </div>
 
@@ -2395,9 +2432,28 @@ function renderMyOrders(){
   const myIds = getMyOrderIds();
   const myOrders = myIds.map(id => allOrders[id]).filter(Boolean);
   if(myOrders.length === 0){ section.innerHTML = ''; return; }
-  section.innerHTML = '<div class="my-orders-title">📦 Pesanan Saya</div>' + 
-    '<p style="font-size:10.5px;color:#6b7280;margin:2px 0 10px;line-height:1.4">🔔 Notifikasi aktif: suara & pop-up otomatis muncul saat pesanan selesai.</p>' +
-    myOrders.map(o => {
+
+  const isGranted = ("Notification" in window) && Notification.permission === "granted";
+  const btnLabel = isGranted ? '✅ Notif HP Aktif' : '🔔 Aktifkan Notif HP';
+  const btnClass = isGranted ? 'phone-notif-btn active' : 'phone-notif-btn';
+  const descText = isGranted
+    ? 'Ponsel Anda akan otomatis bergetar & berdering saat pesanan selesai meski web ditutup.'
+    : 'Tekan untuk mengaktifkan suara & getar di HP saat pesanan selesai meski web ditutup.';
+
+  const bannerHtml = `
+    <div class="phone-notif-banner">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:22px">📲</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:#1e1b4b">Notifikasi HP (Suara & Getar)</div>
+          <div style="font-size:10px;color:#6b7280;line-height:1.35;margin-top:2px">${descText}</div>
+        </div>
+      </div>
+      <button type="button" class="${btnClass}" onclick="enablePhonePushNotifications()">${btnLabel}</button>
+    </div>
+  `;
+
+  section.innerHTML = '<div class="my-orders-title">📦 Pesanan Saya</div>' + bannerHtml + myOrders.map(o => {
     const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
     let statusBadge = '';
     let cancelAction = '';
@@ -2424,15 +2480,59 @@ function renderMyOrders(){
   }).join('');
 }
 
-// ==================== SISTEM NOTIFIKASI PESANAN (Suara, Pop-up, Web Push) ============
+// ==================== SISTEM NOTIFIKASI HP & WEB PUSH (SUARA, GETAR, PWA) ============
+let swRegistration = null;
+let deferredPWAInstallPrompt = null;
+const isIOSDevice = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = '='.repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+  for (let i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+
+function getClientDeviceId(){
+  let id = safeGetItem('norxstore_device_id', '');
+  if(!id){
+    id = 'dev_' + Date.now() + '_' + Math.random().toString(36).slice(2, 9);
+    safeSetItem('norxstore_device_id', id);
+  }
+  return id;
+}
+
+async function registerServiceWorker(){
+  if('serviceWorker' in navigator){
+    try {
+      swRegistration = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      console.log('Norxstore Service Worker active');
+      return swRegistration;
+    } catch(e){
+      console.warn('SW registration warning:', e);
+    }
+  }
+  return null;
+}
+
+function playNotificationSoundAudio(){
+  try {
+    const audio = new Audio('/notification.wav');
+    audio.play().catch(()=>{});
+  } catch(e){}
+}
+
 function playNotificationChime(){
+  playNotificationSoundAudio();
   try {
     const AudioCtx = window.AudioContext || window.webkitAudioContext;
     if(!AudioCtx) return;
     const ctx = new AudioCtx();
     const now = ctx.currentTime;
     
-    // Nada ceria 1: E5 (659.25Hz)
     const osc1 = ctx.createOscillator();
     const gain1 = ctx.createGain();
     osc1.type = 'sine';
@@ -2445,7 +2545,6 @@ function playNotificationChime(){
     osc1.start(now);
     osc1.stop(now + 0.35);
     
-    // Nada ceria 2: B5 (987.77Hz)
     const osc2 = ctx.createOscillator();
     const gain2 = ctx.createGain();
     osc2.type = 'sine';
@@ -2460,14 +2559,79 @@ function playNotificationChime(){
   } catch(e){}
 }
 
+async function enablePhonePushNotifications(silent = false){
+  if(!("Notification" in window)){
+    if(!silent) showToast('Perangkat Anda tidak mendukung notifikasi web.');
+    return false;
+  }
+
+  try {
+    const permission = await Notification.requestPermission();
+    if(permission !== 'granted'){
+      if(!silent) showToast('Izin notifikasi belum diizinkan di HP Anda.');
+      renderMyOrders();
+      return false;
+    }
+
+    if('serviceWorker' in navigator){
+      const reg = swRegistration || await navigator.serviceWorker.ready;
+      if(reg && reg.pushManager){
+        const res = await fetch('/api/push-public-key');
+        const { publicKey } = await res.json();
+        if(publicKey){
+          let sub = await reg.pushManager.getSubscription();
+          if(!sub){
+            sub = await reg.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: urlBase64ToUint8Array(publicKey)
+            });
+          }
+          await fetch('/api/push-subscribe', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              subscription: sub,
+              orderIds: getMyOrderIds(),
+              deviceId: getClientDeviceId()
+            })
+          });
+        }
+      }
+    }
+
+    if(!silent){
+      playNotificationChime();
+      showToast('🎉 Notifikasi HP Aktif! Ponsel akan bergetar & bersuara saat pesanan selesai.');
+    }
+    renderMyOrders();
+    return true;
+  } catch(e){
+    console.error('Push registration error:', e);
+    if(!silent) showToast('Gagal mendaftarkan notifikasi: ' + (e.message || ''));
+    return false;
+  }
+}
+
 function sendBrowserNotification(title, body){
   if(!("Notification" in window)) return;
   if(Notification.permission === "granted"){
     try {
-      new Notification(title, {
-        body: body,
-        icon: 'https://cdn-icons-png.flaticon.com/512/190/190411.png'
-      });
+      if(swRegistration && swRegistration.showNotification){
+        swRegistration.showNotification(title, {
+          body: body,
+          icon: '/icon-192.png',
+          badge: '/icon-192.png',
+          vibrate: [300, 100, 300, 100, 400],
+          sound: '/notification.wav',
+          tag: 'norxstore-order',
+          renotify: true
+        });
+      } else {
+        new Notification(title, {
+          body: body,
+          icon: '/icon-192.png'
+        });
+      }
     } catch(e){}
   }
 }
@@ -2475,9 +2639,7 @@ function sendBrowserNotification(title, body){
 function requestNotificationPermissionIfNeeded(){
   if(!("Notification" in window)) return;
   if(Notification.permission === "default"){
-    try {
-      Notification.requestPermission();
-    } catch(e){}
+    enablePhonePushNotifications(true);
   }
 }
 
@@ -2497,6 +2659,7 @@ function recordOrderNotifState(orderId, status){
   const map = getNotifTrackerMap();
   map[orderId] = status;
   saveNotifTrackerMap(map);
+  enablePhonePushNotifications(true);
 }
 
 function updateOrderNotifDot(){
@@ -2546,19 +2709,16 @@ function checkOrderNotifications(newOrders){
     
     const lastStatus = tracker[id];
 
-    // Status berubah jadi 'done' (pesanan selesai dikerjakan)
     if(order.status === 'done' && lastStatus !== 'done'){
       tracker[id] = 'done';
       modified = true;
       triggerOrderFinishedNotification(order);
     }
-    // Status berubah jadi 'processing' (admin konfirmasi & input estimasi)
     else if(order.status === 'processing' && lastStatus !== 'processing'){
       tracker[id] = 'processing';
       modified = true;
       triggerOrderProcessingNotification(order);
     }
-    // Rekam status awal jika pesanan baru
     else if(!lastStatus){
       tracker[id] = order.status;
       modified = true;
@@ -2625,6 +2785,51 @@ function onOrderNotifOpenReview(){
   if(sec) sec.scrollIntoView({behavior:'smooth'});
   showToast('⭐ Terima kasih! Silakan bagikan ulasan atau hubungi admin.');
 }
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPWAInstallPrompt = e;
+  const btn = document.getElementById('pwaInstallBtn');
+  if(btn) btn.style.display = 'inline-flex';
+});
+
+window.addEventListener('appinstalled', () => {
+  deferredPWAInstallPrompt = null;
+  const btn = document.getElementById('pwaInstallBtn');
+  if(btn) btn.style.display = 'none';
+  showToast('🎉 Aplikasi Norxstore berhasil dipasang di HP!');
+});
+
+function triggerPWAInstall(){
+  if(deferredPWAInstallPrompt){
+    deferredPWAInstallPrompt.prompt();
+    deferredPWAInstallPrompt.userChoice.then((choiceResult) => {
+      if(choiceResult.outcome === 'accepted'){
+        enablePhonePushNotifications(true);
+      }
+      deferredPWAInstallPrompt = null;
+    });
+  } else if(isIOSDevice){
+    const modal = document.getElementById('iosInstallModal');
+    if(modal) modal.classList.add('open');
+  } else {
+    showToast('Buka menu peramban (⋮) lalu pilih "Tambahkan ke Layar Utama"');
+  }
+}
+
+function closeIOSModal(event){
+  const modal = document.getElementById('iosInstallModal');
+  if(modal) modal.classList.remove('open');
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+  const btn = document.getElementById('pwaInstallBtn');
+  if(!isStandalone && btn && isIOSDevice){
+    btn.style.display = 'inline-flex';
+  }
+  registerServiceWorker();
+});
 
 fbDB.ref('norxstore/orders').on('value', snap=>{
   allOrders = snap.val() || {};
@@ -2806,16 +3011,16 @@ function renderAdminOrders(){
     let statusBadge, actions;
     if(o.status === 'pending'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu</span>';
-      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="approveOrder('${o.id}')">⏳ Proses</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="approveOrder('${o.id}')">⏳ Proses</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'processing'){
       statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Diproses${o.estimate ? ' · '+o.estimate : ''}</span>`;
-      actions = `<button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'cancelled'){
       statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
       actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
     } else {
       statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
-      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
     }
     return `
     <div class="my-order-card">
@@ -2835,7 +3040,22 @@ function approveOrder(id){
     allOrders[id].status = 'processing';
     allOrders[id].estimate = est.trim() || null;
   }
-  showToast('Pesanan disetujui, sedang diproses');
+  const order = allOrders[id];
+  const itemsText = order ? order.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
+
+  // Kirim Web Push HP secara background
+  fetch('/api/send-order-push', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      orderId: id,
+      status: 'processing',
+      estimate: est.trim() || null,
+      itemName: itemsText
+    })
+  }).catch(e=>console.warn('Push error:', e));
+
+  showToast('Pesanan disetujui, notifikasi HP dikirim ke pembeli');
   renderMyOrders();
   renderProducts();
   if(isAdminOpen()) {
@@ -2846,13 +3066,35 @@ function approveOrder(id){
 function completeOrderStatus(id){
   fbDB.ref('norxstore/orders/' + id).update({status:'done', completedAt: Date.now()}).catch(e=>console.error(e));
   if(allOrders[id]) allOrders[id].status = 'done';
-  showToast('✅ Pesanan selesai! Produk kini kembali bisa dipesan.');
+  const order = allOrders[id];
+  const itemsText = order ? order.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
+
+  // Kirim Web Push HP secara background (HP bergetar & bersuara meski web tertutup)
+  fetch('/api/send-order-push', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      orderId: id,
+      status: 'done',
+      itemName: itemsText
+    })
+  }).catch(e=>console.warn('Push error:', e));
+
+  showToast('✅ Pesanan selesai! Notifikasi HP (suara & getar) dikirim.');
   renderMyOrders();
   renderProducts();
   if(isAdminOpen()) {
     renderAdminOrders();
     renderAdminProductList();
   }
+}
+function sendWACompletion(id){
+  const o = allOrders[id];
+  if(!o) return;
+  const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
+  const text = `Halo kak! Pesanan kamu di Norxstore:\n*${itemsText}*\n\nStatus: *SELESAI (DONE)* ✅\nTotal: ${formatPrice(o.total)}\n\nLayanan akun kamu sudah tuntas kami kerjakan. Silakan dicek kembali ya kak!\nTerima kasih banyak sudah mempercayakan pesananmu di Norxstore! ⭐⭐⭐⭐⭐`;
+  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
+  window.open(url, '_blank');
 }
 function cancelOrder(id){
   if(!confirm('Batalkan pesanan ini? Produk akan otomatis kembali tersedia untuk dipesan pelanggan.')) return;

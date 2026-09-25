@@ -5,11 +5,13 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "mkdir -p public && cp index.html public/ && mkdir -p dist && cp index.html dist/",
+    "build": "mkdir -p public dist && cp index.html manifest.json sw.js notification.wav icon* apple-touch-icon.png public/ 2>/dev/null || true && cp index.html manifest.json sw.js notification.wav icon* apple-touch-icon.png dist/ 2>/dev/null || true",
     "lint": "node -c server.js"
   },
   "dependencies": {
     "express": "^4.21.2",
-    "tesseract.js": "^7.0.0"
+    "sharp": "^0.35.4",
+    "tesseract.js": "^7.0.0",
+    "web-push": "^3.6.7"
   }
 }
