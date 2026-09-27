@@ -66,12 +66,42 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .phone-notif-btn:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6)}
 .phone-notif-btn.active{background:#10b981;box-shadow:0 3px 10px rgba(16,185,129,0.25)}
 
-.pwa-install-pill{display:inline-flex;align-items:center;gap:5px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border:none;padding:5px 11px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 8px rgba(124,58,237,0.3);transition:all .15s ease;white-space:nowrap}
-.pwa-install-pill:hover{transform:scale(1.03)}
-
-.ios-install-modal{position:fixed;inset:0;background:rgba(0,0,0,0.7);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:400;padding:20px}
-.ios-install-modal.open{display:flex}
-.ios-install-box{background:#fff;border-radius:20px;padding:24px 20px;max-width:360px;width:100%;text-align:center;box-shadow:0 20px 40px rgba(0,0,0,0.3);animation:scaleUp .25s ease}
+/* ============ RATING & TESTIMONI INTERAKTIF ============ */
+.interactive-stars-wrap{display:flex;align-items:center;justify-content:center;gap:4px;user-select:none}
+.interactive-star{font-size:32px;color:#475569;cursor:pointer;transition:transform .15s ease,color .15s ease;display:inline-block;padding:2px 4px;line-height:1}
+.interactive-star:hover,.interactive-star.active{color:#f59e0b;transform:scale(1.15)}
+.interactive-star:active{transform:scale(0.95)}
+.rating-field-input{width:100%;box-sizing:border-box;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);border-radius:10px;padding:9px 12px;font-size:12px;color:#fff;margin-bottom:8px;outline:none;font-family:inherit}
+.rating-field-input:focus{border-color:#a855f7;background:rgba(255,255,255,0.14)}
+.rating-field-input::placeholder{color:#94a3b8}
+.rating-hero-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);backdrop-filter:blur(10px);border-radius:18px;padding:16px 20px;max-width:440px;width:calc(100% - 32px);margin:12px auto 0;box-shadow:0 12px 30px rgba(0,0,0,0.35)}
+.rating-big-value{font-size:46px;font-weight:900;line-height:1;background:linear-gradient(135deg,#fde047,#fbbf24,#f59e0b);-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:0 4px 18px rgba(245,158,11,0.25)}
+.rating-stars-display{font-size:18px;letter-spacing:3px;margin:2px 0}
+.star-filled{color:#f59e0b}
+.star-empty{color:#475569}
+.rating-count-text{font-size:11.5px;font-weight:700;color:#cbd5e1}
+.rating-stats-row{display:flex;align-items:center;justify-content:center;gap:18px;margin-top:12px;padding-top:10px;border-top:1px solid rgba(255,255,255,0.08)}
+.rating-stat-item{text-align:center}
+.rating-stat-num{font-size:15px;font-weight:800;color:#fff;display:block}
+.rating-stat-lbl{font-size:10px;color:#94a3b8;font-weight:600}
+.rating-stat-divider{width:1px;height:24px;background:rgba(255,255,255,0.12)}
+.give-rating-hero-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:12px;padding:10px 18px;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(217,119,6,0.35);transition:all .15s ease}
+.give-rating-hero-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(217,119,6,0.45)}
+.give-rating-hero-btn:active{transform:scale(0.97)}
+.testi-tabs-wrap{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0 12px;padding:0 16px}
+.testi-tab-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:#cbd5e1;padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease}
+.testi-tab-btn.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.3)}
+.customer-review-card{background:#161324;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:transform .15s ease}
+.customer-review-card:hover{transform:translateY(-2px)}
+.customer-review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.customer-review-author{display:flex;align-items:center;gap:8px}
+.customer-review-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
+.customer-review-name{font-size:13px;font-weight:700;color:#fff}
+.customer-review-badge{font-size:9.5px;font-weight:700;color:#4ade80;background:rgba(74,222,128,0.12);padding:2px 6px;border-radius:6px;display:inline-flex;align-items:center;gap:3px}
+.customer-review-date{font-size:10px;color:#64748b}
+.customer-review-stars{color:#f59e0b;font-size:13px;margin-bottom:4px;letter-spacing:1px}
+.customer-review-service{font-size:11px;color:#c084fc;font-weight:600;margin-bottom:4px}
+.customer-review-comment{font-size:12px;color:#cbd5e1;line-height:1.45}
 
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
 .carousel-track{display:flex;transition:transform .5s ease;width:100%}
@@ -207,9 +237,9 @@ body.dark-mode .live-pill-mode{
 }
 
 .dark-section{padding:0 0 30px}
-.dark-hero{height:150px;background:linear-gradient(145deg,#1a0b2e 0%,#3b1e6b 45%,#0f0a1e 100%);border-bottom:1px solid #2d1b4e;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100vw;position:relative;left:50%;transform:translateX(-50%)}
+.dark-hero{min-height:220px;height:auto;padding:26px 16px 22px;background:linear-gradient(145deg,#160b28 0%,#2e1555 50%,#0e091b 100%);border-bottom:1px solid #2d1b4e;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;width:100vw;position:relative;left:50%;transform:translateX(-50%)}
 .dark-hero h2{font-size:21px;font-weight:800;background:linear-gradient(135deg,#c4b5fd,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent;margin:0}
-.dark-hero p{font-size:12px;color:#6b6b7b;margin:4px 0 0}
+.dark-hero p{font-size:12px;color:#cbd5e1;margin:4px 0 0}
 
 .review-list{padding:0 16px}
 .review-photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
@@ -643,7 +673,7 @@ button{cursor:pointer;font-family:inherit}
   .slide-content{right:90px}
   .slide-title{font-size:24px}
   .slide-desc{font-size:13px}
-  .dark-hero{height:160px}
+  .dark-hero{height:auto;min-height:220px}
   .dark-hero h2{font-size:22px}
 }
 
@@ -669,7 +699,7 @@ button{cursor:pointer;font-family:inherit}
   .mode-label{font-size:14px}
 
   .light-section,.dark-section,.footer{max-width:1200px;margin-left:auto;margin-right:auto}
-  .dark-hero{max-width:1200px;width:calc(100% - 32px);margin:0 auto;border-radius:18px;left:auto;transform:none;height:190px}
+  .dark-hero{max-width:1200px;width:calc(100% - 32px);margin:0 auto;border-radius:18px;left:auto;transform:none;height:auto;min-height:220px;padding:32px 24px}
   .dark-hero h2{font-size:28px}
   .dark-hero p{font-size:13px}
 
@@ -807,7 +837,6 @@ button{cursor:pointer;font-family:inherit}
   <input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()">
 </div>
 <div class="nav-actions">
-  <button type="button" class="pwa-install-pill" id="pwaInstallBtn" onclick="triggerPWAInstall()" style="display:none" title="Pasang aplikasi di layar utama HP">📲 Pasang App</button>
   <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
   <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang">
     <div class="nav-icon">🛒</div>
@@ -859,20 +888,66 @@ button{cursor:pointer;font-family:inherit}
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
 </div>
 <div style="padding:16px 16px 8px;text-align:center">
-  <button type="button" class="testi-cta-banner-btn" onclick="switchMode('dark')" style="width:100%;max-width:540px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(124,58,237,0.3);transition:transform .15s ease">
-    <span>⭐ Lihat 5.000+ Bukti Testimoni Pelanggan</span>
+  <button type="button" class="testi-cta-banner-btn" onclick="switchMode('dark')" id="homeTestiCtaBtn" style="width:100%;max-width:540px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(124,58,237,0.3);transition:transform .15s ease">
+    <span id="homeTestiBtnLabel">⭐ Lihat Testimoni & Rating Pelanggan (⭐ 0.0)</span>
     <span style="font-size:14px">➔</span>
   </button>
 </div>
 </section>
 
 <section class="dark-section" id="darkSection">
-<div class="dark-hero">
-<h2>⭐ Testimoni Pelanggan</h2>
-<p>5.000+ order berhasil diselesaikan</p>
+<div class="dark-hero" id="darkHeroSection">
+  <div style="font-size:11px;font-weight:800;color:#c4b5fd;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px">⭐ REPUTASI & KEPUASAN PELANGGAN</div>
+  <h2 style="margin:0 0 10px">Testimoni & Rating Kepuasan</h2>
+  
+  <div class="rating-hero-card">
+    <div style="display:flex;align-items:center;justify-content:center;gap:14px;flex-wrap:wrap">
+      <div class="rating-big-value" id="ratingBigScore">0.0</div>
+      <div style="text-align:left">
+        <div class="rating-stars-display" id="ratingStarsRow">
+          <span class="star-empty">★</span><span class="star-empty">★</span><span class="star-empty">★</span><span class="star-empty">★</span><span class="star-empty">★</span>
+        </div>
+        <div class="rating-count-text" id="ratingCountText">Rating Mulai 0 · 0 Penilaian</div>
+      </div>
+    </div>
+    
+    <div class="rating-stats-row">
+      <div class="rating-stat-item">
+        <span class="rating-stat-num" id="statCompletedJokiCount">0</span>
+        <span class="rating-stat-lbl">Jokian Selesai</span>
+      </div>
+      <div class="rating-stat-divider"></div>
+      <div class="rating-stat-item">
+        <span class="rating-stat-num" id="statSatisfactionPercent">0%</span>
+        <span class="rating-stat-lbl">Puas (Bintang 4-5)</span>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center">
+    <button type="button" class="give-rating-hero-btn" onclick="openGiveRatingModal()">
+      ✍️ Beri Bintang & Ulasan Jokian
+    </button>
+  </div>
 </div>
 
-<div class="review-list" id="reviewList">
+<!-- Tabs Switcher Testimoni: Ulasan Bintang vs Bukti Screenshot -->
+<div class="testi-tabs-wrap">
+  <button type="button" class="testi-tab-btn active" id="tabReviewsBtn" onclick="switchTestiTab('reviews')">
+    ⭐ Ulasan Pelanggan (<span id="tabReviewsCountBadge">0</span>)
+  </button>
+  <button type="button" class="testi-tab-btn" id="tabPhotosBtn" onclick="switchTestiTab('photos')">
+    📸 Bukti Chat / Transfer (<span id="tabPhotosCountBadge">0</span>)
+  </button>
+</div>
+
+<!-- Container Ulasan Rating Bintang -->
+<div class="customer-reviews-container" id="customerReviewsSection" style="padding:0 16px;max-width:800px;margin:0 auto 16px">
+  <div id="customerReviewsList"></div>
+</div>
+
+<!-- Container Galeri Foto Bukti Testimoni -->
+<div class="review-list" id="reviewList" style="display:none">
   <div class="review-photo-grid">
     <div class="skel skel-review"></div>
     <div class="skel skel-review"></div>
@@ -1216,6 +1291,23 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="admin-divider"></div>
 
+<!-- ==================== BAGIAN KELOLA RATING & ULASAN PELANGGAN ==================== -->
+<div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:18px">
+  <div class="admin-section-title" style="color:#b45309;margin-top:0;display:flex;align-items:center;justify-content:space-between">
+    <span>⭐ Kelola Rating & Ulasan Pelanggan</span>
+    <span id="adminRatingSummaryBadge" style="font-size:11px;background:#fef3c7;color:#92400e;padding:3px 8px;border-radius:8px;font-weight:700">⭐ 0.0 (0 Ulasan)</span>
+  </div>
+  <p class="admin-hint" style="margin-bottom:10px;background:#fef3c7;border:1px solid #fde68a;padding:6px 10px;border-radius:8px;color:#92400e;font-size:11px">
+    ⭐ <strong>Sistem Otomatis:</strong> Rating dimulai dari 0 dan otomatis naik saat pelanggan memberi bintang kepuasan jokian. Admin dapat memantau dan menghapus ulasan spam/uji coba.
+  </p>
+  <div id="adminRatingsList" style="max-height:220px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:10px"></div>
+  <div style="display:flex;gap:8px">
+    <button type="button" class="admin-btn" style="flex:1;background:#ef4444;color:#fff;font-size:11px" onclick="resetAllRatingsAdmin()">🗑️ Reset Semua Rating ke Nol (0)</button>
+  </div>
+</div>
+
+<div class="admin-divider"></div>
+
 <!-- ==================== BAGIAN KHUSUS TESTIMONI ==================== -->
 <div style="background:#fbf9ff;border:1.5px solid #d8b4fe;border-radius:12px;padding:14px;margin-bottom:18px">
   <div class="admin-section-title" style="color:#6b21a8;margin-top:0;display:flex;align-items:center;gap:6px">
@@ -1445,33 +1537,84 @@ button{cursor:pointer;font-family:inherit}
       <div class="order-notif-pulse"></div>
       <span class="order-notif-icon" id="orderNotifIcon">🎉</span>
     </div>
-    <span class="order-notif-badge">NOTIFIKASI PESANAN</span>
+    <span class="order-notif-badge" id="orderNotifBadge">JOKIAN SELESAI</span>
     <h3 class="order-notif-title" id="orderNotifTitle">Pesanan Anda Telah Selesai!</h3>
-    <p class="order-notif-subtitle" id="orderNotifSubtitle">Admin telah menyelesaikan pengerjaan layanan Anda. Terima kasih telah mempercayakan transaksi di Norxstore!</p>
+    <p class="order-notif-subtitle" id="orderNotifSubtitle">Admin telah menyelesaikan pengerjaan layanan Anda. Berikan bintang kepuasan Anda di bawah untuk menaikkan rating toko!</p>
     
     <div class="order-notif-card" id="orderNotifCard">
       <div class="order-notif-item-name" id="orderNotifItemName">Layanan Pesanan</div>
       <div class="order-notif-item-meta" id="orderNotifItemMeta">Total: Rp0 · Status: 🟢 Selesai</div>
     </div>
 
+    <!-- WIDGET RATING LANGSUNG JOKIAN SELESAI -->
+    <div id="orderNotifRatingBox" style="background:rgba(255,255,255,0.06);border:1px solid rgba(250,204,21,0.3);border-radius:14px;padding:12px;margin-bottom:14px;text-align:center">
+      <div style="font-size:12px;font-weight:800;color:#fde047;margin-bottom:6px">⭐ Beri Bintang Kepuasan Jokian:</div>
+      <div class="interactive-stars-wrap" id="notifStarsPicker" style="margin-bottom:6px">
+        <span class="interactive-star active" data-val="1" onclick="setNotifRatingStars(1)">★</span>
+        <span class="interactive-star active" data-val="2" onclick="setNotifRatingStars(2)">★</span>
+        <span class="interactive-star active" data-val="3" onclick="setNotifRatingStars(3)">★</span>
+        <span class="interactive-star active" data-val="4" onclick="setNotifRatingStars(4)">★</span>
+        <span class="interactive-star active" data-val="5" onclick="setNotifRatingStars(5)">★</span>
+      </div>
+      <div id="notifStarDesc" style="font-size:11.5px;font-weight:700;color:#fef08a;margin-bottom:8px">⭐⭐⭐⭐⭐ Sangat Puas (5 Bintang)</div>
+      <input type="text" id="notifReviewerName" class="rating-field-input" placeholder="Nama / Panggilan Anda (opsional)">
+      <textarea id="notifReviewText" class="rating-field-input" rows="2" placeholder="Ulasan Anda (misal: 'Joki kilat, akun aman, penjual ramah!')"></textarea>
+      <button type="button" class="order-notif-btn primary" id="btnSubmitNotifRating" onclick="submitNotifRating()">⭐ Kirim Bintang & Naikkan Rating</button>
+    </div>
+
     <div class="order-notif-actions">
-      <button type="button" class="order-notif-btn primary" onclick="onOrderNotifOpenCart()">🛒 Buka Keranjang</button>
-      <button type="button" class="order-notif-btn secondary" onclick="onOrderNotifOpenReview()">⭐ Lihat & Beri Testimoni</button>
+      <button type="button" class="order-notif-btn secondary" onclick="onOrderNotifOpenReview()">⭐ Lihat Rating & Testimoni Toko</button>
+      <button type="button" class="order-notif-btn" style="background:rgba(255,255,255,0.08);color:#cbd5e1" onclick="onOrderNotifOpenCart()">🛒 Buka Riwayat Pesanan</button>
     </div>
   </div>
 </div>
 
-<div class="ios-install-modal" id="iosInstallModal" onclick="closeIOSModal(event)">
-  <div class="ios-install-box" onclick="event.stopPropagation()">
-    <div style="font-size:36px;margin-bottom:8px">📲</div>
-    <h3 style="font-size:16px;font-weight:800;color:#1e1b4b;margin-bottom:6px">Pasang di iPhone / iPad</h3>
-    <p style="font-size:12px;color:#4b5563;line-height:1.55;margin-bottom:16px;text-align:left">
-      Agar notifikasi suara & getar tetap masuk saat Safari ditutup:
-      <br>1. Tekan tombol <strong>Bagikan / Share</strong> (ikon <span style="font-size:14px">⎙</span> kotak panah ke atas) di menu Safari bawah.
-      <br>2. Gulir ke bawah, lalu tekan <strong>Tambah ke Layar Utama (Add to Home Screen)</strong>.
-      <br>3. Buka Norxstore dari Layar Utama HP Anda.
+<!-- Modal Beri Rating Standalone (bisa dibuka dari Testimoni atau Pesanan Saya) -->
+<div class="modal-overlay" id="giveRatingModal" onclick="closeGiveRatingModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="background:#161324;border:1.5px solid #8b5cf6;color:#fff;max-width:400px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:16px;font-weight:800;color:#fde047">⭐ Beri Bintang & Ulasan Jokian</div>
+      <button type="button" class="modal-close" onclick="closeGiveRatingModal()" style="color:#cbd5e1">✕</button>
+    </div>
+    <p style="font-size:11.5px;color:#cbd5e1;line-height:1.45;margin-bottom:12px">
+      Rating Anda akan otomatis dihitung dan menaikkan bintang toko secara transparan dan real-time.
     </p>
-    <button type="button" class="order-notif-btn primary" onclick="closeIOSModal()">Mengerti</button>
+    
+    <div id="giveRatingOrderSelectWrap" style="margin-bottom:10px">
+      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Layanan / Jokian:</label>
+      <select id="giveRatingOrderSelect" class="rating-field-input" style="background:#231e3d;cursor:pointer" onchange="handleModalOrderSelectChange()">
+        <option value="">-- Pilih Dari Pesanan Selesai Anda --</option>
+      </select>
+    </div>
+    <div id="giveRatingCustomServiceWrap" style="margin-bottom:10px">
+      <input type="text" id="giveRatingCustomService" class="rating-field-input" placeholder="Nama Layanan (misal: Joki Spiral Abyss, Joki WuWa, dll)">
+    </div>
+
+    <div style="text-align:center;margin:12px 0 8px">
+      <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:4px">PILIH BINTANG KEPUASAN:</div>
+      <div class="interactive-stars-wrap" id="modalStarsPicker">
+        <span class="interactive-star active" data-val="1" onclick="setModalRatingStars(1)">★</span>
+        <span class="interactive-star active" data-val="2" onclick="setModalRatingStars(2)">★</span>
+        <span class="interactive-star active" data-val="3" onclick="setModalRatingStars(3)">★</span>
+        <span class="interactive-star active" data-val="4" onclick="setModalRatingStars(4)">★</span>
+        <span class="interactive-star active" data-val="5" onclick="setModalRatingStars(5)">★</span>
+      </div>
+      <div id="modalStarDesc" style="font-size:12px;font-weight:800;color:#fde047;margin-top:2px">⭐⭐⭐⭐⭐ Sangat Puas (5 Bintang)</div>
+    </div>
+
+    <div style="margin-bottom:8px">
+      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Nama Anda / In-Game Name:</label>
+      <input type="text" id="modalReviewerName" class="rating-field-input" placeholder="Contoh: Dimas / Traveler">
+    </div>
+
+    <div style="margin-bottom:14px">
+      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Ulasan / Pengalaman Jokian:</label>
+      <textarea id="modalReviewComment" class="rating-field-input" rows="3" placeholder="Ceritakan bagaimana pengerjaan jokian Anda... (cepat, akun aman, ramah, dll.)"></textarea>
+    </div>
+
+    <button type="button" class="order-notif-btn primary" id="btnSubmitModalRating" onclick="submitModalRating()">
+      ⭐ Kirim Bintang & Naikkan Rating
+    </button>
   </div>
 </div>
 
@@ -2486,7 +2629,11 @@ function renderMyOrders(){
     else if(o.status === 'cancelled') statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
     else {
       statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">🟢 Selesai</span>';
-      cancelAction = `<button onclick="switchMode('dark');closeCart();" class="admin-btn-sm" style="background:#7c3aed;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Beri testimoni untuk layanan ini">⭐ Beri Testi</button>`;
+      if(isOrderRated(o.id)){
+        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;margin-left:6px;display:inline-flex;align-items:center;gap:3px">⭐ Sudah Diberi Rating</span>`;
+      } else {
+        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:3px 8px;font-size:10px;font-weight:700;margin-left:6px;border-radius:4px;box-shadow:0 2px 6px rgba(217,119,6,0.3)" title="Beri rating untuk jokian ini">⭐ Beri Bintang</button>`;
+      }
     }
     return `
     <div class="my-order-card" style="position:relative">
@@ -2501,9 +2648,8 @@ function renderMyOrders(){
   }).join('');
 }
 
-// ==================== SISTEM NOTIFIKASI HP & WEB PUSH (SUARA, GETAR, PWA) ============
+// ==================== SISTEM NOTIFIKASI HP & WEB PUSH (SUARA & GETAR) ============
 let swRegistration = null;
-let deferredPWAInstallPrompt = null;
 const isIOSDevice = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
 
 function urlBase64ToUint8Array(base64String) {
@@ -2768,9 +2914,33 @@ function triggerOrderFinishedNotification(order){
   
   if(iconEl) iconEl.textContent = '🎉';
   if(titleEl) titleEl.textContent = 'Pesanan Anda Telah Selesai!';
-  if(subEl) subEl.textContent = 'Admin telah menyelesaikan pengerjaan layanan Anda. Terima kasih telah mempercayakan transaksi di Norxstore!';
+  if(subEl) subEl.textContent = 'Admin telah menyelesaikan pengerjaan layanan Anda. Berikan bintang kepuasan Anda di bawah untuk menaikkan rating toko!';
   if(nameEl) nameEl.textContent = itemsText;
   if(metaEl) metaEl.textContent = `Total: ${formatPrice(order.total)} · Status: 🟢 Selesai`;
+
+  // Tampilkan form rating otomatis di dalam modal pesanan selesai
+  currentFinishedOrderToRate = order;
+  const ratingBox = document.getElementById('orderNotifRatingBox');
+  if(ratingBox){
+    if(isOrderRated(order.id)){
+      ratingBox.innerHTML = `
+        <div style="padding:10px;text-align:center">
+          <div style="font-size:24px;margin-bottom:4px">⭐</div>
+          <div style="font-size:12.5px;font-weight:700;color:#4ade80">✅ Anda sudah memberikan rating untuk pesanan ini</div>
+          <div style="font-size:11px;color:#cbd5e1;margin-top:2px">Terima kasih atas kepercayaan Anda di Norxstore!</div>
+        </div>
+      `;
+    } else {
+      setNotifRatingStars(5);
+      const nameInput = document.getElementById('notifReviewerName');
+      const commentInput = document.getElementById('notifReviewText');
+      if(nameInput){
+        const defaultName = order.customerName || (currentUser && !currentUser.isAnonymous ? currentUser.displayName : '');
+        nameInput.value = defaultName || '';
+      }
+      if(commentInput) commentInput.value = '';
+    }
+  }
   
   const overlay = document.getElementById('orderNotifOverlay');
   if(overlay) overlay.classList.add('open');
@@ -2802,53 +2972,506 @@ function onOrderNotifOpenCart(){
 function onOrderNotifOpenReview(){
   closeOrderNotif();
   switchMode('dark');
+  switchTestiTab('reviews');
   const sec = document.getElementById('darkSection');
   if(sec) sec.scrollIntoView({behavior:'smooth'});
-  showToast('⭐ Terima kasih! Silakan bagikan ulasan atau hubungi admin.');
+  showToast('⭐ Reputasi & ulasan kepuasan pelanggan Norxstore.');
 }
 
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPWAInstallPrompt = e;
-  const btn = document.getElementById('pwaInstallBtn');
-  if(btn) btn.style.display = 'inline-flex';
-});
+// ==================== SISTEM RATING & PENILAIAN OTOMATIS ====================
+function escapeHtml(str){
+  if(!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
 
-window.addEventListener('appinstalled', () => {
-  deferredPWAInstallPrompt = null;
-  const btn = document.getElementById('pwaInstallBtn');
-  if(btn) btn.style.display = 'none';
-  showToast('🎉 Aplikasi Norxstore berhasil dipasang di HP!');
-});
+let customerRatingsCache = null;
+function getCustomerRatings(){
+  if(Array.isArray(customerRatingsCache)) return customerRatingsCache;
+  try {
+    const data = JSON.parse(safeGetItem('norxstore_customer_ratings', '[]'));
+    customerRatingsCache = Array.isArray(data) ? data : [];
+    return customerRatingsCache;
+  } catch(e){
+    customerRatingsCache = [];
+    return [];
+  }
+}
+function saveCustomerRatings(list){
+  customerRatingsCache = Array.isArray(list) ? list : [];
+  safeSetItem('norxstore_customer_ratings', JSON.stringify(customerRatingsCache));
+}
 
-function triggerPWAInstall(){
-  if(deferredPWAInstallPrompt){
-    deferredPWAInstallPrompt.prompt();
-    deferredPWAInstallPrompt.userChoice.then((choiceResult) => {
-      if(choiceResult.outcome === 'accepted'){
-        enablePhonePushNotifications(true);
+function getRatedOrderIds(){
+  try {
+    const list = JSON.parse(safeGetItem('norxstore_rated_orders', '[]'));
+    return Array.isArray(list) ? list : [];
+  } catch(e){ return []; }
+}
+function markOrderAsRated(orderId){
+  if(!orderId) return;
+  const list = getRatedOrderIds();
+  if(!list.includes(orderId)){
+    list.push(orderId);
+    safeSetItem('norxstore_rated_orders', JSON.stringify(list));
+  }
+}
+function isOrderRated(orderId){
+  if(!orderId) return false;
+  return getRatedOrderIds().includes(orderId);
+}
+
+function calculateRatingStats(){
+  const ratings = getCustomerRatings();
+  const count = ratings.length;
+  if(count === 0){
+    return {
+      average: '0.0',
+      numericAvg: 0,
+      total: 0,
+      satisfactionPct: '0%',
+      completedOrders: getCompletedOrdersCount()
+    };
+  }
+  const sum = ratings.reduce((acc, r) => acc + (Number(r.stars) || 0), 0);
+  const avg = (sum / count).toFixed(1);
+  const highCount = ratings.filter(r => (Number(r.stars) || 0) >= 4).length;
+  const pct = Math.round((highCount / count) * 100) + '%';
+  return {
+    average: avg,
+    numericAvg: parseFloat(avg),
+    total: count,
+    satisfactionPct: pct,
+    completedOrders: getCompletedOrdersCount()
+  };
+}
+
+function getCompletedOrdersCount(){
+  if(!allOrders || typeof allOrders !== 'object') return 0;
+  return Object.values(allOrders).filter(o => o && o.status === 'done').length;
+}
+
+function updateRatingStatsUI(){
+  const stats = calculateRatingStats();
+  
+  // Nilai angka besar (dimulai dari 0.0)
+  const bigScore = document.getElementById('ratingBigScore');
+  if(bigScore) bigScore.textContent = stats.average;
+  
+  // Visual deretan 5 bintang
+  const starsRow = document.getElementById('ratingStarsRow');
+  if(starsRow){
+    const roundedStars = Math.round(stats.numericAvg);
+    let starsHtml = '';
+    for(let i = 1; i <= 5; i++){
+      if(stats.numericAvg > 0 && i <= roundedStars){
+        starsHtml += '<span class="star-filled">★</span>';
+      } else {
+        starsHtml += '<span class="star-empty">★</span>';
       }
-      deferredPWAInstallPrompt = null;
-    });
-  } else if(isIOSDevice){
-    const modal = document.getElementById('iosInstallModal');
-    if(modal) modal.classList.add('open');
+    }
+    starsRow.innerHTML = starsHtml;
+  }
+  
+  // Label total ulasan
+  const countText = document.getElementById('ratingCountText');
+  if(countText){
+    if(stats.total === 0){
+      countText.textContent = 'Rating Mulai 0 · Belum Ada Penilaian';
+    } else {
+      countText.textContent = `⭐ ${stats.average} / 5.0 · ${stats.total} Penilaian Pelanggan`;
+    }
+  }
+  
+  // Statistik jokian selesai & persentase kepuasan
+  const compEl = document.getElementById('statCompletedJokiCount');
+  if(compEl) compEl.textContent = stats.completedOrders + ' Selesai';
+  
+  const satEl = document.getElementById('statSatisfactionPercent');
+  if(satEl) satEl.textContent = stats.satisfactionPct;
+  
+  // Tombol banner di katalog depan
+  const homeBtn = document.getElementById('homeTestiBtnLabel');
+  if(homeBtn){
+    if(stats.total === 0){
+      homeBtn.textContent = '⭐ Lihat Testimoni & Rating Pelanggan (⭐ 0.0)';
+    } else {
+      homeBtn.textContent = `⭐ Lihat Testimoni (${stats.total} Rating · ⭐ ${stats.average})`;
+    }
+  }
+  
+  // Badge jumlah tab
+  const tabBadge = document.getElementById('tabReviewsCountBadge');
+  if(tabBadge) tabBadge.textContent = stats.total;
+  
+  const photoBadge = document.getElementById('tabPhotosCountBadge');
+  if(photoBadge) photoBadge.textContent = getReviewPhotos().length;
+  
+  // Badge ringkasan di admin
+  const adminBadge = document.getElementById('adminRatingSummaryBadge');
+  if(adminBadge) adminBadge.textContent = `⭐ ${stats.average} (${stats.total} Ulasan)`;
+}
+
+function renderCustomerReviews(){
+  const container = document.getElementById('customerReviewsList');
+  if(!container) return;
+  const ratings = getCustomerRatings();
+  
+  if(ratings.length === 0){
+    container.innerHTML = `
+      <div style="text-align:center;padding:36px 16px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.12);border-radius:16px;color:#94a3b8">
+        <div style="font-size:38px;margin-bottom:8px">⭐</div>
+        <div style="font-size:15px;font-weight:800;color:#fff;margin-bottom:4px">Rating Masih 0 (Belum Ada Penilaian)</div>
+        <p style="font-size:12px;line-height:1.5;max-width:340px;margin:0 auto 14px">
+          Sistem otomatis aktif! Begitu jokian Anda selesai dikerjakan, Anda dapat memberikan bintang kepuasan dan rating toko akan bertambah otomatis.
+        </p>
+        <button type="button" class="give-rating-hero-btn" onclick="openGiveRatingModal()">
+          ⭐ Beri Bintang Pertama Sekarang
+        </button>
+      </div>
+    `;
+    return;
+  }
+  
+  container.innerHTML = ratings.map(r => {
+    const starCount = Math.max(1, Math.min(5, Number(r.stars) || 5));
+    const starsStr = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
+    const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'}) : 'Baru saja';
+    const authorInitial = (r.customerName || 'P').charAt(0).toUpperCase();
+    const commentHtml = r.comment ? `<p class="customer-review-comment">"${escapeHtml(r.comment)}"</p>` : `<p class="customer-review-comment" style="font-style:italic;color:#94a3b8">Pelanggan memberikan rating ⭐ ${starCount} bintang untuk layanan ini.</p>`;
+    
+    return `
+      <div class="customer-review-card">
+        <div class="customer-review-header">
+          <div class="customer-review-author">
+            <div class="customer-review-avatar">${authorInitial}</div>
+            <div>
+              <div class="customer-review-name">${escapeHtml(r.customerName || 'Pelanggan Norxstore')}</div>
+              <div class="customer-review-badge">🟢 Jokian Selesai Terverifikasi</div>
+            </div>
+          </div>
+          <span class="customer-review-date">${dateStr}</span>
+        </div>
+        <div class="customer-review-stars">${starsStr} <span style="font-weight:800;font-size:11px;color:#fff;margin-left:4px">${starCount}.0</span></div>
+        <div class="customer-review-service">🎮 ${escapeHtml(r.serviceName || 'Layanan Joki Game')}</div>
+        ${commentHtml}
+      </div>
+    `;
+  }).join('');
+}
+
+let currentTestiTab = 'reviews';
+function switchTestiTab(tab){
+  currentTestiTab = tab;
+  const revTab = document.getElementById('tabReviewsBtn');
+  const photoTab = document.getElementById('tabPhotosBtn');
+  const revSec = document.getElementById('customerReviewsSection');
+  const photoSec = document.getElementById('reviewList');
+  
+  if(tab === 'reviews'){
+    if(revTab) revTab.classList.add('active');
+    if(photoTab) photoTab.classList.remove('active');
+    if(revSec) revSec.style.display = 'block';
+    if(photoSec) photoSec.style.display = 'none';
   } else {
-    showToast('Buka menu peramban (⋮) lalu pilih "Tambahkan ke Layar Utama"');
+    if(photoTab) photoTab.classList.add('active');
+    if(revTab) revTab.classList.remove('active');
+    if(revSec) revSec.style.display = 'none';
+    if(photoSec) photoSec.style.display = 'block';
   }
 }
 
-function closeIOSModal(event){
-  const modal = document.getElementById('iosInstallModal');
-  if(modal) modal.classList.remove('open');
+// Bintang interaktif di notifikasi order selesai
+let notifSelectedStars = 5;
+let currentFinishedOrderToRate = null;
+
+function setNotifRatingStars(val){
+  notifSelectedStars = val;
+  const wrap = document.getElementById('notifStarsPicker');
+  if(wrap){
+    const stars = wrap.querySelectorAll('.interactive-star');
+    stars.forEach(s => {
+      const sVal = parseInt(s.getAttribute('data-val'), 10);
+      if(sVal <= val) s.classList.add('active');
+      else s.classList.remove('active');
+    });
+  }
+  const descEl = document.getElementById('notifStarDesc');
+  if(descEl){
+    const starLabels = {
+      1: '⭐ Kurang Puas (1 Bintang)',
+      2: '⭐⭐ Cukup (2 Bintang)',
+      3: '⭐⭐⭐ Baik (3 Bintang)',
+      4: '⭐⭐⭐⭐ Sangat Baik (4 Bintang)',
+      5: '⭐⭐⭐⭐⭐ Sangat Puas! (5 Bintang)'
+    };
+    descEl.textContent = starLabels[val] || `${val} Bintang`;
+  }
 }
+
+function submitNotifRating(){
+  if(!currentFinishedOrderToRate){
+    showToast('Pesanan tidak ditemukan');
+    return;
+  }
+  const nameInput = document.getElementById('notifReviewerName');
+  const commentInput = document.getElementById('notifReviewText');
+  const customerName = (nameInput && nameInput.value) ? nameInput.value.trim() : (currentFinishedOrderToRate.customerName || (currentUser && !currentUser.isAnonymous ? currentUser.displayName : ''));
+  const comment = commentInput ? commentInput.value.trim() : '';
+  const serviceName = currentFinishedOrderToRate.items.map(i => i.name).join(', ') || 'Layanan Joki';
+  
+  submitCustomerRating({
+    orderId: currentFinishedOrderToRate.id,
+    customerName: customerName,
+    stars: notifSelectedStars,
+    serviceName: serviceName,
+    comment: comment
+  });
+  
+  const ratingBox = document.getElementById('orderNotifRatingBox');
+  if(ratingBox){
+    ratingBox.innerHTML = `
+      <div style="padding:10px;text-align:center">
+        <div style="font-size:32px;margin-bottom:6px">🎉</div>
+        <div style="font-size:14px;font-weight:800;color:#4ade80;margin-bottom:4px">Bintang & Penilaian Terkirim!</div>
+        <div style="font-size:11.5px;color:#cbd5e1">Terima kasih atas penilaian ⭐${notifSelectedStars} bintang Anda. Rating toko berhasil naik!</div>
+      </div>
+    `;
+  }
+  showToast(`🎉 Terima kasih! Penilaian ⭐${notifSelectedStars} bintang berhasil menaikkan rating toko.`);
+}
+
+// Bintang interaktif di Modal Mandiri
+let modalSelectedStars = 5;
+function openGiveRatingModal(orderId){
+  const overlay = document.getElementById('giveRatingModal');
+  if(!overlay) return;
+  
+  const myIds = getMyOrderIds();
+  const finishedOrders = myIds.map(id => allOrders[id]).filter(o => o && o.status === 'done');
+  const select = document.getElementById('giveRatingOrderSelect');
+  const customWrap = document.getElementById('giveRatingCustomServiceWrap');
+  
+  if(select){
+    if(finishedOrders.length > 0){
+      select.innerHTML = '<option value="">-- Pilih Dari Pesanan Selesai Anda --</option>' + 
+        finishedOrders.map(o => {
+          const itemsTitle = o.items.map(i => i.name).join(', ');
+          const ratedBadge = isOrderRated(o.id) ? ' (Sudah Diberi Rating)' : '';
+          return `<option value="${o.id}">${itemsTitle} - ${formatPrice(o.total)}${ratedBadge}</option>`;
+        }).join('') + '<option value="__custom__">➕ Layanan Lainnya / Masukkan Manual</option>';
+      
+      if(orderId){
+        select.value = orderId;
+      } else {
+        const unrated = finishedOrders.find(o => !isOrderRated(o.id));
+        if(unrated) select.value = unrated.id;
+      }
+      handleModalOrderSelectChange();
+    } else {
+      select.innerHTML = '<option value="__custom__">Layanan Joki Norxstore</option>';
+      if(customWrap) customWrap.style.display = 'block';
+    }
+  }
+  
+  const nameEl = document.getElementById('modalReviewerName');
+  if(nameEl && (!nameEl.value || nameEl.value.trim() === '')){
+    if(currentUser && !currentUser.isAnonymous && currentUser.displayName){
+      nameEl.value = currentUser.displayName;
+    }
+  }
+  
+  setModalRatingStars(5);
+  overlay.classList.add('open');
+}
+
+function closeGiveRatingModal(event){
+  if(event && event.target && event.target !== document.getElementById('giveRatingModal') && !event.target.classList.contains('modal-close')) return;
+  const overlay = document.getElementById('giveRatingModal');
+  if(overlay) overlay.classList.remove('open');
+}
+
+function setModalRatingStars(val){
+  modalSelectedStars = val;
+  const wrap = document.getElementById('modalStarsPicker');
+  if(wrap){
+    const stars = wrap.querySelectorAll('.interactive-star');
+    stars.forEach(s => {
+      const sVal = parseInt(s.getAttribute('data-val'), 10);
+      if(sVal <= val) s.classList.add('active');
+      else s.classList.remove('active');
+    });
+  }
+  const descEl = document.getElementById('modalStarDesc');
+  if(descEl){
+    const starLabels = {
+      1: '⭐ Kurang Puas (1 Bintang)',
+      2: '⭐⭐ Cukup (2 Bintang)',
+      3: '⭐⭐⭐ Baik (3 Bintang)',
+      4: '⭐⭐⭐⭐ Sangat Baik (4 Bintang)',
+      5: '⭐⭐⭐⭐⭐ Sangat Puas! (5 Bintang)'
+    };
+    descEl.textContent = starLabels[val] || `${val} Bintang`;
+  }
+}
+
+function handleModalOrderSelectChange(){
+  const select = document.getElementById('giveRatingOrderSelect');
+  const customWrap = document.getElementById('giveRatingCustomServiceWrap');
+  if(!select || !customWrap) return;
+  if(select.value === '__custom__'){
+    customWrap.style.display = 'block';
+  } else {
+    customWrap.style.display = 'none';
+  }
+}
+
+function submitCustomerRating(ratingData){
+  const id = 'RAT-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+  const newRating = {
+    id: id,
+    orderId: ratingData.orderId || null,
+    customerName: (ratingData.customerName || '').trim() || 'Pelanggan Norxstore',
+    stars: Math.max(1, Math.min(5, parseInt(ratingData.stars, 10) || 5)),
+    serviceName: (ratingData.serviceName || '').trim() || 'Layanan Joki Game',
+    comment: (ratingData.comment || '').trim(),
+    createdAt: Date.now()
+  };
+
+  const ratings = getCustomerRatings();
+  ratings.unshift(newRating);
+  saveCustomerRatings(ratings);
+
+  if(ratingData.orderId){
+    markOrderAsRated(ratingData.orderId);
+  }
+
+  // Simpan ke Firebase Realtime Database
+  fbDB.ref('norxstore/customerRatings/' + id).set(newRating).catch(e => console.error(e));
+
+  updateRatingStatsUI();
+  renderCustomerReviews();
+  renderMyOrders();
+  if(isAdminOpen()) renderAdminRatingsList();
+
+  return newRating;
+}
+
+function submitModalRating(){
+  const select = document.getElementById('giveRatingOrderSelect');
+  const customInput = document.getElementById('giveRatingCustomService');
+  const nameInput = document.getElementById('modalReviewerName');
+  const commentInput = document.getElementById('modalReviewComment');
+  
+  let orderId = null;
+  let serviceName = '';
+  
+  if(select && select.value && select.value !== '__custom__'){
+    orderId = select.value;
+    const order = allOrders[orderId];
+    if(order && Array.isArray(order.items)){
+      serviceName = order.items.map(i => i.name).join(', ');
+    }
+  } else if(customInput && customInput.value.trim()){
+    serviceName = customInput.value.trim();
+  }
+  
+  if(!serviceName) serviceName = 'Layanan Joki Norxstore';
+  
+  const customerName = nameInput ? nameInput.value.trim() : '';
+  const comment = commentInput ? commentInput.value.trim() : '';
+  
+  submitCustomerRating({
+    orderId: orderId,
+    customerName: customerName,
+    stars: modalSelectedStars,
+    serviceName: serviceName,
+    comment: comment
+  });
+  
+  closeGiveRatingModal();
+  switchMode('dark');
+  switchTestiTab('reviews');
+  const sec = document.getElementById('darkSection');
+  if(sec) sec.scrollIntoView({behavior:'smooth'});
+  showToast(`🎉 Terima kasih! Penilaian ⭐${modalSelectedStars} bintang Anda berhasil menaikkan rating toko.`);
+}
+
+// ==================== PANEL ADMIN: KELOLA RATING & ULASAN ====================
+function renderAdminRatingsList(){
+  const list = document.getElementById('adminRatingsList');
+  if(!list) return;
+  const ratings = getCustomerRatings();
+  if(ratings.length === 0){
+    list.innerHTML = '<p style="font-size:12px;color:#888;text-align:center;padding:8px">Belum ada rating pelanggan masuk (Rating 0.0).</p>';
+    return;
+  }
+  list.innerHTML = ratings.map(r => {
+    const starCount = r.stars || 5;
+    const starStr = '★'.repeat(starCount);
+    const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '-';
+    return `
+      <div style="background:#fff;border:1px solid #fed7aa;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span style="font-weight:700;color:#1e1b4b">${escapeHtml(r.customerName || 'Pelanggan')}</span>
+            <span style="color:#f59e0b;font-weight:700">${starStr} (${starCount}★)</span>
+          </div>
+          <div style="font-size:11px;color:#7c3aed;margin-bottom:2px">${escapeHtml(r.serviceName || 'Layanan')}</div>
+          ${r.comment ? `<div style="font-size:11.5px;color:#475569">"${escapeHtml(r.comment)}"</div>` : ''}
+          <div style="font-size:10px;color:#94a3b8;margin-top:2px">${dateStr}</div>
+        </div>
+        <button type="button" class="admin-btn-sm" style="background:#ef4444;color:#fff;font-size:10px;padding:3px 6px;cursor:pointer" onclick="deleteCustomerRatingAdmin('${r.id}')" title="Hapus Ulasan">🗑</button>
+      </div>
+    `;
+  }).join('');
+}
+
+function deleteCustomerRatingAdmin(ratingId){
+  if(!confirm('Hapus penilaian pelanggan ini?')) return;
+  const ratings = getCustomerRatings().filter(r => r.id !== ratingId);
+  saveCustomerRatings(ratings);
+  fbDB.ref('norxstore/customerRatings/' + ratingId).remove().catch(e => console.error(e));
+  updateRatingStatsUI();
+  renderCustomerReviews();
+  renderAdminRatingsList();
+  showToast('Ulasan berhasil dihapus');
+}
+
+function resetAllRatingsAdmin(){
+  if(!confirm('Yakin ingin mereset SEMUA rating ke 0? Semua ulasan pelanggan akan dihapus.')) return;
+  saveCustomerRatings([]);
+  fbDB.ref('norxstore/customerRatings').remove().catch(e => console.error(e));
+  updateRatingStatsUI();
+  renderCustomerReviews();
+  renderAdminRatingsList();
+  showToast('⭐ Semua rating berhasil direset ke 0');
+}
+
+// Hook Firebase Customer Ratings Realtime
+fbDB.ref('norxstore/customerRatings').on('value', snap => {
+  const val = snap.val();
+  if(!val){
+    customerRatingsCache = [];
+    saveCustomerRatings([]);
+  } else if(Array.isArray(val)){
+    customerRatingsCache = val;
+    saveCustomerRatings(val);
+  } else if(typeof val === 'object'){
+    customerRatingsCache = Object.values(val);
+    customerRatingsCache.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+    saveCustomerRatings(customerRatingsCache);
+  }
+  updateRatingStatsUI();
+  renderCustomerReviews();
+  if(isAdminOpen()) renderAdminRatingsList();
+});
 
 window.addEventListener('DOMContentLoaded', () => {
-  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-  const btn = document.getElementById('pwaInstallBtn');
-  if(!isStandalone && btn && isIOSDevice){
-    btn.style.display = 'inline-flex';
-  }
   registerServiceWorker();
 });
 
@@ -3528,6 +4151,7 @@ function openAdmin(){
   renderCarouselAdmin();
   renderPayIconAdminList();
   renderAdminReviewList();
+  renderAdminRatingsList();
   renderAdminOrders();
   refreshSubgroupFormUI();
 
@@ -5725,6 +6349,8 @@ function initPresenceSystem(){
 renderCarousel();
 renderProducts();
 renderReviews();
+renderCustomerReviews();
+updateRatingStatsUI();
 applyPaymentIcons();
 initPresenceSystem();
 
