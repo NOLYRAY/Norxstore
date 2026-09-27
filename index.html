@@ -85,11 +85,11 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .rating-stat-num{font-size:15px;font-weight:800;color:#fff;display:block}
 .rating-stat-lbl{font-size:10px;color:#94a3b8;font-weight:600}
 .rating-stat-divider{width:1px;height:24px;background:rgba(255,255,255,0.12)}
-.give-rating-hero-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:12px;padding:10px 18px;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(217,119,6,0.35);transition:all .15s ease}
+.give-rating-hero-btn{background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;border:none;border-radius:12px;padding:10px 18px;font-size:12px;font-weight:800;cursor:pointer;display:inline-flex;align-items:center;gap:6px;box-shadow:0 4px 14px rgba(217,119,6,0.35);transition:all .15s ease;position:relative;z-index:10}
 .give-rating-hero-btn:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(217,119,6,0.45)}
 .give-rating-hero-btn:active{transform:scale(0.97)}
-.testi-tabs-wrap{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0 12px;padding:0 16px}
-.testi-tab-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:#cbd5e1;padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease}
+.testi-tabs-wrap{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0 12px;padding:0 16px;position:relative;z-index:10}
+.testi-tab-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:#cbd5e1;padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease;position:relative;z-index:10}
 .testi-tab-btn.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.3)}
 .customer-review-card{background:#161324;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:transform .15s ease}
 .customer-review-card:hover{transform:translateY(-2px)}
@@ -241,9 +241,9 @@ body.dark-mode .live-pill-mode{
 .dark-hero h2{font-size:21px;font-weight:800;background:linear-gradient(135deg,#c4b5fd,#f0abfc);-webkit-background-clip:text;background-clip:text;color:transparent;margin:0}
 .dark-hero p{font-size:12px;color:#cbd5e1;margin:4px 0 0}
 
-.review-list{padding:0 16px}
-.review-photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-.review-photo{aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#12121a;border:1px solid #1a1a25;cursor:pointer;transition:transform .2s ease;touch-action:pan-y}
+.review-list{padding:0 16px;position:relative}
+.review-photo-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;position:relative}
+.review-photo{position:relative !important;aspect-ratio:3/4;border-radius:14px;overflow:hidden;background:#12121a;border:1px solid #1a1a25;cursor:pointer;transition:transform .2s ease;touch-action:pan-y}
 .review-photo:hover{transform:translateY(-3px)}
 .review-photo img{width:100%;height:100%;object-fit:cover;display:block}
 .review-empty{grid-column:1/-1;text-align:center;padding:50px 20px;color:#6b6b7b}
@@ -602,11 +602,11 @@ img,
   position: absolute;
   inset: 0;
   z-index: 2;
-  cursor: pointer;
   background: transparent;
   -webkit-touch-callout: none !important;
   -webkit-user-select: none !important;
   user-select: none !important;
+  pointer-events: none !important;
 }
 
 .img-protected-watermark {
@@ -5102,7 +5102,7 @@ function renderProductCard(p, discount, idx){
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
     <div class="product-img-slide" data-index="${i}" onclick="openProductImageViewer(${p.id},${i},event)" style="cursor:zoom-in" title="Perbesar foto produk">
       <img src="${url}" alt="${p.name}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}">
-      <div class="slide-protect-shield" onclick="openProductImageViewer(${p.id},${i},event)"></div>
+      <div class="slide-protect-shield"></div>
     </div>
   `).join('') : (!imagesDataReady ? `
     <div class="product-img-slide"><div class="skel" style="width:100%;height:100%;position:absolute;inset:0"></div></div>
@@ -5344,7 +5344,7 @@ function renderReviews(){
   container.innerHTML = '<div class="review-photo-grid">' + photos.map((url, idx) => `
     <div class="review-photo" onclick="openReviewPhoto(${idx})">
       <img src="${url}" alt="Foto testimoni ${idx+1}" draggable="false">
-      <div class="slide-protect-shield" onclick="openReviewPhoto(${idx})"></div>
+      <div class="slide-protect-shield"></div>
     </div>
   `).join('') + '</div>';
 }
