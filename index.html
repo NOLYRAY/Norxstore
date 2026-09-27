@@ -2495,17 +2495,37 @@ function saveCart(){
 // ==================== ORDER TRACKING (Pesanan Saya) ====================
 let allOrders = {};
 
+function getDeletedOrderIds(){
+  try {
+    const arr = JSON.parse(safeGetItem('norxstore_deleted_orders', '[]'));
+    return Array.isArray(arr) ? arr : [];
+  } catch(e){
+    return [];
+  }
+}
+function markOrderAsDeleted(id){
+  if(!id) return;
+  const arr = getDeletedOrderIds();
+  if(!arr.includes(id)){
+    arr.push(id);
+    safeSetItem('norxstore_deleted_orders', JSON.stringify(arr.slice(-100)));
+  }
+}
+
 function getActiveOrderForProduct(productId){
   // Kunci produk untuk akun pembeli ini jika memiliki pesanan aktif yang belum selesai ('pending' atau 'processing').
   // Pengunjung/pelanggan lain yang tidak memesan produk ini TIDAK akan terblokir dan tetap bisa memesan.
   const prod = products.find(p => p.id === productId);
   if(!prod || !allOrders || typeof allOrders !== 'object') return null;
 
+  const deletedIds = getDeletedOrderIds();
+
   // 1. Cek pesanan aktif yang tersimpan di perangkat ini (localStorage / sessionStorage)
-  const myIds = getMyOrderIds();
+  const myIds = getMyOrderIds().filter(id => !deletedIds.includes(id));
   for(const ordId of myIds){
     const ord = allOrders[ordId];
     if(!ord) continue;
+    if(deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
     if(ord.status === 'pending' || ord.status === 'processing'){
       if(Array.isArray(ord.items)){
         const hasItem = ord.items.some(it => {
@@ -2525,8 +2545,10 @@ function getActiveOrderForProduct(productId){
   // 2. Jika user sedang login dengan Google, cek juga pesanan aktif milik akun ini di Firebase
   if(currentUser && !currentUser.isAnonymous){
     for(const ordId in allOrders){
+      if(deletedIds.includes(ordId)) continue; // Abaikan jika pesanan sudah dihapus pelanggan
       const ord = allOrders[ordId];
       if(!ord) continue;
+      if(deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
       const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
                      (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
       if(isMine && (ord.status === 'pending' || ord.status === 'processing')){
@@ -2579,8 +2601,14 @@ function isProductInUnfinishedOrder(productId){
 }
 
 function getMyOrderIds(){
-  try { const arr = JSON.parse(safeGetItem('norxstore_my_orders', '[]')); return Array.isArray(arr) ? arr : []; }
-  catch(e){ return []; }
+  try {
+    const arr = JSON.parse(safeGetItem('norxstore_my_orders', '[]'));
+    if(!Array.isArray(arr)) return [];
+    const deleted = getDeletedOrderIds();
+    return arr.filter(id => !deleted.includes(id));
+  } catch(e){
+    return [];
+  }
 }
 function addMyOrderId(id){
   const arr = getMyOrderIds();
@@ -2616,21 +2644,62 @@ function createOrder(items, total, paymentMethod, adminName){
 function removeMyOrder(orderId, event){
   if(event) event.stopPropagation();
   if(!confirm('Hapus riwayat pesanan ini dari daftar Anda?')) return;
+  
+  // 1. Blacklist ID pesanan agar tidak pernah dimunculkan atau dipulihkan lagi oleh cloud
+  markOrderAsDeleted(orderId);
+
+  // 2. Batalkan status pesanan di Firebase jika belum selesai, agar produk di katalog tidak terkunci lagi
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/' + orderId).update({
+      status: 'cancelled',
+      cancelledAt: Date.now(),
+      deletedByCustomer: true
+    }).catch(e=>console.error(e));
+  }
+  if(allOrders[orderId]){
+    allOrders[orderId].status = 'cancelled';
+    allOrders[orderId].deletedByCustomer = true;
+  }
+
+  // 3. Hapus dari localStorage norxstore_my_orders
   const filtered = getMyOrderIds().filter(id => id !== orderId);
   safeSetItem('norxstore_my_orders', JSON.stringify(filtered));
+
+  // 4. Sinkronkan pembaruan ke cloud
   syncOrderIdsToCloud();
+
+  // 5. Bersihkan tracker notifikasi agar tidak memicu notifikasi ulang
+  try {
+    const tracker = getNotifTrackerMap();
+    delete tracker[orderId];
+    saveNotifTrackerMap(tracker);
+  } catch(e){}
+
   renderMyOrders();
   renderProducts();
   updateOrderNotifDot();
-  showToast('Riwayat pesanan dihapus');
+  showToast('Riwayat pesanan berhasil dihapus');
 }
 function cancelMyOrder(orderId, event){
   if(event) event.stopPropagation();
   if(!confirm('Batalkan pesanan ini? Layanan akan langsung kembali bisa dipesan.')) return;
+  
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/orders/' + orderId).update({status: 'cancelled', cancelledAt: Date.now()}).catch(e=>console.error(e));
+    fbDB.ref('norxstore/orders/' + orderId).update({
+      status: 'cancelled',
+      cancelledAt: Date.now()
+    }).catch(e=>console.error(e));
   }
-  if(allOrders[orderId]) allOrders[orderId].status = 'cancelled';
+  if(allOrders[orderId]){
+    allOrders[orderId].status = 'cancelled';
+  }
+  
+  try {
+    const tracker = getNotifTrackerMap();
+    tracker[orderId] = 'cancelled';
+    saveNotifTrackerMap(tracker);
+  } catch(e){}
+
   renderMyOrders();
   renderProducts();
   updateOrderNotifDot();
@@ -2672,22 +2741,28 @@ function renderMyOrders(){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
       cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Batalkan Pesanan">✕ Batalkan</button>`;
     }
-    else if(o.status === 'processing') statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
-    else if(o.status === 'cancelled') statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
+    else if(o.status === 'processing'){
+      statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
+      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Batalkan Pesanan">✕ Batalkan</button>`;
+    }
+    else if(o.status === 'cancelled'){
+      statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
+      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Hapus dari daftar Pesanan Saya">🗑️ Hapus</button>`;
+    }
     else {
       statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">🟢 Selesai</span>';
       if(isOrderRated(o.id)){
-        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;margin-left:6px;display:inline-flex;align-items:center;gap:3px">⭐ Sudah Diberi Rating</span>`;
+        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;margin-left:6px;display:inline-flex;align-items:center;gap:3px">⭐ Sudah Diberi Rating</span><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
       } else {
-        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:3px 8px;font-size:10px;font-weight:700;margin-left:6px;border-radius:4px;box-shadow:0 2px 6px rgba(217,119,6,0.3)" title="Beri rating untuk jokian ini">⭐ Beri Bintang</button>`;
+        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:3px 8px;font-size:10px;font-weight:700;margin-left:6px;border-radius:4px;box-shadow:0 2px 6px rgba(217,119,6,0.3)" title="Beri rating untuk jokian ini">⭐ Beri Bintang</button><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
       }
     }
     return `
     <div class="my-order-card" style="position:relative">
-      <button onclick="removeMyOrder('${o.id}', event)" title="Hapus riwayat pesanan" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:14px;padding:4px;line-height:1">✕</button>
-      <p class="my-order-items" style="padding-right:20px">${itemsText}</p>
+      <button onclick="removeMyOrder('${o.id}', event)" title="Hapus riwayat pesanan" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:16px;padding:6px;line-height:1" aria-label="Hapus Pesanan">✕</button>
+      <p class="my-order-items" style="padding-right:24px">${itemsText}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
-      <div style="display:flex;align-items:center;margin-top:4px">
+      <div style="display:flex;align-items:center;margin-top:4px;flex-wrap:wrap;gap:4px">
         ${statusBadge}
         ${cancelAction}
       </div>
@@ -3813,11 +3888,14 @@ function loadUserDataFromCloud(uid){
   }).catch(e=>console.error(e));
   fbDB.ref('norxstore/users/' + uid + '/myOrderIds').once('value').then(snap=>{
     const cloudIds = snap.val();
-    const localIds = getMyOrderIds();
-    const merged = Array.from(new Set([...(Array.isArray(cloudIds) ? cloudIds : []), ...localIds]));
-    safeSetItem('norxstore_my_orders', JSON.stringify(merged.slice(0, 30)));
-    fbDB.ref('norxstore/users/' + uid + '/myOrderIds').set(merged.slice(0, 30)).catch(e=>console.error(e));
+    const deleted = getDeletedOrderIds();
+    const cleanCloudIds = (Array.isArray(cloudIds) ? cloudIds : []).filter(id => !deleted.includes(id));
+    const localIds = getMyOrderIds().filter(id => !deleted.includes(id));
+    const merged = Array.from(new Set([...cleanCloudIds, ...localIds])).slice(0, 30);
+    safeSetItem('norxstore_my_orders', JSON.stringify(merged));
+    fbDB.ref('norxstore/users/' + uid + '/myOrderIds').set(merged).catch(e=>console.error(e));
     renderMyOrders();
+    renderProducts();
   }).catch(e=>console.error(e));
 }
 function syncCartToCloud(){
@@ -3827,7 +3905,9 @@ function syncCartToCloud(){
 }
 function syncOrderIdsToCloud(){
   if(currentUser && !currentUser.isAnonymous){
-    fbDB.ref('norxstore/users/' + currentUser.uid + '/myOrderIds').set(getMyOrderIds()).catch(e=>console.error(e));
+    const deleted = getDeletedOrderIds();
+    const ids = getMyOrderIds().filter(id => !deleted.includes(id));
+    fbDB.ref('norxstore/users/' + currentUser.uid + '/myOrderIds').set(ids).catch(e=>console.error(e));
   }
 }
 
@@ -3947,6 +4027,7 @@ function cancelOrder(id){
 }
 function deleteOrder(id){
   if(!confirm('Hapus riwayat pesanan ini?')) return;
+  markOrderAsDeleted(id);
   const o = allOrders[id];
   if(o && o.customerUid){
     fbDB.ref('norxstore/users/' + o.customerUid + '/myOrderIds').once('value').then(snap=>{
