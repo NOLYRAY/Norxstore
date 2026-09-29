@@ -6,14 +6,22 @@
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
-<title>Norxstore — Top-Up & Joki Game Terpercaya</title>
-<meta name="description" content="Layanan Joki Genshin, Honkai Star Rail, Wuthering Waves, NTE dan Top-Up Game Terpercaya Norxstore.">
+<title>NORXSTORE</title>
+<meta name="description" content="NORXSTORE — Toko Game Online Terpercaya.">
+<meta property="og:title" content="NORXSTORE">
+<meta property="og:description" content="NORXSTORE — Toko Game Online Terpercaya.">
+<meta property="og:site_name" content="NORXSTORE">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://norxstore.vercel.app">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="NORXSTORE">
+<meta name="twitter:description" content="NORXSTORE — Toko Game Online Terpercaya.">
 <link rel="manifest" href="/manifest.json">
 <meta name="theme-color" content="#7c3aed">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Norxstore">
+<meta name="apple-mobile-web-app-title" content="NORXSTORE">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png">
 <link rel="icon" type="image/svg+xml" href="/icon.svg">
@@ -1758,15 +1766,21 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <!-- Checklist Auto Selesai -->
-    <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#334155;font-weight:600;margin-bottom:16px;cursor:pointer;user-select:none">
+    <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#334155;font-weight:600;margin-bottom:14px;cursor:pointer;user-select:none">
       <input type="checkbox" id="waProofAutoDoneCheck" checked style="accent-color:#22c55e;width:17px;height:17px">
       <span>Otomatis ubah status pesanan jadi <strong>✅ Selesai</strong> & kirim notif HP</span>
     </label>
 
+    <!-- Keterangan Lampiran Foto -->
+    <div id="waProofPhotoHint" style="display:none;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:8px 10px;font-size:11px;color:#166534;margin-bottom:12px;line-height:1.4"></div>
+
     <!-- Tombol Kirim -->
     <div style="display:flex;flex-direction:column;gap:8px">
-      <button type="button" id="waProofSendBtn" onclick="sendProofViaWhatsApp()" class="wa-btn" style="margin:0;font-size:13px;padding:12px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px">
-        <span>🚀 Kirim ke WhatsApp (Foto Bukti + Pesan)</span>
+      <button type="button" id="waProofSendBtn" onclick="sendProofViaWhatsApp(false)" class="wa-btn" style="margin:0;font-size:13px;padding:12px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>📸 Kirim Foto Bukti ke WhatsApp</span>
+      </button>
+      <button type="button" id="waProofDirectBtn" onclick="sendProofViaWhatsApp(true)" class="admin-btn" style="display:none;background:#0284c7;color:#fff;font-size:12px;padding:10px;border-radius:10px;margin:0;font-weight:700">
+        <span>💬 Buka Chat ke Nomor (Teks Saja)</span>
       </button>
       <button type="button" onclick="closeWaProofModal()" style="background:#f1f5f9;color:#64748b;border:none;padding:10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer">
         Tutup
@@ -4434,7 +4448,7 @@ function openWaProofModal(orderId){
   if(fileInput) fileInput.value = '';
 
   // Default WhatsApp message text
-  const defaultText = `Halo kak! Pesanan kamu di Norx Store:\n*${itemsText}*\n\nStatus: *SELESAI (DONE)* ✅\nTotal: ${formatPrice(o.total)}\n\nLayanan akun kamu sudah tuntas kami kerjakan. Foto bukti pengerjaan terlampir ya kak! 📸✨\n\nTerima kasih banyak sudah mempercayakan pesananmu di Norx Store!\nMohon kesediaannya untuk memberi rating ulasan di website kami ya kak ⭐⭐⭐⭐⭐\nhttps://norxstore.vercel.app`;
+  const defaultText = `Halo kak! Pesanan kamu di NORXSTORE:\n*${itemsText}*\n\nStatus: *SELESAI (DONE)* ✅\nTotal: ${formatPrice(o.total)}\n\nLayanan akun kamu sudah tuntas kami kerjakan. Foto bukti pengerjaan terlampir ya kak! 📸✨\n\nTerima kasih banyak sudah mempercayakan pesananmu di NORXSTORE!\nMohon kesediaannya untuk memberi rating ulasan di website kami ya kak ⭐⭐⭐⭐⭐\nhttps://norxstore.vercel.app`;
   
   const textarea = document.getElementById('waProofTextarea');
   if(textarea) textarea.value = defaultText;
@@ -4569,22 +4583,38 @@ function onWaProofPhoneChange(){
 
 function updateWaProofBtnState(){
   const sendBtn = document.getElementById('waProofSendBtn');
+  const directBtn = document.getElementById('waProofDirectBtn');
+  const hintEl = document.getElementById('waProofPhotoHint');
   if(!sendBtn) return;
   const phoneEl = document.getElementById('waProofPhoneInput');
   const formattedPhone = formatIndonesianWaNumber(phoneEl ? phoneEl.value : '');
 
-  if(formattedPhone && formattedPhone.length >= 10){
-    const displayNum = '+62 ' + formattedPhone.slice(2);
-    if(currentProofFile){
-      sendBtn.innerHTML = `<span>🚀 Chat & Kirim Bukti ke ${displayNum}</span>`;
-    } else {
-      sendBtn.innerHTML = `<span>🚀 Buka Chat Langsung ke ${displayNum}</span>`;
-    }
+  if(currentProofFile){
+    sendBtn.innerHTML = `<span>📸 Kirim Foto Bukti ke WhatsApp (Foto Terlampir)</span>`;
     sendBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+    
+    if(hintEl){
+      hintEl.style.display = 'block';
+      hintEl.innerHTML = `✨ <strong>Foto bukti aktif!</strong> Tombol hijau di atas akan membuka WhatsApp dengan <strong>foto sudah terlampir</strong> & teks otomatis jadi caption.`;
+    }
+
+    if(formattedPhone && formattedPhone.length >= 10){
+      const displayNum = '+62 ' + formattedPhone.slice(2);
+      if(directBtn){
+        directBtn.style.display = 'block';
+        directBtn.innerHTML = `<span>💬 Buka Chat Langsung ke ${displayNum} (Teks Saja)</span>`;
+      }
+    } else {
+      if(directBtn) directBtn.style.display = 'none';
+    }
   } else {
-    if(currentProofFile){
-      sendBtn.innerHTML = `<span>📲 Bagikan Foto Bukti ke WhatsApp</span>`;
-      sendBtn.style.background = 'linear-gradient(135deg,#7c3aed,#6d28d9)';
+    if(hintEl) hintEl.style.display = 'none';
+    if(directBtn) directBtn.style.display = 'none';
+
+    if(formattedPhone && formattedPhone.length >= 10){
+      const displayNum = '+62 ' + formattedPhone.slice(2);
+      sendBtn.innerHTML = `<span>🚀 Buka Chat Langsung ke ${displayNum}</span>`;
+      sendBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
     } else {
       sendBtn.innerHTML = `<span>💬 Buka WhatsApp (Pilih Kontak Sendiri)</span>`;
       sendBtn.style.background = 'linear-gradient(135deg,#25d366,#128c7e)';
@@ -4592,7 +4622,7 @@ function updateWaProofBtnState(){
   }
 }
 
-async function sendProofViaWhatsApp(){
+async function sendProofViaWhatsApp(forceDirect = false){
   if(!currentWaProofOrderId) return;
   const o = allOrders[currentWaProofOrderId];
   if(!o) return;
@@ -4619,26 +4649,18 @@ async function sendProofViaWhatsApp(){
     }
   }
 
-  // Jika ada foto dan browser mendukung clipboard copy, salin agar admin bisa langsung Paste (Ctrl+V) di WA
-  if(currentProofFile && navigator.clipboard && window.ClipboardItem){
-    try {
-      const item = new ClipboardItem({ [currentProofFile.type]: currentProofFile });
-      await navigator.clipboard.write([item]);
-      showToast('📋 Foto bukti disalin ke clipboard! Anda bisa langsung Tempel / Paste di chat WA.');
-    } catch(clipErr){
-      console.warn('Gagal salin gambar ke clipboard:', clipErr);
+  // OPSI 1: Admin memilih Buka Chat Langsung ke Nomor (Teks Saja) ATAU tidak ada foto
+  if(forceDirect || (!currentProofFile && rawPhone && rawPhone.length >= 10)){
+    // Jika ada foto, kita salin ke clipboard agar bisa di-Paste manual
+    if(currentProofFile && navigator.clipboard && window.ClipboardItem){
+      try {
+        const item = new ClipboardItem({ [currentProofFile.type]: currentProofFile });
+        await navigator.clipboard.write([item]);
+        showToast('📋 Foto bukti disalin ke clipboard! Silakan Paste (Ctrl+V) di chat.');
+      } catch(e){}
     }
-  }
-
-  // KASUS 1: NOMOR DIISI -> LANGSUNG ARAHKAN KE NOMOR TERSEBUT!
-  if(rawPhone && rawPhone.length >= 10){
-    // URL resmi WhatsApp yang paling kompatibel dan langsung membuka app WhatsApp di Android / iOS
     const directWaUrl = `https://api.whatsapp.com/send?phone=${rawPhone}&text=${encodeURIComponent(messageText)}`;
-    
     closeWaProofModal();
-
-    // Di perangkat mobile (Android/iOS, termasuk Brave & Chrome):
-    // Navigasi langsung menggunakan window.location.href agar memicu deep-link Intent WhatsApp ke nomor tujuan
     const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
     if(isMobile){
       window.location.href = directWaUrl;
@@ -4648,31 +4670,46 @@ async function sendProofViaWhatsApp(){
     return;
   }
 
-  // KASUS 2: NOMOR KOSONG TAPI ADA FOTO -> Buka share sheet agar foto terlampir otomatis
+  // OPSI 2: JIKA ADA FOTO -> GUNAKAN WEB SHARE API AGAR FOTO TERLAMPIR SECARA FISIK DI WHATSAPP!
   if(currentProofFile && navigator.canShare && navigator.canShare({ files: [currentProofFile] })){
     try {
+      if(rawPhone && navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(rawPhone).catch(()=>{});
+      }
+      showToast('📱 Membuka WhatsApp dengan foto bukti...');
       await navigator.share({
         files: [currentProofFile],
-        title: 'Bukti Pengerjaan Selesai - Norx Store',
+        title: 'Bukti Pengerjaan Selesai - NORXSTORE',
         text: messageText
       });
-      showToast('✅ Berhasil dibagikan ke WhatsApp!');
+      showToast('✅ Foto bukti berhasil dibagikan ke WhatsApp!');
       closeWaProofModal();
       return;
     } catch(err){
       if(err && err.name === 'AbortError') return;
-      console.warn('Web Share gagal, beralih ke fallback:', err);
+      console.warn('Web Share dibatalkan atau beralih ke fallback:', err);
     }
   }
 
-  // KASUS 3: NOMOR KOSONG & TANPA WEB SHARE
-  const generalWaUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`;
+  // OPSI 3: Fallback jika di desktop / browser tanpa Web Share file
+  if(currentProofFile && navigator.clipboard && window.ClipboardItem){
+    try {
+      const item = new ClipboardItem({ [currentProofFile.type]: currentProofFile });
+      await navigator.clipboard.write([item]);
+      showToast('📋 Foto bukti disalin ke clipboard! Silakan Paste (Ctrl+V) di WhatsApp.');
+    } catch(e){}
+  }
+
+  const targetWaUrl = (rawPhone && rawPhone.length >= 10)
+    ? `https://api.whatsapp.com/send?phone=${rawPhone}&text=${encodeURIComponent(messageText)}`
+    : `https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`;
+
   closeWaProofModal();
   const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
   if(isMobile){
-    window.location.href = generalWaUrl;
+    window.location.href = targetWaUrl;
   } else {
-    window.open(generalWaUrl, '_blank');
+    window.open(targetWaUrl, '_blank');
   }
 }
 function cancelOrder(id){

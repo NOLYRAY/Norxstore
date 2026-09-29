@@ -1,8 +1,8 @@
 {
   "id": "/",
-  "name": "Norxstore — Top-Up & Joki Game",
-  "short_name": "Norxstore",
-  "description": "Layanan Joki Genshin Impact, Honkai Star Rail, Wuthering Waves & Top-Up Game Terpercaya Norxstore.",
+  "name": "NORXSTORE",
+  "short_name": "NORXSTORE",
+  "description": "Toko Game Online Terpercaya NORXSTORE.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
