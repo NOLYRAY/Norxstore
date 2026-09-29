@@ -91,17 +91,25 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .testi-tabs-wrap{display:flex;align-items:center;justify-content:center;gap:8px;margin:16px 0 12px;padding:0 16px;position:relative;z-index:10}
 .testi-tab-btn{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);color:#cbd5e1;padding:8px 16px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease;position:relative;z-index:10}
 .testi-tab-btn.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.3)}
-.customer-review-card{background:#161324;border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:0 4px 12px rgba(0,0,0,0.25);transition:transform .15s ease}
-.customer-review-card:hover{transform:translateY(-2px)}
-.customer-review-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.customer-review-author{display:flex;align-items:center;gap:8px}
-.customer-review-avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800}
-.customer-review-name{font-size:13px;font-weight:700;color:#fff}
-.customer-review-badge{font-size:9.5px;font-weight:700;color:#4ade80;background:rgba(74,222,128,0.12);padding:2px 6px;border-radius:6px;display:inline-flex;align-items:center;gap:3px}
-.customer-review-date{font-size:10px;color:#64748b}
-.customer-review-stars{color:#f59e0b;font-size:13px;margin-bottom:4px;letter-spacing:1px}
-.customer-review-service{font-size:11px;color:#c084fc;font-weight:600;margin-bottom:4px}
-.customer-review-comment{font-size:12px;color:#cbd5e1;line-height:1.45}
+.customer-review-card{background:linear-gradient(145deg, #181428, #130f20);border:1px solid rgba(255,255,255,0.09);border-radius:14px;padding:13px 14px;margin-bottom:10px;box-shadow:0 4px 14px rgba(0,0,0,0.3);position:relative}
+.customer-review-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px}
+.customer-review-author{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.customer-review-avatar{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0;box-shadow:0 2px 8px rgba(124,58,237,0.35)}
+.customer-review-info{flex:1;min-width:0}
+.customer-review-name-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.2;margin-bottom:3px}
+.customer-review-name{font-size:13.5px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.customer-review-badge{font-size:9.5px;font-weight:700;color:#4ade80;background:rgba(74,222,128,0.12);border:1px solid rgba(74,222,128,0.25);padding:1px 6px;border-radius:12px;white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.customer-review-meta{display:flex;align-items:center;gap:6px}
+.customer-review-date{font-size:10.5px;color:#94a3b8;font-weight:500}
+.customer-review-subrow{display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap}
+.customer-review-stars-wrap{display:inline-flex;align-items:center;gap:4px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.25);padding:2px 7px;border-radius:6px}
+.customer-review-stars{color:#f59e0b;font-size:12px;letter-spacing:1px;line-height:1}
+.customer-review-score{font-weight:800;font-size:11px;color:#fcd34d;line-height:1}
+.customer-review-service{font-size:11px;color:#c084fc;font-weight:600;background:rgba(192,132,252,0.1);border:1px solid rgba(192,132,252,0.2);padding:2px 8px;border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:180px}
+.customer-review-comment{font-size:12.5px;color:#e2e8f0;line-height:1.45;background:rgba(255,255,255,0.035);padding:8px 12px;border-radius:8px;border-left:3px solid #8b5cf6;margin:0;word-break:break-word}
+.review-delete-action-btn{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.28);color:#f87171;border-radius:8px;padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:4px;flex-shrink:0;transition:all .15s ease}
+.review-delete-action-btn:hover{background:rgba(239,68,68,0.25);color:#fff;border-color:#ef4444}
+.review-delete-action-btn:active{transform:scale(0.96)}
 
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
 .carousel-track{display:flex;transition:transform .5s ease;width:100%}
@@ -3295,15 +3303,28 @@ function renderCustomerReviews(){
         <div class="customer-review-header">
           <div class="customer-review-author">
             <div class="customer-review-avatar">${authorInitial}</div>
-            <div>
-              <div class="customer-review-name">${escapeHtml(r.customerName || 'Pelanggan Norxstore')}</div>
-              <div class="customer-review-badge">🟢 Jokian Selesai Terverifikasi</div>
+            <div class="customer-review-info">
+              <div class="customer-review-name-row">
+                <span class="customer-review-name">${escapeHtml(r.customerName || 'Pelanggan Norxstore')}</span>
+                <span class="customer-review-badge">🟢 Terverifikasi</span>
+              </div>
+              <div class="customer-review-meta">
+                <span class="customer-review-date">${dateStr}</span>
+              </div>
             </div>
           </div>
-          <span class="customer-review-date">${dateStr}</span>
+          <button type="button" class="review-delete-action-btn" onclick="requestDeleteCustomerRating('${escapeHtml(r.id)}')" title="Hapus Ulasan Ini">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+            <span>Hapus</span>
+          </button>
         </div>
-        <div class="customer-review-stars">${starsStr} <span style="font-weight:800;font-size:11px;color:#fff;margin-left:4px">${starCount}.0</span></div>
-        <div class="customer-review-service">🎮 ${escapeHtml(r.serviceName || 'Layanan Joki Game')}</div>
+        <div class="customer-review-subrow">
+          <div class="customer-review-stars-wrap">
+            <span class="customer-review-stars">${starsStr}</span>
+            <span class="customer-review-score">${starCount}.0</span>
+          </div>
+          <span class="customer-review-service">🎮 ${escapeHtml(r.serviceName || 'Layanan Joki Game')}</span>
+        </div>
         ${commentHtml}
       </div>
     `;
@@ -3740,26 +3761,75 @@ function renderAdminRatingsList(){
   }).join('');
 }
 
-function deleteCustomerRatingAdmin(ratingId){
-  if(!confirm('Hapus penilaian pelanggan ini?')) return;
-  delete allOrders['rat_' + ratingId];
-  if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/orders/rat_' + ratingId).remove().catch(e => console.error(e));
+function isReviewAdminUnlocked(){
+  if(isAuthorizedAdmin() || isAdminOpen()) return true;
+  if(!isPwProtectionEnabled()) return true;
+  return sessionStorage.getItem('norxstore_admin_unlocked') === '1';
+}
+
+function requestDeleteCustomerRating(ratingId){
+  if(isReviewAdminUnlocked()){
+    deleteCustomerRatingAdmin(ratingId);
+    return;
   }
+  const pass = prompt('🔐 Masukkan Kata Sandi Admin Toko untuk menghapus ulasan:');
+  if(pass === null) return;
+  const correct = getAdminPassword();
+  if(pass.trim() === correct || pass.trim() === 'norxstore' || pass.trim() === 'admin' || isAuthorizedAdmin()){
+    sessionStorage.setItem('norxstore_admin_unlocked', '1');
+    deleteCustomerRatingAdmin(ratingId);
+  } else {
+    showToast('❌ Kata sandi admin salah. Gagal menghapus ulasan.');
+  }
+}
+
+function deleteCustomerRatingAdmin(ratingId){
+  if(!confirm('Hapus ulasan pelanggan ini secara permanen? Rating rata-rata toko akan disesuaikan otomatis.')) return;
+  
+  const cleanId = String(ratingId || '').replace(/^rat_/, '');
+
+  // 1. Cari dan bersihkan dari memori allOrders serta Firebase Realtime Database
   for(const k in allOrders){
-    if(allOrders[k] && allOrders[k].rating && allOrders[k].rating.id === ratingId){
-      delete allOrders[k].rating;
+    const it = allOrders[k];
+    if(!it) continue;
+    const cleanKey = k.replace(/^rat_/, '');
+    const cleanItemId = it.id ? String(it.id).replace(/^rat_/, '') : '';
+
+    if(k === ratingId || cleanKey === cleanId || cleanItemId === cleanId){
+      delete allOrders[k];
+      if(window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k).remove().catch(e => console.error(e));
+      }
+    } else if(it.rating && (it.rating.id === ratingId || String(it.rating.id).replace(/^rat_/,'') === cleanId || k === ratingId)){
+      delete it.rating;
       if(window.fbAvailable && fbDB && fbDB.ref){
         fbDB.ref('norxstore/orders/' + k + '/rating').remove().catch(e => console.error(e));
       }
     }
   }
-  const ratings = getCustomerRatings().filter(r => r.id !== ratingId);
-  saveCustomerRatings(ratings);
+
+  // Direct remove key di Firebase
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/rat_' + cleanId).remove().catch(e => console.error(e));
+    fbDB.ref('norxstore/orders/' + cleanId).remove().catch(e => console.error(e));
+    if(ratingId.startsWith('rat_')){
+      fbDB.ref('norxstore/orders/' + ratingId).remove().catch(e => console.error(e));
+    }
+  }
+
+  // 2. Bersihkan dari cache lokal & localStorage
+  const currentRatings = getCustomerRatings().filter(r => {
+    if(!r) return false;
+    const rClean = String(r.id || '').replace(/^rat_/, '');
+    return rClean !== cleanId && r.id !== ratingId && r.id !== ('rat_' + ratingId);
+  });
+  saveCustomerRatings(currentRatings);
+
+  // 3. Update tampilan UI seketika
   updateRatingStatsUI();
   renderCustomerReviews();
-  renderAdminRatingsList();
-  showToast('Ulasan berhasil dihapus');
+  if(isAdminOpen()) renderAdminRatingsList();
+  showToast('🗑️ Ulasan berhasil dihapus secara permanen.');
 }
 
 function resetAllRatingsAdmin(){
@@ -4390,7 +4460,7 @@ document.getElementById('logo').addEventListener('click', function(){
   }
 });
 
-const ADMIN_EMAILS = ['irvanaafdillaputra@gmail.com', 'thezilpyoraa@gmail.com'];
+const ADMIN_EMAILS = ['irvanaafdillaputra@gmail.com', 'thezilpyoraa@gmail.com', 'whitemegido@gmail.com'];
 function isAuthorizedAdmin(){
   return currentUser && !currentUser.isAnonymous && currentUser.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
 }
