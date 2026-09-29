@@ -3291,12 +3291,21 @@ function renderCustomerReviews(){
     return;
   }
   
+  const showAdminDelete = isReviewAdminUnlocked();
+  
   container.innerHTML = ratings.map(r => {
     const starCount = Math.max(1, Math.min(5, Number(r.stars) || 5));
     const starsStr = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
     const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('id-ID', {day:'numeric',month:'short',year:'numeric'}) : 'Baru saja';
     const authorInitial = (r.customerName || 'P').charAt(0).toUpperCase();
     const commentHtml = r.comment ? `<p class="customer-review-comment">"${escapeHtml(r.comment)}"</p>` : `<p class="customer-review-comment" style="font-style:italic;color:#94a3b8">Pelanggan memberikan rating ⭐ ${starCount} bintang untuk layanan ini.</p>`;
+    
+    const deleteBtnHtml = showAdminDelete ? `
+      <button type="button" class="review-delete-action-btn" onclick="requestDeleteCustomerRating('${escapeHtml(r.id)}')" title="Hapus Ulasan (Khusus Admin)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+        <span>Hapus</span>
+      </button>
+    ` : '';
     
     return `
       <div class="customer-review-card">
@@ -3313,10 +3322,7 @@ function renderCustomerReviews(){
               </div>
             </div>
           </div>
-          <button type="button" class="review-delete-action-btn" onclick="requestDeleteCustomerRating('${escapeHtml(r.id)}')" title="Hapus Ulasan Ini">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-            <span>Hapus</span>
-          </button>
+          ${deleteBtnHtml}
         </div>
         <div class="customer-review-subrow">
           <div class="customer-review-stars-wrap">
@@ -3762,9 +3768,7 @@ function renderAdminRatingsList(){
 }
 
 function isReviewAdminUnlocked(){
-  if(isAuthorizedAdmin() || isAdminOpen()) return true;
-  if(!isPwProtectionEnabled()) return true;
-  return sessionStorage.getItem('norxstore_admin_unlocked') === '1';
+  return !!(isAuthorizedAdmin() || isAdminOpen() || sessionStorage.getItem('norxstore_admin_unlocked') === '1');
 }
 
 function requestDeleteCustomerRating(ratingId){
@@ -4530,6 +4534,8 @@ document.getElementById('pwInput').addEventListener('keydown', function(e){
 });
 
 function openAdmin(){
+  sessionStorage.setItem('norxstore_admin_unlocked', '1');
+  renderCustomerReviews();
   renderDiscountAdminUI();
   document.getElementById('adminStatus').classList.remove('show');
   document.getElementById('passStatus').classList.remove('show');
@@ -4560,6 +4566,7 @@ function openAdmin(){
 function closeAdmin(e){
   if(!e || e.target === document.getElementById('adminOverlay')){
     document.getElementById('adminOverlay').classList.remove('open');
+    renderCustomerReviews();
   }
 }
 function isPwProtectionEnabled(){
