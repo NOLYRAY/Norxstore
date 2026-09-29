@@ -3108,17 +3108,44 @@ function escapeHtml(str){
     .replace(/'/g, '&#039;');
 }
 
+function extractCustomerRatingsFromOrders(){
+  if(!allOrders || typeof allOrders !== 'object') return [];
+  const list = [];
+  for(const key in allOrders){
+    const item = allOrders[key];
+    if(!item) continue;
+    if(item.type === 'rating' || item.isRating === true || (item.id && String(item.id).startsWith('RAT-')) || key.startsWith('rat_')){
+      list.push(item);
+    } else if(item.rating && typeof item.rating === 'object' && item.rating.stars){
+      list.push(item.rating);
+    }
+  }
+  return list;
+}
+
 let customerRatingsCache = null;
 function getCustomerRatings(){
-  if(Array.isArray(customerRatingsCache)) return customerRatingsCache;
+  const cloudRatings = extractCustomerRatingsFromOrders();
+  let localRatings = [];
   try {
     const data = JSON.parse(safeGetItem('norxstore_customer_ratings', '[]'));
-    customerRatingsCache = Array.isArray(data) ? data : [];
-    return customerRatingsCache;
+    localRatings = Array.isArray(data) ? data : [];
   } catch(e){
-    customerRatingsCache = [];
-    return [];
+    localRatings = [];
   }
+  
+  const map = new Map();
+  for(const r of cloudRatings){
+    if(r && r.id) map.set(r.id, r);
+  }
+  for(const r of localRatings){
+    if(r && r.id && !map.has(r.id)) map.set(r.id, r);
+  }
+  
+  const merged = Array.from(map.values());
+  merged.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
+  customerRatingsCache = merged;
+  return merged;
 }
 function saveCustomerRatings(list){
   customerRatingsCache = Array.isArray(list) ? list : [];
@@ -3171,7 +3198,7 @@ function calculateRatingStats(){
 
 function getCompletedOrdersCount(){
   if(!allOrders || typeof allOrders !== 'object') return 0;
-  return Object.values(allOrders).filter(o => o && o.status === 'done').length;
+  return Object.values(allOrders).filter(o => o && o.status === 'done' && !o.isRating && o.type !== 'rating').length;
 }
 
 function updateRatingStatsUI(){
@@ -3605,6 +3632,8 @@ function submitCustomerRating(ratingData){
   const id = 'RAT-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
   const newRating = {
     id: id,
+    type: 'rating',
+    isRating: true,
     orderId: ratingData.orderId || null,
     customerName: (ratingData.customerName || '').trim() || 'Pelanggan Norxstore',
     stars: Math.max(1, Math.min(5, parseInt(ratingData.stars, 10) || 5)),
@@ -3613,16 +3642,28 @@ function submitCustomerRating(ratingData){
     createdAt: Date.now()
   };
 
-  const ratings = getCustomerRatings();
+  // Simpan seketika di memori lokal allOrders
+  allOrders['rat_' + id] = newRating;
+
+  // Simpan ke cache lokal
+  const ratings = getCustomerRatings().filter(r => r.id !== id);
   ratings.unshift(newRating);
   saveCustomerRatings(ratings);
 
   if(ratingData.orderId){
     markOrderAsRated(ratingData.orderId);
+    if(allOrders[ratingData.orderId]){
+      allOrders[ratingData.orderId].rating = newRating;
+      if(window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + ratingData.orderId + '/rating').set(newRating).catch(e=>console.error(e));
+      }
+    }
   }
 
-  // Simpan ke Firebase Realtime Database
-  fbDB.ref('norxstore/customerRatings/' + id).set(newRating).catch(e => console.error(e));
+  // Simpan ke Firebase Realtime Database di bawah norxstore/orders/rat_... yang diizinkan oleh Rules
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/rat_' + id).set(newRating).catch(e => console.error('Rating save error:', e));
+  }
 
   updateRatingStatsUI();
   renderCustomerReviews();
@@ -3701,9 +3742,20 @@ function renderAdminRatingsList(){
 
 function deleteCustomerRatingAdmin(ratingId){
   if(!confirm('Hapus penilaian pelanggan ini?')) return;
+  delete allOrders['rat_' + ratingId];
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/rat_' + ratingId).remove().catch(e => console.error(e));
+  }
+  for(const k in allOrders){
+    if(allOrders[k] && allOrders[k].rating && allOrders[k].rating.id === ratingId){
+      delete allOrders[k].rating;
+      if(window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k + '/rating').remove().catch(e => console.error(e));
+      }
+    }
+  }
   const ratings = getCustomerRatings().filter(r => r.id !== ratingId);
   saveCustomerRatings(ratings);
-  fbDB.ref('norxstore/customerRatings/' + ratingId).remove().catch(e => console.error(e));
   updateRatingStatsUI();
   renderCustomerReviews();
   renderAdminRatingsList();
@@ -3712,32 +3764,27 @@ function deleteCustomerRatingAdmin(ratingId){
 
 function resetAllRatingsAdmin(){
   if(!confirm('Yakin ingin mereset SEMUA rating ke 0? Semua ulasan pelanggan akan dihapus.')) return;
+  for(const k in allOrders){
+    const it = allOrders[k];
+    if(it && (it.type === 'rating' || it.isRating === true || k.startsWith('rat_') || (it.id && String(it.id).startsWith('RAT-')))){
+      delete allOrders[k];
+      if(window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k).remove().catch(e=>console.error(e));
+      }
+    } else if(it && it.rating){
+      delete it.rating;
+      if(window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k + '/rating').remove().catch(e=>console.error(e));
+      }
+    }
+  }
+  customerRatingsCache = [];
   saveCustomerRatings([]);
-  fbDB.ref('norxstore/customerRatings').remove().catch(e => console.error(e));
   updateRatingStatsUI();
   renderCustomerReviews();
   renderAdminRatingsList();
   showToast('⭐ Semua rating berhasil direset ke 0');
 }
-
-// Hook Firebase Customer Ratings Realtime
-fbDB.ref('norxstore/customerRatings').on('value', snap => {
-  const val = snap.val();
-  if(!val){
-    customerRatingsCache = [];
-    saveCustomerRatings([]);
-  } else if(Array.isArray(val)){
-    customerRatingsCache = val;
-    saveCustomerRatings(val);
-  } else if(typeof val === 'object'){
-    customerRatingsCache = Object.values(val);
-    customerRatingsCache.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
-    saveCustomerRatings(customerRatingsCache);
-  }
-  updateRatingStatsUI();
-  renderCustomerReviews();
-  if(isAdminOpen()) renderAdminRatingsList();
-});
 
 window.addEventListener('DOMContentLoaded', () => {
   registerServiceWorker();
@@ -3754,6 +3801,9 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
     renderAdminProductList();
   }
   updateOrderNotifDot();
+  updateRatingStatsUI();
+  renderCustomerReviews();
+  if(isAdminOpen()) renderAdminRatingsList();
 });
 
 // ==================== LOGIN GOOGLE & SINKRONISASI LINTAS DEVICE ====================
@@ -3914,7 +3964,7 @@ function syncOrderIdsToCloud(){
 function renderAdminOrders(){
   const list = document.getElementById('adminOrdersList');
   if(!list) return;
-  const orders = Object.values(allOrders).sort((a,b) => b.createdAt - a.createdAt);
+  const orders = Object.values(allOrders).filter(o => o && Array.isArray(o.items) && !o.isRating && o.type !== 'rating').sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
   if(orders.length === 0){
     list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada pesanan masuk.</p>';
     return;
