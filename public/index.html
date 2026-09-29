@@ -357,6 +357,11 @@ body.dark-mode .live-pill-mode{
 .cart-panel.open{transform:translateX(0)}
 .cart-header{padding:16px;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;background:#fff;flex-shrink:0}
 .cart-header h3{margin:0;font-size:16px;font-weight:700}
+.cart-tabs-nav{display:flex;border-bottom:1px solid #e5e5e5;background:#f8f9fa;padding:6px 12px;gap:6px;flex-shrink:0}
+.cart-tab-btn{flex:1;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:transparent;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s ease}
+.cart-tab-btn.active{background:#fff;color:#7c3aed;border-color:#e2e8f0;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+.cart-tab-badge{display:inline-flex;align-items:center;justify-content:center;padding:1px 6px;border-radius:10px;font-size:10px;font-weight:800;background:rgba(124,58,237,0.12);color:#7c3aed}
+.cart-tab-btn.active .cart-tab-badge{background:#7c3aed;color:#fff}
 .cart-close{width:32px;height:32px;border-radius:8px;border:1px solid #e5e5e5;background:#f5f5f5;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
 .cart-body{flex:1;overflow-y:auto;padding:16px;position:relative;z-index:1}
 .cart-empty{text-align:center;padding:40px 20px;color:#aaa}
@@ -1057,18 +1062,32 @@ button{cursor:pointer;font-family:inherit}
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-panel" id="cartPanel">
 <div class="cart-header">
-<h3>🛒 Keranjang Belanja</h3>
+<h3 id="cartPanelTitle">🛒 Keranjang Belanja</h3>
 <button class="cart-close" onclick="closeCart()">×</button>
 </div>
+<div class="cart-tabs-nav">
+  <button type="button" class="cart-tab-btn active" id="cartTabBtnCart" onclick="switchCartPanelTab('cart')">
+    <span>🛒 Keranjang</span>
+    <span class="cart-tab-badge" id="cartTabBadge" style="display:none">0</span>
+  </button>
+  <button type="button" class="cart-tab-btn" id="cartTabBtnOrders" onclick="switchCartPanelTab('orders')">
+    <span>📦 Pesanan Saya</span>
+    <span class="cart-tab-badge" id="ordersTabBadge" style="display:none">0</span>
+  </button>
+</div>
 <div class="cart-body" id="cartBody">
-<div id="myOrdersSection"></div>
-<div id="cartItemsList">
-<div class="cart-empty" id="cartEmptyMsg">
-<span class="cart-empty-icon">🛒</span>
-<p>Keranjang masih kosong</p>
-<p style="font-size:12px;margin-top:4px">Yuk tambah layanan favoritmu!</p>
-</div>
-</div>
+  <div id="cartViewCartTab">
+    <div id="cartItemsList">
+      <div class="cart-empty" id="cartEmptyMsg">
+        <span class="cart-empty-icon">🛒</span>
+        <p>Keranjang masih kosong</p>
+        <p style="font-size:12px;margin-top:4px">Yuk tambah layanan favoritmu!</p>
+      </div>
+    </div>
+  </div>
+  <div id="cartViewOrdersTab" style="display:none">
+    <div id="myOrdersSection"></div>
+  </div>
 </div>
 <div class="cart-footer" id="cartFooter" style="display:none">
 <div class="cart-subtotal-row" id="cartSubtotalRow" style="display:none">
@@ -2520,20 +2539,41 @@ function markOrderAsDeleted(id){
   }
 }
 
+function getMyOrderStorageKey(){
+  if(currentUser && !currentUser.isAnonymous){
+    return 'norxstore_orders_user_' + currentUser.uid;
+  }
+  return 'norxstore_orders_guest';
+}
+
 function getActiveOrderForProduct(productId){
-  // Kunci produk untuk akun pembeli ini jika memiliki pesanan aktif yang belum selesai ('pending' atau 'processing').
-  // Pengunjung/pelanggan lain yang tidak memesan produk ini TIDAK akan terblokir dan tetap bisa memesan.
+  // 0. JIKA AKUN YANG MELIHAT ADALAH ADMIN: JANGAN PERNAH KUNCI PRODUK!
+  // Admin adalah pemilik toko, bebas melihat dan mencoba layanan tanpa status 'sedang diproses'
+  if(isAuthorizedAdmin()) return null;
+
   const prod = products.find(p => p.id === productId);
   if(!prod || !allOrders || typeof allOrders !== 'object') return null;
 
   const deletedIds = getDeletedOrderIds();
 
-  // 1. Cek pesanan aktif yang tersimpan di perangkat ini (localStorage / sessionStorage)
+  // 1. Cek pesanan aktif yang terikat dengan sesi pengguna saat ini
   const myIds = getMyOrderIds().filter(id => !deletedIds.includes(id));
   for(const ordId of myIds){
     const ord = allOrders[ordId];
     if(!ord) continue;
     if(deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
+
+    // Filter ketat kepemilikan akun:
+    if(currentUser && !currentUser.isAnonymous){
+      // Pengguna login: jangan kunci produk jika pesanan ini dibuat sebagai pesanan tamu sesi lain
+      const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
+                     (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
+      if(!isMine) continue;
+    } else {
+      // Pengguna tamu: jangan kunci produk jika pesanan ini milik user terdaftar
+      if(ord.customerEmail || (ord.customerUid && !ord.customerUid.startsWith('guest'))) continue;
+    }
+
     if(ord.status === 'pending' || ord.status === 'processing'){
       if(Array.isArray(ord.items)){
         const hasItem = ord.items.some(it => {
@@ -2550,10 +2590,10 @@ function getActiveOrderForProduct(productId){
     }
   }
 
-  // 2. Jika user sedang login dengan Google, cek juga pesanan aktif milik akun ini di Firebase
+  // 2. Jika user sedang login dengan Google (bukan admin), cek pesanan aktif yang terdaftar di akun Google ini
   if(currentUser && !currentUser.isAnonymous){
     for(const ordId in allOrders){
-      if(deletedIds.includes(ordId)) continue; // Abaikan jika pesanan sudah dihapus pelanggan
+      if(deletedIds.includes(ordId)) continue;
       const ord = allOrders[ordId];
       if(!ord) continue;
       if(deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
@@ -2609,21 +2649,64 @@ function isProductInUnfinishedOrder(productId){
 }
 
 function getMyOrderIds(){
+  // Jika Admin: admin tidak menampung pesanan pembeli / tamu di tab "Pesanan Saya"
+  if(isAuthorizedAdmin()){
+    const key = 'norxstore_orders_user_' + currentUser.uid;
+    try {
+      const arr = JSON.parse(safeGetItem(key, '[]'));
+      const deleted = getDeletedOrderIds();
+      return (Array.isArray(arr) ? arr : []).filter(id => {
+        if(deleted.includes(id)) return false;
+        const ord = allOrders[id];
+        return ord && ord.customerUid === currentUser.uid && !ord.isGuestOrder;
+      });
+    } catch(e){
+      return [];
+    }
+  }
+
+  const key = getMyOrderStorageKey();
   try {
-    const arr = JSON.parse(safeGetItem('norxstore_my_orders', '[]'));
+    let arr = JSON.parse(safeGetItem(key, '[]'));
+    // Fallback lama ke legacy storage jika ada
+    if((!Array.isArray(arr) || arr.length === 0) && (!currentUser || currentUser.isAnonymous)){
+      try {
+        const legacy = JSON.parse(safeGetItem('norxstore_my_orders', '[]'));
+        if(Array.isArray(legacy) && legacy.length > 0) arr = legacy;
+      } catch(e){}
+    }
     if(!Array.isArray(arr)) return [];
     const deleted = getDeletedOrderIds();
-    return arr.filter(id => !deleted.includes(id));
+
+    if(currentUser && !currentUser.isAnonymous){
+      return arr.filter(id => {
+        if(deleted.includes(id)) return false;
+        const ord = allOrders[id];
+        if(!ord) return true;
+        return (ord.customerUid === currentUser.uid) || (ord.customerEmail && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
+      });
+    }
+
+    return arr.filter(id => {
+      if(deleted.includes(id)) return false;
+      const ord = allOrders[id];
+      if(!ord) return true;
+      if(ord.customerEmail && !ord.isGuestOrder) return false;
+      return true;
+    });
   } catch(e){
     return [];
   }
 }
+
 function addMyOrderId(id){
+  const key = getMyOrderStorageKey();
   const arr = getMyOrderIds();
-  arr.unshift(id);
-  safeSetItem('norxstore_my_orders', JSON.stringify(arr.slice(0, 30)));
+  if(!arr.includes(id)) arr.unshift(id);
+  safeSetItem(key, JSON.stringify(arr.slice(0, 30)));
   syncOrderIdsToCloud();
 }
+
 function createOrder(items, total, paymentMethod, adminName){
   const orderId = 'ord_' + Date.now() + '_' + Math.random().toString(36).slice(2,8);
   const isLoggedIn = currentUser && !currentUser.isAnonymous;
@@ -2636,9 +2719,10 @@ function createOrder(items, total, paymentMethod, adminName){
     status: 'pending',
     estimate: null,
     createdAt: Date.now(),
-    customerUid: currentUser ? currentUser.uid : null,
+    customerUid: isLoggedIn ? currentUser.uid : ('guest_' + (currentUser ? currentUser.uid : 'anon')),
     customerName: isLoggedIn ? (currentUser.displayName || null) : null,
-    customerEmail: isLoggedIn ? (currentUser.email || null) : null
+    customerEmail: isLoggedIn ? (currentUser.email || null) : null,
+    isGuestOrder: !isLoggedIn
   };
   allOrders[orderId] = order;
   fbDB.ref('norxstore/orders/' + orderId).set(order).catch(e=>console.error(e));
@@ -2714,12 +2798,79 @@ function cancelMyOrder(orderId, event){
   showToast('Pesanan berhasil dibatalkan. Layanan kembali bisa dipesan.');
 }
 
+let currentCartPanelTab = 'cart';
+
+function updateCartPanelTabsBadges(){
+  const cartBadge = document.getElementById('cartTabBadge');
+  const ordersBadge = document.getElementById('ordersTabBadge');
+  const myIds = getMyOrderIds();
+  const myOrders = myIds.map(id => allOrders[id]).filter(Boolean);
+
+  if(cartBadge){
+    cartBadge.textContent = cart.length;
+    cartBadge.style.display = cart.length > 0 ? 'inline-flex' : 'none';
+  }
+  if(ordersBadge){
+    ordersBadge.textContent = myOrders.length;
+    ordersBadge.style.display = myOrders.length > 0 ? 'inline-flex' : 'none';
+  }
+}
+
+function switchCartPanelTab(tab){
+  currentCartPanelTab = tab;
+  const btnCart = document.getElementById('cartTabBtnCart');
+  const btnOrders = document.getElementById('cartTabBtnOrders');
+  const viewCart = document.getElementById('cartViewCartTab');
+  const viewOrders = document.getElementById('cartViewOrdersTab');
+  const title = document.getElementById('cartPanelTitle');
+  const footer = document.getElementById('cartFooter');
+
+  updateCartPanelTabsBadges();
+
+  if(tab === 'orders'){
+    if(btnCart) btnCart.classList.remove('active');
+    if(btnOrders) btnOrders.classList.add('active');
+    if(viewCart) viewCart.style.display = 'none';
+    if(viewOrders) viewOrders.style.display = 'block';
+    if(title) title.innerHTML = '📦 Pesanan Saya';
+    if(footer) footer.style.display = 'none';
+    renderMyOrders();
+  } else {
+    if(btnCart) btnCart.classList.add('active');
+    if(btnOrders) btnOrders.classList.remove('active');
+    if(viewCart) viewCart.style.display = 'block';
+    if(viewOrders) viewOrders.style.display = 'none';
+    if(title) title.innerHTML = '🛒 Keranjang Belanja';
+    renderCart();
+  }
+}
+
+function dismissPhoneNotifBanner(e){
+  if(e) e.stopPropagation();
+  sessionStorage.setItem('norx_dismiss_phone_notif', '1');
+  renderMyOrders();
+}
+
 function renderMyOrders(){
+  updateCartPanelTabsBadges();
   const section = document.getElementById('myOrdersSection');
   if(!section) return;
   const myIds = getMyOrderIds();
   const myOrders = myIds.map(id => allOrders[id]).filter(Boolean);
-  if(myOrders.length === 0){ section.innerHTML = ''; return; }
+  
+  if(myOrders.length === 0){
+    section.innerHTML = `
+      <div class="cart-empty" style="padding:40px 16px">
+        <span class="cart-empty-icon">📦</span>
+        <p style="font-weight:700;color:#1e1b4b;font-size:14px">Belum Ada Pesanan</p>
+        <p style="font-size:12px;margin-top:4px;color:#64748b">Layanan yang Anda pesan akan muncul di sini beserta status pengerjaannya secara real-time.</p>
+        <button type="button" class="give-rating-hero-btn" style="margin-top:14px;font-size:11.5px;padding:8px 16px" onclick="switchCartPanelTab('cart')">
+          🛒 Lihat Keranjang Belanja
+        </button>
+      </div>
+    `;
+    return;
+  }
 
   const isGranted = ("Notification" in window) && Notification.permission === "granted";
   const btnLabel = isGranted ? '✅ Notif HP Aktif' : '🔔 Aktifkan Notif HP';
@@ -2728,51 +2879,56 @@ function renderMyOrders(){
     ? 'Ponsel Anda akan otomatis bergetar & berdering saat pesanan selesai meski web ditutup.'
     : 'Tekan untuk mengaktifkan suara & getar di HP saat pesanan selesai meski web ditutup.';
 
-  const bannerHtml = `
-    <div class="phone-notif-banner">
-      <div style="display:flex;align-items:center;gap:10px">
-        <span style="font-size:22px">📲</span>
-        <div>
+  const isDismissed = sessionStorage.getItem('norx_dismiss_phone_notif') === '1';
+  const bannerHtml = isDismissed ? '' : `
+    <div class="phone-notif-banner" id="phoneNotifBanner" style="position:relative">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
+        <span style="font-size:22px;flex-shrink:0">📲</span>
+        <div style="flex:1;min-width:0">
           <div style="font-size:12px;font-weight:700;color:#1e1b4b">Notifikasi HP (Suara & Getar)</div>
           <div style="font-size:10px;color:#6b7280;line-height:1.35;margin-top:2px">${descText}</div>
         </div>
       </div>
-      <button type="button" class="${btnClass}" onclick="enablePhonePushNotifications()">${btnLabel}</button>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <button type="button" class="${btnClass}" onclick="enablePhonePushNotifications()">${btnLabel}</button>
+        <button type="button" onclick="dismissPhoneNotifBanner(event)" title="Tutup Banner" style="background:none;border:none;color:#94a3b8;font-size:15px;cursor:pointer;padding:2px 4px;line-height:1">✕</button>
+      </div>
     </div>
   `;
 
-  section.innerHTML = '<div class="my-orders-title">📦 Pesanan Saya</div>' + bannerHtml + myOrders.map(o => {
+  section.innerHTML = bannerHtml + myOrders.map(o => {
     const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
     let statusBadge = '';
     let cancelAction = '';
     if(o.status === 'pending'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
-      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Batalkan Pesanan">✕ Batalkan</button>`;
+      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="Batalkan Pesanan">✕ Batalkan</button>`;
     }
     else if(o.status === 'processing'){
       statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
-      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Batalkan Pesanan">✕ Batalkan</button>`;
+      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="Batalkan Pesanan">✕ Batalkan</button>`;
     }
     else if(o.status === 'cancelled'){
       statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
-      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Hapus dari daftar Pesanan Saya">🗑️ Hapus</button>`;
+      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="Hapus dari daftar Pesanan Saya">🗑️ Hapus Riwayat</button>`;
     }
     else {
       statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">🟢 Selesai</span>';
       if(isOrderRated(o.id)){
-        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;margin-left:6px;display:inline-flex;align-items:center;gap:3px">⭐ Sudah Diberi Rating</span><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
+        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;display:inline-flex;align-items:center;gap:3px">⭐ Sudah Dinilai</span><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
       } else {
-        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:3px 8px;font-size:10px;font-weight:700;margin-left:6px;border-radius:4px;box-shadow:0 2px 6px rgba(217,119,6,0.3)" title="Beri rating untuk jokian ini">⭐ Beri Bintang</button><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:3px 8px;font-size:10px;margin-left:6px;border-radius:4px" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
+        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;box-shadow:0 2px 6px rgba(217,119,6,0.3);cursor:pointer" title="Beri rating untuk jokian ini">⭐ Beri Bintang</button><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
       }
     }
     return `
-    <div class="my-order-card" style="position:relative">
-      <button onclick="removeMyOrder('${o.id}', event)" title="Hapus riwayat pesanan" style="position:absolute;top:8px;right:8px;background:none;border:none;color:#9ca3af;cursor:pointer;font-size:16px;padding:6px;line-height:1" aria-label="Hapus Pesanan">✕</button>
-      <p class="my-order-items" style="padding-right:24px">${itemsText}</p>
-      <p class="my-order-total">${formatPrice(o.total)}</p>
-      <div style="display:flex;align-items:center;margin-top:4px;flex-wrap:wrap;gap:4px">
-        ${statusBadge}
-        ${cancelAction}
+    <div class="my-order-card">
+      <div style="margin-bottom:6px">
+        <p class="my-order-items" style="font-weight:700;font-size:13.5px;color:#1e1b4b;margin:0 0 2px">${itemsText}</p>
+        <p class="my-order-total" style="font-size:14px;font-weight:800;color:#7c3aed;margin:0">${formatPrice(o.total)}</p>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding-top:6px;border-top:1px dashed #e9d5ff">
+        <div>${statusBadge}</div>
+        <div>${cancelAction}</div>
       </div>
     </div>`;
   }).join('');
@@ -2865,7 +3021,7 @@ async function enablePhonePushNotifications(silent = false){
   try {
     const permission = await Notification.requestPermission();
     if(permission !== 'granted'){
-      if(!silent) showToast('Izin notifikasi belum diizinkan di HP Anda.');
+      if(!silent) showToast('Izin notifikasi belum diizinkan. Untuk browser Brave/Chrome, aktifkan izin Notifikasi di setelan situs.');
       renderMyOrders();
       return false;
     }
@@ -3096,7 +3252,7 @@ function closeOrderNotif(event){
 
 function onOrderNotifOpenCart(){
   closeOrderNotif();
-  openCart();
+  openCart('orders');
 }
 
 function onOrderNotifOpenReview(){
@@ -3902,6 +4058,8 @@ if(window.fbAvailable && fbAuth.onAuthStateChanged){
       userDataLoaded = true;
       loadUserDataFromCloud(user.uid);
     }
+    renderMyOrders();
+    renderProducts();
   });
   fbAuth.getRedirectResult().then(result=>{
     if(result && result.user){
@@ -4010,13 +4168,37 @@ function loadUserDataFromCloud(uid){
       }
     }
   }).catch(e=>console.error(e));
+
   fbDB.ref('norxstore/users/' + uid + '/myOrderIds').once('value').then(snap=>{
     const cloudIds = snap.val();
     const deleted = getDeletedOrderIds();
-    const cleanCloudIds = (Array.isArray(cloudIds) ? cloudIds : []).filter(id => !deleted.includes(id));
-    const localIds = getMyOrderIds().filter(id => !deleted.includes(id));
+    let cleanCloudIds = (Array.isArray(cloudIds) ? cloudIds : []).filter(id => !deleted.includes(id));
+
+    // JIKA USER ADALAH ADMIN: JANGAN PERNAH MERGE PESANAN TAMU LOKAL!
+    // Bersihkan juga jika sebelumnya ada pesanan tamu yang tidak sengaja termerge ke akun admin
+    if(isAuthorizedAdmin()){
+      cleanCloudIds = cleanCloudIds.filter(id => {
+        const ord = allOrders[id];
+        return ord && ord.customerUid === uid && !ord.isGuestOrder;
+      });
+      safeSetItem('norxstore_orders_user_' + uid, JSON.stringify(cleanCloudIds));
+      safeSetItem('norxstore_my_orders', '[]');
+      fbDB.ref('norxstore/users/' + uid + '/myOrderIds').set(cleanCloudIds).catch(e=>console.error(e));
+      renderMyOrders();
+      renderProducts();
+      return;
+    }
+
+    const key = 'norxstore_orders_user_' + uid;
+    let localIds = [];
+    try {
+      localIds = JSON.parse(safeGetItem(key, '[]'));
+      if(!Array.isArray(localIds)) localIds = [];
+    } catch(e){}
+    localIds = localIds.filter(id => !deleted.includes(id));
+
     const merged = Array.from(new Set([...cleanCloudIds, ...localIds])).slice(0, 30);
-    safeSetItem('norxstore_my_orders', JSON.stringify(merged));
+    safeSetItem(key, JSON.stringify(merged));
     fbDB.ref('norxstore/users/' + uid + '/myOrderIds').set(merged).catch(e=>console.error(e));
     renderMyOrders();
     renderProducts();
@@ -4028,7 +4210,7 @@ function syncCartToCloud(){
   }
 }
 function syncOrderIdsToCloud(){
-  if(currentUser && !currentUser.isAnonymous){
+  if(currentUser && !currentUser.isAnonymous && !isAuthorizedAdmin()){
     const deleted = getDeletedOrderIds();
     const ids = getMyOrderIds().filter(id => !deleted.includes(id));
     fbDB.ref('norxstore/users/' + currentUser.uid + '/myOrderIds').set(ids).catch(e=>console.error(e));
@@ -4255,10 +4437,13 @@ function renderCart(){
   const footer = document.getElementById('cartFooter');
   if(cart.length===0){
     body.innerHTML = `
-      <div class="cart-empty">
+      <div class="cart-empty" style="padding:40px 16px">
         <span class="cart-empty-icon">🛒</span>
-        <p>Keranjang masih kosong</p>
-        <p style="font-size:12px;margin-top:4px">Yuk tambah layanan favoritmu!</p>
+        <p style="font-weight:700;color:#1e1b4b;font-size:14px">Keranjang Masih Kosong</p>
+        <p style="font-size:12px;margin-top:4px;color:#64748b">Yuk pilih dan tambahkan layanan favoritmu dari katalog!</p>
+        <button type="button" class="give-rating-hero-btn" style="margin-top:14px;font-size:11.5px;padding:8px 16px" onclick="closeCart()">
+          🎮 Jelajahi Katalog Joki
+        </button>
       </div>`;
     footer.style.display = 'none';
     return;
@@ -4341,15 +4526,31 @@ function renderCart(){
     }
   }
 
-  footer.style.display = 'block';
+  if(currentCartPanelTab === 'cart' && cart.length > 0){
+    footer.style.display = 'block';
+  } else {
+    footer.style.display = 'none';
+  }
 }
 
-function openCart(){
+function openCart(preferredTab){
   markFinishedOrdersAsSeenInCart();
   updateOrderNotifDot();
   renderCart();
   renderMyOrders();
   closeCartCheckoutStep();
+
+  const myIds = getMyOrderIds();
+  const myOrders = myIds.map(id => allOrders[id]).filter(Boolean);
+
+  if(preferredTab){
+    switchCartPanelTab(preferredTab);
+  } else if(cart.length === 0 && myOrders.length > 0){
+    switchCartPanelTab('orders');
+  } else {
+    switchCartPanelTab('cart');
+  }
+
   document.getElementById('cartOverlay').classList.add('open');
   document.getElementById('cartPanel').classList.add('open');
   document.body.style.overflow = 'hidden';
