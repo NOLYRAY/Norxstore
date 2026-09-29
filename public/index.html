@@ -1692,6 +1692,85 @@ button{cursor:pointer;font-family:inherit}
   </div>
 </div>
 
+<!-- Modal Kirim Bukti Selesai via WhatsApp (Foto + Pesan) -->
+<div class="modal-overlay" id="waProofOverlay" style="z-index:300" onclick="closeWaProofModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px;max-width:440px;width:calc(100% - 24px);margin:auto;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,0.35);max-height:90vh;overflow-y:auto;box-sizing:border-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid #f1f5f9;padding-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:24px">💬</span>
+        <div>
+          <h3 style="margin:0;font-size:16px;font-weight:800;color:#1e1b4b">Kirim Bukti Selesai ke WA</h3>
+          <p style="margin:2px 0 0;font-size:11px;color:#64748b">Lampirkan foto bukti & kirim ke pelanggan</p>
+        </div>
+      </div>
+      <button type="button" class="modal-close" onclick="closeWaProofModal()" style="font-size:20px;background:#f1f5f9;border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569">×</button>
+    </div>
+
+    <!-- Ringkasan Pesanan -->
+    <div id="waProofOrderSummary" style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:12px;margin-bottom:14px;font-size:12px">
+    </div>
+
+    <!-- Upload Foto Bukti -->
+    <div style="margin-bottom:14px">
+      <label style="font-size:12px;font-weight:700;color:#1e293b;display:block;margin-bottom:6px">
+        📸 Foto Bukti Pengerjaan (Screenshot / Hasil Joki)
+      </label>
+
+      <!-- Kotak Unggah saat belum ada foto -->
+      <div id="waProofUploadBox" style="border:2px dashed #8b5cf6;background:#f5f3ff;border-radius:14px;padding:18px;text-align:center;cursor:pointer;transition:all .2s ease" onclick="triggerFileInput('waProofFileInput')">
+        <div style="font-size:34px;margin-bottom:4px">📸</div>
+        <div style="font-size:13px;font-weight:800;color:#7c3aed">Pilih / Ambil Foto Bukti</div>
+        <div style="font-size:11px;color:#6b7280;margin-top:3px">Klik untuk memilih dari Galeri atau Kamera HP</div>
+      </div>
+      <input type="file" id="waProofFileInput" accept="image/*" style="display:none" onchange="handleProofImageSelected(event)">
+
+      <!-- Kotak Preview saat foto terpilih -->
+      <div id="waProofPreviewBox" style="display:none;position:relative;border-radius:14px;overflow:hidden;border:1.5px solid #8b5cf6;background:#0f172a;margin-top:4px">
+        <img id="waProofPreviewImg" src="" alt="Bukti Selesai" style="width:100%;max-height:240px;object-fit:contain;display:block">
+        <div style="position:absolute;top:8px;right:8px;display:flex;gap:6px">
+          <button type="button" onclick="triggerFileInput('waProofFileInput')" class="admin-btn-sm" style="background:rgba(0,0,0,0.7);color:#fff;backdrop-filter:blur(4px);padding:4px 8px;font-size:11px;border-radius:6px;cursor:pointer">🔄 Ganti</button>
+          <button type="button" onclick="removeProofImage()" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 8px;font-size:11px;border-radius:6px;cursor:pointer">✕ Hapus</button>
+        </div>
+        <div id="waProofFileInfo" style="position:absolute;bottom:0;inset-x:0;background:rgba(0,0,0,0.75);color:#fff;font-size:11px;padding:5px 10px;backdrop-filter:blur(4px);display:flex;justify-content:space-between">
+        </div>
+      </div>
+    </div>
+
+    <!-- Nomor WhatsApp Tujuan (Opsional) -->
+    <div style="margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#475569;display:block;margin-bottom:4px">
+        📱 Nomor WhatsApp Pelanggan (Opsional)
+      </label>
+      <input type="tel" id="waProofPhoneInput" placeholder="Contoh: 08123456789 (kosongkan jika pilih kontak di WA)" class="admin-input" style="font-size:12px;padding:9px 12px;width:100%;box-sizing:border-box">
+      <div style="font-size:10px;color:#94a3b8;margin-top:3px">Jika dikosongkan, Anda dapat memilih kontak chat langsung di WhatsApp.</div>
+    </div>
+
+    <!-- Template Pesan -->
+    <div style="margin-bottom:14px">
+      <label style="font-size:11px;font-weight:700;color:#475569;display:block;margin-bottom:4px">
+        📝 Teks Pesan WhatsApp
+      </label>
+      <textarea id="waProofTextarea" rows="6" class="admin-input" style="font-size:12px;padding:10px 12px;line-height:1.5;resize:vertical;font-family:inherit;width:100%;box-sizing:border-box"></textarea>
+    </div>
+
+    <!-- Checklist Auto Selesai -->
+    <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#334155;font-weight:600;margin-bottom:16px;cursor:pointer;user-select:none">
+      <input type="checkbox" id="waProofAutoDoneCheck" checked style="accent-color:#22c55e;width:17px;height:17px">
+      <span>Otomatis ubah status pesanan jadi <strong>✅ Selesai</strong> & kirim notif HP</span>
+    </label>
+
+    <!-- Tombol Kirim -->
+    <div style="display:flex;flex-direction:column;gap:8px">
+      <button type="button" id="waProofSendBtn" onclick="sendProofViaWhatsApp()" class="wa-btn" style="margin:0;font-size:13px;padding:12px;border-radius:12px;display:flex;align-items:center;justify-content:center;gap:6px">
+        <span>🚀 Kirim ke WhatsApp (Foto Bukti + Pesan)</span>
+      </button>
+      <button type="button" onclick="closeWaProofModal()" style="background:#f1f5f9;color:#64748b;border:none;padding:10px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer">
+        Tutup
+      </button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
 <script>
@@ -4286,7 +4365,7 @@ function approveOrder(id){
     renderAdminProductList();
   }
 }
-function completeOrderStatus(id){
+function completeOrderStatus(id, silent = false){
   fbDB.ref('norxstore/orders/' + id).update({status:'done', completedAt: Date.now()}).catch(e=>console.error(e));
   if(allOrders[id]) allOrders[id].status = 'done';
   const order = allOrders[id];
@@ -4303,7 +4382,7 @@ function completeOrderStatus(id){
     })
   }).catch(e=>console.warn('Push error:', e));
 
-  showToast('✅ Pesanan selesai! Notifikasi HP (suara & getar) dikirim.');
+  if(!silent) showToast('✅ Pesanan selesai! Notifikasi HP (suara & getar) dikirim.');
   renderMyOrders();
   renderProducts();
   if(isAdminOpen()) {
@@ -4311,13 +4390,218 @@ function completeOrderStatus(id){
     renderAdminProductList();
   }
 }
+
+let currentWaProofOrderId = null;
+let currentProofFile = null;
+let currentProofDataUrl = null;
+
 function sendWACompletion(id){
-  const o = allOrders[id];
+  openWaProofModal(id);
+}
+
+function openWaProofModal(orderId){
+  const o = allOrders[orderId];
   if(!o) return;
+  currentWaProofOrderId = orderId;
+  currentProofFile = null;
+  currentProofDataUrl = null;
+
   const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
-  const text = `Halo kak! Pesanan kamu di Norxstore:\n*${itemsText}*\n\nStatus: *SELESAI (DONE)* ✅\nTotal: ${formatPrice(o.total)}\n\nLayanan akun kamu sudah tuntas kami kerjakan. Silakan dicek kembali ya kak!\nTerima kasih banyak sudah mempercayakan pesananmu di Norxstore! ⭐⭐⭐⭐⭐`;
-  const url = `https://wa.me/?text=${encodeURIComponent(text)}`;
-  window.open(url, '_blank');
+  const custName = o.customerName || (o.customerEmail ? o.customerEmail : 'Tamu (Pelanggan)');
+
+  // Render Order Summary
+  const summaryEl = document.getElementById('waProofOrderSummary');
+  if(summaryEl){
+    summaryEl.innerHTML = `
+      <div style="font-weight:700;color:#1e1b4b;font-size:13px;margin-bottom:2px">👤 ${custName}</div>
+      <div style="color:#6b21a8;font-weight:700;margin-bottom:2px">${itemsText}</div>
+      <div style="display:flex;justify-content:space-between;color:#64748b;font-size:11px">
+        <span>${o.adminName || 'Admin'} · ${o.paymentMethod || 'Metode Pembayaran'}</span>
+        <span style="font-weight:800;color:#16a34a">${formatPrice(o.total)}</span>
+      </div>
+    `;
+  }
+
+  // Reset upload state
+  document.getElementById('waProofUploadBox').style.display = 'block';
+  document.getElementById('waProofPreviewBox').style.display = 'none';
+  document.getElementById('waProofPreviewImg').src = '';
+  const fileInput = document.getElementById('waProofFileInput');
+  if(fileInput) fileInput.value = '';
+
+  // Default WhatsApp message text
+  const defaultText = `Halo kak! Pesanan kamu di Norx Store:\n*${itemsText}*\n\nStatus: *SELESAI (DONE)* ✅\nTotal: ${formatPrice(o.total)}\n\nLayanan akun kamu sudah tuntas kami kerjakan. Foto bukti pengerjaan terlampir ya kak! 📸✨\n\nTerima kasih banyak sudah mempercayakan pesananmu di Norx Store!\nMohon kesediaannya untuk memberi rating ulasan di website kami ya kak ⭐⭐⭐⭐⭐\nhttps://norxstore.vercel.app`;
+  
+  const textarea = document.getElementById('waProofTextarea');
+  if(textarea) textarea.value = defaultText;
+
+  const phoneInput = document.getElementById('waProofPhoneInput');
+  if(phoneInput) phoneInput.value = '';
+
+  updateWaProofBtnState();
+
+  const overlay = document.getElementById('waProofOverlay');
+  if(overlay) overlay.classList.add('open');
+}
+
+function closeWaProofModal(e){
+  if(e && e.target && e.target !== document.getElementById('waProofOverlay') && !e.target.classList.contains('modal-close')) return;
+  const overlay = document.getElementById('waProofOverlay');
+  if(overlay) overlay.classList.remove('open');
+  currentWaProofOrderId = null;
+  currentProofFile = null;
+  currentProofDataUrl = null;
+}
+
+function handleProofImageSelected(event){
+  const file = event.target.files[0];
+  if(!file) return;
+
+  if(file.size > 15 * 1024 * 1024){
+    showToast('⚠️ Ukuran foto terlalu besar! Maksimal 15MB');
+    return;
+  }
+
+  showToast('Memproses foto bukti pengerjaan...');
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      // Kompres ukuran gambar jika sangat besar agar ringan dibagikan via WhatsApp (maksimal 1600px)
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const maxDim = 1600;
+      let w = img.width, h = img.height;
+      if(w > h && w > maxDim){
+        h = Math.round(h * (maxDim / w));
+        w = maxDim;
+      } else if(h > maxDim){
+        w = Math.round(w * (maxDim / h));
+        h = maxDim;
+      }
+      canvas.width = w;
+      canvas.height = h;
+      ctx.drawImage(img, 0, 0, w, h);
+
+      canvas.toBlob(blob => {
+        if(!blob){
+          currentProofFile = file;
+          currentProofDataUrl = e.target.result;
+        } else {
+          currentProofFile = new File([blob], 'bukti_joki_' + (currentWaProofOrderId || Date.now()) + '.jpg', { type: 'image/jpeg' });
+          currentProofDataUrl = canvas.toDataURL('image/jpeg', 0.88);
+        }
+
+        document.getElementById('waProofUploadBox').style.display = 'none';
+        document.getElementById('waProofPreviewBox').style.display = 'block';
+        document.getElementById('waProofPreviewImg').src = currentProofDataUrl;
+        
+        const sizeKb = Math.round(currentProofFile.size / 1024);
+        const infoEl = document.getElementById('waProofFileInfo');
+        if(infoEl){
+          infoEl.innerHTML = `<span>📷 ${currentProofFile.name} (${sizeKb} KB)</span>`;
+        }
+
+        updateWaProofBtnState();
+        showToast('✅ Foto bukti siap dikirimkan!');
+      }, 'image/jpeg', 0.88);
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function removeProofImage(){
+  currentProofFile = null;
+  currentProofDataUrl = null;
+  document.getElementById('waProofUploadBox').style.display = 'block';
+  document.getElementById('waProofPreviewBox').style.display = 'none';
+  document.getElementById('waProofPreviewImg').src = '';
+  const fileInput = document.getElementById('waProofFileInput');
+  if(fileInput) fileInput.value = '';
+  updateWaProofBtnState();
+}
+
+function updateWaProofBtnState(){
+  const sendBtn = document.getElementById('waProofSendBtn');
+  if(!sendBtn) return;
+  if(currentProofFile){
+    sendBtn.innerHTML = `<span>🚀 Kirim ke WhatsApp (Foto Bukti + Pesan)</span>`;
+    sendBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
+  } else {
+    sendBtn.innerHTML = `<span>💬 Kirim Pesan ke WhatsApp (Tanpa Foto)</span>`;
+    sendBtn.style.background = 'linear-gradient(135deg,#25d366,#128c7e)';
+  }
+}
+
+async function sendProofViaWhatsApp(){
+  if(!currentWaProofOrderId) return;
+  const o = allOrders[currentWaProofOrderId];
+  if(!o) return;
+
+  const textEl = document.getElementById('waProofTextarea');
+  const messageText = textEl ? textEl.value.trim() : '';
+  const phoneEl = document.getElementById('waProofPhoneInput');
+  let rawPhone = phoneEl ? phoneEl.value.trim().replace(/[^0-9]/g, '') : '';
+  if(rawPhone.startsWith('0')){
+    rawPhone = '62' + rawPhone.slice(1);
+  }
+
+  // Tandai pesanan sebagai selesai jika dicentang
+  const autoDoneCheck = document.getElementById('waProofAutoDoneCheck');
+  if(autoDoneCheck && autoDoneCheck.checked && o.status !== 'done'){
+    completeOrderStatus(currentWaProofOrderId, true);
+  }
+
+  // Simpan foto bukti pengerjaan ke database pesanan jika ada
+  if(currentProofDataUrl && window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/' + currentWaProofOrderId).update({
+      proofImageUrl: currentProofDataUrl,
+      proofSentAt: Date.now()
+    }).catch(e=>console.warn('Gagal simpan bukti ke database:', e));
+    if(allOrders[currentWaProofOrderId]){
+      allOrders[currentWaProofOrderId].proofImageUrl = currentProofDataUrl;
+    }
+  }
+
+  // METODE 1: Web Share API (Didukung penuh di browser HP Android/iOS seperti Chrome & Brave)
+  // Ini langsung membuka WhatsApp dengan foto terlampir dan teks sebagai caption!
+  if(currentProofFile && navigator.canShare && navigator.canShare({ files: [currentProofFile] })){
+    try {
+      await navigator.share({
+        files: [currentProofFile],
+        title: 'Bukti Pengerjaan Selesai - Norx Store',
+        text: messageText
+      });
+      showToast('✅ Berhasil dibagikan ke WhatsApp!');
+      closeWaProofModal();
+      return;
+    } catch(err){
+      if(err && err.name === 'AbortError'){
+        return;
+      }
+      console.warn('Web Share gagal, beralih ke wa.me fallback:', err);
+    }
+  }
+
+  // METODE 2: Fallback wa.me url
+  // Jika di desktop PC: salin foto ke clipboard jika didukung browser agar bisa langsung Ctrl+V di WhatsApp Web
+  if(currentProofFile && navigator.clipboard && window.ClipboardItem){
+    try {
+      const item = new ClipboardItem({ [currentProofFile.type]: currentProofFile });
+      await navigator.clipboard.write([item]);
+      showToast('📋 Foto bukti disalin ke clipboard! Silakan Paste (Ctrl+V) di WhatsApp.');
+    } catch(clipErr){
+      console.warn('Gagal salin gambar ke clipboard:', clipErr);
+    }
+  }
+
+  const waUrl = rawPhone
+    ? `https://wa.me/${rawPhone}?text=${encodeURIComponent(messageText)}`
+    : `https://wa.me/?text=${encodeURIComponent(messageText)}`;
+
+  window.open(waUrl, '_blank');
+  closeWaProofModal();
 }
 function cancelOrder(id){
   if(!confirm('Batalkan pesanan ini? Produk akan otomatis kembali tersedia untuk dipesan pelanggan.')) return;
