@@ -40,22 +40,22 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .order-notif-dot{position:absolute;top:-2px;left:-2px;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:none;box-shadow:0 0 8px rgba(34,197,94,0.9);animation:pulseNotifGreen 1.4s infinite;z-index:4}
 @keyframes pulseNotifGreen{0%{transform:scale(0.9);box-shadow:0 0 0 0 rgba(34,197,94,0.8)}70%{transform:scale(1.25);box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{transform:scale(0.9);box-shadow:0 0 0 0 rgba(34,197,94,0)}}
 
-.order-notif-overlay{position:fixed;inset:0;background:rgba(10,10,20,0.85);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:350;padding:16px;animation:fadeIn .2s ease}
+.order-notif-overlay{position:fixed;inset:0;background:rgba(10,10,20,0.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:350;padding:12px;overflow-y:auto;box-sizing:border-box;animation:fadeIn .2s ease}
 .order-notif-overlay.open{display:flex}
-.order-notif-modal{background:linear-gradient(145deg,#1f1b2e 0%,#131120 100%);border:1.5px solid #8b5cf6;border-radius:22px;max-width:390px;width:100%;padding:26px 20px 22px;text-align:center;position:relative;box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 35px rgba(139,92,246,0.25);animation:scaleUp .25s cubic-bezier(0.16,1,0.3,1)}
-.order-notif-close-btn{position:absolute;top:12px;right:12px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);color:#cbd5e1;font-size:14px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease}
+.order-notif-modal{background:linear-gradient(145deg,#1f1b2e 0%,#131120 100%);border:1.5px solid #8b5cf6;border-radius:20px;max-width:380px;width:100%;max-height:86vh;max-height:86dvh;overflow-y:auto;overscroll-behavior:contain;padding:18px 16px 16px;text-align:center;position:relative;margin:auto;box-sizing:border-box;box-shadow:0 20px 60px rgba(0,0,0,0.85),0 0 35px rgba(139,92,246,0.3);animation:scaleUp .25s cubic-bezier(0.16,1,0.3,1)}
+.order-notif-close-btn{position:absolute;top:10px;right:10px;z-index:15;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);color:#fff;font-size:15px;font-weight:700;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease}
 .order-notif-close-btn:hover{background:#ef4444;color:#fff;border-color:#ef4444}
-.order-notif-icon-wrap{position:relative;width:68px;height:68px;margin:0 auto 12px;display:flex;align-items:center;justify-content:center}
+.order-notif-icon-wrap{position:relative;width:52px;height:52px;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
 .order-notif-pulse{position:absolute;inset:0;border-radius:50%;background:rgba(34,197,94,0.3);animation:pulseNotifGreen 1.6s infinite ease-out}
-.order-notif-icon{position:relative;font-size:38px;z-index:2}
-.order-notif-badge{display:inline-block;font-size:10px;font-weight:800;letter-spacing:1px;color:#86efac;background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);padding:4px 12px;border-radius:20px;margin-bottom:10px}
-.order-notif-title{font-size:18px;font-weight:800;color:#fff;margin:0 0 6px}
-.order-notif-subtitle{font-size:12px;color:#cbd5e1;margin:0 0 16px;line-height:1.45}
-.order-notif-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px 14px;text-align:left;margin-bottom:18px}
-.order-notif-item-name{font-size:13px;font-weight:700;color:#fff;margin-bottom:4px}
-.order-notif-item-meta{font-size:11px;color:#a78bfa}
-.order-notif-actions{display:flex;flex-direction:column;gap:8px}
-.order-notif-btn{width:100%;padding:11px 16px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s ease;border:none}
+.order-notif-icon{position:relative;font-size:28px;z-index:2}
+.order-notif-badge{display:inline-block;font-size:9.5px;font-weight:800;letter-spacing:1px;color:#86efac;background:rgba(34,197,94,0.18);border:1px solid rgba(34,197,94,0.4);padding:3px 10px;border-radius:20px;margin-bottom:6px}
+.order-notif-title{font-size:16px;font-weight:800;color:#fff;margin:0 0 4px}
+.order-notif-subtitle{font-size:11.5px;color:#cbd5e1;margin:0 0 10px;line-height:1.4}
+.order-notif-card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:12px;padding:8px 12px;text-align:left;margin-bottom:10px}
+.order-notif-item-name{font-size:12px;font-weight:700;color:#fff;margin-bottom:2px}
+.order-notif-item-meta{font-size:10.5px;color:#a78bfa}
+.order-notif-actions{display:flex;flex-direction:column;gap:6px}
+.order-notif-btn{width:100%;padding:9px 14px;border-radius:10px;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s ease;border:none}
 .order-notif-btn.primary{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 4px 15px rgba(16,185,129,0.35)}
 .order-notif-btn.primary:hover{background:linear-gradient(135deg,#059669,#047857);transform:translateY(-1px)}
 .order-notif-btn.secondary{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;box-shadow:0 4px 15px rgba(124,58,237,0.3)}
@@ -1606,7 +1606,9 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="order-notif-overlay" id="orderNotifOverlay" onclick="closeOrderNotif(event)">
   <div class="order-notif-modal" onclick="event.stopPropagation()">
+    <!-- Tombol Tutup X di Pojok Kanan Atas -->
     <button type="button" class="order-notif-close-btn" onclick="closeOrderNotif()" title="Tutup">✕</button>
+    
     <div class="order-notif-icon-wrap">
       <div class="order-notif-pulse"></div>
       <span class="order-notif-icon" id="orderNotifIcon">🎉</span>
@@ -1621,7 +1623,7 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <!-- WIDGET RATING LANGSUNG JOKIAN SELESAI -->
-    <div id="orderNotifRatingBox" style="background:rgba(255,255,255,0.06);border:1px solid rgba(250,204,21,0.3);border-radius:14px;padding:12px;margin-bottom:14px;text-align:center">
+    <div id="orderNotifRatingBox" style="background:rgba(255,255,255,0.06);border:1px solid rgba(250,204,21,0.3);border-radius:14px;padding:12px;margin-bottom:12px;text-align:center">
       <div style="font-size:12px;font-weight:800;color:#fde047;margin-bottom:6px">⭐ Beri Bintang Kepuasan Jokian:</div>
       <div class="interactive-stars-wrap" id="notifStarsPicker" style="margin-bottom:6px">
         <span class="interactive-star active" data-val="1" onclick="setNotifRatingStars(1)">★</span>
@@ -1637,8 +1639,8 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <div class="order-notif-actions">
-      <button type="button" class="order-notif-btn secondary" onclick="onOrderNotifOpenReview()">⭐ Beri Bintang & Ulasan</button>
-      <button type="button" class="order-notif-btn" style="background:rgba(255,255,255,0.08);color:#cbd5e1" onclick="onOrderNotifOpenCart()">🛒 Buka Riwayat Pesanan</button>
+      <button type="button" class="order-notif-btn" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2)" onclick="closeOrderNotif()">✕ Tutup Jendela</button>
+      <button type="button" class="order-notif-btn" style="background:rgba(124,58,237,0.2);color:#c084fc;border:1px solid rgba(124,58,237,0.4)" onclick="onOrderNotifOpenCart()">🛒 Buka Riwayat Pesanan</button>
     </div>
   </div>
 </div>
@@ -1741,8 +1743,10 @@ button{cursor:pointer;font-family:inherit}
       <label style="font-size:11px;font-weight:700;color:#475569;display:block;margin-bottom:4px">
         📱 Nomor WhatsApp Pelanggan (Opsional)
       </label>
-      <input type="tel" id="waProofPhoneInput" placeholder="Contoh: 08123456789 (kosongkan jika pilih kontak di WA)" class="admin-input" style="font-size:12px;padding:9px 12px;width:100%;box-sizing:border-box">
-      <div style="font-size:10px;color:#94a3b8;margin-top:3px">Jika dikosongkan, Anda dapat memilih kontak chat langsung di WhatsApp.</div>
+      <input type="tel" id="waProofPhoneInput" placeholder="Contoh: 08123456789 atau 628123456789" class="admin-input" style="font-size:12px;padding:9px 12px;width:100%;box-sizing:border-box" oninput="onWaProofPhoneChange()">
+      <div id="waProofPhoneStatus" style="font-size:11px;color:#64748b;margin-top:4px;line-height:1.4">
+        💡 Jika diisi, chat WhatsApp akan <strong>langsung terbuka ke nomor ini</strong>. Jika kosong, Anda bisa memilih kontak manual di WA.
+      </div>
     </div>
 
     <!-- Template Pesan -->
@@ -4437,7 +4441,7 @@ function openWaProofModal(orderId){
 
   const phoneInput = document.getElementById('waProofPhoneInput');
   if(phoneInput) phoneInput.value = '';
-
+  onWaProofPhoneChange();
   updateWaProofBtnState();
 
   const overlay = document.getElementById('waProofOverlay');
@@ -4522,15 +4526,69 @@ function removeProofImage(){
   updateWaProofBtnState();
 }
 
+function formatIndonesianWaNumber(numStr){
+  if(!numStr) return '';
+  let clean = numStr.trim().replace(/[^0-9]/g, '');
+  if(!clean) return '';
+  if(clean.startsWith('62')){
+    return clean;
+  }
+  if(clean.startsWith('0')){
+    return '62' + clean.slice(1);
+  }
+  if(clean.startsWith('8')){
+    return '62' + clean;
+  }
+  return clean;
+}
+
+function onWaProofPhoneChange(){
+  const phoneEl = document.getElementById('waProofPhoneInput');
+  const statusEl = document.getElementById('waProofPhoneStatus');
+  const val = phoneEl ? phoneEl.value.trim() : '';
+  const formatted = formatIndonesianWaNumber(val);
+
+  if(!val){
+    if(statusEl){
+      statusEl.style.color = '#64748b';
+      statusEl.innerHTML = '💡 Jika diisi, chat WhatsApp akan <strong>langsung terbuka ke nomor ini</strong>. Jika kosong, Anda bisa memilih kontak manual di WA.';
+    }
+  } else if(formatted.length >= 10 && formatted.startsWith('628')){
+    if(statusEl){
+      statusEl.style.color = '#16a34a';
+      statusEl.innerHTML = `✅ <strong>Langsung ke:</strong> +${formatted.slice(0,2)} ${formatted.slice(2,5)}-${formatted.slice(5,9)}-${formatted.slice(9)}`;
+    }
+  } else {
+    if(statusEl){
+      statusEl.style.color = '#eab308';
+      statusEl.innerHTML = `⏳ Format nomor: +${formatted} (masukkan nomor HP yang benar)`;
+    }
+  }
+  updateWaProofBtnState();
+}
+
 function updateWaProofBtnState(){
   const sendBtn = document.getElementById('waProofSendBtn');
   if(!sendBtn) return;
-  if(currentProofFile){
-    sendBtn.innerHTML = `<span>🚀 Kirim ke WhatsApp (Foto Bukti + Pesan)</span>`;
+  const phoneEl = document.getElementById('waProofPhoneInput');
+  const formattedPhone = formatIndonesianWaNumber(phoneEl ? phoneEl.value : '');
+
+  if(formattedPhone && formattedPhone.length >= 10){
+    const displayNum = '+62 ' + formattedPhone.slice(2);
+    if(currentProofFile){
+      sendBtn.innerHTML = `<span>🚀 Chat & Kirim Bukti ke ${displayNum}</span>`;
+    } else {
+      sendBtn.innerHTML = `<span>🚀 Buka Chat Langsung ke ${displayNum}</span>`;
+    }
     sendBtn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
   } else {
-    sendBtn.innerHTML = `<span>💬 Kirim Pesan ke WhatsApp (Tanpa Foto)</span>`;
-    sendBtn.style.background = 'linear-gradient(135deg,#25d366,#128c7e)';
+    if(currentProofFile){
+      sendBtn.innerHTML = `<span>📲 Bagikan Foto Bukti ke WhatsApp</span>`;
+      sendBtn.style.background = 'linear-gradient(135deg,#7c3aed,#6d28d9)';
+    } else {
+      sendBtn.innerHTML = `<span>💬 Buka WhatsApp (Pilih Kontak Sendiri)</span>`;
+      sendBtn.style.background = 'linear-gradient(135deg,#25d366,#128c7e)';
+    }
   }
 }
 
@@ -4542,10 +4600,7 @@ async function sendProofViaWhatsApp(){
   const textEl = document.getElementById('waProofTextarea');
   const messageText = textEl ? textEl.value.trim() : '';
   const phoneEl = document.getElementById('waProofPhoneInput');
-  let rawPhone = phoneEl ? phoneEl.value.trim().replace(/[^0-9]/g, '') : '';
-  if(rawPhone.startsWith('0')){
-    rawPhone = '62' + rawPhone.slice(1);
-  }
+  const rawPhone = formatIndonesianWaNumber(phoneEl ? phoneEl.value : '');
 
   // Tandai pesanan sebagai selesai jika dicentang
   const autoDoneCheck = document.getElementById('waProofAutoDoneCheck');
@@ -4564,8 +4619,36 @@ async function sendProofViaWhatsApp(){
     }
   }
 
-  // METODE 1: Web Share API (Didukung penuh di browser HP Android/iOS seperti Chrome & Brave)
-  // Ini langsung membuka WhatsApp dengan foto terlampir dan teks sebagai caption!
+  // Jika ada foto dan browser mendukung clipboard copy, salin agar admin bisa langsung Paste (Ctrl+V) di WA
+  if(currentProofFile && navigator.clipboard && window.ClipboardItem){
+    try {
+      const item = new ClipboardItem({ [currentProofFile.type]: currentProofFile });
+      await navigator.clipboard.write([item]);
+      showToast('📋 Foto bukti disalin ke clipboard! Anda bisa langsung Tempel / Paste di chat WA.');
+    } catch(clipErr){
+      console.warn('Gagal salin gambar ke clipboard:', clipErr);
+    }
+  }
+
+  // KASUS 1: NOMOR DIISI -> LANGSUNG ARAHKAN KE NOMOR TERSEBUT!
+  if(rawPhone && rawPhone.length >= 10){
+    // URL resmi WhatsApp yang paling kompatibel dan langsung membuka app WhatsApp di Android / iOS
+    const directWaUrl = `https://api.whatsapp.com/send?phone=${rawPhone}&text=${encodeURIComponent(messageText)}`;
+    
+    closeWaProofModal();
+
+    // Di perangkat mobile (Android/iOS, termasuk Brave & Chrome):
+    // Navigasi langsung menggunakan window.location.href agar memicu deep-link Intent WhatsApp ke nomor tujuan
+    const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    if(isMobile){
+      window.location.href = directWaUrl;
+    } else {
+      window.open(directWaUrl, '_blank');
+    }
+    return;
+  }
+
+  // KASUS 2: NOMOR KOSONG TAPI ADA FOTO -> Buka share sheet agar foto terlampir otomatis
   if(currentProofFile && navigator.canShare && navigator.canShare({ files: [currentProofFile] })){
     try {
       await navigator.share({
@@ -4577,31 +4660,20 @@ async function sendProofViaWhatsApp(){
       closeWaProofModal();
       return;
     } catch(err){
-      if(err && err.name === 'AbortError'){
-        return;
-      }
-      console.warn('Web Share gagal, beralih ke wa.me fallback:', err);
+      if(err && err.name === 'AbortError') return;
+      console.warn('Web Share gagal, beralih ke fallback:', err);
     }
   }
 
-  // METODE 2: Fallback wa.me url
-  // Jika di desktop PC: salin foto ke clipboard jika didukung browser agar bisa langsung Ctrl+V di WhatsApp Web
-  if(currentProofFile && navigator.clipboard && window.ClipboardItem){
-    try {
-      const item = new ClipboardItem({ [currentProofFile.type]: currentProofFile });
-      await navigator.clipboard.write([item]);
-      showToast('📋 Foto bukti disalin ke clipboard! Silakan Paste (Ctrl+V) di WhatsApp.');
-    } catch(clipErr){
-      console.warn('Gagal salin gambar ke clipboard:', clipErr);
-    }
-  }
-
-  const waUrl = rawPhone
-    ? `https://wa.me/${rawPhone}?text=${encodeURIComponent(messageText)}`
-    : `https://wa.me/?text=${encodeURIComponent(messageText)}`;
-
-  window.open(waUrl, '_blank');
+  // KASUS 3: NOMOR KOSONG & TANPA WEB SHARE
+  const generalWaUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(messageText)}`;
   closeWaProofModal();
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile){
+    window.location.href = generalWaUrl;
+  } else {
+    window.open(generalWaUrl, '_blank');
+  }
 }
 function cancelOrder(id){
   if(!confirm('Batalkan pesanan ini? Produk akan otomatis kembali tersedia untuk dipesan pelanggan.')) return;
