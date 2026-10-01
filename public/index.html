@@ -32,14 +32,18 @@
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:pan-y}
 html,body{width:100%;min-height:100dvh;overflow-x:hidden;font-family:'Poppins',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f4fa;color:#1a1a1a}
 body{transition:background-color 0.5s ease,color 0.5s ease}
-.navbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06)}
-.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0}
+.navbar{display:flex;align-items:center;justify-content:space-between;gap:10px 12px;padding:12px 16px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06);flex-wrap:wrap}
+.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0;order:1}
 .logo::before{content:'💠';font-size:16px}
 .logo span{background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;background-clip:text;color:transparent}
-.search-bar-wrap{flex:1;display:flex;align-items:center;position:relative;min-width:0}
+.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto;order:2}
+.search-bar-wrap{width:100%;flex-basis:100%;display:flex;align-items:center;position:relative;min-width:0;order:3}
 .search-bar-icon{position:absolute;left:12px;font-size:13px;color:#9ca3af;pointer-events:none;z-index:2;line-height:1}
-.search-bar{width:100%;height:38px;border:1.5px solid #ece9f7;border-radius:12px;background:#f5f4fa;padding:0 14px 0 34px;font-size:13px;color:#1a1a1a;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease,box-shadow 0.3s ease}
-.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
+.search-bar{width:100%;height:38px;border:1.5px solid #ece9f7;border-radius:12px;background:#f5f4fa;padding:0 34px 0 34px;font-size:13px;color:#1a1a1a;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease,box-shadow 0.3s ease}
+.search-bar:focus{border-color:#a855f7;background:#fff;box-shadow:0 0 0 3px rgba(168,85,247,0.15)}
+.search-clear-btn{position:absolute;right:8px;width:22px;height:22px;border-radius:50%;background:#e2e8f0;border:none;color:#64748b;font-size:11px;font-weight:800;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:4;transition:all .15s ease}
+.search-clear-btn:hover{background:#cbd5e1;color:#1e293b}
+.search-clear-btn.show{display:flex}
 .nav-icon{width:38px;height:38px;border-radius:12px;background:#f5f4fa;border:1.5px solid #ece9f7;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease}
 .nav-icon:active{background:#e5e5e5}
 .nav-icon-wrap{position:relative;flex-shrink:0}
@@ -73,6 +77,255 @@ body{transition:background-color 0.5s ease,color 0.5s ease}
 .phone-notif-btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:7px 12px;border-radius:8px;font-size:11px;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 3px 10px rgba(124,58,237,0.25);transition:all .15s ease;flex-shrink:0}
 .phone-notif-btn:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6)}
 .phone-notif-btn.active{background:#10b981;box-shadow:0 3px 10px rgba(16,185,129,0.25)}
+
+/* ============ MULTI-CURRENCY & NEGARA ============ */
+.country-currency-btn{height:36px;padding:0 9px;border-radius:11px;background:#f5f4fa;border:1.5px solid #ece9f7;display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;color:#1e1b4b;transition:all .2s ease;user-select:none;flex-shrink:0}
+.country-currency-btn:hover{background:#ede9fe;border-color:#c4b5fd;color:#7c3aed;transform:translateY(-1px);box-shadow:0 3px 8px rgba(124,58,237,.1)}
+.country-flag-icon{font-size:15px;line-height:1}
+.country-code-text{font-size:11px;font-weight:800;letter-spacing:.3px}
+.country-arrow{font-size:8.5px;color:#7c3aed;margin-left:1px}
+body.dark-mode .country-currency-btn{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.18);color:#f1f5f9}
+body.dark-mode .country-currency-btn:hover{background:rgba(124,58,237,0.25);border-color:#8b5cf6;color:#fff}
+
+.country-currency-grid{display:flex;flex-direction:column;gap:10px}
+.country-card{border:1.5px solid #e2e8f0;background:#f8fafc;border-radius:14px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;transition:all .18s ease;position:relative}
+.country-card:hover{background:#f5f3ff;border-color:#c4b5fd;transform:translateY(-1px)}
+.country-card.active{background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);border-color:#8b5cf6;box-shadow:0 3px 12px rgba(139,92,246,0.18)}
+.country-card-main{display:flex;align-items:center;gap:12px;flex:1;min-width:0}
+.country-card-flag{font-size:26px;line-height:1;flex-shrink:0}
+.country-card-info{display:flex;flex-direction:column;gap:3px;flex:1;min-width:0}
+.country-card-top-row{display:flex;align-items:center;gap:7px;flex-wrap:nowrap}
+.country-card-title{font-size:14px;font-weight:700;color:#1e293b;white-space:nowrap}
+.country-card-badge{font-size:10px;font-weight:800;background:#7c3aed;color:#fff;padding:2px 7px;border-radius:6px;letter-spacing:.3px;white-space:nowrap;display:inline-block}
+.country-card-lang{font-size:11px;color:#64748b;font-weight:500;display:flex;align-items:center;gap:4px;white-space:nowrap}
+.country-card-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.country-card-check{width:24px;height:24px;border-radius:50%;border:1.5px solid #cbd5e1;background:#fff;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;transition:all .15s ease}
+.country-card.active .country-card-check{background:#8b5cf6;border-color:#8b5cf6;color:#fff}
+
+/* ============ LIVE SEARCH SUGGESTIONS DROPDOWN ============ */
+.search-suggestions-dropdown{
+  position:absolute;
+  top:calc(100% + 6px);
+  left:0;
+  right:0;
+  background:#ffffff;
+  border:1.5px solid #c4b5fd;
+  border-radius:16px;
+  box-shadow:0 16px 36px rgba(124,58,237,0.18), 0 4px 12px rgba(0,0,0,0.06);
+  z-index:200;
+  display:none;
+  overflow:hidden;
+  max-height:420px;
+  overflow-y:auto;
+  animation:slideDownSug .2s ease;
+  padding:10px 0 6px;
+}
+.search-suggestions-dropdown.open{
+  display:block;
+}
+@keyframes slideDownSug{
+  from{opacity:0;transform:translateY(-6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.search-sug-header{
+  padding:4px 14px 8px;
+  font-size:11.5px;
+  font-weight:700;
+  color:#6b21a8;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid #f1f0fb;
+}
+.search-sug-list{
+  padding:4px 0;
+  max-height:260px;
+  overflow-y:auto;
+}
+.search-sug-item{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:9px 14px;
+  cursor:pointer;
+  transition:background .15s ease;
+  border-bottom:1px solid #fafafa;
+}
+.search-sug-item:last-child{
+  border-bottom:none;
+}
+.search-sug-item:hover{
+  background:#f5f3ff;
+}
+.search-sug-img-wrap{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  background:#f1f5f9;
+  overflow:hidden;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid #e2e8f0;
+}
+.search-sug-img-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.search-sug-img-wrap .emoji-icon{
+  font-size:20px;
+}
+.search-sug-info{
+  flex:1;
+  min-width:0;
+}
+.search-sug-title{
+  font-size:13px;
+  font-weight:700;
+  color:#1e1b4b;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  margin-bottom:2px;
+}
+.search-sug-title mark{
+  background:rgba(234,179,8,0.35);
+  color:#7c2d12;
+  font-weight:800;
+  padding:0 2px;
+  border-radius:3px;
+}
+.search-sug-meta{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:10.5px;
+  color:#64748b;
+  overflow:hidden;
+  white-space:nowrap;
+  text-overflow:ellipsis;
+}
+.search-sug-cat{
+  background:#e0e7ff;
+  color:#3730a3;
+  padding:1px 6px;
+  border-radius:4px;
+  font-weight:700;
+  font-size:9.5px;
+  flex-shrink:0;
+}
+.search-sug-price{
+  text-align:right;
+  flex-shrink:0;
+}
+.sug-price-val{
+  font-size:13px;
+  font-weight:800;
+  color:#10b981;
+}
+.sug-price-old{
+  font-size:10px;
+  color:#94a3b8;
+  text-decoration:line-through;
+  display:block;
+}
+.search-sug-footer{
+  padding:8px 12px 4px;
+  border-top:1px solid #f1f0fb;
+  text-align:center;
+}
+.search-sug-footer-btn{
+  background:#f5f3ff;
+  color:#7c3aed;
+  border:1px solid #ddd6fe;
+  width:100%;
+  padding:8px;
+  border-radius:10px;
+  font-size:11.5px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.search-sug-footer-btn:hover{
+  background:#7c3aed;
+  color:#fff;
+}
+.search-sug-empty{
+  padding:20px 14px;
+  text-align:center;
+  color:#64748b;
+  font-size:12px;
+}
+.search-sug-empty p{
+  margin:4px 0 6px;
+  color:#1e293b;
+  font-weight:600;
+}
+
+/* Dark mode search dropdown */
+body.dark-mode .search-suggestions-dropdown{
+  background:#171329;
+  border-color:rgba(139,92,246,0.45);
+  box-shadow:0 18px 40px rgba(0,0,0,0.6);
+}
+body.dark-mode .search-sug-header{
+  color:#c084fc;
+  border-color:rgba(255,255,255,0.08);
+}
+body.dark-mode .search-sug-item{
+  border-color:rgba(255,255,255,0.04);
+}
+body.dark-mode .search-sug-item:hover{
+  background:rgba(139,92,246,0.15);
+}
+body.dark-mode .search-sug-title{
+  color:#f1f5f9;
+}
+body.dark-mode .search-sug-title mark{
+  background:rgba(234,179,8,0.4);
+  color:#fef08a;
+}
+body.dark-mode .search-sug-img-wrap{
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(255,255,255,0.12);
+}
+body.dark-mode .search-sug-cat{
+  background:rgba(99,102,241,0.25);
+  color:#a5b4fc;
+}
+body.dark-mode .search-sug-footer{
+  border-color:rgba(255,255,255,0.08);
+}
+body.dark-mode .search-sug-footer-btn{
+  background:rgba(124,58,237,0.2);
+  color:#c084fc;
+  border-color:rgba(124,58,237,0.4);
+}
+body.dark-mode .search-sug-footer-btn:hover{
+  background:#7c3aed;
+  color:#fff;
+}
+body.dark-mode .search-sug-empty p{
+  color:#e2e8f0;
+}
+
+@keyframes prodCardGlow{
+  0%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,0.7)}
+  50%{transform:scale(1.03);box-shadow:0 0 25px 8px rgba(124,58,237,0.5)}
+  100%{transform:scale(1);box-shadow:0 0 0 0 rgba(124,58,237,0)}
+}
+.card-highlight-glow{
+  animation:prodCardGlow 1.4s ease;
+  border-color:#8b5cf6 !important;
+}
+body.dark-mode #modalPayCrossBorderNote > div,
+body.dark-mode #cartPayCrossBorderNote > div{
+  background:rgba(255,255,255,0.06) !important;
+  border-color:rgba(255,255,255,0.14) !important;
+  color:#cbd5e1 !important;
+}
 
 /* ============ RATING & TESTIMONI INTERAKTIF ============ */
 .interactive-stars-wrap{display:flex;align-items:center;justify-content:center;gap:4px;user-select:none}
@@ -207,9 +460,10 @@ body.dark-mode .live-pill-mode{
 .light-section.inactive-mode{opacity:0;transform:translateY(-16px);position:absolute;top:0;left:0;right:0;pointer-events:none}
 
 .light-section{padding:16px 0 30px}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;padding:0 16px}
-.section-title{font-size:16px;font-weight:700}
-.section-link{font-size:12px;color:#888}
+.section-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;padding:0 16px}
+.section-title{font-size:clamp(13px,3.8vw,16px);font-weight:800;text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1;margin:0;display:flex;align-items:center;gap:5px}
+.section-link{font-size:11px;color:#7c3aed;background:#f3e8ff;padding:4px 10px;border-radius:999px;text-transform:uppercase;font-weight:700;letter-spacing:0.3px;cursor:pointer;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;transition:all .18s ease}
+.section-link:hover{background:#ede9fe;color:#6d28d9;transform:translateX(1px)}
 .cat-chips{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y}
 .cat-chips::-webkit-scrollbar{display:none}
 .cat-chip{padding:8px 17px;border-radius:20px;background:#f5f4fa;border:1px solid #ece9f7;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#666;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease,color 0.3s ease,transform .15s ease}
@@ -364,7 +618,7 @@ body.dark-mode .live-pill-mode{
 .cart-panel{position:fixed;top:0;right:0;width:100%;max-width:380px;height:100dvh;background:#fff;display:flex;flex-direction:column;z-index:111;transform:translateX(100%);transition:transform .3s ease}
 .cart-panel.open{transform:translateX(0)}
 .cart-header{padding:16px;border-bottom:1px solid #e5e5e5;display:flex;align-items:center;justify-content:space-between;position:relative;z-index:2;background:#fff;flex-shrink:0}
-.cart-header h3{margin:0;font-size:16px;font-weight:700}
+.cart-header h3{margin:0;font-size:15px;font-weight:800;text-transform:uppercase;letter-spacing:0.5px}
 .cart-tabs-nav{display:flex;border-bottom:1px solid #e5e5e5;background:#f8f9fa;padding:6px 12px;gap:6px;flex-shrink:0}
 .cart-tab-btn{flex:1;padding:8px 10px;border-radius:8px;border:1px solid transparent;background:transparent;color:#64748b;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .15s ease}
 .cart-tab-btn.active{background:#fff;color:#7c3aed;border-color:#e2e8f0;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
@@ -701,12 +955,12 @@ button{cursor:pointer;font-family:inherit}
 /* ============ RESPONSIVE: DESKTOP (>=900px) ============ */
 @media (min-width:900px){
   body{background:#f1f1f5}
-  .navbar{max-width:1200px;width:calc(100% - 32px);margin:16px auto 0;padding:12px 24px;border-radius:16px;position:sticky;top:16px;z-index:60;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(124,58,237,.08)}
-  .logo{font-size:22px;flex-shrink:0}
-  .search-bar-wrap{flex:1;max-width:none;margin:0}
+  .navbar{max-width:1200px;width:calc(100% - 32px);margin:16px auto 0;padding:12px 24px;border-radius:16px;position:sticky;top:16px;z-index:60;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(124,58,237,.08);flex-wrap:nowrap}
+  .logo{font-size:22px;flex-shrink:0;order:1}
+  .search-bar-wrap{flex:1;max-width:none;margin:0;width:auto;flex-basis:auto;order:2}
   .search-bar{height:42px;font-size:13.5px;padding:0 16px 0 38px;border-radius:14px}
   .search-bar-icon{left:14px;font-size:14px}
-  .nav-actions{gap:12px;margin-left:auto}
+  .nav-actions{gap:12px;margin-left:auto;order:3}
   .nav-icon{width:42px;height:42px;font-size:18px;border-radius:12px}
   .nav-icon:hover{background:#ede9fe;border-color:#c4b5fd;transform:translateY(-1px);box-shadow:0 3px 8px rgba(124,58,237,.1)}
 
@@ -855,9 +1109,16 @@ button{cursor:pointer;font-family:inherit}
 <div class="logo" id="logo" onclick="window.scrollTo({top:0,behavior:'smooth'})">NORX<span>STORE</span></div>
 <div class="search-bar-wrap">
   <span class="search-bar-icon">🔍</span>
-  <input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()">
+  <input class="search-bar" id="searchInput" placeholder="Cari layanan joki..." oninput="handleSearch()" onfocus="handleSearchFocus()" onkeydown="handleSearchKeydown(event)" autocomplete="off">
+  <button type="button" class="search-clear-btn" id="searchClearBtn" onclick="clearSearch()" title="Hapus pencarian">✕</button>
+  <div class="search-suggestions-dropdown" id="searchSuggestionsDropdown"></div>
 </div>
 <div class="nav-actions">
+  <button type="button" class="country-currency-btn" id="countryCurrencyBtn" onclick="openCountryCurrencyModal()" title="Pilih Negara & Mata Uang">
+    <span class="country-flag-icon" id="navCountryFlag">🇮🇩</span>
+    <span class="country-code-text" id="navCountryCode">IDR</span>
+    <span class="country-arrow">▾</span>
+  </button>
   <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
   <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang">
     <div class="nav-icon">🛒</div>
@@ -888,8 +1149,8 @@ button{cursor:pointer;font-family:inherit}
 <div class="mode-wrapper">
 <section class="light-section" id="lightSection">
 <div class="section-header">
-<h2 class="section-title">🛒 Katalog Layanan</h2>
-<span class="section-link" onclick="showAllProducts()">Lihat semua →</span>
+<h2 class="section-title">🛒 KATALOG LAYANAN</h2>
+<span class="section-link" onclick="showAllProducts()">LIHAT SEMUA →</span>
 </div>
 <div class="cat-chips" id="catChips">
 <button class="cat-chip active" id="chip_all" data-cat="all" onclick="filterCat('all',this)">SEMUA</button>
@@ -1070,7 +1331,7 @@ button{cursor:pointer;font-family:inherit}
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()"></div>
 <div class="cart-panel" id="cartPanel">
 <div class="cart-header">
-<h3 id="cartPanelTitle">🛒 Keranjang Belanja</h3>
+<h3 id="cartPanelTitle">🛒 KERANJANG BELANJA</h3>
 <button class="cart-close" onclick="closeCart()">×</button>
 </div>
 <div class="cart-tabs-nav">
@@ -1373,7 +1634,78 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="admin-divider"></div>
 
-<!-- ==================== BAGIAN KELOLA RATING & ULASAN PELANGGAN ==================== -->
+<!-- ==================== BAGIAN KELOLA KURS & MULTI-CURRENCY NEGARA ==================== -->
+<div style="background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:12px;padding:14px;margin-bottom:18px">
+  <div class="admin-section-title" style="color:#0f172a;margin-top:0;display:flex;align-items:center;justify-content:space-between">
+    <span style="display:flex;align-items:center;gap:6px">🌍 Kelola Kurs & Mata Uang Negara (Multi-Currency)</span>
+    <span style="font-size:11px;background:#e2e8f0;color:#334155;padding:3px 8px;border-radius:8px;font-weight:700" id="adminCurrencyCountBadge">3 Negara (Indo, Malay, Singapur)</span>
+  </div>
+  <p class="admin-hint" style="margin-bottom:12px;background:#f1f5f9;border:1px solid #e2e8f0;padding:8px 10px;border-radius:8px;color:#334155;font-size:11.5px;line-height:1.4">
+    💡 <strong>Fitur Multi-Negara:</strong> Sesuaikan harga untuk pembeli luar negeri (🇲🇾 Malaysia & 🇸🇬 Singapura). Anda bisa mengatur nilai kurs, persentase markup, dan aturan pembulatan ke atas (contoh: 25k IDR = 5,63 RM dibulatkan ke atas jadi <strong>6 RM</strong>).
+  </p>
+
+  <!-- Pilihan Negara yang Sedang Diedit -->
+  <div style="margin-bottom:12px">
+    <label class="admin-label">Pilih Negara untuk Diedit:</label>
+    <select class="admin-input" id="adminEditCountrySelect" onchange="onAdminCountrySelectChange()" style="font-size:13px;font-weight:700;cursor:pointer">
+      <option value="MY">🇲🇾 Malaysia (MYR - RM)</option>
+      <option value="SG">🇸🇬 Singapura (SGD - S$)</option>
+      <option value="ID">🇮🇩 Indonesia (IDR - Standar Asli)</option>
+    </select>
+  </div>
+
+  <div id="adminCountryEditForm" style="background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:12px;margin-bottom:12px">
+    <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+      <div style="flex:1;min-width:140px">
+        <label class="admin-label" id="lblCountryRate">Kurs 1 [Mata Uang] ke IDR (Rp):</label>
+        <input type="number" step="any" id="adminCountryRateInput" class="admin-input" style="font-weight:700" oninput="updateAdminCurrencyPreview()">
+        <span style="font-size:10.5px;color:#64748b" id="hintCountryRate">Contoh: 4440 (1 RM = Rp 4.440)</span>
+      </div>
+      <div style="flex:1;min-width:140px">
+        <label class="admin-label">Markup Tambahan (%):</label>
+        <input type="number" step="any" id="adminCountryMarkupInput" class="admin-input" value="0" oninput="updateAdminCurrencyPreview()">
+        <span style="font-size:10.5px;color:#64748b">Tambahkan margin ekstra (0% = tanpa markup)</span>
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label">Aturan Pembulatan Harga:</label>
+      <select class="admin-input" id="adminCountryRoundingSelect" onchange="updateAdminCurrencyPreview()" style="font-size:12px;font-weight:600;cursor:pointer">
+        <option value="ceil_1">⭐ Bulatkan ke Atas ke Angka Bulat Penuh (Contoh: 5,63 RM ➔ 6 RM)</option>
+        <option value="ceil_0.5">Bulatkan ke Atas Kelipatan 0.5 (Contoh: 2,12 S$ ➔ 2.5 S$)</option>
+        <option value="ceil_5">Bulatkan ke Atas Kelipatan 5 (Contoh: 88 ₱ ➔ 90 ₱)</option>
+        <option value="ceil_10">Bulatkan ke Atas Kelipatan 10 (Contoh: 82 ➔ 90)</option>
+        <option value="round_2">Desimal 2 Angka Standar (Contoh: 5,63 RM)</option>
+        <option value="none">Tanpa Pembulatan (Desimal Asli)</option>
+      </select>
+    </div>
+
+    <!-- Live Preview Simulator -->
+    <div style="background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px;padding:10px 12px;margin-bottom:12px">
+      <div style="font-size:11.5px;font-weight:700;color:#0f172a;margin-bottom:6px">🧪 Kalkulator Simulasi Live:</div>
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+        <span style="font-size:12px;color:#64748b;font-weight:600">Uji Harga IDR: Rp</span>
+        <input type="number" id="adminSimIdrInput" class="admin-input" style="width:110px;padding:5px 8px;font-size:12px;font-weight:700;margin-bottom:0" value="25000" oninput="updateAdminCurrencyPreview()">
+      </div>
+      <div id="adminSimResultBox" style="font-size:12.5px;font-weight:700;color:#7c3aed;background:#ede9fe;padding:8px 10px;border-radius:8px;line-height:1.4">
+        Rp 25.000 ➔ 6 RM (Perhitungan: 25.000 ÷ 4.440 = 5,63 RM dibulatkan ke atas jadi 6 RM)
+      </div>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label">Metode Pembayaran untuk Negara Ini (Pisahkan Koma):</label>
+      <input type="text" id="adminCountryPaymentsInput" class="admin-input" style="font-size:12px" placeholder="Contoh: QRIS (Bisa di-scan dengan Touch 'n Go, Bank)">
+      <span style="font-size:10.5px;color:#64748b">Opsi pembayaran yang akan muncul saat pembeli memilih negara ini.</span>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button type="button" class="admin-btn" style="flex:1;background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;font-weight:700" onclick="saveAdminCountryConfig()">💾 Simpan Pengaturan Kurs Negara</button>
+      <button type="button" class="admin-btn-sm" style="background:#f1f5f9;color:#64748b;font-weight:700" onclick="resetCurrentCountryConfig()">🔄 Reset Default</button>
+    </div>
+  </div>
+</div>
+
+<div class="admin-divider"></div>
 <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:18px">
   <div class="admin-section-title" style="color:#b45309;margin-top:0;display:flex;align-items:center;justify-content:space-between">
     <span>⭐ Kelola Rating & Ulasan Pelanggan</span>
@@ -1649,6 +1981,25 @@ button{cursor:pointer;font-family:inherit}
     <div class="order-notif-actions">
       <button type="button" class="order-notif-btn" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2)" onclick="closeOrderNotif()">✕ Tutup Jendela</button>
       <button type="button" class="order-notif-btn" style="background:rgba(124,58,237,0.2);color:#c084fc;border:1px solid rgba(124,58,237,0.4)" onclick="onOrderNotifOpenCart()">🛒 Buka Riwayat Pesanan</button>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== MODAL PILIH NEGARA & MATA UANG ==================== -->
+<div class="modal-overlay" id="countryCurrencyModal" style="z-index:500;align-items:center;padding:16px" onclick="closeCountryCurrencyModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="max-width:380px;width:100%;margin:auto;padding:18px;border-radius:18px;background:#fff;border:1.5px solid #8b5cf6;box-shadow:0 25px 60px rgba(0,0,0,0.3)">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px">
+      <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
+        <span style="font-size:22px;flex-shrink:0">🌍</span>
+        <h4 style="font-size:15px;font-weight:800;margin:0;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pilih Negara & Mata Uang</h4>
+      </div>
+      <button type="button" class="modal-close" onclick="closeCountryCurrencyModal('force')" style="color:#64748b;font-weight:800;width:30px;height:30px;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;cursor:pointer;flex-shrink:0">✕</button>
+    </div>
+
+    <div class="country-currency-grid" id="countryCurrencyList"></div>
+
+    <div style="margin-top:14px">
+      <button type="button" class="admin-btn" style="background:#f1f5f9;color:#475569;border:none;padding:10px;font-size:12px;border-radius:10px;font-weight:700;width:100%;cursor:pointer" onclick="closeCountryCurrencyModal('force')">Tutup</button>
     </div>
   </div>
 </div>
@@ -2210,8 +2561,945 @@ function resetAllDiscounts(){
 function saveDiscount(){
   saveDiscountSettings();
 }
-function formatPrice(p){
-  return 'Rp' + p.toLocaleString('id-ID');
+// ==================== MULTI-LANGUAGE & I18N ====================
+const I18N = {
+  ID: {
+    langName: 'Bahasa Indonesia',
+    searchPlaceholder: 'Cari layanan joki...',
+    searchClearTitle: 'Hapus pencarian',
+    searchPenelusuran: 'Penelusuran',
+    servicesLabel: 'layanan',
+    noServicesFound: 'Tidak ada layanan yang cocok dengan',
+    showAllServices: 'TAMPILKAN SEMUA {n} LAYANAN DI KATALOG ➔',
+    countryModalTitle: 'Pilih Negara & Mata Uang',
+    countryBtnTitle: 'Pilih Negara & Mata Uang',
+    closeBtn: 'TUTUP',
+    cartIconTitle: 'Keranjang',
+    accountIconTitle: 'Akun',
+    catalogTitle: '🛒 KATALOG LAYANAN',
+    viewAllLink: 'LIHAT SEMUA →',
+    catAll: 'SEMUA',
+    catAccount: '🔑 JUAL AKUN',
+    btnBuy: '🛒 Beli',
+    btnAddCart: 'Keranjang',
+    btnInCart: 'Keranjang',
+    soldBadge: '🔴 TERJUAL',
+    reservedBadge: '🟡 DIPESAN',
+    processingBadge: '🔵 SEDANG DIPROSES',
+    stock1Badge: '🔑 STOK 1',
+    soldBtn: '🔴 Terjual',
+    reservedBtn: '🟡 Dipesan',
+    processingBtn: '🔵 Sedang Diproses',
+    cartTitle: '🛒 KERANJANG BELANJA',
+    tabCart: '🛒 Keranjang',
+    tabMyOrders: '📦 Pesanan Saya',
+    cartSubtotal: 'Subtotal',
+    cartDiscount: 'Diskon',
+    cartTotal: 'Total',
+    cartCheckoutBtn: '💬 Checkout via WhatsApp',
+    cartClear: 'Kosongkan Keranjang',
+    cartBack: '← Kembali ke Keranjang',
+    cartConfirmOrder: '✅ Konfirmasi & Kirim',
+    cartEmptyTitle: 'Keranjang Masih Kosong',
+    cartEmptySub: 'Yuk pilih dan tambahkan layanan favoritmu dari katalog!',
+    cartExploreBtn: '🎮 JELAJAHI KATALOG JOKI',
+    cartItemQty: 'Jumlah',
+    cartItemMax: 'Maksimal 1 per layanan',
+    cartRemoveTitle: 'Hapus dari keranjang',
+    ordersEmptyTitle: 'Belum Ada Pesanan',
+    ordersEmptySub: 'Layanan yang Anda pesan akan muncul di sini beserta status pengerjaannya secara real-time.',
+    ordersViewCartBtn: '🛒 LIHAT KERANJANG BELANJA',
+    payMethodLabel: 'Metode Pembayaran',
+    chatAdminLabel: 'Chat ke Admin',
+    waPreviewLabel: 'Pesan WhatsApp',
+    waSendBtn: '💬 Kirim ke WhatsApp',
+    modalHeaderTitle: 'PILIH METODE PEMBAYARAN',
+    viewFullPhoto: '🔍 Lihat Foto Ukuran Penuh',
+    testiBadge: '⭐ REPUTASI & KEPUASAN PELANGGAN',
+    testiTitle: 'TESTIMONI & RATING KEPUASAN',
+    testiDone: 'Jokian Selesai',
+    testiSatisfied: 'Puas (Bintang 4-5)',
+    testiWriteBtn: '✍️ BERI BINTANG & ULASAN JOKIAN',
+    tabTestiReviews: '⭐ Ulasan Pelanggan',
+    tabTestiProofs: '💬 Bukti Testimoni Chat',
+    waGreeting: 'Halo Admin NORXSTORE, saya ingin memesan',
+    waWithPrice: 'dengan harga',
+    waEquivalent: 'setara',
+    waAndPayment: 'dan pembayaran via',
+    waClosing: 'Mohon konfirmasi ketersediaannya, terima kasih!',
+    toastCountryChanged: 'Negara & Bahasa diubah ke'
+  },
+  MY: {
+    langName: 'Bahasa Melayu',
+    searchPlaceholder: 'Cari perkhidmatan joki...',
+    searchClearTitle: 'Padam carian',
+    searchPenelusuran: 'Carian',
+    servicesLabel: 'perkhidmatan',
+    noServicesFound: 'Tiada perkhidmatan yang sepadan dengan',
+    showAllServices: 'PAPAR SEMUA {n} PERKHIDMATAN DI KATALOG ➔',
+    countryModalTitle: 'Pilih Negara & Mata Wang',
+    countryBtnTitle: 'Pilih Negara & Mata Wang',
+    closeBtn: 'TUTUP',
+    cartIconTitle: 'Troli',
+    accountIconTitle: 'Akaun',
+    catalogTitle: '🛒 KATALOG PERKHIDMATAN',
+    viewAllLink: 'LIHAT SEMUA →',
+    catAll: 'SEMUA',
+    catAccount: '🔑 JUAL AKAUN',
+    btnBuy: '🛒 Beli',
+    btnAddCart: 'Troli',
+    btnInCart: 'Troli',
+    soldBadge: '🔴 TELAH DIJUAL',
+    reservedBadge: '🟡 TELAH DITEMPAH',
+    processingBadge: '🔵 SEDANG DIPROSES',
+    stock1Badge: '🔑 BAKI 1',
+    soldBtn: '🔴 Telah Dijual',
+    reservedBtn: '🟡 Telah Ditempah',
+    processingBtn: '🔵 Sedang Diproses',
+    cartTitle: '🛒 TROLI BELANJA',
+    tabCart: '🛒 Troli',
+    tabMyOrders: '📦 Pesanan Saya',
+    cartSubtotal: 'Subjumlah',
+    cartDiscount: 'Diskaun',
+    cartTotal: 'Jumlah',
+    cartCheckoutBtn: '💬 Checkout melalui WhatsApp',
+    cartClear: 'Kosongkan Troli',
+    cartBack: '← Kembali ke Troli',
+    cartConfirmOrder: '✅ Sahkan & Hantar',
+    cartEmptyTitle: 'Troli Masih Kosong',
+    cartEmptySub: 'Jom pilih dan tambah perkhidmatan kegemaran anda dari katalog!',
+    cartExploreBtn: '🎮 TEROKAI KATALOG JOKI',
+    cartItemQty: 'Kuantiti',
+    cartItemMax: 'Maksimum 1 bagi setiap perkhidmatan',
+    cartRemoveTitle: 'Keluarkan dari troli',
+    ordersEmptyTitle: 'Tiada Pesanan Lagi',
+    ordersEmptySub: 'Perkhidmatan yang anda pesan akan dipaparkan di sini berserta status kerja secara masa nyata.',
+    ordersViewCartBtn: '🛒 LIHAT TROLI BELANJA',
+    payMethodLabel: 'Kaedah Pembayaran',
+    chatAdminLabel: 'Sembang dengan Admin',
+    waPreviewLabel: 'Mesej WhatsApp',
+    waSendBtn: '💬 Hantar ke WhatsApp',
+    modalHeaderTitle: 'PILIH KAEDAH PEMBAYARAN',
+    viewFullPhoto: '🔍 Lihat Foto Saiz Penuh',
+    testiBadge: '⭐ REPUTASI & KEPUASAN PELANGGAN',
+    testiTitle: 'TESTIMONI & PENILAIAN PELANGGAN',
+    testiDone: 'Joki Selesai',
+    testiSatisfied: 'Berpuas Hati (Bintang 4-5)',
+    testiWriteBtn: '✍️ BERI BINTANG & ULASAN JOKI',
+    tabTestiReviews: '⭐ Ulasan Pelanggan',
+    tabTestiProofs: '💬 Bukti Testimoni Sembang',
+    waGreeting: 'Halo Admin NORXSTORE, saya ingin membuat pesanan',
+    waWithPrice: 'pada harga',
+    waEquivalent: 'bersamaan',
+    waAndPayment: 'dan pembayaran melalui',
+    waClosing: 'Sila sahkan ketersediaan, terima kasih!',
+    toastCountryChanged: 'Negara & Bahasa ditukar kepada'
+  },
+  SG: {
+    langName: 'English (Singapore)',
+    searchPlaceholder: 'Search services...',
+    searchClearTitle: 'Clear search',
+    searchPenelusuran: 'Search',
+    servicesLabel: 'services',
+    noServicesFound: 'No services found matching',
+    showAllServices: 'VIEW ALL {n} SERVICES IN CATALOG ➔',
+    countryModalTitle: 'Select Country & Currency',
+    countryBtnTitle: 'Select Country & Currency',
+    closeBtn: 'CLOSE',
+    cartIconTitle: 'Cart',
+    accountIconTitle: 'Account',
+    catalogTitle: '🛒 SERVICES CATALOG',
+    viewAllLink: 'VIEW ALL →',
+    catAll: 'ALL',
+    catAccount: '🔑 BUY/SELL ACCOUNT',
+    btnBuy: '🛒 Buy',
+    btnAddCart: 'Cart',
+    btnInCart: 'In Cart',
+    soldBadge: '🔴 SOLD OUT',
+    reservedBadge: '🟡 RESERVED',
+    processingBadge: '🔵 PROCESSING',
+    stock1Badge: '🔑 1 IN STOCK',
+    soldBtn: '🔴 Sold Out',
+    reservedBtn: '🟡 Reserved',
+    processingBtn: '🔵 Processing',
+    cartTitle: '🛒 SHOPPING CART',
+    tabCart: '🛒 Cart',
+    tabMyOrders: '📦 My Orders',
+    cartSubtotal: 'Subtotal',
+    cartDiscount: 'Discount',
+    cartTotal: 'Total',
+    cartCheckoutBtn: '💬 Checkout via WhatsApp',
+    cartClear: 'Empty Cart',
+    cartBack: '← Back to Cart',
+    cartConfirmOrder: '✅ Confirm & Send',
+    cartEmptyTitle: 'Shopping Cart is Empty',
+    cartEmptySub: 'Explore our catalog and add your favorite services now!',
+    cartExploreBtn: '🎮 EXPLORE SERVICES CATALOG',
+    cartItemQty: 'Qty',
+    cartItemMax: 'Maximum 1 per service',
+    cartRemoveTitle: 'Remove from cart',
+    ordersEmptyTitle: 'No Orders Yet',
+    ordersEmptySub: 'Your ordered services and real-time progress will appear here.',
+    ordersViewCartBtn: '🛒 VIEW SHOPPING CART',
+    payMethodLabel: 'Payment Method',
+    chatAdminLabel: 'Chat with Admin',
+    waPreviewLabel: 'WhatsApp Message',
+    waSendBtn: '💬 Send to WhatsApp',
+    modalHeaderTitle: 'SELECT PAYMENT METHOD',
+    viewFullPhoto: '🔍 View Full Size Photo',
+    testiBadge: '⭐ REPUTATION & SATISFACTION',
+    testiTitle: 'TESTIMONIALS & RATINGS',
+    testiDone: 'Orders Completed',
+    testiSatisfied: 'Satisfied (4-5 Stars)',
+    testiWriteBtn: '✍️ RATE & REVIEW OUR SERVICE',
+    tabTestiReviews: '⭐ Customer Reviews',
+    tabTestiProofs: '💬 Chat Proofs & Proof of Work',
+    waGreeting: 'Hello Admin NORXSTORE, I would like to order',
+    waWithPrice: 'for',
+    waEquivalent: 'equivalent to',
+    waAndPayment: 'with payment via',
+    waClosing: 'Please confirm availability, thank you!',
+    toastCountryChanged: 'Country & Language changed to'
+  }
+};
+
+function t(key, params = {}){
+  const lang = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID';
+  const dict = I18N[lang] || I18N.ID;
+  let str = dict[key] !== undefined ? dict[key] : (I18N.ID[key] !== undefined ? I18N.ID[key] : '');
+  if(params && typeof params === 'object'){
+    Object.keys(params).forEach(p => {
+      str = str.replace(new RegExp(`\\{${p}\\}`, 'g'), params[p]);
+    });
+  }
+  return str;
+}
+
+// ==================== PRODUCT DESCRIPTION TRANSLATION ====================
+const DESC_EXACT_MAP = {
+  "Harga murah cocok untuk pertama kali": {
+    MY: "Harga berpatutan sesuai untuk kali pertama",
+    SG: "Affordable price, perfect for first time"
+  },
+  "harga murah cocok untuk pertama kali": {
+    MY: "harga berpatutan sesuai untuk kali pertama",
+    SG: "affordable price, perfect for first time"
+  },
+  "Top-up via UID": {
+    MY: "Tambah nilai melalui UID",
+    SG: "Top-up via UID"
+  },
+  "30 hari": {
+    MY: "30 hari",
+    SG: "30 days"
+  },
+  "Full star F12": {
+    MY: "Bintang penuh F12",
+    SG: "Full stars F12"
+  },
+  "Memory of Chaos": {
+    MY: "Memory of Chaos",
+    SG: "Memory of Chaos"
+  },
+  "Pure Fiction": {
+    MY: "Pure Fiction",
+    SG: "Pure Fiction"
+  },
+  "Tower of Adversity": {
+    MY: "Tower of Adversity",
+    SG: "Tower of Adversity"
+  },
+  "All weekly bosses": {
+    MY: "Semua bos mingguan",
+    SG: "All weekly bosses"
+  },
+  "Story progression": {
+    MY: "Kemajuan jalan cerita",
+    SG: "Story progression"
+  },
+  "Anomaly farming": {
+    MY: "Farming anomali & sumber",
+    SG: "Anomaly & resource farming"
+  },
+  "Primogem, Welkin, Spiral Abyss full star.": {
+    MY: "Primogem, Welkin, Spiral Abyss bintang penuh.",
+    SG: "Primogem, Welkin, Spiral Abyss full stars."
+  },
+  "Memory of Chaos & Pure Fiction full star.": {
+    MY: "Memory of Chaos & Pure Fiction bintang penuh.",
+    SG: "Memory of Chaos & Pure Fiction full stars."
+  },
+  "Tower of Adversity clear & weekly boss.": {
+    MY: "Tower of Adversity selesai & bos mingguan.",
+    SG: "Tower of Adversity clear & weekly boss."
+  },
+  "Story clear, anomaly farming, & resource.": {
+    MY: "Cerita selesai, farming anomali & sumber.",
+    SG: "Story clear, anomaly farming & resources."
+  }
+};
+
+const WORD_MAP_MY = [
+  [/\bharga murah cocok untuk pertama kali\b/gi, 'harga berpatutan sesuai untuk kali pertama'],
+  [/\bharga murah\b/gi, 'harga berpatutan'],
+  [/\bcocok untuk pertama kali\b/gi, 'sesuai untuk kali pertama'],
+  [/\bpertama kali\b/gi, 'kali pertama'],
+  [/\bcocok untuk\b/gi, 'sesuai untuk'],
+  [/\bcocok\b/gi, 'sesuai'],
+  [/\bmurah\b/gi, 'berpatutan'],
+  [/\bakun polosan\b/gi, 'akaun kosong'],
+  [/\bakun starter\b/gi, 'akaun permulaan'],
+  [/\bakun\b/gi, 'akaun'],
+  [/\bproses cepat dan aman\b/gi, 'proses pantas dan selamat'],
+  [/\bproses cepat\b/gi, 'proses pantas'],
+  [/\bcepat\b/gi, 'pantas'],
+  [/\baman\b/gi, 'selamat'],
+  [/\bterpercaya\b/gi, 'dipercayai'],
+  [/\bgaransi seumur hidup\b/gi, 'jaminan seumur hidup'],
+  [/\bgaransi\b/gi, 'jaminan'],
+  [/\bbergaransi\b/gi, 'berjaminan'],
+  [/\bsiap pakai\b/gi, 'sedia digunakan'],
+  [/\bpaket hemat\b/gi, 'pakej jimat'],
+  [/\bpaket\b/gi, 'pakej'],
+  [/\bmenit\b/gi, 'minit'],
+  [/\blayanan\b/gi, 'perkhidmatan'],
+  [/\bselesai\b/gi, 'siap'],
+  [/\bdikerjakan\b/gi, 'dijalankan'],
+  [/\bbisa nego\b/gi, 'boleh runding'],
+  [/\bbisa\b/gi, 'boleh'],
+  [/\bbutuh\b/gi, 'perlu']
+];
+
+const WORD_MAP_SG = [
+  [/\bharga murah cocok untuk pertama kali\b/gi, 'Affordable price, perfect for first time'],
+  [/\bharga murah\b/gi, 'affordable price'],
+  [/\bcocok untuk pertama kali\b/gi, 'perfect for first time'],
+  [/\bpertama kali\b/gi, 'first time'],
+  [/\bcocok untuk\b/gi, 'suitable for'],
+  [/\bcocok\b/gi, 'suitable'],
+  [/\bmurah\b/gi, 'affordable'],
+  [/\bakun polosan\b/gi, 'fresh / clean account'],
+  [/\bakun starter\b/gi, 'starter account'],
+  [/\bakun\b/gi, 'account'],
+  [/\bproses cepat dan aman\b/gi, 'fast and secure process'],
+  [/\bproses cepat\b/gi, 'fast process'],
+  [/\bcepat\b/gi, 'fast'],
+  [/\baman\b/gi, 'safe & secure'],
+  [/\bterpercaya\b/gi, 'trusted'],
+  [/\bgaransi seumur hidup\b/gi, 'lifetime warranty'],
+  [/\bgaransi\b/gi, 'warranty'],
+  [/\bbergaransi\b/gi, 'guaranteed'],
+  [/\bsiap pakai\b/gi, 'ready to play'],
+  [/\bpaket hemat\b/gi, 'value pack'],
+  [/\bpaket\b/gi, 'pack'],
+  [/\bmenit\b/gi, 'minutes'],
+  [/\bjam\b/gi, 'hours'],
+  [/\bhari\b/gi, 'days'],
+  [/\blayanan\b/gi, 'service'],
+  [/\bselesai dalam\b/gi, 'completed in'],
+  [/\bselesai\b/gi, 'completed'],
+  [/\bdikerjakan\b/gi, 'handled'],
+  [/\bbisa nego\b/gi, 'negotiable'],
+  [/\bharian\b/gi, 'daily'],
+  [/\bmingguan\b/gi, 'weekly'],
+  [/\bbulanan\b/gi, 'monthly']
+];
+
+function translateProductDesc(desc, lang){
+  if(!desc || typeof desc !== 'string') return '';
+  const trimmed = desc.trim();
+  if(!trimmed) return '';
+  
+  const targetLang = lang || currentSelectedCountry || 'ID';
+  if(targetLang === 'ID') return desc;
+
+  // 1. Direct exact phrase match
+  if(DESC_EXACT_MAP[trimmed] && DESC_EXACT_MAP[trimmed][targetLang]){
+    return DESC_EXACT_MAP[trimmed][targetLang];
+  }
+  // Case-insensitive exact match
+  const lower = trimmed.toLowerCase();
+  for(const k in DESC_EXACT_MAP){
+    if(k.toLowerCase() === lower && DESC_EXACT_MAP[k][targetLang]){
+      return DESC_EXACT_MAP[k][targetLang];
+    }
+  }
+
+  // 2. Pattern and word mapping
+  let res = desc;
+  const wordMap = (targetLang === 'MY') ? WORD_MAP_MY : (targetLang === 'SG' ? WORD_MAP_SG : []);
+  for(let i = 0; i < wordMap.length; i++){
+    const [regex, replacement] = wordMap[i];
+    res = res.replace(regex, replacement);
+  }
+  return res;
+}
+
+function getProductDesc(p, lang = null){
+  if(!p) return '';
+  const currentLang = lang || currentSelectedCountry || 'ID';
+  if(currentLang === 'MY' && p.desc_my) return p.desc_my;
+  if(currentLang === 'SG' && (p.desc_sg || p.desc_en)) return p.desc_sg || p.desc_en;
+  if(currentLang === 'ID' && p.desc_id) return p.desc_id;
+  const baseDesc = p.desc || '';
+  return translateProductDesc(baseDesc, currentLang);
+}
+
+function updateLanguageUI(){
+  // 1. Search bar
+  const searchInput = document.getElementById('searchInput');
+  if(searchInput) searchInput.placeholder = t('searchPlaceholder');
+  const searchClearBtn = document.getElementById('searchClearBtn');
+  if(searchClearBtn) searchClearBtn.title = t('searchClearTitle');
+
+  // 2. Nav actions
+  const countryBtn = document.getElementById('countryCurrencyBtn');
+  if(countryBtn) countryBtn.title = t('countryBtnTitle');
+  const loginIcon = document.getElementById('loginIcon');
+  if(loginIcon) loginIcon.title = t('accountIconTitle');
+  const cartIconWrap = document.querySelector('.nav-icon-wrap');
+  if(cartIconWrap) cartIconWrap.title = t('cartIconTitle');
+
+  // 3. Catalog header & chips
+  const catSectionTitle = document.querySelector('.section-header .section-title');
+  if(catSectionTitle) catSectionTitle.innerHTML = t('catalogTitle');
+  const catSectionLink = document.querySelector('.section-header .section-link');
+  if(catSectionLink) catSectionLink.textContent = t('viewAllLink');
+  const chipAll = document.getElementById('chip_all');
+  if(chipAll) chipAll.textContent = t('catAll');
+  const chipLainnya = document.getElementById('chip_lainnya');
+  if(chipLainnya) chipLainnya.textContent = t('catAccount');
+
+  // 4. Cart header & buttons
+  const cartTitle = document.getElementById('cartPanelTitle');
+  if(cartTitle){
+    cartTitle.innerHTML = (typeof currentCartPanelTab !== 'undefined' && currentCartPanelTab === 'orders') 
+      ? t('tabMyOrders') 
+      : t('cartTitle');
+  }
+  const tabCart = document.getElementById('cartTabBtnCart');
+  if(tabCart) tabCart.innerHTML = t('tabCart');
+  const tabOrders = document.getElementById('cartTabBtnOrders');
+  if(tabOrders) tabOrders.innerHTML = t('tabMyOrders');
+
+  const cartSubtotalLbl = document.querySelector('.cart-subtotal-label');
+  if(cartSubtotalLbl) cartSubtotalLbl.textContent = t('cartSubtotal');
+  const cartTotalLbls = document.querySelectorAll('.cart-total-label');
+  cartTotalLbls.forEach(el => el.textContent = t('cartTotal'));
+  const cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
+  if(cartCheckoutBtn) cartCheckoutBtn.innerHTML = t('cartCheckoutBtn');
+
+  const cartClearP = document.querySelector('.cart-footer .cart-clear');
+  if(cartClearP) cartClearP.textContent = t('cartClear');
+  const cartBackP = document.querySelector('.cart-checkout-step .cart-clear');
+  if(cartBackP) cartBackP.textContent = t('cartBack');
+  const cartConfirmBtn = document.querySelector('.cart-checkout-step .cart-checkout');
+  if(cartConfirmBtn) cartConfirmBtn.innerHTML = t('cartConfirmOrder');
+
+  // Modal checkout labels
+  const modalHeaderH4 = document.querySelector('#modalOverlay .modal-header h4');
+  if(modalHeaderH4) modalHeaderH4.textContent = t('modalHeaderTitle');
+  const modalLabels = document.querySelectorAll('#modalOverlay .modal-label, #cartPanel .modal-label');
+  modalLabels.forEach(el => {
+    const text = el.textContent.trim();
+    if(text.includes('Metode') || text.includes('Kaedah') || text.includes('Payment')) el.textContent = t('payMethodLabel');
+    if(text.includes('Chat') || text.includes('Sembang')) el.textContent = t('chatAdminLabel');
+  });
+  const waLabel = document.querySelector('.wa-preview-label');
+  if(waLabel) waLabel.textContent = t('waPreviewLabel');
+  const waBtn = document.getElementById('waBtn');
+  if(waBtn) waBtn.innerHTML = t('waSendBtn');
+
+  // Country modal header & close button
+  const countryModalHeader = document.querySelector('#countryCurrencyModal h4');
+  if(countryModalHeader) countryModalHeader.textContent = t('countryModalTitle');
+  const countryModalCloseBtn = document.querySelector('#countryCurrencyModal .admin-btn');
+  if(countryModalCloseBtn) countryModalCloseBtn.textContent = t('closeBtn');
+
+  // Testimonial section
+  const darkHero = document.getElementById('darkHeroSection');
+  if(darkHero){
+    const subBadge = darkHero.querySelector('div:first-child');
+    if(subBadge) subBadge.textContent = t('testiBadge');
+    const h2 = darkHero.querySelector('h2');
+    if(h2) h2.textContent = t('testiTitle');
+    const lblCompleted = document.getElementById('statCompletedJokiCount');
+    if(lblCompleted && lblCompleted.nextElementSibling) lblCompleted.nextElementSibling.textContent = t('testiDone');
+    const lblSatisfaction = document.getElementById('statSatisfactionPercent');
+    if(lblSatisfaction && lblSatisfaction.nextElementSibling) lblSatisfaction.nextElementSibling.textContent = t('testiSatisfied');
+    const btnRate = document.getElementById('btnToggleRatingForm');
+    if(btnRate) btnRate.innerHTML = t('testiWriteBtn');
+    const tabReviews = document.getElementById('tabBtnReviews');
+    if(tabReviews) tabReviews.innerHTML = t('tabTestiReviews');
+    const tabProofs = document.getElementById('tabBtnProofs');
+    if(tabProofs) tabProofs.innerHTML = t('tabTestiProofs');
+  }
+}
+
+// ==================== MULTI-CURRENCY & NEGARA ====================
+const ALLOWED_COUNTRY_CODES = ['ID', 'MY', 'SG'];
+
+const DEFAULT_CURRENCY_CONFIG = {
+  selectedCountry: 'ID',
+  countries: {
+    ID: {
+      code: 'ID',
+      name: 'Indonesia',
+      currency: 'IDR',
+      symbol: 'Rp',
+      flag: '🇮🇩',
+      rate: 1,
+      rounding: 'none',
+      markupPercent: 0,
+      note: 'Harga Standar Asli',
+      paymentMethods: [
+        { id: 'QRIS', name: 'QRIS All Payment', icon: '📱' },
+        { id: 'DANA', name: 'DANA', icon: '💙' },
+        { id: 'GoPay', name: 'GoPay', icon: '💚' },
+        { id: 'OVO', name: 'OVO', icon: '🟣' },
+        { id: 'ShopeePay', name: 'ShopeePay', icon: '🟠' },
+        { id: 'BCA', name: 'BCA Transfer', icon: '🏦' },
+        { id: 'BRI', name: 'BRI Transfer', icon: '🏦' },
+        { id: 'Mandiri', name: 'Mandiri Transfer', icon: '🏦' }
+      ]
+    },
+    MY: {
+      code: 'MY',
+      name: 'Malaysia',
+      currency: 'MYR',
+      symbol: 'RM',
+      flag: '🇲🇾',
+      rate: 4440, // 25.000 IDR / 4440 = 5.63 RM -> dibulatkan ke atas jadi 6 RM
+      rounding: 'ceil_1',
+      markupPercent: 0,
+      note: 'Dibulatkan ke atas (25k = 6 RM)',
+      paymentMethods: [
+        { id: 'QRIS_MY', name: "QRIS (Boleh diimbas dengan Touch 'n Go / DuitNow / Bank)", icon: '📱' }
+      ]
+    },
+    SG: {
+      code: 'SG',
+      name: 'Singapura',
+      currency: 'SGD',
+      symbol: 'S$',
+      flag: '🇸🇬',
+      rate: 12000,
+      rounding: 'ceil_0.5',
+      markupPercent: 0,
+      note: 'Kelipatan 0.5 S$',
+      paymentMethods: [
+        { id: 'QRIS_SG', name: 'QRIS (Can be scanned with DBS PayLah! / OCBC / NETS)', icon: '📱' }
+      ]
+    }
+  }
+};
+
+let currencyConfigCache = null;
+let currentSelectedCountry = localStorage.getItem('norxstore_country') || 'ID';
+if(!ALLOWED_COUNTRY_CODES.includes(currentSelectedCountry)){
+  currentSelectedCountry = 'ID';
+  safeSetItem('norxstore_country', 'ID');
+}
+
+function getCurrencyConfig(){
+  if(currencyConfigCache) return currencyConfigCache;
+  try {
+    const raw = localStorage.getItem('norxstore_currency_config');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && parsed.countries){
+        const sanitizedCountries = {};
+        ALLOWED_COUNTRY_CODES.forEach(code => {
+          sanitizedCountries[code] = {
+            ...DEFAULT_CURRENCY_CONFIG.countries[code],
+            ...(parsed.countries[code] || {})
+          };
+          if(code === 'SG'){
+            sanitizedCountries[code].currency = 'SGD';
+            sanitizedCountries[code].symbol = 'S$';
+          }
+          if(code === 'MY' || code === 'SG'){
+            sanitizedCountries[code].paymentMethods = DEFAULT_CURRENCY_CONFIG.countries[code].paymentMethods;
+          }
+        });
+        currencyConfigCache = {
+          ...DEFAULT_CURRENCY_CONFIG,
+          countries: sanitizedCountries
+        };
+        return currencyConfigCache;
+      }
+    }
+  } catch(e){}
+  currencyConfigCache = JSON.parse(JSON.stringify(DEFAULT_CURRENCY_CONFIG));
+  return currencyConfigCache;
+}
+
+function saveCurrencyConfig(cfg){
+  currencyConfigCache = cfg;
+  safeSetItem('norxstore_currency_config', JSON.stringify(cfg));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/currencyConfig').set(cfg).catch(e => {
+      console.warn('Sync notice: currencyConfig disimpan di penyimpanan lokal');
+    });
+  }
+}
+
+function getCountryConfig(code){
+  const cfg = getCurrencyConfig();
+  const cCode = code || currentSelectedCountry || 'ID';
+  return (cfg.countries && cfg.countries[cCode]) || DEFAULT_CURRENCY_CONFIG.countries.ID;
+}
+
+function convertPrice(idrPrice, targetCountryCode){
+  if(typeof idrPrice !== 'number') idrPrice = Number(idrPrice) || 0;
+  const cCode = targetCountryCode || currentSelectedCountry || 'ID';
+  const country = getCountryConfig(cCode);
+
+  if(!country || cCode === 'ID' || !country.rate || country.rate <= 0){
+    return {
+      amount: idrPrice,
+      formatted: 'Rp' + idrPrice.toLocaleString('id-ID'),
+      raw: idrPrice,
+      symbol: 'Rp',
+      currency: 'IDR',
+      country: country || DEFAULT_CURRENCY_CONFIG.countries.ID
+    };
+  }
+
+  // Basic rate conversion:
+  let converted = idrPrice / country.rate;
+
+  // Extra markup if any
+  if(country.markupPercent && Number(country.markupPercent) > 0){
+    converted = converted * (1 + (Number(country.markupPercent) / 100));
+  }
+
+  let finalAmount = converted;
+  const rounding = country.rounding || 'ceil_1';
+
+  if(rounding === 'ceil_1'){
+    // User requested: 25k (5.63 RM) -> 6 RM!
+    finalAmount = Math.ceil(converted);
+  } else if(rounding === 'ceil_0.5'){
+    finalAmount = Math.ceil(converted * 2) / 2;
+  } else if(rounding === 'ceil_5'){
+    finalAmount = Math.ceil(converted / 5) * 5;
+  } else if(rounding === 'ceil_10'){
+    finalAmount = Math.ceil(converted / 10) * 10;
+  } else if(rounding === 'round_2'){
+    finalAmount = Math.round(converted * 100) / 100;
+  } else if(rounding === 'none'){
+    finalAmount = converted;
+  } else {
+    finalAmount = Math.ceil(converted);
+  }
+
+  let formattedNumber;
+  if(Number.isInteger(finalAmount)){
+    formattedNumber = finalAmount.toLocaleString('en-US');
+  } else {
+    formattedNumber = finalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+  }
+
+  return {
+    amount: finalAmount,
+    formatted: `${country.symbol} ${formattedNumber}`,
+    raw: converted,
+    symbol: country.symbol,
+    currency: country.currency,
+    country: country
+  };
+}
+
+function formatPrice(p, countryCode = null){
+  if(typeof p !== 'number') p = Number(p) || 0;
+  const res = convertPrice(p, countryCode);
+  return res.formatted;
+}
+
+function formatPriceWithOriginal(p, countryCode = null){
+  if(typeof p !== 'number') p = Number(p) || 0;
+  const target = countryCode || currentSelectedCountry || 'ID';
+  if(target === 'ID') return 'Rp' + p.toLocaleString('id-ID');
+  const res = convertPrice(p, target);
+  return `${res.formatted} (setara Rp${p.toLocaleString('id-ID')})`;
+}
+
+function selectCountry(countryCode){
+  const cfg = getCurrencyConfig();
+  if(!cfg.countries || !cfg.countries[countryCode]) return;
+  currentSelectedCountry = countryCode;
+  safeSetItem('norxstore_country', countryCode);
+  updateNavCountryBtn();
+  updateLanguageUI();
+  renderProducts();
+  renderModalPaymentMethods();
+  renderCartPaymentMethods();
+  if(typeof renderCart === 'function' && document.getElementById('cartPanel') && document.getElementById('cartPanel').classList.contains('open')){
+    renderCart();
+  }
+  closeCountryCurrencyModal('force');
+  const cInfo = cfg.countries[countryCode];
+  showToast(`${cInfo.flag} ${t('toastCountryChanged')} ${cInfo.name} (${cInfo.currency} - ${cInfo.symbol})`);
+}
+
+function updateNavCountryBtn(){
+  const cInfo = getCountryConfig(currentSelectedCountry);
+  const flagEl = document.getElementById('navCountryFlag');
+  const codeEl = document.getElementById('navCountryCode');
+  if(flagEl) flagEl.textContent = cInfo.flag;
+  if(codeEl) codeEl.textContent = cInfo.currency;
+}
+
+function openCountryCurrencyModal(){
+  renderCountryCurrencyList();
+  const modal = document.getElementById('countryCurrencyModal');
+  if(modal) modal.classList.add('open');
+}
+
+function closeCountryCurrencyModal(e){
+  const modal = document.getElementById('countryCurrencyModal');
+  if(!modal) return;
+  if(!e || e.target === modal || e.currentTarget === modal || (typeof e === 'string' && e === 'force')){
+    modal.classList.remove('open');
+  }
+}
+
+function renderCountryCurrencyList(){
+  const list = document.getElementById('countryCurrencyList');
+  if(!list) return;
+  const cfg = getCurrencyConfig();
+  const countries = cfg.countries || DEFAULT_CURRENCY_CONFIG.countries;
+
+  list.innerHTML = ALLOWED_COUNTRY_CODES.map(code => {
+    const c = countries[code] || DEFAULT_CURRENCY_CONFIG.countries[code];
+    if(!c) return '';
+    const isAct = c.code === currentSelectedCountry;
+    return `
+      <div class="country-card ${isAct ? 'active' : ''}" onclick="selectCountry('${c.code}')">
+        <div class="country-card-main">
+          <span class="country-card-flag">${c.flag}</span>
+          <div class="country-card-info">
+            <div class="country-card-top-row">
+              <span class="country-card-title">${escapeHtml(c.name)}</span>
+              <span class="country-card-badge">${c.currency} (${c.symbol})</span>
+            </div>
+            <div class="country-card-lang">
+              <span>🗣️</span> <span>${(I18N[c.code] && I18N[c.code].langName) || 'Bahasa'}</span>
+            </div>
+          </div>
+        </div>
+        <div class="country-card-right">
+          <span class="country-card-check">${isAct ? '✓' : ''}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function getActivePaymentMethods(){
+  const cInfo = getCountryConfig(currentSelectedCountry);
+  if(Array.isArray(cInfo.paymentMethods) && cInfo.paymentMethods.length > 0){
+    return cInfo.paymentMethods;
+  }
+  return DEFAULT_CURRENCY_CONFIG.countries.ID.paymentMethods;
+}
+
+function renderModalPaymentMethods(){
+  const grid = document.getElementById('modalPayGrid');
+  if(!grid) return;
+  const methods = getActivePaymentMethods();
+  grid.innerHTML = methods.map((m, idx) => `
+    <div class="pay-option ${idx === 0 ? 'selected' : ''}" data-method="${escapeHtml(m.name)}" onclick="selectPay(this, '${escapeHtml(m.name)}')">
+      <span class="pay-check">✓</span>
+      <span class="pay-icon">${m.icon || '💳'}</span>
+      <span class="pay-name">${escapeHtml(m.name)}</span>
+    </div>
+  `).join('');
+
+  let noteHtml = '';
+  if(currentSelectedCountry === 'MY'){
+    noteHtml = `<div style="font-size:11px;color:#64748b;margin-top:6px;line-height:1.4;background:#f8fafc;padding:7px 10px;border-radius:8px;border:1px dashed #cbd5e1">🇲🇾 <b>QRIS boleh diimbas dengan:</b> <b>Touch 'n Go eWallet, MAE Maybank, CIMB, atau DuitNow QR</b>.</div>`;
+  } else if(currentSelectedCountry === 'SG'){
+    noteHtml = `<div style="font-size:11px;color:#64748b;margin-top:6px;line-height:1.4;background:#f8fafc;padding:7px 10px;border-radius:8px;border:1px dashed #cbd5e1">🇸🇬 <b>QRIS can be scanned with:</b> <b>DBS PayLah!, OCBC Digital, UOB TMRW, or NETS</b>.</div>`;
+  }
+  let noteEl = document.getElementById('modalPayCrossBorderNote');
+  if(!noteEl){
+    noteEl = document.createElement('div');
+    noteEl.id = 'modalPayCrossBorderNote';
+    grid.parentNode.insertBefore(noteEl, grid.nextSibling);
+  }
+  noteEl.innerHTML = noteHtml;
+
+  if(methods.length > 0){
+    selectedPayment = methods[0].name;
+  }
+}
+
+function renderCartPaymentMethods(){
+  const grid = document.getElementById('cartPayGrid');
+  if(!grid) return;
+  const methods = getActivePaymentMethods();
+  grid.innerHTML = methods.map((m, idx) => `
+    <div class="pay-option ${idx === 0 ? 'selected' : ''}" data-method="${escapeHtml(m.name)}" onclick="selectCartPay(this, '${escapeHtml(m.name)}')">
+      <span class="pay-check">✓</span>
+      <span class="pay-icon">${m.icon || '💳'}</span>
+      <span class="pay-name">${escapeHtml(m.name)}</span>
+    </div>
+  `).join('');
+
+  let noteHtml = '';
+  if(currentSelectedCountry === 'MY'){
+    noteHtml = `<div style="font-size:11px;color:#64748b;margin-top:6px;line-height:1.4;background:#f8fafc;padding:7px 10px;border-radius:8px;border:1px dashed #cbd5e1">🇲🇾 <b>QRIS boleh diimbas dengan:</b> <b>Touch 'n Go eWallet, MAE Maybank, CIMB, atau DuitNow QR</b>.</div>`;
+  } else if(currentSelectedCountry === 'SG'){
+    noteHtml = `<div style="font-size:11px;color:#64748b;margin-top:6px;line-height:1.4;background:#f8fafc;padding:7px 10px;border-radius:8px;border:1px dashed #cbd5e1">🇸🇬 <b>QRIS can be scanned with:</b> <b>DBS PayLah!, OCBC Digital, UOB TMRW, or NETS</b>.</div>`;
+  }
+  let noteEl = document.getElementById('cartPayCrossBorderNote');
+  if(!noteEl){
+    noteEl = document.createElement('div');
+    noteEl.id = 'cartPayCrossBorderNote';
+    grid.parentNode.insertBefore(noteEl, grid.nextSibling);
+  }
+  noteEl.innerHTML = noteHtml;
+
+  if(methods.length > 0){
+    selectedCartPayment = methods[0].name;
+  }
+}
+
+// Admin Currency Management
+function onAdminCountrySelectChange(){
+  const select = document.getElementById('adminEditCountrySelect');
+  if(!select) return;
+  const code = select.value;
+  const cInfo = getCountryConfig(code);
+  
+  const lblRate = document.getElementById('lblCountryRate');
+  const hintRate = document.getElementById('hintCountryRate');
+  const rateInput = document.getElementById('adminCountryRateInput');
+  const markupInput = document.getElementById('adminCountryMarkupInput');
+  const roundSelect = document.getElementById('adminCountryRoundingSelect');
+  const payInput = document.getElementById('adminCountryPaymentsInput');
+
+  if(lblRate) lblRate.textContent = `Kurs 1 ${cInfo.symbol} (${cInfo.currency}) ke IDR (Rp):`;
+  if(hintRate) hintRate.textContent = `Contoh: ${cInfo.rate} (1 ${cInfo.symbol} = Rp ${cInfo.rate.toLocaleString('id-ID')})`;
+  if(rateInput) rateInput.value = cInfo.rate || 1;
+  if(markupInput) markupInput.value = cInfo.markupPercent || 0;
+  if(roundSelect) roundSelect.value = cInfo.rounding || 'ceil_1';
+  
+  if(payInput){
+    const pays = Array.isArray(cInfo.paymentMethods) ? cInfo.paymentMethods.map(p => p.name).join(', ') : '';
+    payInput.value = pays;
+  }
+
+  updateAdminCurrencyPreview();
+}
+
+function updateAdminCurrencyPreview(){
+  const select = document.getElementById('adminEditCountrySelect');
+  if(!select) return;
+  const code = select.value;
+  const cInfo = getCountryConfig(code);
+
+  const rate = parseFloat(document.getElementById('adminCountryRateInput').value) || cInfo.rate || 1;
+  const markup = parseFloat(document.getElementById('adminCountryMarkupInput').value) || 0;
+  const rounding = document.getElementById('adminCountryRoundingSelect').value || 'ceil_1';
+  const idr = parseFloat(document.getElementById('adminSimIdrInput').value) || 25000;
+
+  let converted = idr / rate;
+  if(markup > 0) converted = converted * (1 + (markup / 100));
+
+  let finalAmount = converted;
+  if(rounding === 'ceil_1'){
+    finalAmount = Math.ceil(converted);
+  } else if(rounding === 'ceil_0.5'){
+    finalAmount = Math.ceil(converted * 2) / 2;
+  } else if(rounding === 'ceil_5'){
+    finalAmount = Math.ceil(converted / 5) * 5;
+  } else if(rounding === 'ceil_10'){
+    finalAmount = Math.ceil(converted / 10) * 10;
+  } else if(rounding === 'round_2'){
+    finalAmount = Math.round(converted * 100) / 100;
+  }
+
+  let formattedNumber = Number.isInteger(finalAmount)
+    ? finalAmount.toLocaleString('en-US')
+    : finalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
+  const resBox = document.getElementById('adminSimResultBox');
+  if(resBox){
+    const rawFixed = (idr / rate).toFixed(2);
+    let desc = `Perhitungan: ${idr.toLocaleString('id-ID')} ÷ ${rate.toLocaleString('id-ID')} = ${rawFixed} ${cInfo.symbol}`;
+    if(rounding === 'ceil_1'){
+      desc += ` ➔ dibulatkan ke atas jadi ${finalAmount} ${cInfo.symbol}`;
+    } else if(rounding === 'ceil_0.5'){
+      desc += ` ➔ dibulatkan ke kelipatan 0.5 jadi ${finalAmount} ${cInfo.symbol}`;
+    }
+    resBox.innerHTML = `Rp ${idr.toLocaleString('id-ID')} ➔ <strong>${cInfo.symbol} ${formattedNumber}</strong><br><span style="font-size:11px;opacity:0.85">${desc}</span>`;
+  }
+}
+
+function saveAdminCountryConfig(){
+  const select = document.getElementById('adminEditCountrySelect');
+  if(!select) return;
+  const code = select.value;
+  const cfg = getCurrencyConfig();
+  if(!cfg.countries[code]) return;
+
+  const rate = parseFloat(document.getElementById('adminCountryRateInput').value);
+  const markup = parseFloat(document.getElementById('adminCountryMarkupInput').value) || 0;
+  const rounding = document.getElementById('adminCountryRoundingSelect').value || 'ceil_1';
+  const payStr = document.getElementById('adminCountryPaymentsInput').value.trim();
+
+  if(code !== 'ID' && (!rate || rate <= 0)){
+    showToast('⚠️ Kurs nilai tukar harus lebih besar dari 0!');
+    return;
+  }
+
+  cfg.countries[code].rate = rate || 1;
+  cfg.countries[code].markupPercent = markup;
+  cfg.countries[code].rounding = rounding;
+
+  if(payStr){
+    const payArr = payStr.split(',').map(s => s.trim()).filter(Boolean);
+    cfg.countries[code].paymentMethods = payArr.map((name, i) => {
+      let icon = '💳';
+      const nLower = name.toLowerCase();
+      if(nLower.includes('touch') || nLower.includes('tng') || nLower.includes('gcash')) icon = '📲';
+      else if(nLower.includes('duitnow')) icon = '🇲🇾';
+      else if(nLower.includes('paynow')) icon = '🇸🇬';
+      else if(nLower.includes('qris')) icon = '📱';
+      else if(nLower.includes('dana')) icon = '💙';
+      else if(nLower.includes('gopay')) icon = '💚';
+      else if(nLower.includes('bank') || nLower.includes('maybank') || nLower.includes('bca') || nLower.includes('dbs')) icon = '🏦';
+      else if(nLower.includes('wise')) icon = '🌐';
+      else if(nLower.includes('crypto') || nLower.includes('usdt')) icon = '🪙';
+      return { id: 'pm_' + i, name: name, icon: icon };
+    });
+  }
+
+  saveCurrencyConfig(cfg);
+  updateNavCountryBtn();
+  renderProducts();
+  if(document.getElementById('cartPanel') && document.getElementById('cartPanel').classList.contains('open')){
+    renderCart();
+  }
+  showToast(`✅ Pengaturan kurs negara ${cfg.countries[code].flag} ${cfg.countries[code].name} berhasil disimpan!`);
+}
+
+function resetCurrentCountryConfig(){
+  const select = document.getElementById('adminEditCountrySelect');
+  if(!select) return;
+  const code = select.value;
+  const cfg = getCurrencyConfig();
+  if(DEFAULT_CURRENCY_CONFIG.countries[code]){
+    cfg.countries[code] = JSON.parse(JSON.stringify(DEFAULT_CURRENCY_CONFIG.countries[code]));
+    saveCurrencyConfig(cfg);
+    onAdminCountrySelectChange();
+    updateNavCountryBtn();
+    renderProducts();
+    showToast(`🔄 Pengaturan kurs ${cfg.countries[code].name} direset ke default.`);
+  }
 }
 
 const DEFAULT_REVIEW_PHOTOS = ['/rev_0.jpg', '/rev_1.jpg', '/rev_2.jpg', '/rev_3.jpg', '/rev_4.jpg'];
@@ -2545,6 +3833,31 @@ fbDB.ref('norxstore/discount').on('value', snap=>{
   renderProducts();
   if(cart.length > 0) renderCart();
   if(isAdminOpen()) renderDiscountAdminUI();
+});
+fbDB.ref('norxstore/currencyConfig').on('value', snap=>{
+  const val = snap.val();
+  if(val && val.countries){
+    const sanitizedCountries = {};
+    ALLOWED_COUNTRY_CODES.forEach(code => {
+      sanitizedCountries[code] = {
+        ...DEFAULT_CURRENCY_CONFIG.countries[code],
+        ...(val.countries[code] || {})
+      };
+    });
+    currencyConfigCache = {
+      ...DEFAULT_CURRENCY_CONFIG,
+      countries: sanitizedCountries
+    };
+    safeSetItem('norxstore_currency_config', JSON.stringify(currencyConfigCache));
+    if(!ALLOWED_COUNTRY_CODES.includes(currentSelectedCountry)){
+      currentSelectedCountry = 'ID';
+      safeSetItem('norxstore_country', 'ID');
+    }
+    updateNavCountryBtn();
+    renderProducts();
+    if(cart.length > 0) renderCart();
+    if(isAdminOpen()) onAdminCountrySelectChange();
+  }
 });
 fbDB.ref('norxstore/images').on('value', snap=>{
   const val = snap.val() || {};
@@ -2929,7 +4242,7 @@ function switchCartPanelTab(tab){
     if(btnOrders) btnOrders.classList.add('active');
     if(viewCart) viewCart.style.display = 'none';
     if(viewOrders) viewOrders.style.display = 'block';
-    if(title) title.innerHTML = '📦 Pesanan Saya';
+    if(title) title.innerHTML = t('tabMyOrders');
     if(footer) footer.style.display = 'none';
     renderMyOrders();
   } else {
@@ -2937,7 +4250,7 @@ function switchCartPanelTab(tab){
     if(btnOrders) btnOrders.classList.remove('active');
     if(viewCart) viewCart.style.display = 'block';
     if(viewOrders) viewOrders.style.display = 'none';
-    if(title) title.innerHTML = '🛒 Keranjang Belanja';
+    if(title) title.innerHTML = t('cartTitle');
     renderCart();
   }
 }
@@ -2959,10 +4272,10 @@ function renderMyOrders(){
     section.innerHTML = `
       <div class="cart-empty" style="padding:40px 16px">
         <span class="cart-empty-icon">📦</span>
-        <p style="font-weight:700;color:#1e1b4b;font-size:14px">Belum Ada Pesanan</p>
-        <p style="font-size:12px;margin-top:4px;color:#64748b">Layanan yang Anda pesan akan muncul di sini beserta status pengerjaannya secara real-time.</p>
+        <p style="font-weight:700;color:#1e1b4b;font-size:14px">${t('ordersEmptyTitle')}</p>
+        <p style="font-size:12px;margin-top:4px;color:#64748b">${t('ordersEmptySub')}</p>
         <button type="button" class="give-rating-hero-btn" style="margin-top:14px;font-size:11.5px;padding:8px 16px" onclick="switchCartPanelTab('cart')">
-          🛒 Lihat Keranjang Belanja
+          ${t('ordersViewCartBtn')}
         </button>
       </div>
     `;
@@ -4832,10 +6145,10 @@ function renderCart(){
     body.innerHTML = `
       <div class="cart-empty" style="padding:40px 16px">
         <span class="cart-empty-icon">🛒</span>
-        <p style="font-weight:700;color:#1e1b4b;font-size:14px">Keranjang Masih Kosong</p>
-        <p style="font-size:12px;margin-top:4px;color:#64748b">Yuk pilih dan tambahkan layanan favoritmu dari katalog!</p>
+        <p style="font-weight:700;color:#1e1b4b;font-size:14px">${t('cartEmptyTitle')}</p>
+        <p style="font-size:12px;margin-top:4px;color:#64748b">${t('cartEmptySub')}</p>
         <button type="button" class="give-rating-hero-btn" style="margin-top:14px;font-size:11.5px;padding:8px 16px" onclick="closeCart()">
-          🎮 Jelajahi Katalog Joki
+          ${t('cartExploreBtn')}
         </button>
       </div>`;
     footer.style.display = 'none';
@@ -4867,18 +6180,19 @@ function renderCart(){
       <div class="cart-item-thumb">${thumb}</div>
       <div class="cart-item-info">
         <p class="cart-item-name">${item.name}</p>
+        <p class="cart-item-meta" style="font-size:11px;color:#64748b;margin:2px 0 4px">${getProductDesc(item)}</p>
         <div class="cart-item-price-row">
           ${hasDisc ? `<span class="cart-item-price-old">${formatPrice(itemSub)}</span>` : ''}
           <span class="${hasDisc ? 'cart-item-price-discount' : 'cart-item-price'}">${formatPrice(itemFinal)}</span>
           ${hasDisc ? `<span style="font-size:10px;color:#ef4444;font-weight:700">-${itemDisc}%</span>` : ''}
         </div>
         <div class="cart-item-qty" style="margin-top:5px;display:flex;align-items:center;gap:6px">
-          <span style="font-size:11px;font-weight:700;color:#6b7280;background:#f3f4f6;padding:3px 8px;border-radius:6px;border:1px solid #e5e7eb">Jumlah: 1</span>
-          <span style="font-size:10px;color:#9ca3af">• Maksimal 1 per layanan</span>
+          <span style="font-size:11px;font-weight:700;color:#6b7280;background:#f3f4f6;padding:3px 8px;border-radius:6px;border:1px solid #e5e7eb">${t('cartItemQty')}: 1</span>
+          <span style="font-size:10px;color:#9ca3af">• ${t('cartItemMax')}</span>
         </div>
         ${busyWarning}
       </div>
-      <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="Hapus dari keranjang">🗑</button>
+      <button class="cart-item-remove" onclick="removeFromCart(${item.id})" title="${t('cartRemoveTitle')}">🗑</button>
     </div>
   `}).join('');
 
@@ -4909,13 +6223,13 @@ function renderCart(){
     if(busyItems.length > 0){
       checkoutBtn.style.background = '#9ca3af';
       checkoutBtn.style.cursor = 'not-allowed';
-      checkoutBtn.title = 'Hapus item yang sedang diproses untuk checkout';
-      checkoutBtn.innerHTML = `⏳ Ada ${busyItems.length} Produk Belum Selesai Dikerjakan`;
+      checkoutBtn.title = (currentSelectedCountry === 'SG') ? 'Remove processing items to checkout' : ((currentSelectedCountry === 'MY') ? 'Keluarkan item yang sedang diproses untuk checkout' : 'Hapus item yang sedang diproses untuk checkout');
+      checkoutBtn.innerHTML = `⏳ ` + ((currentSelectedCountry === 'SG') ? `${busyItems.length} Item(s) Still In Progress` : ((currentSelectedCountry === 'MY') ? `Ada ${busyItems.length} Produk Belum Siap Dijalankan` : `Ada ${busyItems.length} Produk Belum Selesai Dikerjakan`));
     } else {
       checkoutBtn.style.background = '';
       checkoutBtn.style.cursor = '';
       checkoutBtn.title = '';
-      checkoutBtn.innerHTML = `💬 Checkout via WhatsApp`;
+      checkoutBtn.innerHTML = t('cartCheckoutBtn');
     }
   }
 
@@ -4956,6 +6270,7 @@ function openCartCheckoutStep(){
     return;
   }
   document.getElementById('cartTotalStep').textContent = document.getElementById('cartTotal').textContent;
+  renderCartPaymentMethods();
   document.getElementById('cartBody').style.display = 'none';
   document.getElementById('cartFooter').style.display = 'none';
   document.getElementById('cartCheckoutStep').style.display = 'block';
@@ -5007,12 +6322,19 @@ function checkoutCart(){
     return `• ${item.name} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (Diskon ${itemDisc}%)` : ''}`;
   }).join('\n');
   const total = subtotal - totalDiscountAmount;
-  let text = `Halo Admin NORXSTORE, saya ingin memesan:\n\n${itemsText}\n\n`;
+  let text = `${t('waGreeting')}:\n\n${itemsText}\n\n`;
   if(totalDiscountAmount > 0){
     const discSummary = (discountConfig && discountConfig.mode === 'all') ? ` (${discountConfig.global}%)` : '';
-    text += `Subtotal: ${formatPrice(subtotal)}\nTotal Diskon: -${formatPrice(totalDiscountAmount)}${discSummary}\n`;
+    text += `${t('cartSubtotal')}: ${formatPrice(subtotal)}\nTotal ${t('cartDiscount')}: -${formatPrice(totalDiscountAmount)}${discSummary}\n`;
   }
-  text += `Total: ${formatPrice(total)}\nMetode Pembayaran: ${selectedCartPayment}\n\nMohon konfirmasi ketersediaannya, terima kasih!`;
+  if(currentSelectedCountry && currentSelectedCountry !== 'ID'){
+    const cInfo = getCountryConfig(currentSelectedCountry);
+    text += `${t('cartTotal')}: ${formatPrice(total)} (${t('waEquivalent')} Rp ${total.toLocaleString('id-ID')})\n`;
+    text += `${currentSelectedCountry === 'SG' ? 'Currency' : (currentSelectedCountry === 'MY' ? 'Mata Wang' : 'Mata Uang')}: ${cInfo.flag} ${cInfo.name} (${cInfo.currency} - ${cInfo.symbol})\n`;
+  } else {
+    text += `${t('cartTotal')}: ${formatPrice(total)}\n`;
+  }
+  text += `${t('payMethodLabel')}: ${selectedCartPayment}\n\n${t('waClosing')}`;
   const url = getWaLink(text, selectedCartAdmin);
   const adminObj = WA_NUMBERS.find(a => a.number === selectedCartAdmin);
   createOrder(
@@ -5155,6 +6477,7 @@ function openAdmin(){
   document.getElementById('imgAdminSection').style.display = 'none';
 
   updateOnlineCountersUI(currentOnlineCount);
+  onAdminCountrySelectChange();
   document.getElementById('adminOverlay').classList.add('open');
 }
 function closeAdmin(e){
@@ -5844,28 +7167,28 @@ function renderProductCard(p, discount, idx){
 
   let busyBadge = '';
   if(isSold){
-    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#6b7280,#374151);left:8px;right:auto">🔴 TERJUAL</span>`;
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#6b7280,#374151);left:8px;right:auto">${t('soldBadge')}</span>`;
   } else if(isReserved){
-    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">🟡 DIPESAN · ${getReserveMinutesLeft(p)} mnt</span>`;
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">${t('reservedBadge')} · ${getReserveMinutesLeft(p)} ${currentSelectedCountry === 'SG' ? 'mins' : 'mnt'}</span>`;
   } else if(isOrderProcessing){
-    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">🔵 SEDANG DIPROSES${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">${t('processingBadge')}${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
   } else if(p.isAccount){
-    busyBadge = `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">🔑 STOK 1</span>`;
+    busyBadge = `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">${t('stock1Badge')}</span>`;
   }
 
   let lockedBtnText = '';
   let lockedBtnBg = '#9ca3af';
   if(isSold){
-    lockedBtnText = '🔴 Terjual';
+    lockedBtnText = t('soldBtn');
   } else if(isReserved){
-    lockedBtnText = '🟡 Dipesan';
+    lockedBtnText = t('reservedBtn');
   } else if(isOrderProcessing){
-    lockedBtnText = '🔵 Sedang Diproses';
+    lockedBtnText = t('processingBtn');
     lockedBtnBg = 'linear-gradient(135deg,#2563eb,#1d4ed8)';
   }
 
   return `
-  <div class="product-card" style="${isLocked ? 'opacity:.82' : ''}">
+  <div class="product-card" id="prodCard_${p.id}" style="${isLocked ? 'opacity:.82' : ''}">
     <div class="product-img-wrap" id="prodImgWrap_${p.id}">
       ${!isLocked && !p.isAccount && p.badge?`<span class="product-badge">${p.badge}</span>`:''}
       ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
@@ -5882,15 +7205,15 @@ function renderProductCard(p, discount, idx){
         ${hasDisc?`<span class="product-price-old">${formatPrice(p.price)}</span>`:''}
         <span class="${hasDisc?'product-price-discount':'product-price'}">${formatPrice(discPrice)}</span>
       </div>
-      <p class="product-meta">${p.desc}</p>
+      <p class="product-meta">${getProductDesc(p)}</p>
       <div class="product-btn-row" onclick="event.stopPropagation()">
         ${isLocked
           ? `<button class="buy-now-btn" style="background:${lockedBtnBg};cursor:not-allowed;color:#fff;font-weight:700;opacity:.95" disabled>${lockedBtnText}</button>`
-          : `<button class="buy-now-btn" onclick="openModal(${p.id})">🛒 Beli</button>
+          : `<button class="buy-now-btn" onclick="openModal(${p.id})">${t('btnBuy')}</button>
              ${p.isAccount ? '' : (
                cart.some(item => item.id === p.id)
-                 ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="Sudah di keranjang (klik untuk batalkan/hapus)" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>Keranjang</button>`
-                 : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>Keranjang</button>`
+                 ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="${t('btnInCart')}" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>${t('btnInCart')}</button>`
+                 : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>${t('btnAddCart')}</button>`
              )}`
         }
       </div>
@@ -6038,9 +7361,218 @@ function filterCat(cat,btn){
     openSubgroupPopup(cat);
   }
 }
-function handleSearch(){
-  renderProducts();
+function highlightQuery(text, query){
+  if(!query || !text) return escapeHtml(text || '');
+  const escaped = escapeHtml(text);
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return escaped.replace(regex, '<mark>$1</mark>');
 }
+
+function handleSearch(){
+  const searchInput = document.getElementById('searchInput');
+  const clearBtn = document.getElementById('searchClearBtn');
+  const query = searchInput ? searchInput.value.trim() : '';
+
+  if(clearBtn){
+    if(query.length > 0){
+      clearBtn.classList.add('show');
+    } else {
+      clearBtn.classList.remove('show');
+    }
+  }
+
+  // Live filter katalog produk
+  renderProducts();
+
+  // Tampilkan live dropdown saran penelusuran
+  renderSearchSuggestions(query);
+}
+
+function handleSearchFocus(){
+  const searchInput = document.getElementById('searchInput');
+  const query = searchInput ? searchInput.value.trim() : '';
+  if(query){
+    renderSearchSuggestions(query);
+  } else {
+    closeSearchSuggestions();
+  }
+}
+
+function handleSearchKeydown(e){
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    const searchInput = document.getElementById('searchInput');
+    if(searchInput) searchInput.blur();
+    submitFullSearch();
+  } else if(e.key === 'Escape'){
+    closeSearchSuggestions();
+  }
+}
+
+function clearSearch(){
+  const searchInput = document.getElementById('searchInput');
+  if(searchInput){
+    searchInput.value = '';
+    searchInput.focus();
+  }
+  const clearBtn = document.getElementById('searchClearBtn');
+  if(clearBtn) clearBtn.classList.remove('show');
+  
+  renderProducts();
+  closeSearchSuggestions();
+}
+
+function closeSearchSuggestions(){
+  const dropdown = document.getElementById('searchSuggestionsDropdown');
+  if(dropdown) dropdown.classList.remove('open');
+}
+
+function renderSearchSuggestions(query){
+  const dropdown = document.getElementById('searchSuggestionsDropdown');
+  if(!dropdown) return;
+
+  const q = (query || '').trim().toLowerCase();
+
+  // Jika input kosong -> jangan tampilkan dropdown agar bersih dan tidak ramai
+  if(!q){
+    closeSearchSuggestions();
+    return;
+  }
+
+  // Filter produk yang cocok
+  const matches = products.filter(p => {
+    const nameMatch = p.name && p.name.toLowerCase().includes(q);
+    const descMatch = p.desc && p.desc.toLowerCase().includes(q);
+    const subMatch = p.subgroup && p.subgroup.toLowerCase().includes(q);
+    const catMatch = p.cat && p.cat.toLowerCase().includes(q);
+    return nameMatch || descMatch || subMatch || catMatch;
+  });
+
+  if(matches.length === 0){
+    dropdown.innerHTML = `
+      <div class="search-sug-empty">
+        <span style="font-size:20px">🔍</span>
+        <p style="margin:4px 0 0;font-size:12px">${t('noServicesFound')} "<strong>${escapeHtml(query)}</strong>"</p>
+      </div>
+    `;
+    dropdown.classList.add('open');
+    return;
+  }
+
+  let html = `
+    <div class="search-sug-header">
+      <span>🔍 ${t('searchPenelusuran')} <strong>"${escapeHtml(query)}"</strong> (${matches.length} ${t('servicesLabel')}):</span>
+      <button type="button" onclick="closeSearchSuggestions()" style="border:none;background:transparent;cursor:pointer;color:#94a3b8;font-size:13px;padding:2px 6px">✕</button>
+    </div>
+    <div class="search-sug-list">
+  `;
+
+  // Render hingga 6 produk teratas
+  matches.slice(0, 6).forEach(p => {
+    const imgs = getImagesForProduct(p.id);
+    const imgHtml = (imgs && imgs.length > 0)
+      ? `<img src="${escapeHtml(imgs[0])}" alt="${escapeHtml(p.name)}" />`
+      : `<span class="emoji-icon">${p.icon || '💠'}</span>`;
+    
+    const disc = getDiscount(p.cat);
+    const discPrice = getDiscountedPrice(p.price, p.cat);
+    const hasDisc = disc > 0;
+    const convPrice = convertPrice(discPrice, currentSelectedCountry);
+    const convOldPrice = hasDisc ? convertPrice(p.price, currentSelectedCountry) : null;
+    const catName = (CAT_INFO[p.cat] && CAT_INFO[p.cat].name) ? CAT_INFO[p.cat].name : (p.cat || 'Layanan');
+
+    html += `
+      <div class="search-sug-item" onclick="selectSearchResult(${p.id})">
+        <div class="search-sug-img-wrap">
+          ${imgHtml}
+        </div>
+        <div class="search-sug-info">
+          <div class="search-sug-title">${highlightQuery(p.name, query)}</div>
+          <div class="search-sug-meta">
+            <span class="search-sug-cat">${escapeHtml(catName)}</span>
+            <span class="search-sug-desc">${highlightQuery(p.desc || p.subgroup || '', query)}</span>
+          </div>
+        </div>
+        <div class="search-sug-price">
+          ${convOldPrice ? `<span class="sug-price-old">${convOldPrice.formatted}</span>` : ''}
+          <span class="sug-price-val">${convPrice.formatted}</span>
+        </div>
+      </div>
+    `;
+  });
+
+  html += `</div>`;
+
+  html += `
+    <div class="search-sug-footer">
+      <button type="button" class="search-sug-footer-btn" onclick="submitFullSearch()">
+        ${t('showAllServices', {n: matches.length})}
+      </button>
+    </div>
+  `;
+
+  dropdown.innerHTML = html;
+  dropdown.classList.add('open');
+}
+
+function applySearchTag(tag){
+  const searchInput = document.getElementById('searchInput');
+  if(searchInput){
+    searchInput.value = tag;
+  }
+  const clearBtn = document.getElementById('searchClearBtn');
+  if(clearBtn) clearBtn.classList.add('show');
+  
+  currentCatFilter = 'all';
+  currentSubgroupFilter = 'all';
+  renderProducts();
+  closeSearchSuggestions();
+
+  const grid = document.getElementById('productGrid');
+  if(grid) grid.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function selectSearchResult(pid){
+  closeSearchSuggestions();
+  const prod = products.find(p => p.id === pid);
+  if(prod){
+    const searchInput = document.getElementById('searchInput');
+    if(searchInput) searchInput.value = prod.name;
+    const clearBtn = document.getElementById('searchClearBtn');
+    if(clearBtn) clearBtn.classList.add('show');
+
+    currentCatFilter = 'all';
+    currentSubgroupFilter = 'all';
+    renderProducts();
+
+    setTimeout(() => {
+      const card = document.getElementById(`prodCard_${pid}`);
+      if(card){
+        card.scrollIntoView({behavior:'smooth', block:'center'});
+        card.classList.add('card-highlight-glow');
+        setTimeout(() => card.classList.remove('card-highlight-glow'), 2000);
+      } else {
+        const grid = document.getElementById('productGrid');
+        if(grid) grid.scrollIntoView({behavior:'smooth', block:'start'});
+      }
+    }, 100);
+  }
+}
+
+function submitFullSearch(){
+  closeSearchSuggestions();
+  renderProducts();
+  const grid = document.getElementById('productGrid');
+  if(grid) grid.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// Tutup dropdown saran saat klik di luar kotak pencarian
+document.addEventListener('click', function(e){
+  const wrap = document.querySelector('.search-bar-wrap');
+  if(wrap && !wrap.contains(e.target)){
+    closeSearchSuggestions();
+  }
+});
 function showAllProducts(){
   currentCatFilter = 'all';
   currentSubgroupFilter = 'all';
@@ -6296,11 +7828,12 @@ function openModal(id){
         <p class="${hasDisc?'price-discount':'price'}">${formatPrice(discPrice)}</p>
         ${hasDisc?`<span class="discount-tag">-${discount}%</span>`:''}
       </div>
-      ${hasProdImgs ? `<div style="margin-top:3px"><span style="font-size:11px;color:#7c3aed;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px" onclick="openProductImageViewer(${id},0)">🔍 Lihat Foto Ukuran Penuh</span></div>` : ''}
+      <p class="desc" style="font-size:12px;color:#64748b;margin:3px 0 4px">${getProductDesc(selectedProduct)}</p>
+      ${hasProdImgs ? `<div style="margin-top:3px"><span style="font-size:11px;color:#7c3aed;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px" onclick="openProductImageViewer(${id},0)">${t('viewFullPhoto')}</span></div>` : ''}
     </div>`;
-  document.querySelectorAll('#modalPayGrid .pay-option').forEach(el=>el.classList.remove('selected'));
+  renderModalPaymentMethods();
   document.querySelectorAll('#adminGridModal .admin-option').forEach(el=>el.classList.remove('selected'));
-  selectedPayment=null;selectedModalAdmin=null;
+  selectedModalAdmin=null;
   renderAdminGrid('adminGridModal','selectAdminModal');
   document.getElementById('waPreview').style.display='none';
   document.getElementById('modalOverlay').classList.add('open');
@@ -6321,11 +7854,16 @@ function updateWA(){
   if(!selectedProduct||!selectedPayment||!selectedModalAdmin)return;
   const discount = getDiscount(selectedProduct.cat);
   const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
-  let text=`Halo Admin NORXSTORE, saya ingin memesan ${selectedProduct.name}`;
+  let text = `${t('waGreeting')} ${selectedProduct.name}`;
   if(discount > 0){
-    text += ` (diskon ${discount}%)`;
+    text += ` (${t('cartDiscount')} ${discount}%)`;
   }
-  text += ` dengan harga ${formatPrice(discPrice)} dan pembayaran via ${selectedPayment}. Mohon konfirmasi ketersediaannya, terima kasih!`;
+  if(currentSelectedCountry && currentSelectedCountry !== 'ID'){
+    const cInfo = getCountryConfig(currentSelectedCountry);
+    text += ` ${t('waWithPrice')} ${formatPrice(discPrice)} (${t('waEquivalent')} Rp${discPrice.toLocaleString('id-ID')}) [${cInfo.flag} ${cInfo.currency}] ${t('waAndPayment')} ${selectedPayment}. ${t('waClosing')}`;
+  } else {
+    text += ` ${t('waWithPrice')} ${formatPrice(discPrice)} ${t('waAndPayment')} ${selectedPayment}. ${t('waClosing')}`;
+  }
   document.getElementById('waText').textContent=text;
   document.getElementById('waPreview').style.display='block';
   document.getElementById('waBtn').dataset.text=text;
@@ -7344,6 +8882,10 @@ function initPresenceSystem(){
 // ==================== INIT ====================
 // Render langsung dari cache lokal saat inisialisasi agar semua banner, produk, gambar,
 // dan testimoni langsung muncul seketika tanpa delay begitu loading web selesai.
+updateNavCountryBtn();
+updateLanguageUI();
+renderModalPaymentMethods();
+renderCartPaymentMethods();
 renderCarousel();
 renderProducts();
 renderReviews();
