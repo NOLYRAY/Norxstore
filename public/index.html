@@ -3024,7 +3024,75 @@ function getProductDesc(p, lang = null){
 }
 
 // ==================== CUSTOMER REVIEW TRANSLATION ENGINE ====================
+let reviewTranslationCache = {};
+try {
+  const savedCache = safeGetItem('norxstore_review_translations');
+  if(savedCache) reviewTranslationCache = JSON.parse(savedCache);
+} catch(e){}
+
+function saveReviewTranslationCache(){
+  try {
+    safeSetItem('norxstore_review_translations', JSON.stringify(reviewTranslationCache));
+  } catch(e){}
+}
+
 const REVIEW_EXACT_MAP = {
+  "mantap sekali": {
+    SG: "Really awesome!",
+    MY: "Sangat mantap!"
+  },
+  "mantap banget": {
+    SG: "Super awesome!",
+    MY: "Sangat mantap!"
+  },
+  "mantap": {
+    SG: "Awesome!",
+    MY: "Terbaik!"
+  },
+  "bagus sekali": {
+    SG: "Very good!",
+    MY: "Sangat bagus!"
+  },
+  "bagus banget": {
+    SG: "Really great!",
+    MY: "Sangat bagus!"
+  },
+  "cepat sekali": {
+    SG: "Super fast!",
+    MY: "Sangat pantas!"
+  },
+  "cepat banget": {
+    SG: "Super fast!",
+    MY: "Sangat pantas!"
+  },
+  "cepet banget": {
+    SG: "Super fast!",
+    MY: "Sangat pantas!"
+  },
+  "puas sekali": {
+    SG: "Very satisfied!",
+    MY: "Sangat berpuas hati!"
+  },
+  "puas banget": {
+    SG: "Very satisfied!",
+    MY: "Sangat berpuas hati!"
+  },
+  "ramah sekali": {
+    SG: "Very friendly!",
+    MY: "Sangat mesra!"
+  },
+  "ramah banget": {
+    SG: "Super friendly!",
+    MY: "Sangat mesra!"
+  },
+  "amanah sekali": {
+    SG: "Very trustworthy!",
+    MY: "Sangat amanah & dipercayai!"
+  },
+  "amanah dan terpercaya": {
+    SG: "Trustworthy and reliable!",
+    MY: "Amanah dan dipercayai!"
+  },
   "mantap joki disini cepat banget": {
     SG: "Awesome! The boost service here is super fast.",
     MY: "Mantap! Khidmat joki di sini sangat pantas."
@@ -3067,294 +3135,249 @@ const REVIEW_EXACT_MAP = {
   }
 };
 
-const REVIEW_WORD_MAP_SG = [
-  [/\bmantap joki disini cepat banget\b/gi, 'Awesome boost service here, super fast'],
-  [/\bmantap banget\b/gi, 'super awesome'],
-  [/\bmantap jiwa\b/gi, 'truly fantastic'],
-  [/\bmantap\b/gi, 'awesome'],
-  [/\bmantul\b/gi, 'amazing'],
-  [/\bjos gandos\b/gi, 'excellent'],
-  [/\bjos\b/gi, 'great'],
-  [/\bcepat banget\b/gi, 'super fast'],
-  [/\bcepet banget\b/gi, 'super fast'],
-  [/\bsangat cepat\b/gi, 'very fast'],
-  [/\bkilat banget\b/gi, 'lightning fast'],
-  [/\bkilat\b/gi, 'lightning-fast'],
-  [/\bcepet\b/gi, 'fast'],
-  [/\bcepat\b/gi, 'fast'],
-  [/\bpantas\b/gi, 'fast'],
-  [/\bamanah banget\b/gi, 'very trustworthy'],
-  [/\bamanah\b/gi, 'trustworthy & reliable'],
-  [/\bterpercaya\b/gi, 'trusted'],
-  [/\brecomended banget\b/gi, 'highly recommended'],
-  [/\brecommended banget\b/gi, 'highly recommended'],
-  [/\brecomended\b/gi, 'recommended'],
-  [/\brecommended\b/gi, 'recommended'],
-  [/\brekomen\b/gi, 'recommended'],
-  [/\bdisyorkan\b/gi, 'recommended'],
-  [/\bramah banget\b/gi, 'very friendly'],
-  [/\bseller ramah\b/gi, 'friendly seller'],
-  [/\badmin ramah\b/gi, 'friendly admin'],
-  [/\bramah\b/gi, 'friendly'],
-  [/\bmesra\b/gi, 'friendly'],
-  [/\bbaik banget\b/gi, 'very kind and helpful'],
-  [/\bbaik\b/gi, 'kind and good'],
-  [/\bpuas banget\b/gi, 'very satisfied'],
-  [/\bsangat puas\b/gi, 'very satisfied'],
-  [/\bpuas\b/gi, 'satisfied'],
-  [/\bberpuas hati\b/gi, 'satisfied'],
-  [/\bharga murah cocok untuk pertama kali\b/gi, 'affordable price, perfect for first time'],
-  [/\bharga murah\b/gi, 'affordable price'],
-  [/\bmurah banget\b/gi, 'very affordable'],
-  [/\bmurah\b/gi, 'affordable'],
-  [/\bberpatutan\b/gi, 'affordable'],
-  [/\bprosesnya kilat\b/gi, 'lightning-fast process'],
-  [/\bprosesnya\b/gi, 'the process'],
-  [/\bproses\b/gi, 'process'],
-  [/\bpengerjaannya\b/gi, 'the completion'],
-  [/\bpengerjaan\b/gi, 'completion'],
-  [/\bkelar\b/gi, 'done / completed'],
-  [/\bselesai\b/gi, 'completed'],
-  [/\bsiap\b/gi, 'completed'],
-  [/\blangsung kelar\b/gi, 'cleared right away'],
-  [/\blangsung selesai\b/gi, 'completed right away'],
-  [/\blangsung beres\b/gi, 'finished immediately'],
-  [/\bberes\b/gi, 'all done'],
-  [/\bakun aman dan selamat\b/gi, 'account is 100% safe and secure'],
-  [/\bakun aman\b/gi, 'account is 100% safe'],
-  [/\bakaun selamat\b/gi, 'account is safe'],
-  [/\bakun\b/gi, 'account'],
-  [/\bakaun\b/gi, 'account'],
-  [/\bselamat\b/gi, 'safe'],
-  [/\baman\b/gi, 'safe'],
-  [/\banti ban\b/gi, 'anti-ban guaranteed'],
-  [/\bbebas ban\b/gi, 'safe from bans'],
-  [/\bgak kena ban\b/gi, 'no bans'],
-  [/\btidak kena ban\b/gi, 'no bans'],
-  [/\bterima kasih banyak\b/gi, 'thank you very much'],
-  [/\bterima kasih min\b/gi, 'thank you admin'],
-  [/\bterima kasih\b/gi, 'thank you'],
-  [/\bmakasih min\b/gi, 'thanks admin'],
-  [/\bmakasih banyak\b/gi, 'thanks a lot'],
-  [/\bmakasih\b/gi, 'thanks'],
-  [/\btengkyu\b/gi, 'thank you'],
-  [/\btq min\b/gi, 'thanks admin'],
-  [/\btq\b/gi, 'thank you'],
-  [/\bnext order lagi\b/gi, 'will definitely order again'],
-  [/\bnext order\b/gi, 'next order'],
-  [/\blangganan tetap\b/gi, 'loyal customer'],
-  [/\blangganan disini\b/gi, 'regular customer here'],
-  [/\blangganan\b/gi, 'regular customer'],
-  [/\bjoki disini\b/gi, 'boost here'],
-  [/\bjoki di sini\b/gi, 'boost here'],
-  [/\bjoki\b/gi, 'boost service'],
-  [/\bjokian\b/gi, 'boost order'],
-  [/\bjokiannya\b/gi, 'the boost service'],
-  [/\bjangan ragu\b/gi, 'do not hesitate'],
-  [/\btak perlu ragu\b/gi, 'no need to hesitate'],
-  [/\bbintang 5\b/gi, '5 stars'],
-  [/\bbintang lima\b/gi, '5 stars'],
-  [/\bbintang penuh\b/gi, 'full stars'],
-  [/\bfull star\b/gi, 'full stars'],
-  [/\bfullstar\b/gi, 'full stars'],
-  [/\bhari\b/gi, 'day(s)'],
-  [/\bjam\b/gi, 'hour(s)'],
-  [/\bmenit\b/gi, 'minute(s)'],
-  [/\bcuma\b/gi, 'only'],
-  [/\bhanya\b/gi, 'only'],
-  [/\btokonya\b/gi, 'this store'],
-  [/\btoko ini\b/gi, 'this shop'],
-  [/\bkedai ini\b/gi, 'this store'],
-  [/\btoko\b/gi, 'store'],
-  [/\bkedai\b/gi, 'store'],
-  [/\bpelayanan terbaik\b/gi, 'best customer service'],
-  [/\bpelayanan ramah\b/gi, 'friendly service'],
-  [/\bpelayanan\b/gi, 'service'],
-  [/\bperkhidmatan\b/gi, 'service'],
-  [/\bterbaik\b/gi, 'the best'],
-  [/\bbagus banget\b/gi, 'really great'],
-  [/\bbagus\b/gi, 'great'],
-  [/\bkeren banget\b/gi, 'super cool'],
-  [/\bkeren\b/gi, 'cool'],
-  [/\brapih banget\b/gi, 'very neat & clean'],
-  [/\brapih\b/gi, 'neat'],
-  [/\bkemas\b/gi, 'neat'],
-  [/\bhasil memuaskan\b/gi, 'very satisfying results'],
-  [/\bmemuaskan\b/gi, 'satisfying'],
-  [/\bgak nyesel\b/gi, 'no regrets'],
-  [/\btidak menyesal\b/gi, 'no regrets'],
-  [/\btak menyesal\b/gi, 'no regrets'],
-  [/\bpasti repeat\b/gi, 'will definitely repeat order'],
-  [/\brepeat order\b/gi, 'repeat order'],
-  [/\bsukses selalu\b/gi, 'always successful'],
-  [/\bsukses terus\b/gi, 'continuous success'],
-  [/\blaris manis\b/gi, 'high sales & success'],
-  [/\blaris\b/gi, 'successful sales'],
-  [/\bdan\b/gi, 'and'],
-  [/\bjuga\b/gi, 'also'],
-  [/\bsudah\b/gi, 'already'],
-  [/\budah\b/gi, 'already'],
-  [/\bbisa\b/gi, 'can'],
-  [/\bbuat\b/gi, 'for'],
-  [/\buntuk\b/gi, 'for']
-];
+function cleanLocalTranslate(text, targetLang){
+  if(!text || typeof text !== 'string') return '';
+  let s = text.trim();
+  if(!s) return '';
+  const lang = (targetLang || currentSelectedCountry || 'ID').toUpperCase();
 
-const REVIEW_WORD_MAP_MY = [
-  [/\bmantap joki disini cepat banget\b/gi, 'Mantap khidmat joki di sini sangat pantas'],
-  [/\bmantap banget\b/gi, 'sangat mantap'],
-  [/\bmantap jiwa\b/gi, 'terbaik'],
-  [/\bmantap\b/gi, 'mantap'],
-  [/\bmantul\b/gi, 'hebat'],
-  [/\bcepat banget\b/gi, 'sangat pantas'],
-  [/\bcepet banget\b/gi, 'sangat pantas'],
-  [/\bsangat cepat\b/gi, 'sangat pantas'],
-  [/\bkilat banget\b/gi, 'sangat pantas kilat'],
-  [/\bkilat\b/gi, 'pantas'],
-  [/\bcepet\b/gi, 'pantas'],
-  [/\bcepat\b/gi, 'pantas'],
-  [/\bamanah banget\b/gi, 'sangat amanah'],
-  [/\bamanah\b/gi, 'amanah & dipercayai'],
-  [/\bterpercaya\b/gi, 'dipercayai'],
-  [/\brecomended banget\b/gi, 'sangat disyorkan'],
-  [/\brecommended banget\b/gi, 'sangat disyorkan'],
-  [/\brecomended\b/gi, 'disyorkan'],
-  [/\brecommended\b/gi, 'disyorkan'],
-  [/\brekomen\b/gi, 'disyorkan'],
-  [/\bramah banget\b/gi, 'sangat mesra'],
-  [/\bseller ramah\b/gi, 'penjual mesra'],
-  [/\badmin ramah\b/gi, 'admin mesra'],
-  [/\bramah\b/gi, 'mesra'],
-  [/\bbaik banget\b/gi, 'sangat baik'],
-  [/\bbaik\b/gi, 'baik'],
-  [/\bpuas banget\b/gi, 'sangat berpuas hati'],
-  [/\bsangat puas\b/gi, 'sangat berpuas hati'],
-  [/\bpuas\b/gi, 'berpuas hati'],
-  [/\bharga murah cocok untuk pertama kali\b/gi, 'harga berpatutan sesuai untuk kali pertama'],
-  [/\bharga murah\b/gi, 'harga berpatutan'],
-  [/\bmurah banget\b/gi, 'sangat berpatutan'],
-  [/\bmurah\b/gi, 'berpatutan'],
-  [/\bprosesnya kilat\b/gi, 'proses sangat pantas'],
-  [/\bprosesnya\b/gi, 'prosesnya'],
-  [/\bproses\b/gi, 'proses'],
-  [/\bpengerjaannya\b/gi, 'pelaksanaan kerja'],
-  [/\bpengerjaan\b/gi, 'pelaksanaan kerja'],
-  [/\bkelar\b/gi, 'siap'],
-  [/\bselesai\b/gi, 'siap'],
-  [/\blangsung kelar\b/gi, 'terus siap'],
-  [/\blangsung selesai\b/gi, 'terus selesai'],
-  [/\bberes\b/gi, 'beres / selesai'],
-  [/\bakun aman dan selamat\b/gi, 'akaun selamat dan terjamin'],
-  [/\bakun aman\b/gi, 'akaun selamat'],
-  [/\bakun\b/gi, 'akaun'],
-  [/\bselamat\b/gi, 'selamat'],
-  [/\baman\b/gi, 'selamat'],
-  [/\banti ban\b/gi, 'bebas ban'],
-  [/\bgak kena ban\b/gi, 'tiada ban'],
-  [/\btidak kena ban\b/gi, 'tiada sekatan'],
-  [/\bterima kasih banyak\b/gi, 'terima kasih banyak'],
-  [/\bterima kasih min\b/gi, 'terima kasih admin'],
-  [/\bmakasih min\b/gi, 'terima kasih admin'],
-  [/\bmakasih banyak\b/gi, 'terima kasih banyak'],
-  [/\bmakasih\b/gi, 'terima kasih'],
-  [/\btq min\b/gi, 'terima kasih admin'],
-  [/\btq\b/gi, 'terima kasih'],
-  [/\bnext order lagi\b/gi, 'pasti tempah lagi'],
-  [/\bnext order\b/gi, 'tempahan seterusnya'],
-  [/\blangganan tetap\b/gi, 'pelanggan tetap'],
-  [/\blangganan\b/gi, 'pelanggan tetap'],
-  [/\bjoki disini\b/gi, 'joki di sini'],
-  [/\bjokiannya\b/gi, 'perkhidmatan joki'],
-  [/\bjokian\b/gi, 'joki'],
-  [/\bjangan ragu\b/gi, 'jangan ragu-ragu'],
-  [/\bbintang 5\b/gi, '5 bintang'],
-  [/\bbintang lima\b/gi, '5 bintang'],
-  [/\bbintang penuh\b/gi, 'bintang penuh'],
-  [/\bfull star\b/gi, 'bintang penuh'],
-  [/\bfullstar\b/gi, 'bintang penuh'],
-  [/\bmenit\b/gi, 'minit'],
-  [/\bcuma\b/gi, 'hanya'],
-  [/\btokonya\b/gi, 'kedai ini'],
-  [/\btoko ini\b/gi, 'kedai ini'],
-  [/\btoko\b/gi, 'kedai'],
-  [/\bpelayanan terbaik\b/gi, 'perkhidmatan terbaik'],
-  [/\bpelayanan ramah\b/gi, 'perkhidmatan mesra'],
-  [/\bpelayanan\b/gi, 'perkhidmatan'],
-  [/\bterbaik\b/gi, 'terbaik'],
-  [/\bbagus banget\b/gi, 'sangat bagus'],
-  [/\bbagus\b/gi, 'bagus'],
-  [/\bkeren banget\b/gi, 'sangat hebat'],
-  [/\bkeren\b/gi, 'hebat'],
-  [/\brapih banget\b/gi, 'sangat kemas'],
-  [/\brapih\b/gi, 'kemas'],
-  [/\brapi\b/gi, 'kemas'],
-  [/\bhasil memuaskan\b/gi, 'hasil sangat memuaskan'],
-  [/\bmemuaskan\b/gi, 'memuaskan'],
-  [/\bgak nyesel\b/gi, 'tiada penyesalan'],
-  [/\bpasti repeat\b/gi, 'pasti akan tempah lagi'],
-  [/\bsukses selalu\b/gi, 'semoga sentiasa berjaya'],
-  [/\bsukses terus\b/gi, 'terus berjaya'],
-  [/\blaris manis\b/gi, 'laris dan maju'],
-  [/\bsudah\b/gi, 'sudah'],
-  [/\budah\b/gi, 'sudah'],
-  [/\bbuat\b/gi, 'untuk']
-];
+  const rulesSG = [
+    [/\bawesome sekali\b/gi, 'Really awesome!'],
+    [/\bmantap sekali\b/gi, 'Really awesome!'],
+    [/\bbagus sekali\b/gi, 'Very good!'],
+    [/\bcepat sekali\b/gi, 'Super fast!'],
+    [/\bcepet sekali\b/gi, 'Super fast!'],
+    [/\bpuas sekali\b/gi, 'Very satisfied!'],
+    [/\bramah sekali\b/gi, 'Very friendly!'],
+    [/\bamanah sekali\b/gi, 'Very trustworthy!'],
+    [/\bmantap banget\b/gi, 'Super awesome!'],
+    [/\bbagus banget\b/gi, 'Really great!'],
+    [/\bcepat banget\b/gi, 'Super fast!'],
+    [/\bcepet banget\b/gi, 'Super fast!'],
+    [/\bpuas banget\b/gi, 'Very satisfied!'],
+    [/\bramah banget\b/gi, 'Super friendly!'],
+    [/\bmurah banget\b/gi, 'Very affordable!'],
+    [/\baman banget\b/gi, 'Super safe!'],
+    [/\bmantap jiwa\b/gi, 'Truly awesome!'],
+    [/\bjoki disini\b/gi, 'boosting here'],
+    [/\bjoki di sini\b/gi, 'boosting here'],
+    [/\bakun aman dan selamat\b/gi, 'account is 100% safe and secure'],
+    [/\bakun aman\b/gi, 'account is safe'],
+    [/\bbebas ban\b/gi, 'safe from ban'],
+    [/\banti ban\b/gi, 'anti-ban guaranteed'],
+    [/\bproses kilat\b/gi, 'lightning-fast process'],
+    [/\bprosesnya kilat\b/gi, 'lightning-fast process'],
+    [/\bnext order lagi\b/gi, 'will definitely order again'],
+    [/\bnext order\b/gi, 'next order'],
+    [/\bterima kasih banyak\b/gi, 'thank you very much'],
+    [/\bterima kasih min\b/gi, 'thank you admin'],
+    [/\bterima kasih\b/gi, 'thank you'],
+    [/\bmakasih min\b/gi, 'thanks admin'],
+    [/\bmakasih\b/gi, 'thanks'],
+    [/\bamanah dan terpercaya\b/gi, 'trustworthy and reliable'],
+    [/\bamanah\b/gi, 'trustworthy'],
+    [/\bterpercaya\b/gi, 'trusted'],
+    [/\brekomended\b/gi, 'recommended'],
+    [/\brekomendasi\b/gi, 'recommended'],
+    [/\brecommended\b/gi, 'recommended'],
+    [/\bharga murah\b/gi, 'affordable price'],
+    [/\bmantap\b/gi, 'Awesome!'],
+    [/\bsekali\b/gi, 'very much'],
+    [/\bbanget\b/gi, 'very'],
+    [/\bcepet\b/gi, 'fast'],
+    [/\bcepat\b/gi, 'fast'],
+    [/\bramah\b/gi, 'friendly'],
+    [/\bbagus\b/gi, 'great'],
+    [/\bkeren\b/gi, 'cool'],
+    [/\bmurah\b/gi, 'affordable'],
+    [/\bpuas\b/gi, 'satisfied'],
+    [/\bkelar\b/gi, 'done'],
+    [/\bselesai\b/gi, 'completed'],
+    [/\bberes\b/gi, 'done'],
+    [/\bakun\b/gi, 'account'],
+    [/\btokonya\b/gi, 'this shop'],
+    [/\btoko ini\b/gi, 'this shop'],
+    [/\bpelayanan\b/gi, 'service'],
+    [/\bcuma\b/gi, 'only'],
+    [/\bhanya\b/gi, 'only'],
+    [/\bmenit\b/gi, 'minutes'],
+    [/\bjam\b/gi, 'hours'],
+    [/\bhari\b/gi, 'days'],
+    [/\bdan\b/gi, 'and'],
+    [/\bjuga\b/gi, 'also'],
+    [/\bsudah\b/gi, 'already'],
+    [/\budah\b/gi, 'already'],
+    [/\bbisa\b/gi, 'can'],
+    [/\bbuat\b/gi, 'for'],
+    [/\buntuk\b/gi, 'for']
+  ];
 
-const REVIEW_WORD_MAP_ID = [
-  [/\bsuper fast\b/gi, 'sangat cepat'],
-  [/\bvery fast\b/gi, 'sangat cepat'],
-  [/\bfast\b/gi, 'cepat'],
-  [/\bawesome\b/gi, 'mantap'],
-  [/\bhighly recommended\b/gi, 'sangat direkomendasikan'],
-  [/\brecommended\b/gi, 'direkomendasikan'],
-  [/\btrustworthy\b/gi, 'amanah & terpercaya'],
-  [/\btrusted\b/gi, 'terpercaya'],
-  [/\bsafe and secure\b/gi, 'aman dan terjamin'],
-  [/\bsafe\b/gi, 'aman'],
-  [/\b5 stars\b/gi, 'bintang 5'],
-  [/\bfriendly seller\b/gi, 'penjual ramah'],
-  [/\bfriendly\b/gi, 'ramah'],
-  [/\bthank you\b/gi, 'terima kasih'],
-  [/\bthanks\b/gi, 'terima kasih'],
-  [/\bwill order again\b/gi, 'akan order lagi'],
-  [/\bsatisfied\b/gi, 'puas']
-];
+  const rulesMY = [
+    [/\bawesome sekali\b/gi, 'Sangat hebat!'],
+    [/\bawesome\b/gi, 'hebat'],
+    [/\bmantap sekali\b/gi, 'Sangat mantap!'],
+    [/\bbagus sekali\b/gi, 'Sangat bagus!'],
+    [/\bcepat sekali\b/gi, 'Sangat pantas!'],
+    [/\bcepet sekali\b/gi, 'Sangat pantas!'],
+    [/\bpuas sekali\b/gi, 'Sangat berpuas hati!'],
+    [/\bramah sekali\b/gi, 'Sangat mesra!'],
+    [/\bamanah sekali\b/gi, 'Sangat amanah!'],
+    [/\bmantap banget\b/gi, 'Sangat mantap!'],
+    [/\bbagus banget\b/gi, 'Sangat bagus!'],
+    [/\bcepat banget\b/gi, 'Sangat pantas!'],
+    [/\bcepet banget\b/gi, 'Sangat pantas!'],
+    [/\bpuas banget\b/gi, 'Sangat berpuas hati!'],
+    [/\bramah banget\b/gi, 'Sangat mesra!'],
+    [/\bmurah banget\b/gi, 'Sangat berpatutan!'],
+    [/\baman banget\b/gi, 'Sangat selamat!'],
+    [/\bmantap jiwa\b/gi, 'Terbaik sungguh!'],
+    [/\bjoki disini\b/gi, 'joki di sini'],
+    [/\bjoki di sini\b/gi, 'joki di sini'],
+    [/\bakun aman dan selamat\b/gi, 'akaun selamat dan terjamin'],
+    [/\bakun aman\b/gi, 'akaun selamat'],
+    [/\bbebas ban\b/gi, 'bebas daripada sekatan'],
+    [/\banti ban\b/gi, 'bebas ban'],
+    [/\bproses kilat\b/gi, 'proses pantas kilat'],
+    [/\bprosesnya kilat\b/gi, 'prosesnya pantas kilat'],
+    [/\bnext order lagi\b/gi, 'pasti tempah lagi'],
+    [/\bnext order\b/gi, 'tempahan seterusnya'],
+    [/\bterima kasih banyak\b/gi, 'terima kasih banyak'],
+    [/\bterima kasih min\b/gi, 'terima kasih admin'],
+    [/\bterima kasih\b/gi, 'terima kasih'],
+    [/\bmakasih min\b/gi, 'terima kasih admin'],
+    [/\bmakasih\b/gi, 'terima kasih'],
+    [/\bamanah dan terpercaya\b/gi, 'amanah dan dipercayai'],
+    [/\bamanah\b/gi, 'amanah & dipercayai'],
+    [/\bterpercaya\b/gi, 'dipercayai'],
+    [/\brekomended\b/gi, 'sangat disyorkan'],
+    [/\brekomendasi\b/gi, 'disyorkan'],
+    [/\brecommended\b/gi, 'disyorkan'],
+    [/\bharga murah\b/gi, 'harga berpatutan'],
+    [/\bmantap\b/gi, 'Mantap / Terbaik!'],
+    [/\bsekali\b/gi, 'sungguh'],
+    [/\bbanget\b/gi, 'sangat'],
+    [/\bcepet\b/gi, 'pantas'],
+    [/\bcepat\b/gi, 'pantas'],
+    [/\bramah\b/gi, 'mesra'],
+    [/\bbagus\b/gi, 'bagus'],
+    [/\bkeren\b/gi, 'hebat'],
+    [/\bmurah\b/gi, 'berpatutan'],
+    [/\bpuas\b/gi, 'berpuas hati'],
+    [/\bkelar\b/gi, 'siap'],
+    [/\bselesai\b/gi, 'siap'],
+    [/\bberes\b/gi, 'selesai'],
+    [/\bakun\b/gi, 'akaun'],
+    [/\btokonya\b/gi, 'kedai ini'],
+    [/\btoko ini\b/gi, 'kedai ini'],
+    [/\btoko\b/gi, 'kedai'],
+    [/\bpelayanan\b/gi, 'perkhidmatan'],
+    [/\bcuma\b/gi, 'hanya'],
+    [/\bhanya\b/gi, 'hanya'],
+    [/\bmenit\b/gi, 'minit'],
+    [/\bjam\b/gi, 'jam'],
+    [/\bhari\b/gi, 'hari'],
+    [/\bsudah\b/gi, 'sudah'],
+    [/\budah\b/gi, 'sudah'],
+    [/\bbuat\b/gi, 'untuk']
+  ];
+
+  const rules = (lang === 'MY') ? rulesMY : rulesSG;
+  const tokenMap = [];
+  
+  rules.forEach(([regex, replacement], idx) => {
+    s = s.replace(regex, () => {
+      const token = `__TRANS_TOK_${idx}_${tokenMap.length}__`;
+      tokenMap.push({ token, replacement });
+      return token;
+    });
+  });
+
+  tokenMap.forEach(({ token, replacement }) => {
+    s = s.replace(token, replacement);
+  });
+
+  return s;
+}
+
+async function fetchOnlineTranslation(text, targetLang, reviewId = null){
+  if(!text || typeof text !== 'string') return;
+  const trimmed = text.trim();
+  if(!trimmed) return;
+  const langKey = (targetLang || currentSelectedCountry || 'ID').toUpperCase();
+  const cacheKey = `${langKey}_${trimmed.toLowerCase()}`;
+
+  if(reviewTranslationCache[cacheKey]) return reviewTranslationCache[cacheKey];
+
+  try {
+    const langPair = (langKey === 'MY') ? 'id|ms' : (langKey === 'SG' ? 'id|en' : 'en|id');
+    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(trimmed) + '&langpair=' + langPair;
+    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+    const data = await res.json();
+    if(data && data.responseData && data.responseData.translatedText){
+      const trans = data.responseData.translatedText.trim();
+      if(trans && !trans.startsWith('MYMEMORY WARNING') && trans.toLowerCase() !== trimmed.toLowerCase()){
+        reviewTranslationCache[cacheKey] = trans;
+        saveReviewTranslationCache();
+
+        if(reviewId && activeReviewTranslations[reviewId]){
+          const commentEl = document.getElementById('reviewCommentText_' + reviewId);
+          if(commentEl){
+            commentEl.textContent = `"${trans}"`;
+          }
+        }
+        return trans;
+      }
+    }
+  } catch(err){
+    console.warn('Online translation fetch note:', err);
+  }
+}
 
 let activeReviewTranslations = {};
 let areAllReviewsTranslated = false;
 
-function translateCustomerReview(text, targetLang){
+function translateCustomerReview(text, targetLang, reviewId = null){
   if(!text || typeof text !== 'string') return '';
   const trimmed = text.trim();
   if(!trimmed) return '';
-  const lang = targetLang || currentSelectedCountry || 'ID';
+  const lang = (targetLang || currentSelectedCountry || 'ID').toUpperCase();
+  const cacheKey = `${lang}_${trimmed.toLowerCase()}`;
 
-  // 1. Direct exact match
-  if(REVIEW_EXACT_MAP[trimmed] && REVIEW_EXACT_MAP[trimmed][lang]){
-    return REVIEW_EXACT_MAP[trimmed][lang];
+  // 1. Check cached neural translation
+  if(reviewTranslationCache[cacheKey]){
+    return reviewTranslationCache[cacheKey];
   }
-  const lower = trimmed.toLowerCase();
+
+  // 2. Exact phrase dictionary
+  const exactLower = trimmed.toLowerCase();
   for(const k in REVIEW_EXACT_MAP){
-    if(k.toLowerCase() === lower && REVIEW_EXACT_MAP[k][lang]){
+    if(k.toLowerCase() === exactLower && REVIEW_EXACT_MAP[k][lang]){
       return REVIEW_EXACT_MAP[k][lang];
     }
   }
 
-  // 2. Intelligent pattern / word mapping
-  let res = text;
-  let wordMap = [];
-  if(lang === 'SG') wordMap = REVIEW_WORD_MAP_SG;
-  else if(lang === 'MY') wordMap = REVIEW_WORD_MAP_MY;
-  else if(lang === 'ID') wordMap = REVIEW_WORD_MAP_ID;
-
-  for(let i = 0; i < wordMap.length; i++){
-    const [regex, replacement] = wordMap[i];
-    res = res.replace(regex, replacement);
+  // 3. Trigger asynchronous background online translation if reviewId provided
+  if(reviewId && typeof fetchOnlineTranslation === 'function'){
+    fetchOnlineTranslation(trimmed, lang, reviewId);
   }
-  return res;
+
+  // 4. Return clean token-based local translation immediately
+  return cleanLocalTranslate(trimmed, lang);
 }
 
 function toggleReviewTranslate(reviewId){
+  const ratings = getCustomerRatings();
+  const r = ratings.find(item => item.id === reviewId);
   activeReviewTranslations[reviewId] = !activeReviewTranslations[reviewId];
+  
+  if(activeReviewTranslations[reviewId] && r && r.comment){
+    const targetLang = (currentSelectedCountry || 'ID').toUpperCase();
+    const cacheKey = `${targetLang}_${r.comment.trim().toLowerCase()}`;
+    if(!reviewTranslationCache[cacheKey]){
+      fetchOnlineTranslation(r.comment, targetLang, reviewId);
+    }
+  }
+
   renderCustomerReviews();
   const isNowActive = activeReviewTranslations[reviewId];
   showToast(isNowActive ? `🌐 ${t('translatedBadge')}` : `📄 ${t('showOriginalReviewBtn')}`);
@@ -3363,9 +3386,18 @@ function toggleReviewTranslate(reviewId){
 function toggleAllReviewsTranslation(){
   const ratings = getCustomerRatings();
   areAllReviewsTranslated = !areAllReviewsTranslated;
+  const targetLang = (currentSelectedCountry || 'ID').toUpperCase();
+
   ratings.forEach(r => {
     activeReviewTranslations[r.id] = areAllReviewsTranslated;
+    if(areAllReviewsTranslated && r && r.comment){
+      const cacheKey = `${targetLang}_${r.comment.trim().toLowerCase()}`;
+      if(!reviewTranslationCache[cacheKey]){
+        fetchOnlineTranslation(r.comment, targetLang, r.id);
+      }
+    }
   });
+
   renderCustomerReviews();
   showToast(areAllReviewsTranslated ? `🌐 ${t('translatedBadge')}` : `📄 ${t('showAllOriginalReviewsBtn')}`);
 }
@@ -5415,8 +5447,8 @@ function renderCustomerReviews(){
     let translateControls = '';
     
     if(r.comment){
-      const commentText = isTranslated ? translateCustomerReview(r.comment, currentLang) : r.comment;
-      commentDisplay = `<p class="customer-review-comment" style="${isTranslated ? 'color:#f8fafc;' : ''}">"${escapeHtml(commentText)}"</p>`;
+      const commentText = isTranslated ? translateCustomerReview(r.comment, currentLang, r.id) : r.comment;
+      commentDisplay = `<p class="customer-review-comment" id="reviewCommentText_${escapeHtml(r.id)}" style="${isTranslated ? 'color:#f8fafc;' : ''}">"${escapeHtml(commentText)}"</p>`;
       
       translateControls = `
         <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
