@@ -547,7 +547,7 @@ body.dark-mode .live-pill-mode{
 .prod-photo-buy-btn{background:linear-gradient(135deg,#7c3aed,#6d28d9);color:#fff;border:none;padding:10px 18px;border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 4px 14px rgba(124,58,237,0.35);transition:all .15s ease;white-space:nowrap}
 .prod-photo-buy-btn:hover{background:linear-gradient(135deg,#6d28d9,#5b21b6);transform:translateY(-1px)}
 
-.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:100;backdrop-filter:blur(3px)}
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:flex-end;justify-content:center;z-index:200;backdrop-filter:blur(3px)}
 .modal-overlay.open{display:flex}
 .modal-box{background:#fff;border-radius:16px 16px 0 0;width:100%;overflow:hidden;animation:slideUp .25s ease;max-height:85vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -3600,11 +3600,7 @@ const DEFAULT_CURRENCY_CONFIG = {
         { id: 'QRIS', name: 'QRIS All Payment', icon: '📱' },
         { id: 'DANA', name: 'DANA', icon: '💙' },
         { id: 'GoPay', name: 'GoPay', icon: '💚' },
-        { id: 'OVO', name: 'OVO', icon: '🟣' },
-        { id: 'ShopeePay', name: 'ShopeePay', icon: '🟠' },
-        { id: 'BCA', name: 'BCA Transfer', icon: '🏦' },
-        { id: 'BRI', name: 'BRI Transfer', icon: '🏦' },
-        { id: 'Mandiri', name: 'Mandiri Transfer', icon: '🏦' }
+        { id: 'OVO', name: 'OVO', icon: '🟣' }
       ]
     },
     MY: {
@@ -3662,9 +3658,8 @@ function getCurrencyConfig(){
             sanitizedCountries[code].currency = 'SGD';
             sanitizedCountries[code].symbol = 'S$';
           }
-          if(code === 'MY' || code === 'SG'){
-            sanitizedCountries[code].paymentMethods = DEFAULT_CURRENCY_CONFIG.countries[code].paymentMethods;
-          }
+          // Selalu gunakan metode pembayaran resmi terkini sesuai negara (hapus ShopeePay & Bank lama dari cache)
+          sanitizedCountries[code].paymentMethods = DEFAULT_CURRENCY_CONFIG.countries[code].paymentMethods;
         });
         currencyConfigCache = {
           ...DEFAULT_CURRENCY_CONFIG,
@@ -4503,71 +4498,54 @@ function getMyOrderStorageKey(){
 }
 
 function getActiveOrderForProduct(productId){
-  // 0. JIKA AKUN YANG MELIHAT ADALAH ADMIN: JANGAN PERNAH KUNCI PRODUK!
-  // Admin adalah pemilik toko, bebas melihat dan mencoba layanan tanpa status 'sedang diproses'
-  if(isAuthorizedAdmin()) return null;
-
-  const prod = products.find(p => p.id === productId);
+  const prod = products.find(p => p.id == productId);
   if(!prod || !allOrders || typeof allOrders !== 'object') return null;
 
   const deletedIds = getDeletedOrderIds();
 
-  // 1. Cek pesanan aktif yang terikat dengan sesi pengguna saat ini
-  const myIds = getMyOrderIds().filter(id => !deletedIds.includes(id));
-  for(const ordId of myIds){
-    const ord = allOrders[ordId];
-    if(!ord) continue;
-    if(deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
-
-    // Filter ketat kepemilikan akun:
-    if(currentUser && !currentUser.isAnonymous){
-      // Pengguna login: jangan kunci produk jika pesanan ini dibuat sebagai pesanan tamu sesi lain
-      const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
-                     (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
-      if(!isMine) continue;
-    } else {
-      // Pengguna tamu: jangan kunci produk jika pesanan ini milik user terdaftar
-      if(ord.customerEmail || (ord.customerUid && !ord.customerUid.startsWith('guest'))) continue;
-    }
-
-    if(ord.status === 'pending' || ord.status === 'processing'){
-      if(Array.isArray(ord.items)){
-        const hasItem = ord.items.some(it => {
-          if(it.id !== undefined && it.id !== null && it.id !== ''){
-            return Number(it.id) === Number(productId);
-          }
-          if(it.name && prod.name){
-            return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
-          }
-          return false;
-        });
-        if(hasItem) return ord;
+  // 1. Cek jika produk adalah Akun (stok 1) atau single item:
+  // Jika ada pesanan aktif (pending atau processing) dari siapapun, kunci produk secara global
+  if(prod.isAccount || prod.stock === 1){
+    for(const ordId in allOrders){
+      if(deletedIds.includes(ordId)) continue;
+      const ord = allOrders[ordId];
+      if(!ord || !ord.status || deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
+      if(ord.status === 'processing' || ord.status === 'pending'){
+        if(Array.isArray(ord.items)){
+          const hasItem = ord.items.some(it => {
+            if(it.id !== undefined && it.id !== null && it.id !== '') return Number(it.id) === Number(productId);
+            return it.name && prod.name && it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+          });
+          if(hasItem) return ord;
+        }
       }
     }
   }
 
-  // 2. Jika user sedang login dengan Google (bukan admin), cek pesanan aktif yang terdaftar di akun Google ini
-  if(currentUser && !currentUser.isAnonymous){
-    for(const ordId in allOrders){
-      if(deletedIds.includes(ordId)) continue;
-      const ord = allOrders[ordId];
-      if(!ord) continue;
-      if(deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
-      const isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
-                     (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
-      if(isMine && (ord.status === 'pending' || ord.status === 'processing')){
-        if(Array.isArray(ord.items)){
-          const hasItem = ord.items.some(it => {
-            if(it.id !== undefined && it.id !== null && it.id !== ''){
-              return Number(it.id) === Number(productId);
-            }
-            if(it.name && prod.name){
-              return it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
-            }
-            return false;
-          });
-          if(hasItem) return ord;
-        }
+  // 2. Cek untuk layanan joki: jika sedang diproses (status === 'processing')
+  // Kunci produk untuk pengguna yang memesan atau untuk akun yang sedang menguji, agar tidak bisa membeli berkali-kali produk yang sama
+  for(const ordId in allOrders){
+    if(deletedIds.includes(ordId)) continue;
+    const ord = allOrders[ordId];
+    if(!ord || ord.status !== 'processing' || deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
+
+    let isMine = false;
+    if(currentUser && !currentUser.isAnonymous){
+      isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
+               (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
+               (isAuthorizedAdmin() && (ord.customerEmail && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase()));
+    } else {
+      isMine = getMyOrderIds().includes(ord.id);
+    }
+
+    // Jika admin toko sedang menguji atau melihat, atau pemilik pesanan sedang melihat
+    if(isMine){
+      if(Array.isArray(ord.items)){
+        const hasItem = ord.items.some(it => {
+          if(it.id !== undefined && it.id !== null && it.id !== '') return Number(it.id) === Number(productId);
+          return it.name && prod.name && it.name.trim().toLowerCase() === prod.name.trim().toLowerCase();
+        });
+        if(hasItem) return ord;
       }
     }
   }
