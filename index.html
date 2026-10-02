@@ -3213,64 +3213,104 @@ function cleanLocalTranslate(text, targetLang){
   ];
 
   const rulesMY = [
-    [/\bawesome sekali\b/gi, 'Sangat hebat!'],
+    [/\bawesome sekali\b/gi, 'sangat hebat'],
     [/\bawesome\b/gi, 'hebat'],
-    [/\bmantap sekali\b/gi, 'Sangat mantap!'],
-    [/\bbagus sekali\b/gi, 'Sangat bagus!'],
-    [/\bcepat sekali\b/gi, 'Sangat pantas!'],
-    [/\bcepet sekali\b/gi, 'Sangat pantas!'],
-    [/\bpuas sekali\b/gi, 'Sangat berpuas hati!'],
-    [/\bramah sekali\b/gi, 'Sangat mesra!'],
-    [/\bamanah sekali\b/gi, 'Sangat amanah!'],
-    [/\bmantap banget\b/gi, 'Sangat mantap!'],
-    [/\bbagus banget\b/gi, 'Sangat bagus!'],
-    [/\bcepat banget\b/gi, 'Sangat pantas!'],
-    [/\bcepet banget\b/gi, 'Sangat pantas!'],
-    [/\bpuas banget\b/gi, 'Sangat berpuas hati!'],
-    [/\bramah banget\b/gi, 'Sangat mesra!'],
-    [/\bmurah banget\b/gi, 'Sangat berpatutan!'],
-    [/\baman banget\b/gi, 'Sangat selamat!'],
-    [/\bmantap jiwa\b/gi, 'Terbaik sungguh!'],
+    [/\bmantap sekali\b/gi, 'sangat mantap'],
+    [/\bbagus sekali\b/gi, 'sangat bagus'],
+    [/\bcepat sekali\b/gi, 'sangat pantas'],
+    [/\bcepet sekali\b/gi, 'sangat pantas'],
+    [/\bpuas sekali\b/gi, 'sangat berpuas hati'],
+    [/\bramah sekali\b/gi, 'sangat mesra'],
+    [/\bamanah sekali\b/gi, 'sangat amanah'],
+    [/\bmantap banget\b/gi, 'sangat mantap'],
+    [/\bbagus banget\b/gi, 'sangat bagus'],
+    [/\bcepat banget\b/gi, 'sangat pantas'],
+    [/\bcepet banget\b/gi, 'sangat pantas'],
+    [/\bpuas banget\b/gi, 'sangat berpuas hati'],
+    [/\bramah banget\b/gi, 'sangat mesra'],
+    [/\bmurah banget\b/gi, 'sangat berpatutan'],
+    [/\baman banget\b/gi, 'sangat selamat'],
+    [/\bmantap jiwa\b/gi, 'terbaik sungguh'],
+    [/\bmantap min\b/gi, 'terbaik admin'],
+    [/\bmantap gan\b/gi, 'terbaik boss'],
     [/\bjoki disini\b/gi, 'joki di sini'],
     [/\bjoki di sini\b/gi, 'joki di sini'],
     [/\bakun aman dan selamat\b/gi, 'akaun selamat dan terjamin'],
     [/\bakun aman\b/gi, 'akaun selamat'],
     [/\bbebas ban\b/gi, 'bebas daripada sekatan'],
-    [/\banti ban\b/gi, 'bebas ban'],
+    [/\banti ban\b/gi, 'bebas sekatan'],
     [/\bproses kilat\b/gi, 'proses pantas kilat'],
     [/\bprosesnya kilat\b/gi, 'prosesnya pantas kilat'],
     [/\bnext order lagi\b/gi, 'pasti tempah lagi'],
     [/\bnext order\b/gi, 'tempahan seterusnya'],
+    [/\border lagi\b/gi, 'tempah lagi'],
+    [/\bpesan lagi\b/gi, 'tempah lagi'],
     [/\bterima kasih banyak\b/gi, 'terima kasih banyak'],
     [/\bterima kasih min\b/gi, 'terima kasih admin'],
     [/\bterima kasih\b/gi, 'terima kasih'],
     [/\bmakasih min\b/gi, 'terima kasih admin'],
+    [/\bmakasih banyak\b/gi, 'terima kasih banyak'],
     [/\bmakasih\b/gi, 'terima kasih'],
+    [/\btq min\b/gi, 'terima kasih admin'],
+    [/\btq\b/gi, 'terima kasih'],
     [/\bamanah dan terpercaya\b/gi, 'amanah dan dipercayai'],
     [/\bamanah\b/gi, 'amanah & dipercayai'],
     [/\bterpercaya\b/gi, 'dipercayai'],
-    [/\brekomended\b/gi, 'sangat disyorkan'],
+    [/\brekomended banget\b/gi, 'sangat disyorkan'],
+    [/\brecommended banget\b/gi, 'sangat disyorkan'],
+    [/\brekomended\b/gi, 'disyorkan'],
     [/\brekomendasi\b/gi, 'disyorkan'],
     [/\brecommended\b/gi, 'disyorkan'],
+    [/\brekomen\b/gi, 'disyorkan'],
     [/\bharga murah\b/gi, 'harga berpatutan'],
-    [/\bmantap\b/gi, 'Mantap / Terbaik!'],
+    [/\bmurah meriah\b/gi, 'harga sangat berpatutan'],
+    [/\bmurah\b/gi, 'berpatutan'],
+    [/\bpelayanan terbaik\b/gi, 'perkhidmatan terbaik'],
+    [/\bpelayanan ramah\b/gi, 'layanan mesra'],
+    [/\bpelayanannya\b/gi, 'layanannya'],
+    [/\bpelayanan\b/gi, 'perkhidmatan'],
+    [/\bseller ramah\b/gi, 'penjual mesra'],
+    [/\bseller\b/gi, 'penjual'],
+    [/\btokonya\b/gi, 'kedai ini'],
+    [/\btoko ini\b/gi, 'kedai ini'],
+    [/\btoko\b/gi, 'kedai'],
+    [/\bkeren banget\b/gi, 'sangat hebat'],
+    [/\bkeren\b/gi, 'hebat'],
+    [/\brapih banget\b/gi, 'sangat kemas'],
+    [/\brapih\b/gi, 'kemas'],
+    [/\brapi\b/gi, 'kemas'],
+    [/\bhasil memuaskan\b/gi, 'hasil sangat memuaskan'],
+    [/\bmemuaskan\b/gi, 'memuaskan'],
+    [/\bgak nyesel\b/gi, 'tidak menyesal'],
+    [/\btidak nyesel\b/gi, 'tidak menyesal'],
+    [/\bgak bakal nyesel\b/gi, 'pasti takkan menyesal'],
+    [/\bnyesel\b/gi, 'menyesal'],
+    [/\bpasti repeat\b/gi, 'pasti akan tempah lagi'],
+    [/\bsukses selalu\b/gi, 'semoga sentiasa maju jaya'],
+    [/\blaris manis\b/gi, 'semoga perniagaan laris'],
+    [/\bjangan ragu\b/gi, 'jangan ragu-ragu'],
+    [/\bbintang 5\b/gi, '5 bintang'],
+    [/\bbintang lima\b/gi, '5 bintang'],
+    [/\bbintang penuh\b/gi, 'bintang penuh'],
+    [/\bfull star\b/gi, 'bintang penuh'],
+    [/\bfullstar\b/gi, 'bintang penuh'],
+    [/\bjokiannya\b/gi, 'khidmat jokinya'],
+    [/\bjokian\b/gi, 'khidmat joki'],
+    [/\bjoki\b/gi, 'joki'],
+    [/\bmantap\b/gi, 'mantap'],
     [/\bsekali\b/gi, 'sungguh'],
     [/\bbanget\b/gi, 'sangat'],
+    [/\bbgt\b/gi, 'sangat'],
     [/\bcepet\b/gi, 'pantas'],
     [/\bcepat\b/gi, 'pantas'],
     [/\bramah\b/gi, 'mesra'],
     [/\bbagus\b/gi, 'bagus'],
-    [/\bkeren\b/gi, 'hebat'],
-    [/\bmurah\b/gi, 'berpatutan'],
     [/\bpuas\b/gi, 'berpuas hati'],
     [/\bkelar\b/gi, 'siap'],
     [/\bselesai\b/gi, 'siap'],
-    [/\bberes\b/gi, 'selesai'],
+    [/\bberes\b/gi, 'siap'],
     [/\bakun\b/gi, 'akaun'],
-    [/\btokonya\b/gi, 'kedai ini'],
-    [/\btoko ini\b/gi, 'kedai ini'],
-    [/\btoko\b/gi, 'kedai'],
-    [/\bpelayanan\b/gi, 'perkhidmatan'],
+    [/\baman\b/gi, 'selamat'],
     [/\bcuma\b/gi, 'hanya'],
     [/\bhanya\b/gi, 'hanya'],
     [/\bmenit\b/gi, 'minit'],
@@ -3278,77 +3318,59 @@ function cleanLocalTranslate(text, targetLang){
     [/\bhari\b/gi, 'hari'],
     [/\bsudah\b/gi, 'sudah'],
     [/\budah\b/gi, 'sudah'],
-    [/\bbuat\b/gi, 'untuk']
+    [/\bbisa\b/gi, 'boleh'],
+    [/\bbuat\b/gi, 'untuk'],
+    [/\bgak\b/gi, 'tidak'],
+    [/\bnggak\b/gi, 'tidak'],
+    [/\bngga\b/gi, 'tidak']
   ];
 
   const rules = (lang === 'MY') ? rulesMY : rulesSG;
   const tokenMap = [];
   
   rules.forEach(([regex, replacement], idx) => {
-    s = s.replace(regex, () => {
+    s = s.replace(regex, (match) => {
       const token = `__TRANS_TOK_${idx}_${tokenMap.length}__`;
-      tokenMap.push({ token, replacement });
+      let rep = replacement;
+      if(match && match[0] && match[0] === match[0].toUpperCase()){
+        rep = rep.charAt(0).toUpperCase() + rep.slice(1);
+      }
+      tokenMap.push({ token, rep });
       return token;
     });
   });
 
-  tokenMap.forEach(({ token, replacement }) => {
-    s = s.replace(token, replacement);
+  tokenMap.forEach(({ token, rep }) => {
+    s = s.replace(token, rep);
   });
 
   return s;
 }
 
-async function fetchOnlineTranslation(text, targetLang, reviewId = null){
-  if(!text || typeof text !== 'string') return;
-  const trimmed = text.trim();
-  if(!trimmed) return;
-  const langKey = (targetLang || currentSelectedCountry || 'ID').toUpperCase();
-  const cacheKey = `${langKey}_${trimmed.toLowerCase()}`;
-
-  if(reviewTranslationCache[cacheKey]) return reviewTranslationCache[cacheKey];
-
-  try {
-    const langPair = (langKey === 'MY') ? 'id|ms' : (langKey === 'SG' ? 'id|en' : 'en|id');
-    const url = 'https://api.mymemory.translated.net/get?q=' + encodeURIComponent(trimmed) + '&langpair=' + langPair;
-    const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
-    const data = await res.json();
-    if(data && data.responseData && data.responseData.translatedText){
-      const trans = data.responseData.translatedText.trim();
-      if(trans && !trans.startsWith('MYMEMORY WARNING') && trans.toLowerCase() !== trimmed.toLowerCase()){
-        reviewTranslationCache[cacheKey] = trans;
-        saveReviewTranslationCache();
-
-        if(reviewId && activeReviewTranslations[reviewId]){
-          const commentEl = document.getElementById('reviewCommentText_' + reviewId);
-          if(commentEl){
-            commentEl.textContent = `"${trans}"`;
-          }
-        }
-        return trans;
-      }
-    }
-  } catch(err){
-    console.warn('Online translation fetch note:', err);
-  }
-}
-
 let activeReviewTranslations = {};
 let areAllReviewsTranslated = false;
 
-function translateCustomerReview(text, targetLang, reviewId = null){
+function getReviewOriginLanguage(r){
+  if(!r) return 'ID';
+  if(r.lang && ALLOWED_COUNTRY_CODES.includes(r.lang)) return r.lang;
+  if(r.country && ALLOWED_COUNTRY_CODES.includes(r.country)) return r.country;
+  const comment = (r.comment || '').toLowerCase();
+  if(/\b(akaun|pantas|khidmat|mesra|berpuas hati|disyorkan|kedai ini|tempah lagi|tak rugi|tiada|terbaik admin)\b/.test(comment)){
+    return 'MY';
+  }
+  if(/\b(fast|good|great|awesome|recommend|recommended|satisfied|service|seller|thank you|thanks)\b/.test(comment)){
+    return 'SG';
+  }
+  return 'ID';
+}
+
+function translateCustomerReview(text, targetLang){
   if(!text || typeof text !== 'string') return '';
   const trimmed = text.trim();
   if(!trimmed) return '';
   const lang = (targetLang || currentSelectedCountry || 'ID').toUpperCase();
-  const cacheKey = `${lang}_${trimmed.toLowerCase()}`;
 
-  // 1. Check cached neural translation
-  if(reviewTranslationCache[cacheKey]){
-    return reviewTranslationCache[cacheKey];
-  }
-
-  // 2. Exact phrase dictionary
+  // 1. Direct exact phrase match (instantaneous)
   const exactLower = trimmed.toLowerCase();
   for(const k in REVIEW_EXACT_MAP){
     if(k.toLowerCase() === exactLower && REVIEW_EXACT_MAP[k][lang]){
@@ -3356,28 +3378,12 @@ function translateCustomerReview(text, targetLang, reviewId = null){
     }
   }
 
-  // 3. Trigger asynchronous background online translation if reviewId provided
-  if(reviewId && typeof fetchOnlineTranslation === 'function'){
-    fetchOnlineTranslation(trimmed, lang, reviewId);
-  }
-
-  // 4. Return clean token-based local translation immediately
+  // 2. Return clean token-based local translation immediately (0ms fast response)
   return cleanLocalTranslate(trimmed, lang);
 }
 
 function toggleReviewTranslate(reviewId){
-  const ratings = getCustomerRatings();
-  const r = ratings.find(item => item.id === reviewId);
   activeReviewTranslations[reviewId] = !activeReviewTranslations[reviewId];
-  
-  if(activeReviewTranslations[reviewId] && r && r.comment){
-    const targetLang = (currentSelectedCountry || 'ID').toUpperCase();
-    const cacheKey = `${targetLang}_${r.comment.trim().toLowerCase()}`;
-    if(!reviewTranslationCache[cacheKey]){
-      fetchOnlineTranslation(r.comment, targetLang, reviewId);
-    }
-  }
-
   renderCustomerReviews();
   const isNowActive = activeReviewTranslations[reviewId];
   showToast(isNowActive ? `🌐 ${t('translatedBadge')}` : `📄 ${t('showOriginalReviewBtn')}`);
@@ -3386,18 +3392,9 @@ function toggleReviewTranslate(reviewId){
 function toggleAllReviewsTranslation(){
   const ratings = getCustomerRatings();
   areAllReviewsTranslated = !areAllReviewsTranslated;
-  const targetLang = (currentSelectedCountry || 'ID').toUpperCase();
-
   ratings.forEach(r => {
     activeReviewTranslations[r.id] = areAllReviewsTranslated;
-    if(areAllReviewsTranslated && r && r.comment){
-      const cacheKey = `${targetLang}_${r.comment.trim().toLowerCase()}`;
-      if(!reviewTranslationCache[cacheKey]){
-        fetchOnlineTranslation(r.comment, targetLang, r.id);
-      }
-    }
   });
-
   renderCustomerReviews();
   showToast(areAllReviewsTranslated ? `🌐 ${t('translatedBadge')}` : `📄 ${t('showAllOriginalReviewsBtn')}`);
 }
@@ -4522,23 +4519,25 @@ function getActiveOrderForProduct(productId){
     }
   }
 
-  // 2. Cek untuk layanan joki: jika sedang diproses (status === 'processing')
-  // Kunci produk untuk pengguna yang memesan atau untuk akun yang sedang menguji, agar tidak bisa membeli berkali-kali produk yang sama
+  // 2. Cek untuk layanan joki: jika sedang diproses atau baru dipesan (status === 'processing' || status === 'pending')
+  // Kunci produk untuk pengguna yang memesan agar tulisan proses muncul di produk dan di keranjang, serta mencegah pembelian berulang
+  const myIds = getMyOrderIds().filter(id => !deletedIds.includes(id));
   for(const ordId in allOrders){
     if(deletedIds.includes(ordId)) continue;
     const ord = allOrders[ordId];
-    if(!ord || ord.status !== 'processing' || deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
+    if(!ord || !ord.status || deletedIds.includes(ord.id) || ord.deletedByCustomer) continue;
+    if(ord.status !== 'processing' && ord.status !== 'pending') continue;
 
     let isMine = false;
     if(currentUser && !currentUser.isAnonymous){
       isMine = (ord.customerUid && ord.customerUid === currentUser.uid) ||
                (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase()) ||
-               (isAuthorizedAdmin() && (ord.customerEmail && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase()));
+               myIds.includes(ord.id) ||
+               myIds.includes(ordId);
     } else {
-      isMine = getMyOrderIds().includes(ord.id);
+      isMine = myIds.includes(ord.id) || myIds.includes(ordId);
     }
 
-    // Jika admin toko sedang menguji atau melihat, atau pemilik pesanan sedang melihat
     if(isMine){
       if(Array.isArray(ord.items)){
         const hasItem = ord.items.some(it => {
@@ -4592,7 +4591,8 @@ function getMyOrderIds(){
       return (Array.isArray(arr) ? arr : []).filter(id => {
         if(deleted.includes(id)) return false;
         const ord = allOrders[id];
-        return ord && ord.customerUid === currentUser.uid && !ord.isGuestOrder;
+        if(!ord) return true;
+        return (ord.customerUid === currentUser.uid) || (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
       });
     } catch(e){
       return [];
@@ -5401,15 +5401,20 @@ function renderCustomerReviews(){
   const locale = currentLang === 'SG' ? 'en-SG' : (currentLang === 'MY' ? 'ms-MY' : 'id-ID');
   const nowWord = currentLang === 'SG' ? 'Just now' : (currentLang === 'MY' ? 'Baru sahaja' : 'Baru saja');
   
+  const translatableReviews = ratings.filter(r => r.comment && getReviewOriginLanguage(r) !== currentLang);
+  const showTranslateAllBtn = translatableReviews.length > 0;
+
   let headerHtml = `
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;gap:8px;flex-wrap:wrap">
       <div style="font-size:12px;font-weight:800;color:#c084fc;text-transform:uppercase;letter-spacing:.5px">
         💬 ${t('reviewListHeader', {n: ratings.length})}
       </div>
+      ${showTranslateAllBtn ? `
       <button type="button" class="translate-all-btn" onclick="toggleAllReviewsTranslation()" style="background:rgba(124,58,237,0.15);color:#d8b4fe;border:1px solid rgba(124,58,237,0.4);font-size:11px;font-weight:700;padding:5px 12px;border-radius:14px;cursor:pointer;display:inline-flex;align-items:center;gap:5px;transition:all .18s ease">
         <span style="font-size:12px">🌐</span>
         <span>${areAllReviewsTranslated ? t('showAllOriginalReviewsBtn') : t('translateAllReviewsBtn')}</span>
       </button>
+      ` : ''}
     </div>
   `;
 
@@ -5420,23 +5425,33 @@ function renderCustomerReviews(){
     const authorInitial = (r.customerName || 'P').charAt(0).toUpperCase();
     const serviceNameText = r.serviceName ? escapeHtml(r.serviceName) : t('defaultServiceReview');
     
-    const isTranslated = !!activeReviewTranslations[r.id];
+    const originLang = getReviewOriginLanguage(r);
+    const isSameLanguage = (originLang === currentLang);
+    const isTranslated = !isSameLanguage && !!activeReviewTranslations[r.id];
     let commentDisplay = '';
     let translateControls = '';
     
     if(r.comment){
-      const commentText = isTranslated ? translateCustomerReview(r.comment, currentLang, r.id) : r.comment;
+      const commentText = isTranslated ? translateCustomerReview(r.comment, currentLang) : r.comment;
       commentDisplay = `<p class="customer-review-comment" id="reviewCommentText_${escapeHtml(r.id)}" style="${isTranslated ? 'color:#f8fafc;' : ''}">"${escapeHtml(commentText)}"</p>`;
       
-      translateControls = `
-        <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-          <button type="button" class="review-translate-btn" onclick="toggleReviewTranslate('${escapeHtml(r.id)}')" style="background:${isTranslated ? 'rgba(124,58,237,0.32)' : 'rgba(255,255,255,0.06)'};color:${isTranslated ? '#f3e8ff' : '#c4b5fd'};border:1px solid ${isTranslated ? '#a855f7' : 'rgba(124,58,237,0.35)'};font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .18s ease">
-            <span style="font-size:12px">🌐</span>
-            <span>${isTranslated ? t('showOriginalReviewBtn') : t('translateReviewBtn')}</span>
-          </button>
-          ${isTranslated ? `<span style="font-size:10.5px;color:#a78bfa;font-weight:600;display:inline-flex;align-items:center;gap:3px">✓ ${t('translatedBadge')}</span>` : ''}
-        </div>
-      `;
+      // Jangan pernah munculkan tombol translate di bahasa yang sama!
+      if(!isSameLanguage){
+        let btnTranslateText = t('translateReviewBtn');
+        if(currentLang === 'MY') btnTranslateText = 'Terjemahkan ke BM';
+        else if(currentLang === 'SG') btnTranslateText = 'Translate to English';
+        else if(currentLang === 'ID') btnTranslateText = 'Terjemahkan ke Indo';
+
+        translateControls = `
+          <div style="margin-top:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+            <button type="button" class="review-translate-btn" onclick="toggleReviewTranslate('${escapeHtml(r.id)}')" style="background:${isTranslated ? 'rgba(124,58,237,0.32)' : 'rgba(255,255,255,0.06)'};color:${isTranslated ? '#f3e8ff' : '#c4b5fd'};border:1px solid ${isTranslated ? '#a855f7' : 'rgba(124,58,237,0.35)'};font-size:11px;font-weight:700;padding:4px 10px;border-radius:14px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;transition:all .18s ease">
+              <span style="font-size:12px">🌐</span>
+              <span>${isTranslated ? t('showOriginalReviewBtn') : btnTranslateText}</span>
+            </button>
+            ${isTranslated ? `<span style="font-size:10.5px;color:#a78bfa;font-weight:600;display:inline-flex;align-items:center;gap:3px">✓ ${t('translatedBadge')}</span>` : ''}
+          </div>
+        `;
+      }
     } else {
       commentDisplay = `<p class="customer-review-comment" style="font-style:italic;color:#94a3b8">${t('reviewPlaceholderText', {starCount: starCount})}</p>`;
     }
@@ -5797,7 +5812,9 @@ function submitCustomerRating(ratingData){
     stars: Math.max(1, Math.min(5, parseInt(ratingData.stars, 10) || 5)),
     serviceName: (ratingData.serviceName || '').trim() || 'Layanan Joki Game',
     comment: (ratingData.comment || '').trim(),
-    createdAt: Date.now()
+    createdAt: Date.now(),
+    country: currentSelectedCountry || 'ID',
+    lang: currentSelectedCountry || 'ID'
   };
 
   // Simpan seketika di memori lokal allOrders
@@ -6154,7 +6171,8 @@ function loadUserDataFromCloud(uid){
     if(isAuthorizedAdmin()){
       cleanCloudIds = cleanCloudIds.filter(id => {
         const ord = allOrders[id];
-        return ord && ord.customerUid === uid && !ord.isGuestOrder;
+        if(!ord) return true;
+        return (ord.customerUid === uid) || (ord.customerEmail && currentUser.email && ord.customerEmail.toLowerCase() === currentUser.email.toLowerCase());
       });
       safeSetItem('norxstore_orders_user_' + uid, JSON.stringify(cleanCloudIds));
       safeSetItem('norxstore_my_orders', '[]');
@@ -6185,7 +6203,7 @@ function syncCartToCloud(){
   }
 }
 function syncOrderIdsToCloud(){
-  if(currentUser && !currentUser.isAnonymous && !isAuthorizedAdmin()){
+  if(currentUser && !currentUser.isAnonymous){
     const deleted = getDeletedOrderIds();
     const ids = getMyOrderIds().filter(id => !deleted.includes(id));
     fbDB.ref('norxstore/users/' + currentUser.uid + '/myOrderIds').set(ids).catch(e=>console.error(e));
