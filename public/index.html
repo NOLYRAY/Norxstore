@@ -2653,7 +2653,19 @@ const I18N = {
     waClosing: 'Mohon konfirmasi ketersediaannya, terima kasih!',
     toastCountryChanged: 'Negara & Bahasa diubah ke',
     modeCatalog: '☀️ Katalog',
-    modeTesti: '🌙 Testimoni'
+    modeTesti: '🌙 Testimoni',
+    sgPopTitle: 'Sub-Kategori',
+    sgPopSubtitle: 'Pilih sub-kategori untuk {game}',
+    sgPopAllName: 'Semua {game}',
+    sgPopAllDesc: 'Tampilkan seluruh varian & paket',
+    sgPopItemDesc: 'Layanan kategori {sub}',
+    sgPopItemCount: '{n} produk',
+    sgPopOtherName: 'Lainnya / Reguler',
+    sgPopOtherDesc: 'Layanan reguler tanpa sub-kategori',
+    sgBarLabel: 'Sub-Kategori:',
+    sgBarChange: 'Ganti',
+    sgBarAllBtn: '✕ Semua {game}',
+    sgToastShowing: 'Menampilkan: {label}'
   },
   MY: {
     langName: 'Bahasa Melayu',
@@ -2745,7 +2757,19 @@ const I18N = {
     waClosing: 'Sila sahkan ketersediaan, terima kasih!',
     toastCountryChanged: 'Negara & Bahasa ditukar kepada',
     modeCatalog: '☀️ Katalog',
-    modeTesti: '🌙 Penilaian'
+    modeTesti: '🌙 Penilaian',
+    sgPopTitle: 'Sub-Kategori',
+    sgPopSubtitle: 'Pilih sub-kategori untuk {game}',
+    sgPopAllName: 'Semua {game}',
+    sgPopAllDesc: 'Papar semua varian & pakej',
+    sgPopItemDesc: 'Perkhidmatan kategori {sub}',
+    sgPopItemCount: '{n} produk',
+    sgPopOtherName: 'Lain-lain / Biasa',
+    sgPopOtherDesc: 'Perkhidmatan biasa tanpa sub-kategori',
+    sgBarLabel: 'Sub-Kategori:',
+    sgBarChange: 'Tukar',
+    sgBarAllBtn: '✕ Semua {game}',
+    sgToastShowing: 'Memaparkan: {label}'
   },
   SG: {
     langName: 'English (Singapore)',
@@ -2837,7 +2861,19 @@ const I18N = {
     waClosing: 'Please confirm availability, thank you!',
     toastCountryChanged: 'Country & Language changed to',
     modeCatalog: '☀️ Catalog',
-    modeTesti: '🌙 Testimonials'
+    modeTesti: '🌙 Testimonials',
+    sgPopTitle: 'Sub-Category',
+    sgPopSubtitle: 'Select sub-category for {game}',
+    sgPopAllName: 'All {game}',
+    sgPopAllDesc: 'Show all variants & packages',
+    sgPopItemDesc: 'Services under {sub} category',
+    sgPopItemCount: '{n} product(s)',
+    sgPopOtherName: 'Others / Regular',
+    sgPopOtherDesc: 'Regular services without sub-category',
+    sgBarLabel: 'Sub-Category:',
+    sgBarChange: 'Change',
+    sgBarAllBtn: '✕ All {game}',
+    sgToastShowing: 'Showing: {label}'
   }
 };
 
@@ -3575,6 +3611,11 @@ function updateLanguageUI(){
 
   if(typeof updateRatingStatsUI === 'function') updateRatingStatsUI();
   if(typeof renderCustomerReviews === 'function') renderCustomerReviews();
+  if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
+  const sgModal = document.getElementById('subgroupPopupOverlay');
+  if(sgModal && sgModal.classList.contains('open') && typeof openSubgroupPopup === 'function' && currentCatFilter && currentCatFilter !== 'all'){
+    openSubgroupPopup(currentCatFilter);
+  }
 }
 
 // ==================== MULTI-CURRENCY & NEGARA ====================
@@ -7529,6 +7570,40 @@ function getExistingSubgroups(cat){
   return Array.from(set);
 }
 
+function localizeSubgroupName(sub, lang = null){
+  if(!sub) return '';
+  const currentLang = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  const raw = sub.trim();
+  const subLower = raw.toLowerCase();
+
+  if(currentLang === 'MY'){
+    if(subLower === 'rawat account' || subLower === 'rawat akun') return 'RAWAT AKAUN';
+    if(subLower === 'eksploration' || subLower === 'eksplorasi') return 'EKSPLORASI';
+    if(subLower === 'quest') return 'QUEST / MISI';
+    if(subLower === 'top-up' || subLower === 'topup') return 'TAMBAH NILAI / TOP-UP';
+    if(subLower === 'joki') return 'JOKI / SERVIS MAIN';
+    if(subLower === 'starter') return 'AKAUN STARTER';
+    if(subLower === 'reroll') return 'AKAUN REROLL';
+    if(subLower === 'akun' || subLower === 'account') return 'AKAUN GAME';
+    if(subLower === 'reguler' || subLower === '__none__') return 'Biasa';
+  } else if(currentLang === 'SG'){
+    if(subLower === 'rawat account' || subLower === 'rawat akun') return 'ACCOUNT MAINTENANCE';
+    if(subLower === 'eksploration' || subLower === 'eksplorasi') return 'EXPLORATION';
+    if(subLower === 'quest') return 'QUEST / MISSIONS';
+    if(subLower === 'top-up' || subLower === 'topup') return 'TOP-UP';
+    if(subLower === 'joki') return 'PILOT / BOOSTING';
+    if(subLower === 'starter') return 'STARTER ACCOUNT';
+    if(subLower === 'reroll') return 'REROLL ACCOUNT';
+    if(subLower === 'akun' || subLower === 'account') return 'GAME ACCOUNTS';
+    if(subLower === 'reguler' || subLower === '__none__') return 'Regular';
+  } else {
+    if(subLower === 'rawat account') return 'RAWAT AKUN';
+    if(subLower === 'eksploration') return 'EKSPLORASI';
+  }
+
+  return raw;
+}
+
 function openSubgroupPopup(cat){
   const targetCat = cat || currentCatFilter;
   if(!targetCat || targetCat === 'all') return;
@@ -7536,8 +7611,8 @@ function openSubgroupPopup(cat){
   
   const titleEl = document.getElementById('sgPopTitle');
   const subtitleEl = document.getElementById('sgPopSubtitle');
-  if(titleEl) titleEl.innerHTML = `${info.icon} Sub-Kategori ${info.shortName}`;
-  if(subtitleEl) subtitleEl.textContent = `Pilih sub-kategori untuk ${info.name}`;
+  if(titleEl) titleEl.innerHTML = `✨ ${t('sgPopTitle')} ${info.shortName}`;
+  if(subtitleEl) subtitleEl.textContent = t('sgPopSubtitle', { game: info.name });
   
   const catProds = (products || []).filter(p => p.cat === targetCat);
   const totalCatCount = catProds.length;
@@ -7566,12 +7641,12 @@ function openSubgroupPopup(cat){
       <div class="sg-pop-item-left">
         <div class="sg-pop-icon">🌟</div>
         <div class="sg-pop-text">
-          <div class="sg-pop-name">Semua ${info.shortName}</div>
-          <div class="sg-pop-desc">Tampilkan seluruh varian & paket</div>
+          <div class="sg-pop-name">${t('sgPopAllName', { game: info.shortName })}</div>
+          <div class="sg-pop-desc">${t('sgPopAllDesc')}</div>
         </div>
       </div>
       <div class="sg-pop-item-right">
-        <span class="sg-pop-count">${totalCatCount} produk</span>
+        <span class="sg-pop-count">${t('sgPopItemCount', { n: totalCatCount })}</span>
         <div class="sg-pop-radio"></div>
       </div>
     </div>
@@ -7588,17 +7663,19 @@ function openSubgroupPopup(cat){
     else if(subLower.includes('item') || subLower.includes('pass') || subLower.includes('welkin') || subLower.includes('express')) subIcon = '🌙';
     else if(subLower.includes('event') || subLower.includes('misi')) subIcon = '🎯';
 
+    const localizedName = localizeSubgroupName(sub);
+
     html += `
       <div class="sg-pop-item ${isActive ? 'active' : ''}" onclick="selectSubgroupFilter('${sub.replace(/'/g, "\\'")}')">
         <div class="sg-pop-item-left">
           <div class="sg-pop-icon">${subIcon}</div>
           <div class="sg-pop-text">
-            <div class="sg-pop-name">${sub}</div>
-            <div class="sg-pop-desc">Layanan kategori ${sub}</div>
+            <div class="sg-pop-name">${escapeHtml(localizedName)}</div>
+            <div class="sg-pop-desc">${t('sgPopItemDesc', { sub: escapeHtml(localizedName) })}</div>
           </div>
         </div>
         <div class="sg-pop-item-right">
-          <span class="sg-pop-count">${subCounts[sub]} produk</span>
+          <span class="sg-pop-count">${t('sgPopItemCount', { n: subCounts[sub] })}</span>
           <div class="sg-pop-radio"></div>
         </div>
       </div>
@@ -7612,12 +7689,12 @@ function openSubgroupPopup(cat){
         <div class="sg-pop-item-left">
           <div class="sg-pop-icon">📦</div>
           <div class="sg-pop-text">
-            <div class="sg-pop-name">Lainnya / Reguler</div>
-            <div class="sg-pop-desc">Layanan reguler tanpa sub-kategori</div>
+            <div class="sg-pop-name">${t('sgPopOtherName')}</div>
+            <div class="sg-pop-desc">${t('sgPopOtherDesc')}</div>
           </div>
         </div>
         <div class="sg-pop-item-right">
-          <span class="sg-pop-count">${noneCount} produk</span>
+          <span class="sg-pop-count">${t('sgPopItemCount', { n: noneCount })}</span>
           <div class="sg-pop-radio"></div>
         </div>
       </div>
@@ -7647,8 +7724,10 @@ function selectSubgroupFilter(sub){
   renderProducts(currentCatFilter, currentSubgroupFilter);
   
   const catObj = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
-  const label = sub === 'all' ? ('Semua ' + catObj.shortName) : (sub === '__none__' ? 'Reguler' : sub);
-  showToast('Menampilkan: ' + label);
+  const label = sub === 'all' 
+    ? t('sgPopAllName', { game: catObj.shortName }) 
+    : (sub === '__none__' ? t('sgPopOtherName') : localizeSubgroupName(sub));
+  showToast(t('sgToastShowing', { label: label }));
   
   const grid = document.getElementById('productGrid');
   if(grid){
@@ -7678,8 +7757,8 @@ function updateCategoryChipsUI(){
       chip.classList.add('active');
       if(hasSubs){
         if(currentSubgroupFilter && currentSubgroupFilter !== 'all'){
-          const subLabel = currentSubgroupFilter === '__none__' ? 'Reguler' : currentSubgroupFilter;
-          chip.innerHTML = `${info.shortName}: <b>${subLabel}</b> ▾`;
+          const subLabel = currentSubgroupFilter === '__none__' ? t('sgPopOtherName') : localizeSubgroupName(currentSubgroupFilter);
+          chip.innerHTML = `${info.shortName}: <b>${escapeHtml(subLabel)}</b> ▾`;
         } else {
           chip.innerHTML = `${info.shortName} ▾`;
         }
@@ -7700,17 +7779,17 @@ function updateCategoryChipsUI(){
   if(subBar){
     if(currentCatFilter !== 'all' && currentSubgroupFilter && currentSubgroupFilter !== 'all'){
       const info = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
-      const subLabel = currentSubgroupFilter === '__none__' ? 'Reguler' : currentSubgroupFilter;
+      const subLabel = currentSubgroupFilter === '__none__' ? t('sgPopOtherName') : localizeSubgroupName(currentSubgroupFilter);
       subBar.style.display = 'flex';
       subBar.innerHTML = `
         <div class="csb-left">
-          <span class="csb-label">Sub-Kategori:</span>
+          <span class="csb-label">${t('sgBarLabel')}</span>
           <button type="button" class="csb-active-chip" onclick="openSubgroupPopup('${currentCatFilter}')">
-            🏷️ ${subLabel} ▾ <span style="font-size:9px;opacity:.75;margin-left:2px">Ganti</span>
+            🏷️ ${escapeHtml(subLabel)} ▾ <span style="font-size:9px;opacity:.75;margin-left:2px">${t('sgBarChange')}</span>
           </button>
         </div>
         <button type="button" class="csb-reset-btn" onclick="selectSubgroupFilter('all')">
-          ✕ Semua ${info.shortName}
+          ${t('sgBarAllBtn', { game: info.shortName })}
         </button>
       `;
     } else {
