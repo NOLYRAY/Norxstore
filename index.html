@@ -2954,6 +2954,59 @@ const DESC_EXACT_MAP = {
 };
 
 const WORD_MAP_MY = [
+  // Multi-word level & ascension patterns
+  [/\bup level karakter (\d+)\s*[-–]\s*(\d+)\b/gi, 'Tingkatkan tahap karakter $1-$2'],
+  [/\bup level karakter\b/gi, 'Tingkatkan tahap karakter'],
+  [/\bup level (\d+)\s*[-–]\s*(\d+)\b/gi, 'Tingkatkan level $1-$2'],
+  [/\bup level\b/gi, 'Tingkatkan tahap'],
+  [/\bup lvl (\d+)\s*[-–]\s*(\d+)\b/gi, 'Tingkatkan level $1-$2'],
+  [/\bup lvl\b/gi, 'Tingkatkan level'],
+  [/\bnaik level\b/gi, 'Tingkatkan level'],
+  [/\bnaikkan level\b/gi, 'Tingkatkan level'],
+  [/\bkarakter\b/gi, 'karakter'],
+  [/\bchar\b/gi, 'karakter'],
+
+  // Account admin / status patterns
+  [/\baccount admin yang nganggur\b/gi, 'Akaun admin yang tidak digunakan'],
+  [/\bakun admin yang nganggur\b/gi, 'Akaun admin yang tidak digunakan'],
+  [/\byang nganggur\b/gi, 'yang tidak digunakan'],
+  [/\bnganggur\b/gi, 'tidak digunakan'],
+  [/\bterbiar\b/gi, 'terbiar'],
+  [/\baccount admin\b/gi, 'akaun admin'],
+  [/\bakun admin\b/gi, 'akaun admin'],
+  [/\bakun pribadi\b/gi, 'akaun peribadi'],
+  [/\baccount pribadi\b/gi, 'akaun peribadi'],
+  [/\bakun sultan\b/gi, 'akaun sultan'],
+  [/\bakun terawat\b/gi, 'akaun dijaga rapi'],
+  [/\bakun pensiun\b/gi, 'akaun bersara'],
+  [/\bakun pensi\b/gi, 'akaun pencen'],
+  [/\bpensiun\b/gi, 'bersara'],
+  [/\bpensi\b/gi, 'pencen'],
+  [/\bsangat terawat\b/gi, 'sangat dijaga rapi'],
+  [/\bterawat\b/gi, 'dijaga rapi'],
+  [/\bbisa ganti email\b/gi, 'boleh tukar emel'],
+  [/\bganti email\b/gi, 'tukar emel'],
+  [/\bganti password\b/gi, 'tukar kata laluan'],
+  [/\bubah password\b/gi, 'tukar kata laluan'],
+  [/\btanpa minus\b/gi, 'bersih tiada tolak'],
+  [/\bno minus\b/gi, 'bersih tiada tolak'],
+  [/\brawat account\b/gi, 'Rawat akaun'],
+  [/\brawat akun\b/gi, 'Rawat akaun'],
+  [/\beksploration\b/gi, 'Eksplorasi'],
+  [/\beksplorasi\b/gi, 'Eksplorasi'],
+
+  // Durations & Time
+  [/\b(\d+)\s*hari\b/gi, '$1 hari'],
+  [/\bhari\b/gi, 'hari'],
+  [/\b(\d+)\s*jam\b/gi, '$1 jam'],
+  [/\bjam\b/gi, 'jam'],
+  [/\b(\d+)\s*menit\b/gi, '$1 minit'],
+  [/\bmenit\b/gi, 'minit'],
+  [/\bmingguan\b/gi, 'mingguan'],
+  [/\bbulanan\b/gi, 'bulanan'],
+  [/\bharian\b/gi, 'harian'],
+
+  // Selling & General
   [/\bharga murah cocok untuk pertama kali\b/gi, 'harga berpatutan sesuai untuk kali pertama'],
   [/\bharga murah\b/gi, 'harga berpatutan'],
   [/\bcocok untuk pertama kali\b/gi, 'sesuai untuk kali pertama'],
@@ -2963,28 +3016,108 @@ const WORD_MAP_MY = [
   [/\bmurah\b/gi, 'berpatutan'],
   [/\bakun polosan\b/gi, 'akaun kosong'],
   [/\bakun starter\b/gi, 'akaun permulaan'],
+  [/\bakun reroll\b/gi, 'akaun reroll'],
+  [/\bjual akun\b/gi, 'Jual akaun'],
+  [/\bjual beli akun\b/gi, 'Jual beli akaun'],
   [/\bakun\b/gi, 'akaun'],
+  [/\baccount\b/gi, 'akaun'],
   [/\bproses cepat dan aman\b/gi, 'proses pantas dan selamat'],
   [/\bproses cepat\b/gi, 'proses pantas'],
   [/\bcepat\b/gi, 'pantas'],
   [/\baman\b/gi, 'selamat'],
   [/\bterpercaya\b/gi, 'dipercayai'],
   [/\bgaransi seumur hidup\b/gi, 'jaminan seumur hidup'],
+  [/\bgaransi uang kembali\b/gi, 'jaminan wang dikembalikan'],
+  [/\bgaransi anti hackback\b/gi, 'jaminan anti-hackback'],
   [/\bgaransi\b/gi, 'jaminan'],
   [/\bbergaransi\b/gi, 'berjaminan'],
   [/\bsiap pakai\b/gi, 'sedia digunakan'],
+  [/\bsiap main\b/gi, 'sedia untuk dimainkan'],
   [/\bpaket hemat\b/gi, 'pakej jimat'],
   [/\bpaket\b/gi, 'pakej'],
-  [/\bmenit\b/gi, 'minit'],
   [/\blayanan\b/gi, 'perkhidmatan'],
+  [/\bselesai dalam\b/gi, 'siap dalam'],
   [/\bselesai\b/gi, 'siap'],
   [/\bdikerjakan\b/gi, 'dijalankan'],
   [/\bbisa nego\b/gi, 'boleh runding'],
+  [/\bbisa request\b/gi, 'boleh buat permintaan'],
+  [/\bbebas request\b/gi, 'bebas buat permintaan'],
   [/\bbisa\b/gi, 'boleh'],
-  [/\bbutuh\b/gi, 'perlu']
+  [/\bbutuh\b/gi, 'perlu'],
+  [/\byang\b/gi, 'yang'],
+  [/\bdan\b/gi, 'dan'],
+  [/\batau\b/gi, 'atau'],
+  [/\buntuk\b/gi, 'untuk'],
+  [/\bbuat\b/gi, 'untuk'],
+  [/\bdari\b/gi, 'dari'],
+  [/\bsampai\b/gi, 'hingga'],
+  [/\bhingga\b/gi, 'hingga'],
+  [/\bdengan\b/gi, 'dengan'],
+  [/\btanpa\b/gi, 'tanpa'],
+  [/\bhanya\b/gi, 'hanya'],
+  [/\bcuma\b/gi, 'hanya'],
+  [/\bsudah\b/gi, 'sudah'],
+  [/\budah\b/gi, 'sudah'],
+  [/\btidak\b/gi, 'tidak'],
+  [/\bgak\b/gi, 'tidak'],
+  [/\bnggak\b/gi, 'tidak'],
+  [/\bsemua\b/gi, 'semua']
 ];
 
 const WORD_MAP_SG = [
+  // Multi-word level & ascension patterns
+  [/\bup level karakter (\d+)\s*[-–]\s*(\d+)\b/gi, 'Level up character $1-$2'],
+  [/\bup level karakter\b/gi, 'Level up character'],
+  [/\bup level (\d+)\s*[-–]\s*(\d+)\b/gi, 'Level up $1-$2'],
+  [/\bup level\b/gi, 'Level up'],
+  [/\bup lvl (\d+)\s*[-–]\s*(\d+)\b/gi, 'Level up $1-$2'],
+  [/\bup lvl\b/gi, 'Level up'],
+  [/\bnaik level\b/gi, 'Level up'],
+  [/\bnaikkan level\b/gi, 'Level up'],
+  [/\bkarakter\b/gi, 'character'],
+  [/\bchar\b/gi, 'character'],
+
+  // Account admin / status patterns
+  [/\baccount admin yang nganggur\b/gi, 'Unused admin account'],
+  [/\bakun admin yang nganggur\b/gi, 'Unused admin account'],
+  [/\byang nganggur\b/gi, 'unused / idle'],
+  [/\bnganggur\b/gi, 'unused / idle'],
+  [/\bterbiar\b/gi, 'unused'],
+  [/\baccount admin\b/gi, 'admin account'],
+  [/\bakun admin\b/gi, 'admin account'],
+  [/\bakun pribadi\b/gi, 'personal account'],
+  [/\baccount pribadi\b/gi, 'personal account'],
+  [/\bakun sultan\b/gi, 'whale / luxury account'],
+  [/\bakun terawat\b/gi, 'well-maintained account'],
+  [/\bakun pensiun\b/gi, 'retired player account'],
+  [/\bakun pensi\b/gi, 'retired player account'],
+  [/\bpensiun\b/gi, 'retired'],
+  [/\bpensi\b/gi, 'retired player'],
+  [/\bsangat terawat\b/gi, 'very well-maintained'],
+  [/\bterawat\b/gi, 'well-maintained'],
+  [/\bbisa ganti email\b/gi, 'email changeable'],
+  [/\bganti email\b/gi, 'change email'],
+  [/\bganti password\b/gi, 'change password'],
+  [/\bubah password\b/gi, 'change password'],
+  [/\btanpa minus\b/gi, 'no minus / clean record'],
+  [/\bno minus\b/gi, 'no minus / clean record'],
+  [/\brawat account\b/gi, 'Account maintenance'],
+  [/\brawat akun\b/gi, 'Account maintenance'],
+  [/\beksploration\b/gi, 'Exploration'],
+  [/\beksplorasi\b/gi, 'Exploration'],
+
+  // Durations & Time
+  [/\b(\d+)\s*hari\b/gi, '$1 days'],
+  [/\bhari\b/gi, 'days'],
+  [/\b(\d+)\s*jam\b/gi, '$1 hours'],
+  [/\bjam\b/gi, 'hours'],
+  [/\b(\d+)\s*menit\b/gi, '$1 minutes'],
+  [/\bmenit\b/gi, 'minutes'],
+  [/\bmingguan\b/gi, 'weekly'],
+  [/\bbulanan\b/gi, 'monthly'],
+  [/\bharian\b/gi, 'daily'],
+
+  // Selling & General
   [/\bharga murah cocok untuk pertama kali\b/gi, 'Affordable price, perfect for first time'],
   [/\bharga murah\b/gi, 'affordable price'],
   [/\bcocok untuk pertama kali\b/gi, 'perfect for first time'],
@@ -2994,29 +3127,53 @@ const WORD_MAP_SG = [
   [/\bmurah\b/gi, 'affordable'],
   [/\bakun polosan\b/gi, 'fresh / clean account'],
   [/\bakun starter\b/gi, 'starter account'],
+  [/\bakun reroll\b/gi, 'reroll account'],
+  [/\bjual akun\b/gi, 'Account for sale'],
+  [/\bjual beli akun\b/gi, 'Buy & sell accounts'],
   [/\bakun\b/gi, 'account'],
+  [/\baccount\b/gi, 'account'],
   [/\bproses cepat dan aman\b/gi, 'fast and secure process'],
   [/\bproses cepat\b/gi, 'fast process'],
   [/\bcepat\b/gi, 'fast'],
   [/\baman\b/gi, 'safe & secure'],
   [/\bterpercaya\b/gi, 'trusted'],
   [/\bgaransi seumur hidup\b/gi, 'lifetime warranty'],
+  [/\bgaransi uang kembali\b/gi, 'money-back guarantee'],
+  [/\bgaransi anti hackback\b/gi, 'anti-hackback warranty'],
   [/\bgaransi\b/gi, 'warranty'],
   [/\bbergaransi\b/gi, 'guaranteed'],
   [/\bsiap pakai\b/gi, 'ready to play'],
+  [/\bsiap main\b/gi, 'ready to play'],
   [/\bpaket hemat\b/gi, 'value pack'],
   [/\bpaket\b/gi, 'pack'],
-  [/\bmenit\b/gi, 'minutes'],
-  [/\bjam\b/gi, 'hours'],
-  [/\bhari\b/gi, 'days'],
   [/\blayanan\b/gi, 'service'],
   [/\bselesai dalam\b/gi, 'completed in'],
   [/\bselesai\b/gi, 'completed'],
   [/\bdikerjakan\b/gi, 'handled'],
   [/\bbisa nego\b/gi, 'negotiable'],
-  [/\bharian\b/gi, 'daily'],
-  [/\bmingguan\b/gi, 'weekly'],
-  [/\bbulanan\b/gi, 'monthly']
+  [/\bbisa request\b/gi, 'custom request available'],
+  [/\bbebas request\b/gi, 'free to request'],
+  [/\bbisa\b/gi, 'can'],
+  [/\bmisi\b/gi, 'missions'],
+  [/\btugas\b/gi, 'tasks'],
+  [/\byang\b/gi, 'which is'],
+  [/\bdan\b/gi, 'and'],
+  [/\batau\b/gi, 'or'],
+  [/\buntuk\b/gi, 'for'],
+  [/\bbuat\b/gi, 'for'],
+  [/\bdari\b/gi, 'from'],
+  [/\bsampai\b/gi, 'to'],
+  [/\bhingga\b/gi, 'up to'],
+  [/\bdengan\b/gi, 'with'],
+  [/\btanpa\b/gi, 'without'],
+  [/\bhanya\b/gi, 'only'],
+  [/\bcuma\b/gi, 'only'],
+  [/\bsudah\b/gi, 'already'],
+  [/\budah\b/gi, 'already'],
+  [/\btidak\b/gi, 'not'],
+  [/\bgak\b/gi, 'not'],
+  [/\bnggak\b/gi, 'not'],
+  [/\bsemua\b/gi, 'all']
 ];
 
 function translateProductDesc(desc, lang){
@@ -3024,7 +3181,7 @@ function translateProductDesc(desc, lang){
   const trimmed = desc.trim();
   if(!trimmed) return '';
   
-  const targetLang = lang || currentSelectedCountry || 'ID';
+  const targetLang = (lang || currentSelectedCountry || 'ID').toUpperCase();
   if(targetLang === 'ID') return desc;
 
   // 1. Direct exact phrase match
@@ -3039,19 +3196,34 @@ function translateProductDesc(desc, lang){
     }
   }
 
-  // 2. Pattern and word mapping
-  let res = desc;
+  // 2. Token-based Pattern and word mapping
+  let s = desc;
   const wordMap = (targetLang === 'MY') ? WORD_MAP_MY : (targetLang === 'SG' ? WORD_MAP_SG : []);
-  for(let i = 0; i < wordMap.length; i++){
-    const [regex, replacement] = wordMap[i];
-    res = res.replace(regex, replacement);
-  }
-  return res;
+  const tokenMap = [];
+  wordMap.forEach(([regex, rep], idx) => {
+    s = s.replace(regex, (match, ...args) => {
+      const token = `__DESC_TOK_${idx}_${tokenMap.length}__`;
+      let replaced = rep;
+      if(rep.includes('$1') && args[0] !== undefined){
+        replaced = rep.replace(/\$1/g, args[0]).replace(/\$2/g, args[1] || '').replace(/\$3/g, args[2] || '');
+      } else if(match && match[0] === match[0].toUpperCase()){
+        replaced = replaced.charAt(0).toUpperCase() + replaced.slice(1);
+      }
+      tokenMap.push({ token, replaced });
+      return token;
+    });
+  });
+
+  tokenMap.forEach(({ token, replaced }) => {
+    s = s.replace(token, replaced);
+  });
+
+  return s;
 }
 
 function getProductDesc(p, lang = null){
   if(!p) return '';
-  const currentLang = lang || currentSelectedCountry || 'ID';
+  const currentLang = (lang || currentSelectedCountry || 'ID').toUpperCase();
   if(currentLang === 'MY' && p.desc_my) return p.desc_my;
   if(currentLang === 'SG' && (p.desc_sg || p.desc_en)) return p.desc_sg || p.desc_en;
   if(currentLang === 'ID' && p.desc_id) return p.desc_id;
@@ -3612,6 +3784,7 @@ function updateLanguageUI(){
   if(typeof updateRatingStatsUI === 'function') updateRatingStatsUI();
   if(typeof renderCustomerReviews === 'function') renderCustomerReviews();
   if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
+  if(typeof renderCarousel === 'function') renderCarousel();
   const sgModal = document.getElementById('subgroupPopupOverlay');
   if(sgModal && sgModal.classList.contains('open') && typeof openSubgroupPopup === 'function' && currentCatFilter && currentCatFilter !== 'all'){
     openSubgroupPopup(currentCatFilter);
@@ -7751,6 +7924,7 @@ function updateCategoryChipsUI(){
     }
     
     const info = CAT_INFO[cat] || { shortName: cat };
+    const catShortName = (cat === 'all') ? t('catAll') : ((cat === 'lainnya') ? t('catAccount') : info.shortName);
     const hasSubs = cat !== 'all' && getExistingSubgroups(cat).length > 0;
     
     if(cat === currentCatFilter){
@@ -7758,19 +7932,19 @@ function updateCategoryChipsUI(){
       if(hasSubs){
         if(currentSubgroupFilter && currentSubgroupFilter !== 'all'){
           const subLabel = currentSubgroupFilter === '__none__' ? t('sgPopOtherName') : localizeSubgroupName(currentSubgroupFilter);
-          chip.innerHTML = `${info.shortName}: <b>${escapeHtml(subLabel)}</b> ▾`;
+          chip.innerHTML = `${catShortName}: <b>${escapeHtml(subLabel)}</b> ▾`;
         } else {
-          chip.innerHTML = `${info.shortName} ▾`;
+          chip.innerHTML = `${catShortName} ▾`;
         }
       } else {
-        chip.innerHTML = info.shortName;
+        chip.innerHTML = catShortName;
       }
     } else {
       chip.classList.remove('active');
       if(hasSubs){
-        chip.innerHTML = `${info.shortName} ▾`;
+        chip.innerHTML = `${catShortName} ▾`;
       } else {
-        chip.innerHTML = info.shortName;
+        chip.innerHTML = catShortName;
       }
     }
   });
@@ -8589,9 +8763,9 @@ function renderCarousel(){
       <div class="slide-bg" style="${bgStyle}">
         <div class="slide-overlay"></div>
         <div class="slide-content">
-          <span class="slide-tag" style="${slide.tagStyle}">${slide.tag}</span>
-          <p class="slide-title">${slide.title}</p>
-          <p class="slide-desc">${slide.desc}</p>
+          <span class="slide-tag" style="${slide.tagStyle}">${translateProductDesc(slide.tag)}</span>
+          <p class="slide-title">${translateProductDesc(slide.title)}</p>
+          <p class="slide-desc">${translateProductDesc(slide.desc)}</p>
         </div>
       </div>
     </div>
