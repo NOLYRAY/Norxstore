@@ -707,8 +707,8 @@ body.dark-mode .live-pill-mode{
 .admin-current span{color:#ef4444;font-weight:700}
 .admin-discount-summary-box{background:#fdf4ff;border:1.5px solid #f5d0fe;border-radius:12px;padding:10px 12px;margin-bottom:14px;text-align:center;box-sizing:border-box}
 .admin-discount-status-pill{font-size:12px;font-weight:700;line-height:1.4;display:inline-block;padding:5px 12px;border-radius:20px;max-width:100%;word-break:break-word}
-.discount-mode-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#f3f0fb;padding:4px;border-radius:12px;margin-bottom:14px;box-sizing:border-box;width:100%}
-.discount-mode-tab{width:100%;min-width:0;padding:10px 6px;font-size:12px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#6b7280;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:5px;box-sizing:border-box;white-space:nowrap}
+.discount-mode-tabs{display:grid;grid-template-columns:repeat(3, 1fr);gap:4px;background:#f3f0fb;padding:4px;border-radius:12px;margin-bottom:14px;box-sizing:border-box;width:100%}
+.discount-mode-tab{width:100%;min-width:0;padding:8px 4px;font-size:11px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#6b7280;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:3px;box-sizing:border-box;white-space:nowrap}
 .discount-mode-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(124,58,237,.14)}
 .discount-tab-panel{animation:popIn .2s ease}
 .discount-cat-list{display:flex;flex-direction:column;gap:8px;margin-bottom:10px}
@@ -1464,10 +1464,13 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="discount-mode-tabs">
   <button type="button" class="discount-mode-tab active" id="tabDiscAll" onclick="switchDiscountTab('all')">
-    <span>🌐</span><span>Semua Produk</span>
+    <span>🌐</span><span>Semua</span>
   </button>
   <button type="button" class="discount-mode-tab" id="tabDiscCat" onclick="switchDiscountTab('category')">
-    <span>🏷️</span><span>Per Kategori</span>
+    <span>🏷️</span><span>Kategori</span>
+  </button>
+  <button type="button" class="discount-mode-tab" id="tabDiscSub" onclick="switchDiscountTab('subgroup')">
+    <span>⚡</span><span>Sub-Kategori</span>
   </button>
 </div>
 
@@ -1555,6 +1558,35 @@ button{cursor:pointer;font-family:inherit}
         <span>%</span>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- PANEL MODE 3: DISKON PER SUB-KATEGORI -->
+<div id="panelDiscSub" class="discount-tab-panel" style="display:none">
+  <p class="admin-hint" style="margin-bottom:10px">
+    Atur persentase diskon untuk masing-masing sub-kategori (misal: di Genshin hanya <strong>Eksploration</strong> atau <strong>Intertwined Fate</strong> yang diskon, lainnya tidak):
+  </p>
+  
+  <div style="margin-bottom:12px">
+    <label class="admin-label">Pilih Kategori Game:</label>
+    <select class="admin-select" id="discSubCatSelect" onchange="onDiscountSubCatChange()" style="font-weight:700">
+      <option value="genshin">✨ Genshin Impact</option>
+      <option value="hsr">🚀 Honkai: Star Rail</option>
+      <option value="wuwa">🌊 Wuthering Waves</option>
+      <option value="nte">🔮 Neverness to Everness</option>
+      <option value="lainnya">🔑 Jual Beli Akun</option>
+    </select>
+  </div>
+
+  <div style="display:flex;align-items:center;gap:6px;margin-bottom:12px;background:#f8fafc;border:1px solid #e2e8f0;padding:8px 10px;border-radius:10px">
+    <span style="font-size:11px;font-weight:600;color:#64748b;flex:1">Set Semua Sub di Kategori Ini:</span>
+    <input type="number" id="quickSubDiscountInput" min="0" max="100" placeholder="0" style="width:55px;height:32px;padding:2px 6px;border:1.5px solid #cbd5e1;border-radius:6px;text-align:center;font-weight:700;font-size:12px">
+    <span style="font-size:12px;font-weight:700;color:#7c3aed">%</span>
+    <button type="button" class="admin-btn-secondary" style="padding:6px 10px;font-size:11px;font-weight:700" onclick="applyQuickSubDiscount()">Terapkan</button>
+  </div>
+
+  <div class="discount-cat-list" id="discountSubgroupListContainer">
+    <!-- Diisi otomatis lewat renderDiscountSubgroupList() -->
   </div>
 </div>
 
@@ -2359,9 +2391,9 @@ function setAdminPassword(pass){
   return true;
 }
 
-// ==================== DISCOUNT ENGINE (GLOBAL & PER-CATEGORY) ====================
+// ==================== DISCOUNT ENGINE (GLOBAL, PER-CATEGORY, & PER-SUBGROUP) ====================
 const DEFAULT_DISCOUNT_CONFIG = {
-  mode: 'all', // 'all' (semua produk) atau 'category' (per kategori)
+  mode: 'all', // 'all', 'category', atau 'subgroup'
   global: 0,
   categories: {
     genshin: 0,
@@ -2369,7 +2401,8 @@ const DEFAULT_DISCOUNT_CONFIG = {
     wuwa: 0,
     nte: 0,
     lainnya: 0
-  }
+  },
+  subgroups: {} // format: { "genshin:::intertwined fate": 10, "genshin:::eksploration": 20, ... }
 };
 
 function normalizeDiscountConfig(raw){
@@ -2377,13 +2410,17 @@ function normalizeDiscountConfig(raw){
     return {
       mode: 'all',
       global: Math.max(0, Math.min(100, parseInt(raw) || 0)),
-      categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 }
+      categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 },
+      subgroups: {}
     };
   }
   if(!raw || typeof raw !== 'object'){
     return JSON.parse(JSON.stringify(DEFAULT_DISCOUNT_CONFIG));
   }
-  const mode = (raw.mode === 'category') ? 'category' : 'all';
+  let mode = 'all';
+  if(raw.mode === 'category') mode = 'category';
+  else if(raw.mode === 'subgroup') mode = 'subgroup';
+
   const global = Math.max(0, Math.min(100, parseInt(raw.global) || 0));
   const rawCats = (raw.categories && typeof raw.categories === 'object') ? raw.categories : {};
   const categories = {
@@ -2393,7 +2430,15 @@ function normalizeDiscountConfig(raw){
     nte: Math.max(0, Math.min(100, parseInt(rawCats.nte) || 0)),
     lainnya: Math.max(0, Math.min(100, parseInt(rawCats.lainnya) || 0))
   };
-  return { mode, global, categories };
+
+  const rawSubs = (raw.subgroups && typeof raw.subgroups === 'object') ? raw.subgroups : {};
+  const subgroups = {};
+  for(const k in rawSubs){
+    const val = Math.max(0, Math.min(100, parseInt(rawSubs[k]) || 0));
+    if(val > 0) subgroups[k.toLowerCase()] = val;
+  }
+
+  return { mode, global, categories, subgroups };
 }
 
 let discountConfig = (function(){
@@ -2409,23 +2454,54 @@ let discountConfig = (function(){
 
 let discountVal = discountConfig.global;
 
-function getDiscount(cat){
+function getDiscount(cat, subgroup){
   if(!discountConfig) return 0;
+  // Jika argumen pertama berupa objek produk
+  if(typeof cat === 'object' && cat !== null){
+    subgroup = cat.subgroup;
+    cat = cat.cat;
+  }
   if(discountConfig.mode === 'all'){
     return discountConfig.global || 0;
   }
-  if(cat && discountConfig.categories && typeof discountConfig.categories[cat] === 'number'){
-    return discountConfig.categories[cat] || 0;
+  const c = (cat || '').toLowerCase();
+  const s = (subgroup || '__none__').trim().toLowerCase();
+  const subKey = `${c}:::${s}`;
+
+  if(discountConfig.mode === 'subgroup'){
+    if(discountConfig.subgroups && typeof discountConfig.subgroups[subKey] === 'number'){
+      return discountConfig.subgroups[subKey] || 0;
+    }
+    // Jika tidak spesifik pada sub, fallback ke kategori jika ada
+    if(c && discountConfig.categories && typeof discountConfig.categories[c] === 'number'){
+      return discountConfig.categories[c] || 0;
+    }
+    return 0;
   }
+
+  if(discountConfig.mode === 'category'){
+    // Prioritaskan diskon sub-kategori jika diatur
+    if(subgroup && discountConfig.subgroups && typeof discountConfig.subgroups[subKey] === 'number'){
+      return discountConfig.subgroups[subKey] || 0;
+    }
+    if(c && discountConfig.categories && typeof discountConfig.categories[c] === 'number'){
+      return discountConfig.categories[c] || 0;
+    }
+    return 0;
+  }
+
   if(!cat){
-    const vals = Object.values(discountConfig.categories || {});
-    return vals.length ? Math.max(...vals, 0) : 0;
+    const catVals = Object.values(discountConfig.categories || {});
+    const subVals = Object.values(discountConfig.subgroups || {});
+    const allVals = [...catVals, ...subVals];
+    return allVals.length ? Math.max(...allVals, 0) : 0;
   }
+
   return 0;
 }
 
-function getDiscountedPrice(price, cat){
-  const d = getDiscount(cat);
+function getDiscountedPrice(price, cat, subgroup){
+  const d = getDiscount(cat, subgroup);
   if(d <= 0) return price;
   return Math.round(price * (100 - d) / 100);
 }
@@ -2453,7 +2529,7 @@ function getDiscountSummaryText(){
   if(discountConfig.mode === 'all'){
     const g = discountConfig.global || 0;
     return g > 0 ? `🔥 Diskon Global: ${g}% (Semua Produk)` : 'Nonaktif (0%)';
-  } else {
+  } else if(discountConfig.mode === 'category'){
     const cats = discountConfig.categories || {};
     const active = [];
     if(cats.genshin > 0) active.push(`Genshin ${cats.genshin}%`);
@@ -2462,7 +2538,21 @@ function getDiscountSummaryText(){
     if(cats.nte > 0) active.push(`NTE ${cats.nte}%`);
     if(cats.lainnya > 0) active.push(`Jual Akun ${cats.lainnya}%`);
     return active.length > 0 ? `🏷️ Diskon Kategori: ${active.join(' • ')}` : 'Nonaktif (0%)';
+  } else if(discountConfig.mode === 'subgroup'){
+    const subs = discountConfig.subgroups || {};
+    const activeKeys = Object.keys(subs).filter(k => subs[k] > 0);
+    if(activeKeys.length > 0){
+      const names = activeKeys.slice(0, 3).map(k => {
+        const parts = k.split(':::');
+        const s = parts[1] === '__none__' ? 'Reguler' : parts[1].toUpperCase();
+        return `${s} ${subs[k]}%`;
+      });
+      const more = activeKeys.length > 3 ? ` (+${activeKeys.length - 3})` : '';
+      return `⚡ Diskon Sub: ${names.join(' • ')}${more}`;
+    }
+    return 'Nonaktif (0%)';
   }
+  return 'Nonaktif (0%)';
 }
 
 let currentDiscountTab = 'all';
@@ -2470,12 +2560,128 @@ function switchDiscountTab(tab){
   currentDiscountTab = tab;
   const tabAll = document.getElementById('tabDiscAll');
   const tabCat = document.getElementById('tabDiscCat');
+  const tabSub = document.getElementById('tabDiscSub');
   const panelAll = document.getElementById('panelDiscAll');
   const panelCat = document.getElementById('panelDiscCat');
+  const panelSub = document.getElementById('panelDiscSub');
   if(tabAll) tabAll.classList.toggle('active', tab === 'all');
   if(tabCat) tabCat.classList.toggle('active', tab === 'category');
+  if(tabSub) tabSub.classList.toggle('active', tab === 'subgroup');
   if(panelAll) panelAll.style.display = tab === 'all' ? 'block' : 'none';
   if(panelCat) panelCat.style.display = tab === 'category' ? 'block' : 'none';
+  if(panelSub) panelSub.style.display = tab === 'subgroup' ? 'block' : 'none';
+  if(tab === 'subgroup'){
+    renderDiscountSubgroupList();
+  }
+}
+
+function collectCurrentSubgroupInputs(){
+  if(!discountConfig.subgroups) discountConfig.subgroups = {};
+  const inputs = document.querySelectorAll('.disc-sub-input');
+  inputs.forEach(inp => {
+    const cat = inp.getAttribute('data-cat');
+    const sub = inp.getAttribute('data-sub');
+    if(cat && sub){
+      const key = `${cat}:::${sub}`.toLowerCase();
+      const val = Math.max(0, Math.min(100, parseInt(inp.value) || 0));
+      if(val > 0) discountConfig.subgroups[key] = val;
+      else delete discountConfig.subgroups[key];
+    }
+  });
+}
+
+function onDiscountSubCatChange(){
+  collectCurrentSubgroupInputs();
+  renderDiscountSubgroupList();
+}
+
+function applyQuickSubDiscount(){
+  const val = Math.max(0, Math.min(100, parseInt(document.getElementById('quickSubDiscountInput').value) || 0));
+  const inputs = document.querySelectorAll('.disc-sub-input');
+  inputs.forEach(inp => {
+    inp.value = val > 0 ? val : '';
+  });
+  collectCurrentSubgroupInputs();
+  showToast(`Persentase ${val}% diterapkan ke semua sub di kategori ini`);
+}
+
+function renderDiscountSubgroupList(){
+  const container = document.getElementById('discountSubgroupListContainer');
+  const catSelect = document.getElementById('discSubCatSelect');
+  if(!container || !catSelect) return;
+  const cat = catSelect.value || 'genshin';
+  
+  const catProds = (products || []).filter(p => p.cat === cat);
+  const subCounts = {};
+  let noneCount = 0;
+  catProds.forEach(p => {
+    const s = (p.subgroup || '').trim();
+    if(s) subCounts[s] = (subCounts[s] || 0) + 1;
+    else noneCount++;
+  });
+
+  const subs = Object.keys(subCounts);
+  if(subs.length === 0 && noneCount === 0){
+    container.innerHTML = `
+      <div style="text-align:center;padding:20px 10px;color:#94a3b8;font-size:12px;background:#f8fafc;border-radius:10px;border:1px dashed #cbd5e1">
+        Belum ada produk dalam kategori ini.
+      </div>
+    `;
+    return;
+  }
+
+  const subConfig = (discountConfig && discountConfig.subgroups) ? discountConfig.subgroups : {};
+  let html = '';
+
+  subs.forEach(sub => {
+    const key = `${cat}:::${sub.toLowerCase()}`;
+    const currentVal = (typeof subConfig[key] === 'number' && subConfig[key] > 0) ? subConfig[key] : '';
+    let subIcon = '🏷️';
+    const subLower = sub.toLowerCase();
+    if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('crystal') || subLower.includes('gem') || subLower.includes('primogem') || subLower.includes('oneiric')) subIcon = '💎';
+    else if(subLower.includes('joki') || subLower.includes('quest') || subLower.includes('abyss') || subLower.includes('boss') || subLower.includes('farming')) subIcon = '⚔️';
+    else if(subLower.includes('akun') || subLower.includes('account') || subLower.includes('starter') || subLower.includes('reroll')) subIcon = '🔑';
+    else if(subLower.includes('item') || subLower.includes('pass') || subLower.includes('welkin') || subLower.includes('express')) subIcon = '🌙';
+    else if(subLower.includes('event') || subLower.includes('misi')) subIcon = '🎯';
+
+    html += `
+      <div class="discount-cat-item">
+        <div class="discount-cat-label">
+          <span class="discount-cat-icon">${subIcon}</span>
+          <div style="min-width:0;flex:1">
+            <strong style="font-size:12px;color:#1e293b">${escapeHtml(sub)}</strong>
+            <small style="color:#64748b">${subCounts[sub]} produk</small>
+          </div>
+        </div>
+        <div class="discount-cat-input-wrap">
+          <input class="admin-input disc-sub-input" type="number" data-cat="${escapeHtml(cat)}" data-sub="${escapeHtml(sub.toLowerCase())}" min="0" max="100" placeholder="0" value="${currentVal}">
+          <span>%</span>
+        </div>
+      </div>
+    `;
+  });
+
+  if(noneCount > 0){
+    const noneKey = `${cat}:::__none__`;
+    const noneVal = (typeof subConfig[noneKey] === 'number' && subConfig[noneKey] > 0) ? subConfig[noneKey] : '';
+    html += `
+      <div class="discount-cat-item" style="border-style:dashed;background:#f8fafc">
+        <div class="discount-cat-label">
+          <span class="discount-cat-icon">📦</span>
+          <div style="min-width:0;flex:1">
+            <strong style="font-size:12px;color:#475569">Lainnya / Reguler</strong>
+            <small style="color:#64748b">${noneCount} produk tanpa sub-kategori</small>
+          </div>
+        </div>
+        <div class="discount-cat-input-wrap">
+          <input class="admin-input disc-sub-input" type="number" data-cat="${escapeHtml(cat)}" data-sub="__none__" min="0" max="100" placeholder="0" value="${noneVal}">
+          <span>%</span>
+        </div>
+      </div>
+    `;
+  }
+
+  container.innerHTML = html;
 }
 
 function renderDiscountAdminUI(){
@@ -2491,6 +2697,8 @@ function renderDiscountAdminUI(){
     const el = document.getElementById('discCat_' + k);
     if(el) el.value = (cats[k] && cats[k] > 0) ? cats[k] : '';
   });
+
+  renderDiscountSubgroupList();
 
   const pill = document.getElementById('adminDiscountStatusPill');
   const currEl = document.getElementById('adminCurrentDiscount');
@@ -2508,6 +2716,7 @@ function renderDiscountAdminUI(){
 }
 
 function saveDiscountSettings(){
+  collectCurrentSubgroupInputs();
   const mode = currentDiscountTab;
   const globalVal = Math.max(0, Math.min(100, parseInt(document.getElementById('discountGlobalInput').value) || 0));
   const catVals = {
@@ -2521,7 +2730,8 @@ function saveDiscountSettings(){
   const newConfig = {
     mode: mode,
     global: globalVal,
-    categories: catVals
+    categories: catVals,
+    subgroups: discountConfig.subgroups || {}
   };
 
   setDiscountConfig(newConfig);
@@ -2542,7 +2752,8 @@ function resetAllDiscounts(){
   const newConfig = {
     mode: 'all',
     global: 0,
-    categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 }
+    categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 },
+    subgroups: {}
   };
   setDiscountConfig(newConfig);
   renderDiscountAdminUI();
@@ -6957,7 +7168,8 @@ function renderCart(){
   body.innerHTML = cart.map(item=>{
     const prod = products.find(p => p.id === item.id);
     const itemCat = item.cat || (prod ? prod.cat : '');
-    const itemDisc = getDiscount(itemCat);
+    const itemSubgroup = item.subgroup || (prod ? prod.subgroup : '');
+    const itemDisc = getDiscount(itemCat, itemSubgroup);
     const itemSub = item.price * 1;
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
@@ -7111,7 +7323,8 @@ function checkoutCart(){
   const itemsText = cart.map(item=>{
     const prod = products.find(p => p.id === item.id);
     const itemCat = item.cat || (prod ? prod.cat : '');
-    const itemDisc = getDiscount(itemCat);
+    const itemSubgroup = item.subgroup || (prod ? prod.subgroup : '');
+    const itemDisc = getDiscount(itemCat, itemSubgroup);
     const itemSub = item.price * 1;
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
@@ -7974,8 +8187,8 @@ function updateCategoryChipsUI(){
 }
 
 function renderProductCard(p, discount, idx){
-  const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p.cat);
-  const discPrice = getDiscountedPrice(p.price, p.cat);
+  const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p);
+  const discPrice = getDiscountedPrice(p.price, p);
   const hasDisc = disc > 0;
   const imgs = getImagesForProduct(p.id);
   const hasImgs = imgs.length > 0;
@@ -8105,10 +8318,10 @@ function renderProducts(filter, subFilter){
     });
     grid.innerHTML = groups.map(g => `
       <div class="subgroup-heading">${g.name}</div>
-      ${g.items.map(p => renderProductCard(p, getDiscount(p.cat), cardIdx++)).join('')}
+      ${g.items.map(p => renderProductCard(p, getDiscount(p), cardIdx++)).join('')}
     `).join('');
   } else {
-    grid.innerHTML = filtered.map((p,i) => renderProductCard(p, getDiscount(p.cat), i)).join('');
+    grid.innerHTML = filtered.map((p,i) => renderProductCard(p, getDiscount(p), i)).join('');
   }
   setTimeout(()=>filtered.forEach(p=>initProdTouch(p.id)), 50);
 }
@@ -8311,8 +8524,8 @@ function renderSearchSuggestions(query){
       ? `<img src="${escapeHtml(imgs[0])}" alt="${escapeHtml(p.name)}" />`
       : `<span class="emoji-icon">${p.icon || '💠'}</span>`;
     
-    const disc = getDiscount(p.cat);
-    const discPrice = getDiscountedPrice(p.price, p.cat);
+    const disc = getDiscount(p);
+    const discPrice = getDiscountedPrice(p.price, p);
     const hasDisc = disc > 0;
     const convPrice = convertPrice(discPrice, currentSelectedCountry);
     const convOldPrice = hasDisc ? convertPrice(p.price, currentSelectedCountry) : null;
@@ -8575,8 +8788,8 @@ function updateProductImageViewerContent(){
   const titleEl = document.getElementById('prodPhotoTitle');
   if(titleEl) titleEl.textContent = prod.name + (prod.isAccount ? ' 🔑' : '');
 
-  const disc = getDiscount(prod.cat);
-  const discPrice = getDiscountedPrice(prod.price, prod.cat);
+  const disc = getDiscount(prod);
+  const discPrice = getDiscountedPrice(prod.price, prod);
   const hasDisc = disc > 0;
 
   const oldPriceEl = document.getElementById('prodPhotoPriceOld');
@@ -8650,8 +8863,8 @@ function openModal(id){
     showToast(`⏳ Layanan ini ${stName}. Belum bisa dipesan lagi sampai selesai.`);
     return;
   }
-  const discount = getDiscount(selectedProduct ? selectedProduct.cat : null);
-  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct ? selectedProduct.cat : null);
+  const discount = getDiscount(selectedProduct);
+  const discPrice = getDiscountedPrice(selectedProduct ? selectedProduct.price : 0, selectedProduct);
   const hasDisc = discount > 0;
   const imgs = getImagesForProduct(id);
   const hasProdImgs = imgs.length > 0;
@@ -8689,8 +8902,8 @@ function selectAdminModal(el,number){
 }
 function updateWA(){
   if(!selectedProduct||!selectedPayment||!selectedModalAdmin)return;
-  const discount = getDiscount(selectedProduct.cat);
-  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
+  const discount = getDiscount(selectedProduct);
+  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct);
   let text = `${t('waGreeting')} ${selectedProduct.name}`;
   if(discount > 0){
     text += ` (${t('cartDiscount')} ${discount}%)`;
@@ -8728,7 +8941,7 @@ function sendWA(){
       renderCart();
     }
     renderProducts();
-    const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct.cat);
+    const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct);
     const adminObj = WA_NUMBERS.find(a => a.number === selectedModalAdmin);
     createOrder(
       [{id: selectedProduct.id, name:selectedProduct.name, qty:1, price:selectedProduct.price, cat: selectedProduct.cat}],
