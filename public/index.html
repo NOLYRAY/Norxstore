@@ -479,18 +479,20 @@ body.dark-mode .live-pill-mode{
 .product-img-slide img{width:100%;height:100%;object-fit:cover}
 .product-img-slide .emoji-fallback{font-size:48px}
 .product-badge{position:absolute;top:8px;left:8px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;padding:4px 9px;border-radius:20px;background:linear-gradient(135deg,#1a1a1a,#3d3d3d);color:#fff;z-index:3}
-.discount-badge{position:absolute;top:8px;right:8px;font-size:9px;font-weight:700;padding:4px 9px;border-radius:20px;background:linear-gradient(135deg,#ef4444,#f97316);color:#fff;z-index:3}
+.discount-badge{position:absolute;top:8px;right:8px;font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:20px;background:linear-gradient(135deg,#ef4444,#f97316);color:#fff;z-index:4;box-shadow:0 2px 8px rgba(239,68,68,0.4);display:inline-flex;align-items:center;gap:2px}
+.product-card.has-discount{border-color:#fed7aa;box-shadow:0 3px 12px rgba(249,115,22,0.1)}
 .img-nav-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:3}
 .img-nav-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);border:none;padding:0;transition:all 0.2s}
 .img-nav-dot.active{background:#fff;width:12px;border-radius:3px}
-.img-count{position:absolute;top:8px;right:8px;background:rgba(0,0,0,.4);color:#fff;font-size:9px;font-weight:600;padding:2px 6px;border-radius:8px;z-index:3}
+.img-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;z-index:3;backdrop-filter:blur(2px)}
 
 .product-info{padding:10px 8px 10px;flex:1;display:flex;flex-direction:column}
 .product-name{font-size:12px;font-weight:600;margin:0 0 3px;line-height:1.3;transition:color 0.4s ease}
 .price-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:2px}
-.product-price-old{font-size:11px;color:#aaa}
+.product-price-old{font-size:11px;color:#94a3b8;text-decoration:line-through}
 .product-price{font-size:13px;font-weight:800;color:#7c3aed}
-.product-price-discount{font-size:13px;font-weight:800;color:#ef4444}
+.product-price-discount{font-size:13px;font-weight:800;color:#dc2626}
+.product-disc-pill{font-size:9.5px;font-weight:800;color:#dc2626;background:#fee2e2;border:1px solid #fecaca;padding:1px 6px;border-radius:6px;display:inline-flex;align-items:center;line-height:1.2}
 .product-meta{font-size:10px;color:#aaa;margin-top:2px;flex:1;transition:color 0.4s ease}
 .product-btn-row{display:flex;gap:5px;margin-top:8px;align-items:center;width:100%}
 .buy-now-btn,.add-cart-btn{height:35px;border-radius:10px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;box-sizing:border-box;text-decoration:none;user-select:none;overflow:hidden;transition:transform 0.2s ease,box-shadow 0.2s ease}
@@ -562,9 +564,15 @@ body.dark-mode .live-pill-mode{
 .skel-line{height:10px;border-radius:6px}
 .skel-review{aspect-ratio:3/4;border-radius:14px}
 .search-empty{grid-column:1/-1;text-align:center;padding:40px 16px;color:#aaa}
-.subgroup-heading{grid-column:1/-1;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.6px;padding:6px 2px;margin-top:4px;border-bottom:2px solid #ece5fb;animation:fadeIn .3s ease}
+.subgroup-heading{grid-column:1/-1;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.6px;padding:6px 2px;margin-top:4px;border-bottom:2px solid #ece5fb;animation:fadeIn .3s ease;display:flex;align-items:center;justify-content:space-between}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .subgroup-heading:first-child{margin-top:0}
+.subgroup-disc-badge{display:inline-flex;align-items:center;gap:3px;background:#fee2e2;color:#dc2626;font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;border:1px solid #fecaca;text-transform:none;letter-spacing:0}
+.cat-chip-disc{display:inline-flex;align-items:center;gap:2px;background:#ef4444;color:#fff;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:10px;margin-left:4px;letter-spacing:0;line-height:1.2;box-shadow:0 2px 6px rgba(239,68,68,0.4);animation:pulseSoft 2s infinite ease-in-out}
+@keyframes pulseSoft{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.cat-chip.active .cat-chip-disc{background:#fff;color:#dc2626;box-shadow:0 2px 6px rgba(0,0,0,0.2)}
+.sg-pop-disc-pill{display:inline-flex;align-items:center;justify-content:center;gap:2px;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:10px;font-weight:800;padding:3px 7px;border-radius:7px;box-shadow:0 2px 5px rgba(239,68,68,0.25);letter-spacing:0.2px;white-space:nowrap;flex-shrink:0}
+.csb-disc-tag{display:inline-flex;align-items:center;background:#ef4444;color:#fff;font-size:9.5px;font-weight:800;padding:2px 6px;border-radius:7px;margin-left:4px}
 
 /* ============ SPLASH SCREEN ============ */
 .splash-screen{position:fixed;inset:0;background:linear-gradient(145deg,#1a0b2e 0%,#3b1e6b 45%,#0f0a1e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;transition:opacity .5s ease,visibility .5s ease}
@@ -821,37 +829,49 @@ body.dark-mode .live-pill-mode{
 .sg-pop-header{padding:12px 18px 14px;border-bottom:1px solid #f1f0f6;display:flex;align-items:center;justify-content:space-between;background:linear-gradient(135deg,#faf8ff 0%,#f4f0fd 100%)}
 .sg-pop-title-wrap{display:flex;flex-direction:column;gap:3px;min-width:0}
 .sg-pop-title{font-size:15px;font-weight:800;color:#1a1a1a;margin:0;display:flex;align-items:center;gap:6px;line-height:1.3}
-.sg-pop-subtitle{font-size:11px;color:#6b7280;margin:0;line-height:1.3}
+.sg-pop-subtitle{font-size:11.5px;color:#6b7280;margin:0;line-height:1.3}
 .sg-pop-close{width:32px;height:32px;border-radius:50%;border:1px solid #e5e5eb;background:#fff;color:#666;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .15s ease;flex-shrink:0}
 .sg-pop-close:hover{background:#fee2e2;color:#ef4444;border-color:#fca5a5}
 .sg-pop-body{padding:12px 14px 20px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;-webkit-overflow-scrolling:touch}
-.sg-pop-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:#faf9fd;border:1.5px solid #ece8f8;cursor:pointer;transition:all .18s ease;user-select:none;-webkit-tap-highlight-color:transparent;gap:12px}
-.sg-pop-item:hover{background:#f5f3ff;border-color:#c4b5fd;transform:translateY(-1px)}
-.sg-pop-item.active{background:#f5f0ff;border-color:#7c3aed;box-shadow:0 4px 14px rgba(124,58,237,.14)}
-.sg-pop-item-left{display:flex;align-items:center;gap:11px;min-width:0;flex:1}
-.sg-pop-icon{font-size:17px;width:36px;height:36px;border-radius:10px;background:#fff;border:1px solid #eee;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sg-pop-item.active .sg-pop-icon{background:#ede9fe;border-color:#c4b5fd}
-.sg-pop-text{min-width:0;flex:1;display:flex;flex-direction:column;justify-content:center}
-.sg-pop-name{font-size:13px;font-weight:700;color:#1a1a1a;margin:0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sg-pop-item.active .sg-pop-name{color:#6d28d9}
-.sg-pop-desc{font-size:11px;color:#888;margin:2px 0 0;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sg-pop-item-right{display:flex;align-items:center;gap:10px;flex-shrink:0}
-.sg-pop-count{font-size:11px;font-weight:700;padding:5px 10px;border-radius:9999px;background:#edeaf7;color:#5b5575;white-space:nowrap;display:inline-flex;align-items:center;justify-content:center;line-height:1;min-width:74px;text-align:center;box-sizing:border-box}
-.sg-pop-item.active .sg-pop-count{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff}
-.sg-pop-radio{width:18px;height:18px;border-radius:50%;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;transition:all .15s ease;background:#fff;flex-shrink:0}
-.sg-pop-item.active .sg-pop-radio{border-color:#7c3aed;background:#7c3aed}
-.sg-pop-radio::after{content:'';width:6px;height:6px;border-radius:50%;background:#fff;opacity:0;transform:scale(0);transition:all .15s ease}
-.sg-pop-item.active .sg-pop-radio::after{opacity:1;transform:scale(1)}
 
-/* ============ ACTIVE SUB-FILTER BAR (COMPACT) ============ */
-.catalog-subfilter-bar{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px;gap:8px;animation:fadeIn .2s ease}
+.sg-pop-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:14px;background:#fff;border:1.5px solid #f0edf8;cursor:pointer;transition:all .18s ease;user-select:none;-webkit-tap-highlight-color:transparent;gap:12px}
+.sg-pop-item:hover{background:#faf8ff;border-color:#d8b4fe;transform:translateY(-1px)}
+.sg-pop-item.active{background:#fcfaff;border-color:#7c3aed;box-shadow:0 4px 14px rgba(124,58,237,.12)}
+.sg-pop-item.has-discount{border-color:#fed7aa;background:#fffdf9}
+.sg-pop-item.has-discount:hover{border-color:#fdba74;background:#fff7ed}
+.sg-pop-item.active.has-discount{border-color:#7c3aed;background:#fcfaff;box-shadow:0 4px 14px rgba(124,58,237,.12)}
+
+.sg-pop-item-left{display:flex;align-items:center;gap:12px;min-width:0;flex:1}
+.sg-pop-icon{font-size:18px;width:38px;height:38px;border-radius:10px;background:#f5f3ff;border:1px solid #ece8f8;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sg-pop-item.active .sg-pop-icon{background:#ede9fe;border-color:#c4b5fd}
+.sg-pop-item.has-discount .sg-pop-icon{background:#fff7ed;border-color:#fed7aa}
+
+.sg-pop-content{min-width:0;flex:1;display:flex;flex-direction:column;justify-content:center}
+.sg-pop-title-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.3}
+.sg-pop-name{font-size:13.5px;font-weight:800;color:#1e1b4b;margin:0;letter-spacing:0.1px}
+.sg-pop-item.active .sg-pop-name{color:#6d28d9}
+.sg-pop-sub-row{margin-top:3px;display:flex;align-items:center;gap:4px;line-height:1.2}
+.sg-pop-promo-text{font-size:11px;font-weight:700;color:#ea580c;display:flex;align-items:center;gap:3px}
+.sg-pop-count-text{font-size:11px;font-weight:500;color:#64748b}
+
+.sg-pop-item-right{display:flex;align-items:center;flex-shrink:0}
+.sg-pop-check{width:22px;height:22px;border-radius:50%;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;transition:all .15s ease;background:#fff;color:#fff;font-size:12px;font-weight:800;flex-shrink:0}
+.sg-pop-item.active .sg-pop-check{border-color:#7c3aed;background:linear-gradient(135deg,#7c3aed,#9333ea);box-shadow:0 2px 6px rgba(124,58,237,0.35)}
+
+/* ============ ACTIVE SUB-FILTER BAR (COMPACT & MODERN) ============ */
+.catalog-subfilter-bar{display:flex;align-items:center;padding:0 16px 12px;gap:6px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;animation:fadeIn .2s ease}
+.catalog-subfilter-bar::-webkit-scrollbar{display:none}
 @media (min-width:768px){.catalog-subfilter-bar{padding:0 32px 14px}}
-.csb-left{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
-.csb-label{font-size:11px;font-weight:600;color:#888}
-.csb-active-chip{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;border-radius:16px;font-size:11px;font-weight:700;background:linear-gradient(135deg,#f5f3ff,#ede9fe);color:#7c3aed;border:1.5px solid #c4b5fd;cursor:pointer;transition:all .15s ease}
-.csb-active-chip:hover{background:#ede9fe;border-color:#a78bfa;transform:translateY(-1px)}
-.csb-reset-btn{font-size:11px;color:#888;background:none;border:none;padding:4px 6px;cursor:pointer;font-weight:600;transition:color .15s ease}
-.csb-reset-btn:hover{color:#ef4444}
+
+.sub-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:18px;font-size:11.5px;font-weight:700;background:#f5f4fa;color:#4b5563;border:1px solid #e5e3ef;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s ease;-webkit-tap-highlight-color:transparent}
+.sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd}
+.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(124,58,237,0.25)}
+.sub-chip.has-discount{border-color:#fed7aa;background:#fffdf9}
+.sub-chip.active.has-discount{background:linear-gradient(135deg,#7c3aed,#9333ea);border-color:transparent}
+.sub-chip-disc{font-size:9.5px;font-weight:800;background:#ef4444;color:#fff;padding:1px 5px;border-radius:8px;line-height:1.2;margin-left:2px}
+.sub-chip.active .sub-chip-disc{background:#fff;color:#dc2626}
+.sub-chip-more{background:#fff;border:1px dashed #c4b5fd;color:#7c3aed}
+.sub-chip-more:hover{background:#f5f3ff;border-style:solid}
 
 /* ============ PERLINDUNGAN ANTI-DOWNLOAD & PENCURIAN GAMBAR ============ */
 img, 
@@ -1610,7 +1630,8 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-label">Nama Produk</div>
 <input class="admin-input" type="text" id="newProdName" placeholder="Contoh: 6480 Primogem">
 <div class="admin-label" style="margin-top:10px">Harga (Rp)</div>
-<input class="admin-input" type="number" id="newProdPrice" placeholder="Contoh: 100000">
+<input class="admin-input" type="text" id="newProdPrice" placeholder="Contoh: 100000 atau 10k - 20k">
+<p class="admin-hint" style="margin-top:2px;margin-bottom:8px">Bisa isi angka tunggal (100000 / 100k) atau rentang harga pakai tanda strip (Contoh: <b>10k - 20k</b> atau <b>10000 - 20000</b>).</p>
 <div class="admin-label" style="margin-top:10px">Kategori</div>
 <select class="admin-select" id="newProdCat" onchange="refreshSubgroupFormUI()">
   <option value="genshin">Genshin Impact</option>
@@ -2876,7 +2897,11 @@ const I18N = {
     sgBarLabel: 'Sub-Kategori:',
     sgBarChange: 'Ganti',
     sgBarAllBtn: '✕ Semua {game}',
-    sgToastShowing: 'Menampilkan: {label}'
+    sgToastShowing: 'Menampilkan: {label}',
+    catDiscount: 'DISKON',
+    sgPopDiscountOption: '🔥 Khusus Diskon {game}',
+    sgPopDiscountDesc: 'Tampilkan varian {game} yang sedang promo diskon',
+    sgPopDiscBadge: 'Diskon {n}%'
   },
   MY: {
     langName: 'Bahasa Melayu',
@@ -2980,7 +3005,11 @@ const I18N = {
     sgBarLabel: 'Sub-Kategori:',
     sgBarChange: 'Tukar',
     sgBarAllBtn: '✕ Semua {game}',
-    sgToastShowing: 'Memaparkan: {label}'
+    sgToastShowing: 'Memaparkan: {label}',
+    catDiscount: 'DISKAUN',
+    sgPopDiscountOption: '🔥 Khas Diskaun {game}',
+    sgPopDiscountDesc: 'Papar varian {game} yang sedang promosi diskaun',
+    sgPopDiscBadge: 'Diskaun {n}%'
   },
   SG: {
     langName: 'English (Singapore)',
@@ -3084,7 +3113,11 @@ const I18N = {
     sgBarLabel: 'Sub-Category:',
     sgBarChange: 'Change',
     sgBarAllBtn: '✕ All {game}',
-    sgToastShowing: 'Showing: {label}'
+    sgToastShowing: 'Showing: {label}',
+    catDiscount: 'SALE',
+    sgPopDiscountOption: '🔥 {game} On Sale',
+    sgPopDiscountDesc: 'Show {game} variants with active discount',
+    sgPopDiscBadge: 'Sale {n}%'
   }
 };
 
@@ -4172,13 +4205,127 @@ function convertPrice(idrPrice, targetCountryCode){
   };
 }
 
+function parseSinglePriceToken(token){
+  if(!token) return 0;
+  let str = String(token).trim().toLowerCase();
+  // Tangkap angka dan unit satuan (k, rb, ribu, jt, juta, m, dsb), abaikan teks lain seperti 'culus'
+  const m = str.match(/(\d+(?:[.,]\d+)?)\s*(k|rb|ribu|jt|juta|m|mil|mio)?/i);
+  if(!m) return 0;
+  let rawNum = m[1];
+  const unit = (m[2] || '').toLowerCase();
+  // Jika format ribuan standar Indonesia misal 20.000 (3 digit setelah titik)
+  if(/^\d{1,3}(\.\d{3})+$/.test(rawNum)){
+    rawNum = rawNum.replace(/\./g, '');
+  } else {
+    rawNum = rawNum.replace(/,/g, '.');
+  }
+  const num = parseFloat(rawNum);
+  if(isNaN(num)) return 0;
+  if(unit === 'k' || unit === 'rb' || unit === 'ribu'){
+    return Math.round(num * 1000);
+  }
+  if(unit === 'jt' || unit === 'juta' || unit === 'm' || unit === 'mil' || unit === 'mio'){
+    return Math.round(num * 1000000);
+  }
+  return Math.round(num);
+}
+
+function parseProductPrice(input){
+  if(typeof input === 'number') {
+    return { price: Math.max(0, input), maxPrice: 0, raw: String(input), isRange: false };
+  }
+  const raw = String(input || '').trim();
+  if(!raw) return { price: 0, maxPrice: 0, raw: '', isRange: false };
+
+  const rangeMatch = raw.match(/^([^-–—]+?)\s*[-–—]\s*([^-–—]+)$/i) || raw.match(/^(.+?)\s+(?:s\/d|sampai|to)\s+(.+)$/i);
+  if(rangeMatch){
+    const minVal = parseSinglePriceToken(rangeMatch[1]);
+    const maxVal = parseSinglePriceToken(rangeMatch[2]);
+    if(minVal > 0 && maxVal > 0){
+      const pMin = Math.min(minVal, maxVal);
+      const pMax = Math.max(minVal, maxVal);
+      return {
+        price: pMin,
+        maxPrice: pMax,
+        raw: raw,
+        isRange: true
+      };
+    }
+  }
+
+  const single = parseSinglePriceToken(raw);
+  return {
+    price: single,
+    maxPrice: 0,
+    raw: raw,
+    isRange: false
+  };
+}
+
+function formatProductPrice(p, isDiscounted = false, countryCode = null){
+  if(!p) return '';
+  const price = (typeof p === 'object' && p !== null) ? (p.price || 0) : Number(p);
+  const maxPrice = (typeof p === 'object' && p !== null) ? (p.maxPrice || 0) : 0;
+  const hasRange = maxPrice > price;
+
+  if(isDiscounted){
+    const d = getDiscount(p);
+    if(d > 0){
+      const minDisc = getDiscountedPrice(price, p);
+      if(hasRange){
+        const maxDisc = getDiscountedPrice(maxPrice, p);
+        return `${formatPrice(minDisc, countryCode)} - ${formatPrice(maxDisc, countryCode)}`;
+      }
+      return formatPrice(minDisc, countryCode);
+    }
+  }
+
+  if(hasRange){
+    return `${formatPrice(price, countryCode)} - ${formatPrice(maxPrice, countryCode)}`;
+  }
+  return formatPrice(price, countryCode);
+}
+
+function getCategoryMaxDiscount(cat){
+  if(!products || products.length === 0) return 0;
+  let max = 0;
+  products.forEach(p => {
+    if(cat === 'all' || p.cat === cat){
+      const d = getDiscount(p);
+      if(d > max) max = d;
+    }
+  });
+  return max;
+}
+
+function getCategoryDiscountedCount(cat){
+  if(!products || products.length === 0) return 0;
+  return products.filter(p => (cat === 'all' || p.cat === cat) && getDiscount(p) > 0).length;
+}
+
 function formatPrice(p, countryCode = null){
+  if(typeof p === 'object' && p !== null){
+    return formatProductPrice(p, false, countryCode);
+  }
+  if(typeof p === 'string' && (p.includes('-') || p.includes('–'))){
+    const parsed = parseProductPrice(p);
+    if(parsed.isRange){
+      return `${formatPrice(parsed.price, countryCode)} - ${formatPrice(parsed.maxPrice, countryCode)}`;
+    }
+  }
   if(typeof p !== 'number') p = Number(p) || 0;
   const res = convertPrice(p, countryCode);
   return res.formatted;
 }
 
 function formatPriceWithOriginal(p, countryCode = null){
+  if(typeof p === 'object' && p !== null && p.maxPrice && p.maxPrice > p.price){
+    const target = countryCode || currentSelectedCountry || 'ID';
+    if(target === 'ID') return `Rp${p.price.toLocaleString('id-ID')} - Rp${p.maxPrice.toLocaleString('id-ID')}`;
+    const resMin = convertPrice(p.price, target);
+    const resMax = convertPrice(p.maxPrice, target);
+    return `${resMin.formatted} - ${resMax.formatted} (setara Rp${p.price.toLocaleString('id-ID')} - Rp${p.maxPrice.toLocaleString('id-ID')})`;
+  }
   if(typeof p !== 'number') p = Number(p) || 0;
   const target = countryCode || currentSelectedCountry || 'ID';
   if(target === 'ID') return 'Rp' + p.toLocaleString('id-ID');
@@ -7103,7 +7250,17 @@ function addToCart(id, event){
     showToast('⏳ ' + stMsg + '. Belum bisa dipesan lagi sampai selesai!');
     return;
   }
-  cart.push({id:product.id, name:product.name, price:product.price, icon:product.icon, cat:product.cat, qty:1});
+  cart.push({
+    id: product.id,
+    name: product.name,
+    price: product.price,
+    maxPrice: product.maxPrice || 0,
+    priceRaw: product.priceRaw || '',
+    icon: product.icon,
+    cat: product.cat,
+    subgroup: product.subgroup || '',
+    qty: 1
+  });
   saveCart();
   updateCartBadge();
   renderProducts();
@@ -7171,9 +7328,12 @@ function renderCart(){
     const itemSubgroup = item.subgroup || (prod ? prod.subgroup : '');
     const itemDisc = getDiscount(itemCat, itemSubgroup);
     const itemSub = item.price * 1;
+    const itemMax = (item.maxPrice && item.maxPrice > item.price) ? item.maxPrice : (prod && prod.maxPrice && prod.maxPrice > prod.price ? prod.maxPrice : 0);
+    const hasRange = itemMax > item.price;
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
     const itemFinal = itemSub - itemDiscAmount;
+    const itemMaxFinal = hasRange ? (itemDisc > 0 ? Math.round(itemMax * (100 - itemDisc) / 100) : itemMax) : 0;
     const hasDisc = itemDisc > 0;
     const imgs = getImagesForProduct(item.id);
     const thumb = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:20px">${item.icon}</span>`;
@@ -7184,6 +7344,11 @@ function renderCart(){
         <span>🔵</span> <span>Sedang dalam proses pesanan Anda${activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : ''}. Harap tunggu sampai selesai atau hapus dari keranjang.</span>
       </div>
     ` : '';
+    const oldPriceDisplay = hasRange ? `${formatPrice(itemSub)} - ${formatPrice(itemMax)}` : formatPrice(itemSub);
+    const finalPriceDisplay = hasDisc
+      ? (hasRange ? `${formatPrice(itemFinal)} - ${formatPrice(itemMaxFinal)}` : formatPrice(itemFinal))
+      : (hasRange ? `${formatPrice(itemSub)} - ${formatPrice(itemMax)}` : formatPrice(itemFinal));
+
     return `
     <div class="cart-item" style="${isBusy ? 'background:#f8fafc;border:1px solid #bfdbfe;' : ''}">
       <div class="cart-item-thumb">${thumb}</div>
@@ -7191,8 +7356,8 @@ function renderCart(){
         <p class="cart-item-name">${item.name}</p>
         <p class="cart-item-meta" style="font-size:11px;color:#64748b;margin:2px 0 4px">${getProductDesc(item)}</p>
         <div class="cart-item-price-row">
-          ${hasDisc ? `<span class="cart-item-price-old">${formatPrice(itemSub)}</span>` : ''}
-          <span class="${hasDisc ? 'cart-item-price-discount' : 'cart-item-price'}">${formatPrice(itemFinal)}</span>
+          ${hasDisc ? `<span class="cart-item-price-old">${oldPriceDisplay}</span>` : ''}
+          <span class="${hasDisc ? 'cart-item-price-discount' : 'cart-item-price'}">${finalPriceDisplay}</span>
           ${hasDisc ? `<span style="font-size:10px;color:#ef4444;font-weight:700">-${itemDisc}%</span>` : ''}
         </div>
         <div class="cart-item-qty" style="margin-top:5px;display:flex;align-items:center;gap:6px">
@@ -8002,6 +8167,7 @@ function openSubgroupPopup(cat){
   
   const catProds = (products || []).filter(p => p.cat === targetCat);
   const totalCatCount = catProds.length;
+  const discountedCatCount = catProds.filter(p => getDiscount(p) > 0).length;
   
   const subCounts = {};
   let noneCount = 0;
@@ -8021,19 +8187,22 @@ function openSubgroupPopup(cat){
   let html = '';
   
   // Opsi 1: Semua layanan dalam kategori ini
-  const isAllActive = (currentCatFilter === targetCat && currentSubgroupFilter === 'all');
+  const isAllActive = (currentCatFilter === targetCat && (!currentSubgroupFilter || currentSubgroupFilter === 'all'));
   html += `
     <div class="sg-pop-item ${isAllActive ? 'active' : ''}" onclick="selectSubgroupFilter('all')">
       <div class="sg-pop-item-left">
         <div class="sg-pop-icon">🌟</div>
-        <div class="sg-pop-text">
-          <div class="sg-pop-name">${t('sgPopAllName', { game: info.shortName })}</div>
-          <div class="sg-pop-desc">${t('sgPopAllDesc')}</div>
+        <div class="sg-pop-content">
+          <div class="sg-pop-title-row">
+            <span class="sg-pop-name">Semua ${escapeHtml(info.shortName)}</span>
+          </div>
+          <div class="sg-pop-sub-row">
+            <span class="sg-pop-count-text">Tampilkan seluruh ${totalCatCount} layanan</span>
+          </div>
         </div>
       </div>
       <div class="sg-pop-item-right">
-        <span class="sg-pop-count">${t('sgPopItemCount', { n: totalCatCount })}</span>
-        <div class="sg-pop-radio"></div>
+        <div class="sg-pop-check ${isAllActive ? 'active' : ''}">${isAllActive ? '✓' : ''}</div>
       </div>
     </div>
   `;
@@ -8044,25 +8213,37 @@ function openSubgroupPopup(cat){
     let subIcon = '🏷️';
     const subLower = sub.toLowerCase();
     if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('crystal') || subLower.includes('gem') || subLower.includes('primogem') || subLower.includes('oneiric')) subIcon = '💎';
+    else if(subLower.includes('fate') || subLower.includes('wish') || subLower.includes('pull') || subLower.includes('gacha')) subIcon = '🌠';
+    else if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('map') || subLower.includes('oculus') || subLower.includes('chest')) subIcon = '🗺️';
     else if(subLower.includes('joki') || subLower.includes('quest') || subLower.includes('abyss') || subLower.includes('boss') || subLower.includes('farming')) subIcon = '⚔️';
     else if(subLower.includes('akun') || subLower.includes('account') || subLower.includes('starter') || subLower.includes('reroll')) subIcon = '🔑';
     else if(subLower.includes('item') || subLower.includes('pass') || subLower.includes('welkin') || subLower.includes('express')) subIcon = '🌙';
     else if(subLower.includes('event') || subLower.includes('misi')) subIcon = '🎯';
 
     const localizedName = localizeSubgroupName(sub);
+    const subDisc = getDiscount(targetCat, sub);
+    const hasSubDisc = subDisc > 0;
+    const count = subCounts[sub] || 0;
 
     html += `
-      <div class="sg-pop-item ${isActive ? 'active' : ''}" onclick="selectSubgroupFilter('${sub.replace(/'/g, "\\'")}')">
+      <div class="sg-pop-item ${isActive ? 'active' : ''} ${hasSubDisc ? 'has-discount' : ''}" onclick="selectSubgroupFilter('${sub.replace(/'/g, "\\'")}')">
         <div class="sg-pop-item-left">
           <div class="sg-pop-icon">${subIcon}</div>
-          <div class="sg-pop-text">
-            <div class="sg-pop-name">${escapeHtml(localizedName)}</div>
-            <div class="sg-pop-desc">${t('sgPopItemDesc', { sub: escapeHtml(localizedName) })}</div>
+          <div class="sg-pop-content">
+            <div class="sg-pop-title-row">
+              <span class="sg-pop-name">${escapeHtml(localizedName)}</span>
+              ${hasSubDisc ? `<span class="sg-pop-disc-pill">🔥 -${subDisc}%</span>` : ''}
+            </div>
+            <div class="sg-pop-sub-row">
+              ${hasSubDisc 
+                ? `<span class="sg-pop-promo-text">⚡ Promo Diskon ${subDisc}% · ${count} layanan</span>`
+                : `<span class="sg-pop-count-text">${count} layanan tersedia</span>`
+              }
+            </div>
           </div>
         </div>
         <div class="sg-pop-item-right">
-          <span class="sg-pop-count">${t('sgPopItemCount', { n: subCounts[sub] })}</span>
-          <div class="sg-pop-radio"></div>
+          <div class="sg-pop-check ${isActive ? 'active' : ''}">${isActive ? '✓' : ''}</div>
         </div>
       </div>
     `;
@@ -8070,18 +8251,28 @@ function openSubgroupPopup(cat){
   
   if(noneCount > 0 && uniqueSubgroups.length > 0){
     const isNoneActive = (currentCatFilter === targetCat && currentSubgroupFilter === '__none__');
+    const noneDisc = getDiscount(targetCat, '__none__');
+    const hasNoneDisc = noneDisc > 0;
+
     html += `
-      <div class="sg-pop-item ${isNoneActive ? 'active' : ''}" onclick="selectSubgroupFilter('__none__')">
+      <div class="sg-pop-item ${isNoneActive ? 'active' : ''} ${hasNoneDisc ? 'has-discount' : ''}" onclick="selectSubgroupFilter('__none__')">
         <div class="sg-pop-item-left">
           <div class="sg-pop-icon">📦</div>
-          <div class="sg-pop-text">
-            <div class="sg-pop-name">${t('sgPopOtherName')}</div>
-            <div class="sg-pop-desc">${t('sgPopOtherDesc')}</div>
+          <div class="sg-pop-content">
+            <div class="sg-pop-title-row">
+              <span class="sg-pop-name">${t('sgPopOtherName') || 'Lainnya / Reguler'}</span>
+              ${hasNoneDisc ? `<span class="sg-pop-disc-pill">🔥 -${noneDisc}%</span>` : ''}
+            </div>
+            <div class="sg-pop-sub-row">
+              ${hasNoneDisc 
+                ? `<span class="sg-pop-promo-text">⚡ Promo Diskon ${noneDisc}% · ${noneCount} layanan</span>`
+                : `<span class="sg-pop-count-text">${noneCount} layanan tersedia</span>`
+              }
+            </div>
           </div>
         </div>
         <div class="sg-pop-item-right">
-          <span class="sg-pop-count">${t('sgPopItemCount', { n: noneCount })}</span>
-          <div class="sg-pop-radio"></div>
+          <div class="sg-pop-check ${isNoneActive ? 'active' : ''}">${isNoneActive ? '✓' : ''}</div>
         </div>
       </div>
     `;
@@ -8110,9 +8301,16 @@ function selectSubgroupFilter(sub){
   renderProducts(currentCatFilter, currentSubgroupFilter);
   
   const catObj = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
-  const label = sub === 'all' 
-    ? t('sgPopAllName', { game: catObj.shortName }) 
-    : (sub === '__none__' ? t('sgPopOtherName') : localizeSubgroupName(sub));
+  let label = '';
+  if(sub === 'all'){
+    label = t('sgPopAllName', { game: catObj.shortName });
+  } else if(sub === '__discount__'){
+    label = t('sgPopDiscountOption', { game: catObj.shortName }) || '🔥 Khusus Diskon';
+  } else if(sub === '__none__'){
+    label = t('sgPopOtherName');
+  } else {
+    label = localizeSubgroupName(sub);
+  }
   showToast(t('sgToastShowing', { label: label }));
   
   const grid = document.getElementById('productGrid');
@@ -8123,62 +8321,67 @@ function selectSubgroupFilter(sub){
 
 function updateCategoryChipsUI(){
   const chips = document.querySelectorAll('.cat-chip');
+
   chips.forEach(chip => {
     let cat = chip.getAttribute('data-cat');
     if(!cat){
-      const t = chip.textContent.trim().toLowerCase();
-      if(t.includes('genshin')) cat = 'genshin';
-      else if(t.includes('hsr')) cat = 'hsr';
-      else if(t.includes('wuwa')) cat = 'wuwa';
-      else if(t.includes('nte')) cat = 'nte';
-      else if(t.includes('akun')) cat = 'lainnya';
+      const tStr = chip.textContent.trim().toLowerCase();
+      if(tStr.includes('genshin')) cat = 'genshin';
+      else if(tStr.includes('hsr')) cat = 'hsr';
+      else if(tStr.includes('wuwa')) cat = 'wuwa';
+      else if(tStr.includes('nte')) cat = 'nte';
+      else if(tStr.includes('akun')) cat = 'lainnya';
       else cat = 'all';
       chip.setAttribute('data-cat', cat);
     }
     
+    if(cat === 'discount'){
+      chip.style.display = 'none';
+      return;
+    }
+
     const info = CAT_INFO[cat] || { shortName: cat };
     const catShortName = (cat === 'all') ? t('catAll') : ((cat === 'lainnya') ? t('catAccount') : info.shortName);
-    const hasSubs = cat !== 'all' && getExistingSubgroups(cat).length > 0;
+    const catDisc = (cat === 'all') ? 0 : getCategoryMaxDiscount(cat);
+    const discBadge = catDisc > 0 ? `<span class="cat-chip-disc" title="Diskon hingga ${catDisc}%">🔥 -${catDisc}%</span>` : '';
     
-    if(cat === currentCatFilter){
-      chip.classList.add('active');
-      if(hasSubs){
-        if(currentSubgroupFilter && currentSubgroupFilter !== 'all'){
-          const subLabel = currentSubgroupFilter === '__none__' ? t('sgPopOtherName') : localizeSubgroupName(currentSubgroupFilter);
-          chip.innerHTML = `${catShortName}: <b>${escapeHtml(subLabel)}</b> ▾`;
-        } else {
-          chip.innerHTML = `${catShortName} ▾`;
-        }
-      } else {
-        chip.innerHTML = catShortName;
-      }
-    } else {
-      chip.classList.remove('active');
-      if(hasSubs){
-        chip.innerHTML = `${catShortName} ▾`;
-      } else {
-        chip.innerHTML = catShortName;
-      }
-    }
+    chip.classList.toggle('active', cat === currentCatFilter);
+    chip.innerHTML = `${catShortName}${discBadge ? ' ' + discBadge : ''}`;
   });
   
   const subBar = document.getElementById('catalogSubFilterBar');
   if(subBar){
-    if(currentCatFilter !== 'all' && currentSubgroupFilter && currentSubgroupFilter !== 'all'){
+    const subs = (currentCatFilter !== 'all') ? getExistingSubgroups(currentCatFilter) : [];
+    if(subs.length > 0){
       const info = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
-      const subLabel = currentSubgroupFilter === '__none__' ? t('sgPopOtherName') : localizeSubgroupName(currentSubgroupFilter);
-      subBar.style.display = 'flex';
-      subBar.innerHTML = `
-        <div class="csb-left">
-          <span class="csb-label">${t('sgBarLabel')}</span>
-          <button type="button" class="csb-active-chip" onclick="openSubgroupPopup('${currentCatFilter}')">
-            🏷️ ${escapeHtml(subLabel)} ▾ <span style="font-size:9px;opacity:.75;margin-left:2px">${t('sgBarChange')}</span>
-          </button>
-        </div>
-        <button type="button" class="csb-reset-btn" onclick="selectSubgroupFilter('all')">
-          ${t('sgBarAllBtn', { game: info.shortName })}
+      const isAllSubActive = (!currentSubgroupFilter || currentSubgroupFilter === 'all');
+      
+      let chipsHtml = `
+        <button type="button" class="sub-chip ${isAllSubActive ? 'active' : ''}" onclick="selectSubgroupFilter('all')">
+          🌟 Semua ${escapeHtml(info.shortName)}
         </button>
       `;
+      
+      subs.forEach(s => {
+        const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
+        const sDisc = getDiscount(currentCatFilter, s);
+        const locName = localizeSubgroupName(s);
+        const discBadge = sDisc > 0 ? `<span class="sub-chip-disc">🔥 -${sDisc}%</span>` : '';
+        chipsHtml += `
+          <button type="button" class="sub-chip ${isActive ? 'active' : ''} ${sDisc > 0 ? 'has-discount' : ''}" onclick="selectSubgroupFilter('${s.replace(/'/g, "\\'")}')">
+            ${escapeHtml(locName)} ${discBadge}
+          </button>
+        `;
+      });
+      
+      chipsHtml += `
+        <button type="button" class="sub-chip sub-chip-more" onclick="openSubgroupPopup('${currentCatFilter}')" title="Buka menu lengkap sub-kategori">
+          📑 Menu Lengkap ▾
+        </button>
+      `;
+
+      subBar.style.display = 'flex';
+      subBar.innerHTML = chipsHtml;
     } else {
       subBar.style.display = 'none';
       subBar.innerHTML = '';
@@ -8188,7 +8391,6 @@ function updateCategoryChipsUI(){
 
 function renderProductCard(p, discount, idx){
   const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p);
-  const discPrice = getDiscountedPrice(p.price, p);
   const hasDisc = disc > 0;
   const imgs = getImagesForProduct(p.id);
   const hasImgs = imgs.length > 0;
@@ -8238,10 +8440,10 @@ function renderProductCard(p, discount, idx){
   }
 
   return `
-  <div class="product-card" id="prodCard_${p.id}" style="${isLocked ? 'opacity:.82' : ''}">
+  <div class="product-card ${hasDisc ? 'has-discount' : ''}" id="prodCard_${p.id}" style="${isLocked ? 'opacity:.82' : ''}">
     <div class="product-img-wrap" id="prodImgWrap_${p.id}">
-      ${!isLocked && !p.isAccount && p.badge?`<span class="product-badge">${p.badge}</span>`:''}
-      ${!isLocked && !p.isAccount && hasDisc?`<span class="discount-badge">-${disc}%</span>`:''}
+      ${!isLocked && p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+      ${!isLocked && hasDisc ? `<span class="discount-badge">🔥 -${disc}%</span>` : ''}
       ${busyBadge}
       ${imgCount}
       <div class="product-img-track" id="prodImgTrack_${p.id}" onscroll="onProdImgScroll(${p.id})">
@@ -8252,8 +8454,9 @@ function renderProductCard(p, discount, idx){
     <div class="product-info" onclick="openModal(${p.id})" style="cursor:pointer">
       <p class="product-name">${p.name}</p>
       <div class="price-row">
-        ${hasDisc?`<span class="product-price-old">${formatPrice(p.price)}</span>`:''}
-        <span class="${hasDisc?'product-price-discount':'product-price'}">${formatPrice(discPrice)}</span>
+        ${hasDisc ? `<span class="product-price-old">${formatProductPrice(p, false)}</span>` : ''}
+        <span class="${hasDisc ? 'product-price-discount' : 'product-price'}">${formatProductPrice(p, hasDisc)}</span>
+        ${hasDisc ? `<span class="product-disc-pill">🔥 -${disc}%</span>` : ''}
       </div>
       <p class="product-meta">${getProductDesc(p)}</p>
       <div class="product-btn-row" onclick="event.stopPropagation()">
@@ -8261,9 +8464,9 @@ function renderProductCard(p, discount, idx){
           ? `<button class="buy-now-btn" style="background:${lockedBtnBg};cursor:not-allowed;color:#fff;font-weight:700;opacity:.95" disabled>${lockedBtnText}</button>`
           : `<button class="buy-now-btn" onclick="openModal(${p.id})">${t('btnBuy')}</button>
              ${p.isAccount ? '' : (
-               cart.some(item => item.id === p.id)
-                 ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="${t('btnInCart')}" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>${t('btnInCart')}</button>`
-                 : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>${t('btnAddCart')}</button>`
+                cart.some(item => item.id === p.id)
+                  ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="${t('btnInCart')}" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>${t('btnInCart')}</button>`
+                  : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>${t('btnAddCart')}</button>`
              )}`
         }
       </div>
@@ -8276,10 +8479,11 @@ function renderProducts(filter, subFilter){
   if(filter !== undefined) currentCatFilter = filter;
   if(subFilter !== undefined) currentSubgroupFilter = subFilter;
   autoReleaseExpiredReservations();
-  const grid=document.getElementById('productGrid');
+  const grid = document.getElementById('productGrid');
   const searchInput = document.getElementById('searchInput');
   const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
-  let filtered = currentCatFilter==='all' ? products : products.filter(p=>p.cat===currentCatFilter);
+  
+  let filtered = (currentCatFilter === 'all') ? (products || []) : (products || []).filter(p => p.cat === currentCatFilter);
 
   // Filter berdasarkan sub-kategori jika bukan 'all'
   if(currentCatFilter !== 'all' && currentSubgroupFilter && currentSubgroupFilter !== 'all'){
@@ -8316,10 +8520,18 @@ function renderProducts(filter, subFilter){
       if(!(key in groupIndex)){ groupIndex[key] = groups.length; groups.push({name:key, items:[]}); }
       groups[groupIndex[key]].items.push(p);
     });
-    grid.innerHTML = groups.map(g => `
-      <div class="subgroup-heading">${g.name}</div>
-      ${g.items.map(p => renderProductCard(p, getDiscount(p), cardIdx++)).join('')}
-    `).join('');
+    grid.innerHTML = groups.map(g => {
+      const gDisc = getDiscount(currentCatFilter, g.name === 'Lainnya' ? '__none__' : g.name);
+      const maxItemDisc = Math.max(gDisc, ...g.items.map(item => getDiscount(item) || 0));
+      const discTag = maxItemDisc > 0 ? `<span class="subgroup-disc-badge">🔥 DISKON ${maxItemDisc}%</span>` : '';
+      return `
+        <div class="subgroup-heading">
+          <span>${escapeHtml(g.name)}</span>
+          ${discTag}
+        </div>
+        ${g.items.map(p => renderProductCard(p, getDiscount(p), cardIdx++)).join('')}
+      `;
+    }).join('');
   } else {
     grid.innerHTML = filtered.map((p,i) => renderProductCard(p, getDiscount(p), i)).join('');
   }
@@ -8401,15 +8613,10 @@ function filterCat(cat,btn){
     return;
   }
 
-  // Pindah ke kategori yang dipilih
+  // Pindah ke kategori yang dipilih (langsung tampilkan produk kategori ini dengan rapi)
   currentCatFilter = cat;
   currentSubgroupFilter = 'all';
   renderProducts(cat, 'all');
-
-  // Jika kategori ini memiliki sub-kategori -> otomatis buka pop-up pemilihan
-  if(existingSubs.length > 0){
-    openSubgroupPopup(cat);
-  }
 }
 function highlightQuery(text, query){
   if(!query || !text) return escapeHtml(text || '');
@@ -8525,10 +8732,9 @@ function renderSearchSuggestions(query){
       : `<span class="emoji-icon">${p.icon || '💠'}</span>`;
     
     const disc = getDiscount(p);
-    const discPrice = getDiscountedPrice(p.price, p);
     const hasDisc = disc > 0;
-    const convPrice = convertPrice(discPrice, currentSelectedCountry);
-    const convOldPrice = hasDisc ? convertPrice(p.price, currentSelectedCountry) : null;
+    const oldPriceStr = hasDisc ? formatProductPrice(p, false) : '';
+    const curPriceStr = formatProductPrice(p, hasDisc);
     const catName = (CAT_INFO[p.cat] && CAT_INFO[p.cat].name) ? CAT_INFO[p.cat].name : (p.cat || 'Layanan');
 
     html += `
@@ -8544,8 +8750,8 @@ function renderSearchSuggestions(query){
           </div>
         </div>
         <div class="search-sug-price">
-          ${convOldPrice ? `<span class="sug-price-old">${convOldPrice.formatted}</span>` : ''}
-          <span class="sug-price-val">${convPrice.formatted}</span>
+          ${hasDisc ? `<span class="sug-price-old">${oldPriceStr}</span>` : ''}
+          <span class="sug-price-val">${curPriceStr}</span>
         </div>
       </div>
     `;
@@ -8795,11 +9001,11 @@ function updateProductImageViewerContent(){
   const oldPriceEl = document.getElementById('prodPhotoPriceOld');
   const priceEl = document.getElementById('prodPhotoPrice');
   if(oldPriceEl){
-    oldPriceEl.textContent = hasDisc ? formatPrice(prod.price) : '';
+    oldPriceEl.textContent = hasDisc ? formatProductPrice(prod, false) : '';
     oldPriceEl.style.display = hasDisc ? 'block' : 'none';
   }
   if(priceEl){
-    priceEl.textContent = formatPrice(discPrice) + (hasDisc ? ` (-${disc}%)` : '');
+    priceEl.textContent = formatProductPrice(prod, hasDisc) + (hasDisc ? ` (-${disc}%)` : '');
   }
 
   const fullImg = document.getElementById('prodPhotoFullImg');
@@ -8864,8 +9070,10 @@ function openModal(id){
     return;
   }
   const discount = getDiscount(selectedProduct);
-  const discPrice = getDiscountedPrice(selectedProduct ? selectedProduct.price : 0, selectedProduct);
   const hasDisc = discount > 0;
+  const hasRange = selectedProduct.maxPrice && selectedProduct.maxPrice > selectedProduct.price;
+  const oldPriceFormatted = formatProductPrice(selectedProduct, false);
+  const finalPriceFormatted = formatProductPrice(selectedProduct, hasDisc);
   const imgs = getImagesForProduct(id);
   const hasProdImgs = imgs.length > 0;
   const thumbImg = hasProdImgs ? `<img src="${imgs[0]}" alt="" title="Klik untuk lihat foto penuh">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
@@ -8874,10 +9082,11 @@ function openModal(id){
     <div class="modal-detail">
       <p class="name">${selectedProduct.name}</p>
       <div class="price-row">
-        ${hasDisc?`<span class="price-old">${formatPrice(selectedProduct.price)}</span>`:''}
-        <p class="${hasDisc?'price-discount':'price'}">${formatPrice(discPrice)}</p>
-        ${hasDisc?`<span class="discount-tag">-${discount}%</span>`:''}
+        ${hasDisc ? `<span class="price-old">${oldPriceFormatted}</span>` : ''}
+        <p class="${hasDisc ? 'price-discount' : 'price'}">${finalPriceFormatted}</p>
+        ${hasDisc ? `<span class="discount-tag">-${discount}%</span>` : ''}
       </div>
+      ${hasRange ? `<div style="font-size:11px;color:#7c3aed;font-weight:600;margin:2px 0 3px">💡 Rentang harga ${finalPriceFormatted} (menyesuaikan varian/jumlah saat chat)</div>` : ''}
       <p class="desc" style="font-size:12px;color:#64748b;margin:3px 0 4px">${getProductDesc(selectedProduct)}</p>
       ${hasProdImgs ? `<div style="margin-top:3px"><span style="font-size:11px;color:#7c3aed;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px" onclick="openProductImageViewer(${id},0)">${t('viewFullPhoto')}</span></div>` : ''}
     </div>`;
@@ -8903,16 +9112,21 @@ function selectAdminModal(el,number){
 function updateWA(){
   if(!selectedProduct||!selectedPayment||!selectedModalAdmin)return;
   const discount = getDiscount(selectedProduct);
-  const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct);
+  const hasDisc = discount > 0;
+  const hasRange = selectedProduct.maxPrice && selectedProduct.maxPrice > selectedProduct.price;
+  const priceDisplay = formatProductPrice(selectedProduct, hasDisc);
   let text = `${t('waGreeting')} ${selectedProduct.name}`;
   if(discount > 0){
     text += ` (${t('cartDiscount')} ${discount}%)`;
   }
   if(currentSelectedCountry && currentSelectedCountry !== 'ID'){
     const cInfo = getCountryConfig(currentSelectedCountry);
-    text += ` ${t('waWithPrice')} ${formatPrice(discPrice)} (${t('waEquivalent')} Rp${discPrice.toLocaleString('id-ID')}) [${cInfo.flag} ${cInfo.currency}] ${t('waAndPayment')} ${selectedPayment}. ${t('waClosing')}`;
+    const discMin = getDiscountedPrice(selectedProduct.price, selectedProduct);
+    const discMax = hasRange ? getDiscountedPrice(selectedProduct.maxPrice, selectedProduct) : 0;
+    const eqStr = hasRange ? `Rp${discMin.toLocaleString('id-ID')} - Rp${discMax.toLocaleString('id-ID')}` : `Rp${discMin.toLocaleString('id-ID')}`;
+    text += ` ${t('waWithPrice')} ${priceDisplay} (${t('waEquivalent')} ${eqStr}) [${cInfo.flag} ${cInfo.currency}] ${t('waAndPayment')} ${selectedPayment}. ${t('waClosing')}`;
   } else {
-    text += ` ${t('waWithPrice')} ${formatPrice(discPrice)} ${t('waAndPayment')} ${selectedPayment}. ${t('waClosing')}`;
+    text += ` ${t('waWithPrice')} ${priceDisplay} ${t('waAndPayment')} ${selectedPayment}. ${t('waClosing')}`;
   }
   document.getElementById('waText').textContent=text;
   document.getElementById('waPreview').style.display='block';
@@ -9348,7 +9562,11 @@ let editingProductId = null;
 
 function addNewProduct(){
   const name = document.getElementById('newProdName').value.trim();
-  const price = parseInt(document.getElementById('newProdPrice').value);
+  const priceInput = document.getElementById('newProdPrice').value.trim();
+  const parsedPrice = parseProductPrice(priceInput);
+  const price = parsedPrice.price;
+  const maxPrice = parsedPrice.maxPrice;
+  const priceRaw = parsedPrice.isRange ? priceInput : '';
   const cat = document.getElementById('newProdCat').value;
   const subgroup = document.getElementById('newProdSubgroup').value.trim();
   const desc = document.getElementById('newProdDesc').value.trim();
@@ -9357,13 +9575,13 @@ function addNewProduct(){
   const isAccount = document.getElementById('newProdIsAccount').classList.contains('on');
 
   if(!name) { showToast('Nama produk wajib diisi!'); return; }
-  if(!price || price <= 0) { showToast('Harga harus lebih dari 0!'); return; }
+  if(!price || price <= 0) { showToast('Harga harus lebih dari 0 (contoh: 100000 atau 10k - 20k)!'); return; }
   if(!desc) { showToast('Deskripsi wajib diisi!'); return; }
 
   if(editingProductId !== null){
     const idx = products.findIndex(p => p.id === editingProductId);
     if(idx !== -1){
-      products[idx] = { ...products[idx], name, price, badge, icon, desc, cat, subgroup, isAccount };
+      products[idx] = { ...products[idx], name, price, maxPrice, priceRaw, badge, icon, desc, cat, subgroup, isAccount };
     }
     setProducts(products);
     showToast('Produk "' + name + '" berhasil diperbarui!');
@@ -9374,6 +9592,8 @@ function addNewProduct(){
       id: newId,
       name: name,
       price: price,
+      maxPrice: maxPrice,
+      priceRaw: priceRaw,
       badge: badge,
       icon: icon,
       desc: desc,
@@ -9410,7 +9630,17 @@ function editProduct(id){
   if(!p) return;
   editingProductId = id;
   document.getElementById('newProdName').value = p.name;
-  document.getElementById('newProdPrice').value = p.price;
+  let priceStr = '';
+  if(p.priceRaw){
+    priceStr = p.priceRaw;
+  } else if(p.maxPrice && p.maxPrice > p.price){
+    const p1 = (p.price >= 1000 && p.price % 1000 === 0) ? (p.price / 1000 + 'k') : p.price;
+    const p2 = (p.maxPrice >= 1000 && p.maxPrice % 1000 === 0) ? (p.maxPrice / 1000 + 'k') : p.maxPrice;
+    priceStr = `${p1} - ${p2}`;
+  } else {
+    priceStr = p.price;
+  }
+  document.getElementById('newProdPrice').value = priceStr;
   document.getElementById('newProdCat').value = p.cat;
   document.getElementById('newProdSubgroup').value = p.subgroup || '';
   document.getElementById('newProdDesc').value = p.desc || '';
@@ -9480,6 +9710,8 @@ function duplicateProduct(id){
     id: newId,
     name: copyName,
     price: p.price,
+    maxPrice: p.maxPrice || 0,
+    priceRaw: p.priceRaw || '',
     cat: p.cat,
     subgroup: p.subgroup || '',
     desc: p.desc || '',
@@ -9592,7 +9824,7 @@ function renderAdminProductList(){
       <div class="p-info">
         <p class="p-name">${p.name}${p.isAccount ? ' 🔑' : ''}</p>
         <p class="p-cat">${p.cat.toUpperCase()}${p.subgroup ? ` • <span class="bulk-sub-tag">${p.subgroup}</span>` : ''}</p>
-        <p class="p-price">${formatPrice(p.price)}</p>
+        <p class="p-price">${formatProductPrice(p, false)}</p>
         ${statusLine}
       </div>
       <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
