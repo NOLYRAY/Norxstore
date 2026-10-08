@@ -464,9 +464,15 @@ body.dark-mode .live-pill-mode{
 .section-title{font-size:clamp(13px,3.8vw,16px);font-weight:800;text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1;margin:0;display:flex;align-items:center;gap:5px}
 .section-link{font-size:11px;color:#7c3aed;background:#f3e8ff;padding:4px 10px;border-radius:999px;text-transform:uppercase;font-weight:700;letter-spacing:0.3px;cursor:pointer;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;transition:all .18s ease}
 .section-link:hover{background:#ede9fe;color:#6d28d9;transform:translateX(1px)}
-.cat-chips{display:flex;gap:8px;margin-bottom:14px;overflow-x:auto;padding:0 16px 4px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y}
+.cat-chips-wrapper{position:relative;width:100%;margin-bottom:6px}
+.cat-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 38px 6px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;scroll-behavior:smooth;-webkit-overflow-scrolling:touch}
 .cat-chips::-webkit-scrollbar{display:none}
+.cat-scroll-btn{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.95);border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(124,58,237,0.18);color:#7c3aed;font-size:16px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s ease;backdrop-filter:blur(6px);-webkit-tap-highlight-color:transparent;user-select:none}
+.cat-scroll-btn:hover{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 4px 12px rgba(124,58,237,0.35);transform:translateY(-50%) scale(1.1)}
+.cat-scroll-prev{left:6px}
+.cat-scroll-next{right:6px}
 .cat-chip{padding:8px 17px;border-radius:20px;background:#f5f4fa;border:1px solid #ece9f7;font-size:12px;font-weight:700;letter-spacing:0.5px;text-transform:uppercase;color:#666;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease,color 0.3s ease,transform .15s ease}
+.cat-chip:hover{border-color:#c4b5fd;color:#7c3aed}
 .cat-chip.active{background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(124,58,237,.3)}
 .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;width:100%}
 .product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;touch-action:pan-y}
@@ -858,17 +864,27 @@ body.dark-mode .live-pill-mode{
 .sg-pop-check{width:22px;height:22px;border-radius:50%;border:2px solid #cbd5e1;display:flex;align-items:center;justify-content:center;transition:all .15s ease;background:#fff;color:#fff;font-size:12px;font-weight:800;flex-shrink:0}
 .sg-pop-item.active .sg-pop-check{border-color:#7c3aed;background:linear-gradient(135deg,#7c3aed,#9333ea);box-shadow:0 2px 6px rgba(124,58,237,0.35)}
 
-/* ============ ACTIVE SUB-FILTER BAR (COMPACT & MODERN) ============ */
-.catalog-subfilter-bar{display:flex;align-items:center;padding:0 16px 12px;gap:6px;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;animation:fadeIn .2s ease}
+/* ============ ACTIVE SUB-FILTER BAR (COMPACT & MODERN HORIZONTAL SCROLLER) ============ */
+.subfilter-wrapper{position:relative;width:100%;margin-bottom:12px}
+.sub-scroll-btn{position:absolute;top:50%;transform:translateY(-50%);width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,0.95);border:1px solid #e2e8f0;box-shadow:0 2px 8px rgba(124,58,237,0.18);color:#7c3aed;font-size:16px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:10;transition:all .2s ease;backdrop-filter:blur(6px);-webkit-tap-highlight-color:transparent;user-select:none}
+.sub-scroll-btn:hover{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 4px 12px rgba(124,58,237,0.35);transform:translateY(-50%) scale(1.1)}
+.sub-scroll-prev{left:6px}
+.sub-scroll-next{right:6px}
+.catalog-subfilter-bar{display:flex;align-items:center;padding:4px 38px 8px;gap:7px;overflow-x:auto;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;animation:fadeIn .2s ease;touch-action:pan-x pan-y}
 .catalog-subfilter-bar::-webkit-scrollbar{display:none}
-@media (min-width:768px){.catalog-subfilter-bar{padding:0 32px 14px}}
+@media (min-width:768px){
+  .cat-chips{padding:4px 44px 6px}
+  .catalog-subfilter-bar{padding:4px 44px 8px}
+  .cat-scroll-prev, .sub-scroll-prev{left:10px}
+  .cat-scroll-next, .sub-scroll-next{right:10px}
+}
 
-.sub-chip{display:inline-flex;align-items:center;gap:4px;padding:6px 12px;border-radius:18px;font-size:11.5px;font-weight:700;background:#f5f4fa;color:#4b5563;border:1px solid #e5e3ef;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s ease;-webkit-tap-highlight-color:transparent}
-.sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd}
-.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 2px 8px rgba(124,58,237,0.25)}
+.sub-chip{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;font-size:11.5px;font-weight:700;background:#f8f7fd;color:#4b5563;border:1px solid #e2def2;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .18s ease;-webkit-tap-highlight-color:transparent}
+.sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd;transform:translateY(-1px)}
+.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(124,58,237,0.3);transform:translateY(-1px)}
 .sub-chip.has-discount{border-color:#fed7aa;background:#fffdf9}
 .sub-chip.active.has-discount{background:linear-gradient(135deg,#7c3aed,#9333ea);border-color:transparent}
-.sub-chip-disc{font-size:9.5px;font-weight:800;background:#ef4444;color:#fff;padding:1px 5px;border-radius:8px;line-height:1.2;margin-left:2px}
+.sub-chip-disc{font-size:9.5px;font-weight:800;background:#ef4444;color:#fff;padding:2px 6px;border-radius:10px;line-height:1.2;margin-left:3px}
 .sub-chip.active .sub-chip-disc{background:#fff;color:#dc2626}
 .sub-chip-more{background:#fff;border:1px dashed #c4b5fd;color:#7c3aed}
 .sub-chip-more:hover{background:#f5f3ff;border-style:solid}
@@ -1172,15 +1188,23 @@ button{cursor:pointer;font-family:inherit}
 <h2 class="section-title">🛒 KATALOG LAYANAN</h2>
 <span class="section-link" onclick="showAllProducts()">LIHAT SEMUA →</span>
 </div>
-<div class="cat-chips" id="catChips">
-<button class="cat-chip active" id="chip_all" data-cat="all" onclick="filterCat('all',this)">SEMUA</button>
-<button class="cat-chip" id="chip_genshin" data-cat="genshin" onclick="filterCat('genshin',this)">GENSHIN</button>
-<button class="cat-chip" id="chip_hsr" data-cat="hsr" onclick="filterCat('hsr',this)">HSR</button>
-<button class="cat-chip" id="chip_wuwa" data-cat="wuwa" onclick="filterCat('wuwa',this)">WUWA</button>
-<button class="cat-chip" id="chip_nte" data-cat="nte" onclick="filterCat('nte',this)">NTE</button>
-<button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 JUAL AKUN</button>
+<div class="cat-chips-wrapper">
+  <button type="button" class="cat-scroll-btn cat-scroll-prev" id="catScrollPrev" onclick="scrollCatBar(-1)" title="Geser kategori ke kiri" aria-label="Geser kategori ke kiri">‹</button>
+  <div class="cat-chips" id="catChips">
+    <button class="cat-chip active" id="chip_all" data-cat="all" onclick="filterCat('all',this)">SEMUA</button>
+    <button class="cat-chip" id="chip_genshin" data-cat="genshin" onclick="filterCat('genshin',this)">GENSHIN</button>
+    <button class="cat-chip" id="chip_hsr" data-cat="hsr" onclick="filterCat('hsr',this)">HSR</button>
+    <button class="cat-chip" id="chip_wuwa" data-cat="wuwa" onclick="filterCat('wuwa',this)">WUWA</button>
+    <button class="cat-chip" id="chip_nte" data-cat="nte" onclick="filterCat('nte',this)">NTE</button>
+    <button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 JUAL AKUN</button>
+  </div>
+  <button type="button" class="cat-scroll-btn cat-scroll-next" id="catScrollNext" onclick="scrollCatBar(1)" title="Geser kategori ke kanan" aria-label="Geser kategori ke kanan">›</button>
 </div>
-<div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
+<div class="subfilter-wrapper" id="subfilterWrapper">
+  <button type="button" class="sub-scroll-btn sub-scroll-prev" id="subScrollPrev" onclick="scrollSubFilterBar(-1)" title="Geser sub judul ke kiri" aria-label="Geser sub judul ke kiri">‹</button>
+  <div id="catalogSubFilterBar" class="catalog-subfilter-bar"></div>
+  <button type="button" class="sub-scroll-btn sub-scroll-next" id="subScrollNext" onclick="scrollSubFilterBar(1)" title="Geser sub judul ke kanan" aria-label="Geser sub judul ke kanan">›</button>
+</div>
 <div class="product-grid" id="productGrid">
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
@@ -2198,15 +2222,43 @@ button{cursor:pointer;font-family:inherit}
 <script>
 
 const DEFAULT_PRODUCTS = [
-{id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID',cat:'genshin',subgroup:'Top-Up'},
-{id:2,name:'Welkin Moon',price:15000,badge:'BEST',icon:'🌙',desc:'30 hari',cat:'genshin',subgroup:'Top-Up'},
-{id:3,name:'Joki Spiral Abyss',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star F12',cat:'genshin',subgroup:'Joki'},
-{id:4,name:'Joki MoC Full Star',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos',cat:'hsr',subgroup:'Joki'},
-{id:5,name:'Joki PF Full Star',price:25000,badge:'',icon:'🔥',desc:'Pure Fiction',cat:'hsr',subgroup:'Joki'},
-{id:6,name:'Joki Tower WuWa',price:40000,badge:'PRO',icon:'🌊',desc:'Tower of Adversity',cat:'wuwa',subgroup:'Joki'},
-{id:7,name:'Joki Weekly Boss',price:20000,badge:'',icon:'👹',desc:'All weekly bosses',cat:'wuwa',subgroup:'Joki'},
-{id:8,name:'Joki NTE Story',price:25000,badge:'NEW',icon:'🔮',desc:'Story progression',cat:'nte',subgroup:'Joki'},
-{id:9,name:'Joki Anomaly Clear',price:30000,badge:'',icon:'✨',desc:'Anomaly farming',cat:'nte',subgroup:'Joki'}
+  // GENSHIN IMPACT
+  {id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID resmi & instan',cat:'genshin',subgroup:'Top-Up'},
+  {id:2,name:'Blessing Welkin Moon (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'Bonus 300 Genesis + 90 Daily Primogem',cat:'genshin',subgroup:'Top-Up'},
+  {id:3,name:'Joki Spiral Abyss Floor 9-12',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star 36★ Abyss dijamin aman',cat:'genshin',subgroup:'Spiral Abyss'},
+  {id:10,name:'Farming Oculus (All Region)',price:25000,badge:'HEMAT',icon:'✨',desc:'Anemo / Geo / Electro / Dendro / Hydro / Pyro Oculus',cat:'genshin',subgroup:'Eksplorasi'},
+  {id:11,name:'Joki Eksplorasi 100% Map',price:45000,badge:'PRO',icon:'🗺️',desc:'Full chest, teleport waypoint, & statue max level',cat:'genshin',subgroup:'Eksplorasi'},
+  {id:12,name:'Joki Archon Quest / Story Quest',price:30000,badge:'',icon:'📜',desc:'Selesai babak cerita utama tanpa skip dialog',cat:'genshin',subgroup:'Quest & Misi'},
+  {id:13,name:'Rawat Akun Harian & Resin (7 Hari)',price:20000,badge:'POPULER',icon:'☕',desc:'Daily commission harian + habisin resin & artifact',cat:'genshin',subgroup:'Rawat Akun'},
+  {id:14,name:'Farming Material Karakter & Boss',price:20000,badge:'',icon:'🛡️',desc:'Material ascension karakter level 1 sampai 90',cat:'genshin',subgroup:'Farming Material'},
+
+  // HONKAI: STAR RAIL
+  {id:4,name:'Joki MoC Full Star (Memory of Chaos)',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos 36★ jaminan bintang penuh',cat:'hsr',subgroup:'Memory of Chaos'},
+  {id:5,name:'Joki Pure Fiction & Apocalyptic Shadow',price:25000,badge:'',icon:'🔥',desc:'Full star Pure Fiction stage 1-4',cat:'hsr',subgroup:'Pure Fiction'},
+  {id:15,name:'Express Supply Pass (30 Hari)',price:15000,badge:'BEST',icon:'🚂',desc:'300 Oneiric Shard + 90 Stellar Jade harian',cat:'hsr',subgroup:'Top-Up'},
+  {id:16,name:'Rawat Akun HSR & Trailblaze Power (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Misi harian + habisin stamina Trailblaze Power',cat:'hsr',subgroup:'Rawat Akun'},
+  {id:17,name:'Joki Trailblaze Mission Penacony',price:35000,badge:'PRO',icon:'📜',desc:'Progress cerita utama Penacony & side quest',cat:'hsr',subgroup:'Quest & Misi'},
+  {id:18,name:'Farming Relic & Calyx Material',price:25000,badge:'',icon:'💎',desc:'Calyx bud, trace material, & planar ornament',cat:'hsr',subgroup:'Farming Material'},
+
+  // WUTHERING WAVES
+  {id:6,name:'Joki Tower of Adversity Full Star',price:40000,badge:'PRO',icon:'🌊',desc:'Hazard Zone full dorong 30 Crest',cat:'wuwa',subgroup:'Tower of Adversity'},
+  {id:7,name:'Joki Weekly Boss & Echo Calamity',price:20000,badge:'',icon:'👹',desc:'All weekly boss drop & Bell-Borne farming',cat:'wuwa',subgroup:'Farming Material'},
+  {id:19,name:'Lunite Subscription (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'300 Lunite + 90 Astrite harian',cat:'wuwa',subgroup:'Top-Up'},
+  {id:20,name:'Joki Eksplorasi Map & Sonance Casket 100%',price:45000,badge:'POPULER',icon:'🗺️',desc:'100% map exploration Jinzhou & Huanglong',cat:'wuwa',subgroup:'Eksplorasi'},
+  {id:21,name:'Rawat Akun WuWa & Waveplate (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Activity harian + habiskan Waveplate optimal',cat:'wuwa',subgroup:'Rawat Akun'},
+  {id:22,name:'Joki Main Quest Huanglong',price:30000,badge:'',icon:'📜',desc:'Cerita utama Rover & Companion Quest',cat:'wuwa',subgroup:'Quest & Misi'},
+
+  // NEVERNESS TO EVERNESS
+  {id:8,name:'Joki NTE Main Story Progression',price:25000,badge:'NEW',icon:'🔮',desc:'Story chapter progression & unlock city map',cat:'nte',subgroup:'Quest & Misi'},
+  {id:9,name:'Joki Anomaly Combat & Resource Farming',price:30000,badge:'',icon:'✨',desc:'Anomaly suppression & urban materials',cat:'nte',subgroup:'Farming Material'},
+  {id:23,name:'Rawat Akun NTE Harian & Stamina (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Daily routine, store maintenance, stamina clear',cat:'nte',subgroup:'Rawat Akun'},
+  {id:24,name:'Top-Up NTE Monthly Pass',price:25000,badge:'BEST',icon:'💎',desc:'Monthly pass & exclusive in-game currency',cat:'nte',subgroup:'Top-Up'},
+
+  // JUAL AKUN (LAINNYA)
+  {id:25,name:'Akun Starter Genshin / HSR / WuWa',price:35000,badge:'HOT',icon:'🔑',desc:'Akun fresh AR rendah siap gacha hero idaman',cat:'lainnya',subgroup:'Akun Starter',isAccount:true},
+  {id:26,name:'Akun Mid-End B5 Signature Weapon',price:120000,badge:'BEST',icon:'🌟',desc:'Build rapi siap spiral abyss / MoC / Tower',cat:'lainnya',subgroup:'Akun Mid-End',isAccount:true},
+  {id:27,name:'Akun Endgame / Whale C6 Sultan Terawat',price:350000,badge:'VIP',icon:'👑',desc:'Full B5 constellation tinggi, artifact god tier',cat:'lainnya',subgroup:'Akun Endgame',isAccount:true},
+  {id:28,name:'Akun Reroll Banyak Wish & Gacha Pull',price:20000,badge:'HEMAT',icon:'🎁',desc:'Resource melimpah tinggal gacha karakter favorit',cat:'lainnya',subgroup:'Akun Starter',isAccount:true}
 ];
 
 const DEFAULT_CAROUSEL = [
@@ -2901,7 +2953,14 @@ const I18N = {
     catDiscount: 'DISKON',
     sgPopDiscountOption: '🔥 Khusus Diskon {game}',
     sgPopDiscountDesc: 'Tampilkan varian {game} yang sedang promo diskon',
-    sgPopDiscBadge: 'Diskon {n}%'
+    sgPopDiscBadge: 'Diskon {n}%',
+    subDiscBadge: '🔥 DISKON {n}%',
+    subAllBtn: '🌟 Semua {game}',
+    subMoreBtn: '📑 Menu Lengkap ▾',
+    subPromoText: '⚡ Promo Diskon {n}% · {c} layanan',
+    subCountText: '{c} layanan tersedia',
+    subScrollPrev: 'Geser ke kiri',
+    subScrollNext: 'Geser ke kanan'
   },
   MY: {
     langName: 'Bahasa Melayu',
@@ -3009,7 +3068,14 @@ const I18N = {
     catDiscount: 'DISKAUN',
     sgPopDiscountOption: '🔥 Khas Diskaun {game}',
     sgPopDiscountDesc: 'Papar varian {game} yang sedang promosi diskaun',
-    sgPopDiscBadge: 'Diskaun {n}%'
+    sgPopDiscBadge: 'Diskaun {n}%',
+    subDiscBadge: '🔥 DISKAUN {n}%',
+    subAllBtn: '🌟 Semua {game}',
+    subMoreBtn: '📑 Menu Penuh ▾',
+    subPromoText: '⚡ Promosi Diskaun {n}% · {c} perkhidmatan',
+    subCountText: '{c} perkhidmatan tersedia',
+    subScrollPrev: 'Geser ke kiri',
+    subScrollNext: 'Geser ke kanan'
   },
   SG: {
     langName: 'English (Singapore)',
@@ -3027,7 +3093,7 @@ const I18N = {
     catalogTitle: '🛒 SERVICES CATALOG',
     viewAllLink: 'VIEW ALL →',
     catAll: 'ALL',
-    catAccount: '🔑 BUY/SELL ACCOUNT',
+    catAccount: '🔑 BUY/SELL ACCOUNTS',
     btnBuy: '🛒 Buy',
     btnAddCart: 'Cart',
     btnInCart: 'In Cart',
@@ -3117,7 +3183,14 @@ const I18N = {
     catDiscount: 'SALE',
     sgPopDiscountOption: '🔥 {game} On Sale',
     sgPopDiscountDesc: 'Show {game} variants with active discount',
-    sgPopDiscBadge: 'Sale {n}%'
+    sgPopDiscBadge: 'Sale {n}%',
+    subDiscBadge: '🔥 SALE {n}%',
+    subAllBtn: '🌟 All {game}',
+    subMoreBtn: '📑 All Sub-Categories ▾',
+    subPromoText: '⚡ Promo {n}% Off · {c} services',
+    subCountText: '{c} services available',
+    subScrollPrev: 'Scroll left',
+    subScrollNext: 'Scroll right'
   }
 };
 
@@ -3954,6 +4027,15 @@ function updateLanguageUI(){
   if(chipAll) chipAll.textContent = t('catAll');
   const chipLainnya = document.getElementById('chip_lainnya');
   if(chipLainnya) chipLainnya.textContent = t('catAccount');
+  const subScrollPrev = document.getElementById('subScrollPrev');
+  if(subScrollPrev) subScrollPrev.title = t('subScrollPrev') || 'Geser ke kiri';
+  const subScrollNext = document.getElementById('subScrollNext');
+  if(subScrollNext) subScrollNext.title = t('subScrollNext') || 'Geser ke kanan';
+  const catScrollPrev = document.getElementById('catScrollPrev');
+  if(catScrollPrev) catScrollPrev.title = t('subScrollPrev') || 'Geser ke kiri';
+  const catScrollNext = document.getElementById('catScrollNext');
+  if(catScrollNext) catScrollNext.title = t('subScrollNext') || 'Geser ke kanan';
+  if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
 
   // 4. Cart header & buttons
   const cartTitle = document.getElementById('cartPanelTitle');
@@ -4781,7 +4863,7 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
-const NORX_SYSTEM_VER = '2026.09.25.v10';
+const NORX_SYSTEM_VER = '2026.10.08.v12';
 (function checkSystemVersion(){
   try {
     const cur = safeGetItem('norx_sys_version', null);
@@ -8108,17 +8190,81 @@ const CAT_INFO = {
   lainnya: { name: 'Jual Beli Akun', shortName: '🔑 JUAL AKUN', icon: '🔑' }
 };
 
+const PREDEFINED_SUBGROUPS_BY_CAT = {
+  all: ['Eksplorasi', 'Quest & Misi', 'Rawat Akun', 'Spiral Abyss', 'Memory of Chaos', 'Tower of Adversity', 'Top-Up', 'Farming Material', 'Akun Starter', 'Akun Endgame'],
+  genshin: ['Eksplorasi', 'Quest & Misi', 'Rawat Akun', 'Spiral Abyss', 'Top-Up', 'Farming Material'],
+  hsr: ['Memory of Chaos', 'Pure Fiction', 'Quest & Misi', 'Rawat Akun', 'Top-Up', 'Farming Material'],
+  wuwa: ['Eksplorasi', 'Tower of Adversity', 'Quest & Misi', 'Rawat Akun', 'Top-Up', 'Farming Material'],
+  nte: ['Quest & Misi', 'Farming Material', 'Rawat Akun', 'Top-Up'],
+  lainnya: ['Akun Starter', 'Akun Mid-End', 'Akun Endgame']
+};
+
 let currentCatFilter = 'all';
 let currentSubgroupFilter = 'all';
 
+function getCategoryShortName(cat, lang = null){
+  const l = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  if(!cat || cat === 'all') return t('catAll');
+  if(cat === 'lainnya') return t('catAccount');
+  const info = CAT_INFO[cat];
+  return info ? info.shortName : String(cat).toUpperCase();
+}
+
+function getCategoryName(cat, lang = null){
+  const l = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  if(!cat || cat === 'all'){
+    return l === 'SG' ? 'All Services' : (l === 'MY' ? 'Semua Perkhidmatan' : 'Semua Layanan');
+  }
+  if(cat === 'lainnya'){
+    return l === 'SG' ? 'Game Accounts Store' : (l === 'MY' ? 'Jual Beli Akaun' : 'Jual Beli Akun');
+  }
+  const info = CAT_INFO[cat];
+  return info ? info.name : cat;
+}
+
+function getSubgroupIcon(sub){
+  if(!sub) return '🏷️';
+  const s = sub.toLowerCase();
+  if(s.includes('top-up') || s.includes('topup') || s.includes('crystal') || s.includes('gem') || s.includes('primogem') || s.includes('oneiric') || s.includes('lunite')) return '💎';
+  if(s.includes('pass') || s.includes('welkin') || s.includes('express') || s.includes('subscription')) return '🌙';
+  if(s.includes('eksplor') || s.includes('explore') || s.includes('map') || s.includes('oculus') || s.includes('chest')) return '🗺️';
+  if(s.includes('quest') || s.includes('misi') || s.includes('story')) return '📜';
+  if(s.includes('rawat') || s.includes('daily') || s.includes('harian') || s.includes('resin') || s.includes('waveplate')) return '☕';
+  if(s.includes('abyss') || s.includes('spiral')) return '⚔️';
+  if(s.includes('moc') || s.includes('chaos')) return '🚀';
+  if(s.includes('pure fiction')) return '🔥';
+  if(s.includes('tower')) return '🌊';
+  if(s.includes('boss') || s.includes('farming') || s.includes('material') || s.includes('calyx') || s.includes('echo')) return '👹';
+  if(s.includes('akun') || s.includes('akaun') || s.includes('account') || s.includes('starter') || s.includes('reroll') || s.includes('whale') || s.includes('mid-end')) return '🔑';
+  return '🏷️';
+}
+
 function getExistingSubgroups(cat){
+  const list = [];
   const set = new Set();
+  const targetCat = cat || 'all';
+
+  // 1. Ambil dari produk yang ada di memori
   (products || []).forEach(p => {
-    if((!cat || p.cat === cat) && p.subgroup && p.subgroup.trim()){
-      set.add(p.subgroup.trim());
+    if((targetCat === 'all' || p.cat === targetCat) && p.subgroup && p.subgroup.trim()){
+      const s = p.subgroup.trim();
+      if(!set.has(s)){
+        set.add(s);
+        list.push(s);
+      }
     }
   });
-  return Array.from(set);
+
+  // 2. Tambahkan sub-judul standar agar pilihan selalu kaya & informatif
+  const defs = PREDEFINED_SUBGROUPS_BY_CAT[targetCat] || [];
+  defs.forEach(s => {
+    if(!set.has(s)){
+      set.add(s);
+      list.push(s);
+    }
+  });
+
+  return list;
 }
 
 function localizeSubgroupName(sub, lang = null){
@@ -8128,46 +8274,156 @@ function localizeSubgroupName(sub, lang = null){
   const subLower = raw.toLowerCase();
 
   if(currentLang === 'MY'){
-    if(subLower === 'rawat account' || subLower === 'rawat akun') return 'RAWAT AKAUN';
-    if(subLower === 'eksploration' || subLower === 'eksplorasi') return 'EKSPLORASI';
-    if(subLower === 'quest') return 'QUEST / MISI';
-    if(subLower === 'top-up' || subLower === 'topup') return 'TAMBAH NILAI / TOP-UP';
-    if(subLower === 'joki') return 'JOKI / SERVIS MAIN';
-    if(subLower === 'starter') return 'AKAUN STARTER';
-    if(subLower === 'reroll') return 'AKAUN REROLL';
-    if(subLower === 'akun' || subLower === 'account') return 'AKAUN GAME';
-    if(subLower === 'reguler' || subLower === '__none__') return 'Biasa';
+    // Bahasa Melayu (Malaysia)
+    if(subLower === 'all' || subLower === 'semua') return 'Semua';
+    if(subLower.includes('rawat')) return 'Rawat Akaun / Harian';
+    if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('oculus')) return 'Eksplorasi Peta';
+    if(subLower.includes('quest') || subLower.includes('misi')) return 'Quest & Misi';
+    if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('tambah nilai')) return 'Tambah Nilai / Top-Up';
+    if(subLower.includes('joki')) return 'Servis Joki';
+    if(subLower.includes('spiral abyss') || subLower.includes('abyss')) return 'Spiral Abyss & Cabaran';
+    if(subLower.includes('moc') || subLower.includes('memory of chaos')) return 'Memory of Chaos';
+    if(subLower.includes('pure fiction')) return 'Pure Fiction & Apocalyptic';
+    if(subLower.includes('tower of adversity') || subLower.includes('tower')) return 'Tower of Adversity';
+    if(subLower.includes('farming') || subLower.includes('material') || subLower.includes('calyx') || subLower.includes('echo') || subLower.includes('boss')) return 'Kumpul Bahan & Boss';
+    if(subLower.includes('starter')) return 'Akaun Starter';
+    if(subLower.includes('mid-end') || subLower.includes('pertengahan')) return 'Akaun Pertengahan';
+    if(subLower.includes('endgame') || subLower.includes('whale')) return 'Akaun Endgame / Whale';
+    if(subLower.includes('reroll')) return 'Akaun Reroll';
+    if(subLower.includes('akun') || subLower.includes('account')) return 'Akaun Game';
+    if(subLower.includes('reguler') || subLower.includes('lainnya') || subLower === '__none__') return 'Lain-lain / Biasa';
   } else if(currentLang === 'SG'){
-    if(subLower === 'rawat account' || subLower === 'rawat akun') return 'ACCOUNT MAINTENANCE';
-    if(subLower === 'eksploration' || subLower === 'eksplorasi') return 'EXPLORATION';
-    if(subLower === 'quest') return 'QUEST / MISSIONS';
-    if(subLower === 'top-up' || subLower === 'topup') return 'TOP-UP';
-    if(subLower === 'joki') return 'PILOT / BOOSTING';
-    if(subLower === 'starter') return 'STARTER ACCOUNT';
-    if(subLower === 'reroll') return 'REROLL ACCOUNT';
-    if(subLower === 'akun' || subLower === 'account') return 'GAME ACCOUNTS';
-    if(subLower === 'reguler' || subLower === '__none__') return 'Regular';
+    // English (Singapore)
+    if(subLower === 'all' || subLower === 'semua') return 'All';
+    if(subLower.includes('rawat')) return 'Daily Maintenance';
+    if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('oculus')) return 'Map Exploration';
+    if(subLower.includes('quest') || subLower.includes('misi')) return 'Quests & Missions';
+    if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('tambah nilai')) return 'Top-Up';
+    if(subLower.includes('joki')) return 'Pilot & Boosting';
+    if(subLower.includes('spiral abyss') || subLower.includes('abyss')) return 'Spiral Abyss & Endgame';
+    if(subLower.includes('moc') || subLower.includes('memory of chaos')) return 'Memory of Chaos';
+    if(subLower.includes('pure fiction')) return 'Pure Fiction & Apocalyptic';
+    if(subLower.includes('tower of adversity') || subLower.includes('tower')) return 'Tower of Adversity';
+    if(subLower.includes('farming') || subLower.includes('material') || subLower.includes('calyx') || subLower.includes('echo') || subLower.includes('boss')) return 'Boss & Material Farming';
+    if(subLower.includes('starter')) return 'Starter Accounts';
+    if(subLower.includes('mid-end') || subLower.includes('pertengahan')) return 'Mid-Tier Accounts';
+    if(subLower.includes('endgame') || subLower.includes('whale')) return 'Endgame / Whale Accounts';
+    if(subLower.includes('reroll')) return 'Reroll Accounts';
+    if(subLower.includes('akun') || subLower.includes('account')) return 'Game Accounts';
+    if(subLower.includes('reguler') || subLower.includes('lainnya') || subLower === '__none__') return 'Others / Regular';
   } else {
-    if(subLower === 'rawat account') return 'RAWAT AKUN';
-    if(subLower === 'eksploration') return 'EKSPLORASI';
+    // Bahasa Indonesia (ID)
+    if(subLower === 'all' || subLower === 'semua') return 'Semua';
+    if(subLower.includes('rawat')) return 'Rawat Akun / Harian';
+    if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('oculus')) return 'Eksplorasi Map';
+    if(subLower.includes('quest') || subLower.includes('misi')) return 'Quest & Misi';
+    if(subLower.includes('top-up') || subLower.includes('topup')) return 'Top-Up';
+    if(subLower.includes('joki')) return 'Jasa Joki';
+    if(subLower.includes('spiral abyss') || subLower.includes('abyss')) return 'Spiral Abyss';
+    if(subLower.includes('moc') || subLower.includes('memory of chaos')) return 'Memory of Chaos';
+    if(subLower.includes('pure fiction')) return 'Pure Fiction';
+    if(subLower.includes('tower of adversity') || subLower.includes('tower')) return 'Tower of Adversity';
+    if(subLower.includes('farming') || subLower.includes('material') || subLower.includes('calyx') || subLower.includes('echo') || subLower.includes('boss')) return 'Farming Material & Boss';
+    if(subLower.includes('starter')) return 'Akun Starter';
+    if(subLower.includes('mid-end')) return 'Akun Mid-End';
+    if(subLower.includes('endgame') || subLower.includes('whale')) return 'Akun Endgame / Whale';
+    if(subLower.includes('reroll')) return 'Akun Reroll';
+    if(subLower.includes('akun') || subLower.includes('account')) return 'Akun Game';
+    if(subLower.includes('reguler') || subLower.includes('lainnya') || subLower === '__none__') return 'Lainnya / Reguler';
   }
 
   return raw;
 }
 
+function scrollCatBar(dir){
+  const el = document.getElementById('catChips');
+  if(!el) return;
+  el.scrollBy({ left: dir * 180, behavior: 'smooth' });
+  setTimeout(updateCatBarScrollButtons, 250);
+}
+
+function scrollSubFilterBar(dir){
+  const el = document.getElementById('catalogSubFilterBar');
+  if(!el) return;
+  el.scrollBy({ left: dir * 220, behavior: 'smooth' });
+  setTimeout(updateSubBarScrollButtons, 250);
+}
+
+function updateCatBarScrollButtons(){
+  const el = document.getElementById('catChips');
+  const prev = document.getElementById('catScrollPrev');
+  const next = document.getElementById('catScrollNext');
+  if(!el) return;
+  const canLeft = el.scrollLeft > 6;
+  const canRight = (el.scrollWidth - el.clientWidth - el.scrollLeft) > 6;
+  if(prev) { prev.style.opacity = canLeft ? '1' : '0.25'; prev.style.pointerEvents = canLeft ? 'auto' : 'none'; }
+  if(next) { next.style.opacity = canRight ? '1' : '0.25'; next.style.pointerEvents = canRight ? 'auto' : 'none'; }
+}
+
+function updateSubBarScrollButtons(){
+  const el = document.getElementById('catalogSubFilterBar');
+  const prev = document.getElementById('subScrollPrev');
+  const next = document.getElementById('subScrollNext');
+  if(!el) return;
+  const canLeft = el.scrollLeft > 6;
+  const canRight = (el.scrollWidth - el.clientWidth - el.scrollLeft) > 6;
+  if(prev) { prev.style.opacity = canLeft ? '1' : '0.25'; prev.style.pointerEvents = canLeft ? 'auto' : 'none'; }
+  if(next) { next.style.opacity = canRight ? '1' : '0.25'; next.style.pointerEvents = canRight ? 'auto' : 'none'; }
+}
+
+function enableHorizontalDragScroll(el, onScrollCb){
+  if(!el || el.dataset.dragInit) return;
+  el.dataset.dragInit = '1';
+  let isDown = false;
+  let startX = 0;
+  let scrollLeft = 0;
+  let hasMoved = false;
+
+  el.addEventListener('mousedown', (e) => {
+    if(e.button !== 0) return;
+    isDown = true;
+    hasMoved = false;
+    startX = e.pageX - el.offsetLeft;
+    scrollLeft = el.scrollLeft;
+  });
+  window.addEventListener('mouseup', () => {
+    isDown = false;
+  });
+  el.addEventListener('mousemove', (e) => {
+    if(!isDown) return;
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - startX) * 1.4;
+    if(Math.abs(walk) > 4){
+      hasMoved = true;
+      e.preventDefault();
+      el.scrollLeft = scrollLeft - walk;
+      if(onScrollCb) onScrollCb();
+    }
+  });
+  el.addEventListener('click', (e) => {
+    if(hasMoved){
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  }, true);
+  el.addEventListener('scroll', () => {
+    if(onScrollCb) onScrollCb();
+  }, { passive: true });
+}
+
 function openSubgroupPopup(cat){
   const targetCat = cat || currentCatFilter;
   if(!targetCat || targetCat === 'all') return;
-  const info = CAT_INFO[targetCat] || { name: targetCat, shortName: targetCat, icon: '🎮' };
+  const catShort = getCategoryShortName(targetCat);
+  const catFull = getCategoryName(targetCat);
   
   const titleEl = document.getElementById('sgPopTitle');
   const subtitleEl = document.getElementById('sgPopSubtitle');
-  if(titleEl) titleEl.innerHTML = `✨ ${t('sgPopTitle')} ${info.shortName}`;
-  if(subtitleEl) subtitleEl.textContent = t('sgPopSubtitle', { game: info.name });
+  if(titleEl) titleEl.innerHTML = `✨ ${t('sgPopTitle')} ${catShort}`;
+  if(subtitleEl) subtitleEl.textContent = t('sgPopSubtitle', { game: catFull });
   
   const catProds = (products || []).filter(p => p.cat === targetCat);
   const totalCatCount = catProds.length;
-  const discountedCatCount = catProds.filter(p => getDiscount(p) > 0).length;
   
   const subCounts = {};
   let noneCount = 0;
@@ -8180,7 +8436,7 @@ function openSubgroupPopup(cat){
     }
   });
   
-  const uniqueSubgroups = Object.keys(subCounts);
+  const uniqueSubgroups = getExistingSubgroups(targetCat);
   const listEl = document.getElementById('sgPopList');
   if(!listEl) return;
   
@@ -8188,16 +8444,21 @@ function openSubgroupPopup(cat){
   
   // Opsi 1: Semua layanan dalam kategori ini
   const isAllActive = (currentCatFilter === targetCat && (!currentSubgroupFilter || currentSubgroupFilter === 'all'));
+  const allSubTitle = (currentSelectedCountry === 'SG') ? `All ${catShort}` : `Semua ${catShort}`;
+  const allSubDesc = (currentSelectedCountry === 'SG') 
+    ? `Show all ${totalCatCount} services` 
+    : ((currentSelectedCountry === 'MY') ? `Papar semua ${totalCatCount} perkhidmatan` : `Tampilkan seluruh ${totalCatCount} layanan`);
+
   html += `
     <div class="sg-pop-item ${isAllActive ? 'active' : ''}" onclick="selectSubgroupFilter('all')">
       <div class="sg-pop-item-left">
         <div class="sg-pop-icon">🌟</div>
         <div class="sg-pop-content">
           <div class="sg-pop-title-row">
-            <span class="sg-pop-name">Semua ${escapeHtml(info.shortName)}</span>
+            <span class="sg-pop-name">${escapeHtml(allSubTitle)}</span>
           </div>
           <div class="sg-pop-sub-row">
-            <span class="sg-pop-count-text">Tampilkan seluruh ${totalCatCount} layanan</span>
+            <span class="sg-pop-count-text">${escapeHtml(allSubDesc)}</span>
           </div>
         </div>
       </div>
@@ -8207,23 +8468,14 @@ function openSubgroupPopup(cat){
     </div>
   `;
   
-  // Opsi sub-kategori yang terisi otomatis
+  // Opsi sub-kategori
   uniqueSubgroups.forEach(sub => {
     const isActive = (currentCatFilter === targetCat && currentSubgroupFilter.toLowerCase() === sub.toLowerCase());
-    let subIcon = '🏷️';
-    const subLower = sub.toLowerCase();
-    if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('crystal') || subLower.includes('gem') || subLower.includes('primogem') || subLower.includes('oneiric')) subIcon = '💎';
-    else if(subLower.includes('fate') || subLower.includes('wish') || subLower.includes('pull') || subLower.includes('gacha')) subIcon = '🌠';
-    else if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('map') || subLower.includes('oculus') || subLower.includes('chest')) subIcon = '🗺️';
-    else if(subLower.includes('joki') || subLower.includes('quest') || subLower.includes('abyss') || subLower.includes('boss') || subLower.includes('farming')) subIcon = '⚔️';
-    else if(subLower.includes('akun') || subLower.includes('account') || subLower.includes('starter') || subLower.includes('reroll')) subIcon = '🔑';
-    else if(subLower.includes('item') || subLower.includes('pass') || subLower.includes('welkin') || subLower.includes('express')) subIcon = '🌙';
-    else if(subLower.includes('event') || subLower.includes('misi')) subIcon = '🎯';
-
+    const subIcon = getSubgroupIcon(sub);
     const localizedName = localizeSubgroupName(sub);
     const subDisc = getDiscount(targetCat, sub);
     const hasSubDisc = subDisc > 0;
-    const count = subCounts[sub] || 0;
+    const count = subCounts[sub] || catProds.filter(p => (p.subgroup||'').trim().toLowerCase() === sub.toLowerCase()).length;
 
     html += `
       <div class="sg-pop-item ${isActive ? 'active' : ''} ${hasSubDisc ? 'has-discount' : ''}" onclick="selectSubgroupFilter('${sub.replace(/'/g, "\\'")}')">
@@ -8236,8 +8488,8 @@ function openSubgroupPopup(cat){
             </div>
             <div class="sg-pop-sub-row">
               ${hasSubDisc 
-                ? `<span class="sg-pop-promo-text">⚡ Promo Diskon ${subDisc}% · ${count} layanan</span>`
-                : `<span class="sg-pop-count-text">${count} layanan tersedia</span>`
+                ? `<span class="sg-pop-promo-text">${t('subPromoText', {n: subDisc, c: count})}</span>`
+                : `<span class="sg-pop-count-text">${t('subCountText', {c: count})}</span>`
               }
             </div>
           </div>
@@ -8265,8 +8517,8 @@ function openSubgroupPopup(cat){
             </div>
             <div class="sg-pop-sub-row">
               ${hasNoneDisc 
-                ? `<span class="sg-pop-promo-text">⚡ Promo Diskon ${noneDisc}% · ${noneCount} layanan</span>`
-                : `<span class="sg-pop-count-text">${noneCount} layanan tersedia</span>`
+                ? `<span class="sg-pop-promo-text">${t('subPromoText', {n: noneDisc, c: noneCount})}</span>`
+                : `<span class="sg-pop-count-text">${t('subCountText', {c: noneCount})}</span>`
               }
             </div>
           </div>
@@ -8290,7 +8542,7 @@ function closeSubgroupPopup(e){
   if(modal) modal.classList.remove('open');
 }
 
-function selectSubgroupFilter(sub){
+function selectSubgroupFilter(sub, chipBtn){
   currentSubgroupFilter = sub;
   const modal = document.getElementById('subgroupPopupOverlay');
   if(modal) modal.classList.remove('open');
@@ -8300,12 +8552,16 @@ function selectSubgroupFilter(sub){
   
   renderProducts(currentCatFilter, currentSubgroupFilter);
   
-  const catObj = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
+  if(chipBtn && typeof chipBtn.scrollIntoView === 'function'){
+    try {
+      chipBtn.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+    } catch(e){}
+  }
+  
+  const catShort = getCategoryShortName(currentCatFilter);
   let label = '';
   if(sub === 'all'){
-    label = t('sgPopAllName', { game: catObj.shortName });
-  } else if(sub === '__discount__'){
-    label = t('sgPopDiscountOption', { game: catObj.shortName }) || '🔥 Khusus Diskon';
+    label = (currentCatFilter === 'all') ? t('catAll') : t('subAllBtn', { game: catShort });
   } else if(sub === '__none__'){
     label = t('sgPopOtherName');
   } else {
@@ -8330,7 +8586,7 @@ function updateCategoryChipsUI(){
       else if(tStr.includes('hsr')) cat = 'hsr';
       else if(tStr.includes('wuwa')) cat = 'wuwa';
       else if(tStr.includes('nte')) cat = 'nte';
-      else if(tStr.includes('akun')) cat = 'lainnya';
+      else if(tStr.includes('akun') || tStr.includes('akaun') || tStr.includes('account')) cat = 'lainnya';
       else cat = 'all';
       chip.setAttribute('data-cat', cat);
     }
@@ -8340,49 +8596,65 @@ function updateCategoryChipsUI(){
       return;
     }
 
-    const info = CAT_INFO[cat] || { shortName: cat };
-    const catShortName = (cat === 'all') ? t('catAll') : ((cat === 'lainnya') ? t('catAccount') : info.shortName);
+    const catShortName = getCategoryShortName(cat);
     const catDisc = (cat === 'all') ? 0 : getCategoryMaxDiscount(cat);
     const discBadge = catDisc > 0 ? `<span class="cat-chip-disc" title="Diskon hingga ${catDisc}%">🔥 -${catDisc}%</span>` : '';
     
     chip.classList.toggle('active', cat === currentCatFilter);
     chip.innerHTML = `${catShortName}${discBadge ? ' ' + discBadge : ''}`;
   });
+
+  const catChipsEl = document.getElementById('catChips');
+  if(catChipsEl){
+    enableHorizontalDragScroll(catChipsEl, updateCatBarScrollButtons);
+    updateCatBarScrollButtons();
+  }
   
   const subBar = document.getElementById('catalogSubFilterBar');
+  const subWrap = document.getElementById('subfilterWrapper');
   if(subBar){
-    const subs = (currentCatFilter !== 'all') ? getExistingSubgroups(currentCatFilter) : [];
+    const subs = getExistingSubgroups(currentCatFilter);
     if(subs.length > 0){
-      const info = CAT_INFO[currentCatFilter] || { shortName: currentCatFilter };
+      const catShort = getCategoryShortName(currentCatFilter);
       const isAllSubActive = (!currentSubgroupFilter || currentSubgroupFilter === 'all');
+      const allBtnLabel = (currentCatFilter === 'all')
+        ? (t('catAll') === 'ALL' ? '🌟 All Services' : (currentSelectedCountry === 'MY' ? '🌟 Semua Perkhidmatan' : '🌟 Semua Layanan'))
+        : t('subAllBtn', { game: catShort });
       
       let chipsHtml = `
-        <button type="button" class="sub-chip ${isAllSubActive ? 'active' : ''}" onclick="selectSubgroupFilter('all')">
-          🌟 Semua ${escapeHtml(info.shortName)}
+        <button type="button" class="sub-chip ${isAllSubActive ? 'active' : ''}" onclick="selectSubgroupFilter('all', this)">
+          ${escapeHtml(allBtnLabel)}
         </button>
       `;
       
       subs.forEach(s => {
         const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
-        const sDisc = getDiscount(currentCatFilter, s);
+        const sDisc = (currentCatFilter === 'all') ? 0 : getDiscount(currentCatFilter, s);
         const locName = localizeSubgroupName(s);
         const discBadge = sDisc > 0 ? `<span class="sub-chip-disc">🔥 -${sDisc}%</span>` : '';
+        const icon = getSubgroupIcon(s);
         chipsHtml += `
-          <button type="button" class="sub-chip ${isActive ? 'active' : ''} ${sDisc > 0 ? 'has-discount' : ''}" onclick="selectSubgroupFilter('${s.replace(/'/g, "\\'")}')">
-            ${escapeHtml(locName)} ${discBadge}
+          <button type="button" class="sub-chip ${isActive ? 'active' : ''} ${sDisc > 0 ? 'has-discount' : ''}" onclick="selectSubgroupFilter('${s.replace(/'/g, "\\'")}', this)">
+            ${icon} ${escapeHtml(locName)} ${discBadge}
           </button>
         `;
       });
       
-      chipsHtml += `
-        <button type="button" class="sub-chip sub-chip-more" onclick="openSubgroupPopup('${currentCatFilter}')" title="Buka menu lengkap sub-kategori">
-          📑 Menu Lengkap ▾
-        </button>
-      `;
+      if(currentCatFilter !== 'all'){
+        chipsHtml += `
+          <button type="button" class="sub-chip sub-chip-more" onclick="openSubgroupPopup('${currentCatFilter}')" title="${t('subMoreBtn')}">
+            ${t('subMoreBtn')}
+          </button>
+        `;
+      }
 
+      if(subWrap) subWrap.style.display = 'block';
       subBar.style.display = 'flex';
       subBar.innerHTML = chipsHtml;
+      enableHorizontalDragScroll(subBar, updateSubBarScrollButtons);
+      setTimeout(updateSubBarScrollButtons, 50);
     } else {
+      if(subWrap) subWrap.style.display = 'none';
       subBar.style.display = 'none';
       subBar.innerHTML = '';
     }
@@ -8505,7 +8777,20 @@ function renderProducts(filter, subFilter){
   updateCategoryChipsUI();
 
   if(filtered.length === 0){
-    grid.innerHTML = `<div class="search-empty"><span>🔍</span><p>Tidak ada layanan yang cocok${query ? ' dengan "' + query + '"' : ''}.</p></div>`;
+    const emptyMsg = (currentSelectedCountry === 'SG')
+      ? (query ? `No services found matching "${escapeHtml(query)}"` : 'No services found in this category.')
+      : ((currentSelectedCountry === 'MY')
+        ? (query ? `Tiada perkhidmatan yang sepadan dengan "${escapeHtml(query)}"` : 'Tiada perkhidmatan dalam kategori ini.')
+        : (query ? `Tidak ada layanan yang cocok dengan "${escapeHtml(query)}"` : 'Tidak ada layanan pada kategori ini.'));
+    grid.innerHTML = `
+      <div class="search-empty" style="grid-column:1/-1;text-align:center;padding:36px 16px">
+        <span style="font-size:36px;display:block;margin-bottom:8px">🔍</span>
+        <p style="font-size:13px;color:#64748b;margin-bottom:12px">${emptyMsg}</p>
+        <button type="button" class="sub-chip active" onclick="selectSubgroupFilter('all')" style="margin:0 auto">
+          ${t('catAll') === 'ALL' ? 'View All Services' : (currentSelectedCountry === 'MY' ? 'Papar Semua Perkhidmatan' : 'Tampilkan Semua Layanan')}
+        </button>
+      </div>
+    `;
     return;
   }
 
@@ -8521,12 +8806,13 @@ function renderProducts(filter, subFilter){
       groups[groupIndex[key]].items.push(p);
     });
     grid.innerHTML = groups.map(g => {
+      const locSubName = localizeSubgroupName(g.name);
       const gDisc = getDiscount(currentCatFilter, g.name === 'Lainnya' ? '__none__' : g.name);
       const maxItemDisc = Math.max(gDisc, ...g.items.map(item => getDiscount(item) || 0));
-      const discTag = maxItemDisc > 0 ? `<span class="subgroup-disc-badge">🔥 DISKON ${maxItemDisc}%</span>` : '';
+      const discTag = maxItemDisc > 0 ? `<span class="subgroup-disc-badge">${t('subDiscBadge', {n: maxItemDisc})}</span>` : '';
       return `
         <div class="subgroup-heading">
-          <span>${escapeHtml(g.name)}</span>
+          <span>${escapeHtml(locSubName)}</span>
           ${discTag}
         </div>
         ${g.items.map(p => renderProductCard(p, getDiscount(p), cardIdx++)).join('')}
