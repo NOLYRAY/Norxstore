@@ -2445,7 +2445,7 @@ function mergeProductsData(parsed){
   parsed.forEach(p => {
     if(!p || typeof p !== 'object' || p.id === undefined) return;
     const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
-    let pImgs = (Array.isArray(p.images) && p.images.length > 0) ? p.images : (dp && dp.images ? dp.images : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : []));
+    let pImgs = Array.isArray(p.images) ? p.images : (dp && Array.isArray(dp.images) ? dp.images : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : []));
     merged.push(dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs});
     seenIds.add(p.id);
   });
@@ -4787,55 +4787,120 @@ function purgeReviewPhotosFromProducts(){
 function getImagesForProduct(id){
   const numId = typeof id === 'number' ? id : parseInt(id);
   const all = getProductImages();
-  let list = (all && (all[id] || (numId && all[numId]))) || null;
-  if(!Array.isArray(list) || list.length === 0){
-    const prod = products.find(p => p.id === id || (numId && p.id === numId));
-    if(prod && Array.isArray(prod.images) && prod.images.length > 0){
-      list = [...prod.images];
-      if(all){ all[id] = [...list]; if(numId) all[numId] = [...list]; }
-    } else if(typeof DEFAULT_PRODUCT_IMAGES === 'object' && (DEFAULT_PRODUCT_IMAGES[id] || (numId && DEFAULT_PRODUCT_IMAGES[numId]))){
-      list = [...(DEFAULT_PRODUCT_IMAGES[id] || DEFAULT_PRODUCT_IMAGES[numId])];
-      if(all){ all[id] = [...list]; if(numId) all[numId] = [...list]; }
+
+  // 1. Jika di all[id] sudah tersimpan array (termasuk jika sengaja dikosongkan/dihapus: []), hormati pilihan user!
+  if(all){
+    if(all[id] !== undefined && Array.isArray(all[id])){
+      return all[id].filter(Boolean);
+    }
+    if(numId && all[numId] !== undefined && Array.isArray(all[numId])){
+      return all[numId].filter(Boolean);
     }
   }
-  if(!Array.isArray(list) || list.length === 0) return [];
-  return list.filter(Boolean);
+
+  // 2. Jika di objek produk tersimpan array images eksplisit, hormati!
+  const prod = products.find(p => p.id === id || (numId && p.id === numId));
+  if(prod && prod.images !== undefined && Array.isArray(prod.images)){
+    if(all){ all[id] = [...prod.images]; if(numId) all[numId] = [...prod.images]; }
+    return prod.images.filter(Boolean);
+  }
+
+  // 3. Fallback HANYA jika produk belum pernah dikonfigurasi sama sekali (undefined di all dan prod.images)
+  if(typeof DEFAULT_PRODUCT_IMAGES === 'object'){
+    const def = DEFAULT_PRODUCT_IMAGES[id] || (numId && DEFAULT_PRODUCT_IMAGES[numId]);
+    if(def && Array.isArray(def) && def.length > 0){
+      return [...def];
+    }
+  }
+  return [];
 }
 
 function addImageToProduct(id, url){
   if(!url || !id) return;
-  const all = getProductImages();
-  if(!all[id]){
+  const numId = typeof id === 'number' ? id : parseInt(id);
+  const all = getProductImages() || {};
+  let cur = (all[id] !== undefined ? all[id] : (numId && all[numId] !== undefined ? all[numId] : null));
+  if(!Array.isArray(cur)){
     const currentImgs = getImagesForProduct(id);
-    all[id] = currentImgs.length > 0 ? [...currentImgs] : [];
+    cur = currentImgs.length > 0 ? [...currentImgs] : [];
   }
-  if(!all[id].includes(url)) all[id].push(url);
+  if(!cur.includes(url)) cur.push(url);
+  all[id] = [...cur];
+  if(numId) all[numId] = [...cur];
   setProductImages(all);
 
-  // Simpan juga langsung di object product untuk keamanan data berlapis ganda
-  const prod = products.find(p => p.id === id);
+  const prod = products.find(p => p.id === id || (numId && p.id === numId));
   if(prod){
-    prod.images = [...all[id]];
+    prod.images = [...cur];
+    setProducts(products);
+  }
+}
+
+function replaceImageInProduct(id, idx, url){
+  if(!url || !id) return;
+  const numId = typeof id === 'number' ? id : parseInt(id);
+  const all = getProductImages() || {};
+  let cur = (all[id] !== undefined ? all[id] : (numId && all[numId] !== undefined ? all[numId] : null));
+  if(!Array.isArray(cur)){
+    const currentImgs = getImagesForProduct(id);
+    cur = currentImgs.length > 0 ? [...currentImgs] : [];
+  }
+  if(idx >= 0 && idx < cur.length){
+    cur[idx] = url;
+  } else {
+    cur.push(url);
+  }
+  all[id] = [...cur];
+  if(numId) all[numId] = [...cur];
+  setProductImages(all);
+
+  const prod = products.find(p => p.id === id || (numId && p.id === numId));
+  if(prod){
+    prod.images = [...cur];
     setProducts(products);
   }
 }
 
 function removeImageFromProduct(id, idx){
-  const all = getProductImages();
-  if(!all[id]){
+  const numId = typeof id === 'number' ? id : parseInt(id);
+  const all = getProductImages() || {};
+  let cur = (all[id] !== undefined ? all[id] : (numId && all[numId] !== undefined ? all[numId] : null));
+  if(!Array.isArray(cur)){
     const currentImgs = getImagesForProduct(id);
-    all[id] = currentImgs.length > 0 ? [...currentImgs] : [];
+    cur = currentImgs.length > 0 ? [...currentImgs] : [];
   }
-  if(all[id]){
-    all[id].splice(idx, 1);
+  if(Array.isArray(cur)){
+    cur.splice(idx, 1);
+  } else {
+    cur = [];
   }
+  all[id] = [...cur];
+  if(numId) all[numId] = [...cur];
   setProductImages(all);
 
-  const prod = products.find(p => p.id === id);
+  const prod = products.find(p => p.id === id || (numId && p.id === numId));
   if(prod){
-    prod.images = (all[id] && all[id].length > 0) ? [...all[id]] : [];
+    prod.images = [...cur];
     setProducts(products);
   }
+}
+
+function resetProductImageToDefault(id){
+  const numId = typeof id === 'number' ? id : parseInt(id);
+  const def = (DEFAULT_PRODUCT_IMAGES[id] || (numId && DEFAULT_PRODUCT_IMAGES[numId])) || [];
+  const all = getProductImages() || {};
+  all[id] = [...def];
+  if(numId) all[numId] = [...def];
+  setProductImages(all);
+  const prod = products.find(p => p.id === id || (numId && p.id === numId));
+  if(prod){
+    prod.images = [...def];
+    setProducts(products);
+  }
+  renderAdminImgList();
+  renderFormProductImagesUI();
+  renderProducts();
+  showToast('🔄 Foto produk dipulihkan ke bawaan!');
 }
 
 function setReviewPhotos(arr){
@@ -5122,11 +5187,9 @@ fbDB.ref('norxstore/currencyConfig').on('value', snap=>{
 fbDB.ref('norxstore/images').on('value', snap=>{
   const val = snap.val();
   if(val && typeof val === 'object' && Object.keys(val).length > 0){
-    // Merge remote images without dropping user local images or defaults
     for(const k in val){
-      if(Array.isArray(val[k]) && val[k].length > 0){
-        const localList = Array.isArray(productImagesCache[k]) ? productImagesCache[k] : [];
-        productImagesCache[k] = Array.from(new Set([...localList, ...val[k]]));
+      if(Array.isArray(val[k])){
+        productImagesCache[k] = [...val[k]];
       }
     }
   } else {
@@ -7903,23 +7966,42 @@ function onImageProductChange(){
   if(sec) sec.style.display = 'block';
   renderAdminImgList();
 }
+let replacingImageContext = null;
+
+function triggerReplaceProductImage(id, idx){
+  replacingImageContext = { id, idx };
+  const fi = document.getElementById('imgFileInput');
+  if(fi) fi.click();
+}
+
 function renderAdminImgList(){
   const id = parseInt(document.getElementById('imgProductSelect').value);
   const list = document.getElementById('adminImgList');
   if(!list) return;
   const imgs = getImagesForProduct(id);
   if(!imgs || imgs.length === 0){
-    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada foto untuk produk ini. Upload sekarang!</p>';
+    list.innerHTML = `
+      <div style="text-align:center;padding:14px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:10px">
+        <p style="font-size:12px;font-weight:600;color:#64748b;margin:0 0 6px">Belum ada foto untuk produk ini.</p>
+        <p style="font-size:11px;color:#94a3b8;margin:0 0 8px">Upload foto baru di atas atau gunakan foto bawaan.</p>
+        <button type="button" class="admin-btn-sm" style="background:#475569;color:#fff;font-size:11px;padding:6px 12px" onclick="resetProductImageToDefault(${id})">🔄 Gunakan Foto Bawaan</button>
+      </div>
+    `;
     return;
   }
   list.innerHTML = imgs.map((url, idx) => `
-    <div class="admin-img-item" style="flex-wrap:wrap;gap:6px">
-      <img src="${url}" alt="">
-      <span style="flex:1;min-width:90px">Foto ${idx+1}</span>
-      <button type="button" class="admin-btn-sm" style="background:#7c3aed;color:#fff;font-size:11px" onclick="moveProductImgToReviews(${id},${idx})" title="Pindahkan foto ini ke Galeri Testimoni Pelanggan">⭐ Pindah ke Testi</button>
-      <button type="button" class="admin-btn-sm" onclick="deleteProductImage(${id},${idx})">🗑</button>
+    <div class="admin-img-item" style="flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:6px">
+      <img src="${url}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:zoom-in" onclick="openImageViewer('${url}')" title="Klik untuk lihat penuh">
+      <span style="flex:1;min-width:70px;font-weight:700;font-size:12px;color:#1e293b">Foto ${idx+1}</span>
+      <button type="button" class="admin-btn-sm" style="background:#0284c7;color:#fff;font-size:11px;padding:6px 10px;font-weight:600" onclick="triggerReplaceProductImage(${id},${idx})" title="Ganti foto ini dengan foto lain">🔄 Ubah</button>
+      <button type="button" class="admin-btn-sm" style="background:#7c3aed;color:#fff;font-size:11px;padding:6px 10px;font-weight:600" onclick="moveProductImgToReviews(${id},${idx})" title="Pindahkan foto ini ke Galeri Testimoni Pelanggan">⭐ Testi</button>
+      <button type="button" class="admin-btn-sm" style="background:#ef4444;color:#fff;font-size:11px;padding:6px 10px;font-weight:700" onclick="deleteProductImage(${id},${idx})" title="Hapus foto ini">🗑 Hapus</button>
     </div>
-  `).join('');
+  `).join('') + `
+    <div style="margin-top:6px;text-align:right">
+      <button type="button" class="admin-btn-sm" style="background:#64748b;color:#fff;font-size:10.5px;padding:5px 10px" onclick="resetProductImageToDefault(${id})">🔄 Reset ke Foto Bawaan</button>
+    </div>
+  `;
 }
 function moveProductImgToReviews(productId, imgIndex){
   const all = getProductImages();
@@ -8074,12 +8156,18 @@ function handleImageUpload(event){
       ctx.drawImage(img, 0, 0, w, h);
       const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
       try {
-        addImageToProduct(id, dataUrl);
+        if(replacingImageContext && (replacingImageContext.id === id || replacingImageContext.id === parseInt(id))){
+          replaceImageInProduct(id, replacingImageContext.idx, dataUrl);
+          replacingImageContext = null;
+          showToast('✅ Foto berhasil diubah!');
+        } else {
+          addImageToProduct(id, dataUrl);
+          showToast('✅ Foto produk berhasil disimpan!');
+        }
         renderAdminImgList();
         renderFormProductImagesUI();
         products = getProducts();
         renderProducts();
-        showToast('✅ Foto produk berhasil disimpan!');
       } catch(err) {
         showToast('Storage penuh! Hapus gambar lama dulu.');
         console.error(err);
@@ -8097,13 +8185,12 @@ function handleImageUpload(event){
   reader.readAsDataURL(file);
 }
 function deleteProductImage(id, idx){
-  if(!confirm('Hapus gambar ini?')) return;
   removeImageFromProduct(id, idx);
   renderAdminImgList();
   renderFormProductImagesUI();
   products = getProducts();
   renderProducts();
-  showToast('Gambar dihapus');
+  showToast('🗑 Foto produk berhasil dihapus!');
 }
 
 function renderAdminReviewList(){
