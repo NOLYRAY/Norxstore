@@ -2221,44 +2221,91 @@ button{cursor:pointer;font-family:inherit}
 
 <script>
 
+const DEFAULT_PRODUCT_IMAGES = {
+  1: ['/prod_1.jpg'],
+  2: ['/prod_2.jpg'],
+  3: ['/prod_3.jpg'],
+  4: ['/prod_4.jpg'],
+  5: ['/prod_5.jpg'],
+  6: ['/prod_6.jpg'],
+  7: ['/prod_7.jpg'],
+  8: ['/prod_8.jpg'],
+  9: ['/prod_9.jpg'],
+  10: ['/prod_10.jpg'],
+  11: ['/prod_11.jpg'],
+  12: ['/prod_12.jpg'],
+  13: ['/prod_13.jpg'],
+  14: ['/prod_14.jpg'],
+  15: ['/prod_15.jpg'],
+  16: ['/prod_16.jpg'],
+  17: ['/prod_17.jpg'],
+  18: ['/prod_18.jpg'],
+  19: ['/prod_19.jpg'],
+  20: ['/prod_20.jpg'],
+  21: ['/prod_21.jpg'],
+  22: ['/prod_22.jpg'],
+  23: ['/prod_23.jpg'],
+  24: ['/prod_24.jpg'],
+  25: ['/prod_25.jpg'],
+  26: ['/prod_26.jpg'],
+  27: ['/prod_27.jpg'],
+  28: ['/prod_28.jpg'],
+  29: ['/prod_29.jpg'],
+  30: ['/prod_30.jpg'],
+  31: ['/prod_31.jpg'],
+  32: ['/prod_32.jpg'],
+  33: ['/prod_33.jpg'],
+  34: ['/prod_34.jpg'],
+  35: ['/prod_35.jpg'],
+  39: ['/prod_39.jpg'],
+  40: ['/prod_40.jpg'],
+  41: ['/prod_41.jpg'],
+  42: ['/prod_42.jpg'],
+  43: ['/prod_43.jpg'],
+  44: ['/prod_44.jpg'],
+  63: ['/prod_63.jpg'],
+  64: ['/prod_64.jpg'],
+  66: ['/prod_66.jpg']
+};
+
 const DEFAULT_PRODUCTS = [
   // GENSHIN IMPACT
-  {id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID resmi & instan',cat:'genshin',subgroup:'Top-Up'},
-  {id:2,name:'Blessing Welkin Moon (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'Bonus 300 Genesis + 90 Daily Primogem',cat:'genshin',subgroup:'Top-Up'},
-  {id:3,name:'Joki Spiral Abyss Floor 9-12',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star 36★ Abyss dijamin aman',cat:'genshin',subgroup:'Spiral Abyss'},
-  {id:10,name:'Farming Oculus (All Region)',price:25000,badge:'HEMAT',icon:'✨',desc:'Anemo / Geo / Electro / Dendro / Hydro / Pyro Oculus',cat:'genshin',subgroup:'Eksplorasi'},
-  {id:11,name:'Joki Eksplorasi 100% Map',price:45000,badge:'PRO',icon:'🗺️',desc:'Full chest, teleport waypoint, & statue max level',cat:'genshin',subgroup:'Eksplorasi'},
-  {id:12,name:'Joki Archon Quest / Story Quest',price:30000,badge:'',icon:'📜',desc:'Selesai babak cerita utama tanpa skip dialog',cat:'genshin',subgroup:'Quest & Misi'},
-  {id:13,name:'Rawat Akun Harian & Resin (7 Hari)',price:20000,badge:'POPULER',icon:'☕',desc:'Daily commission harian + habisin resin & artifact',cat:'genshin',subgroup:'Rawat Akun'},
-  {id:14,name:'Farming Material Karakter & Boss',price:20000,badge:'',icon:'🛡️',desc:'Material ascension karakter level 1 sampai 90',cat:'genshin',subgroup:'Farming Material'},
+  {id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID resmi & instan',cat:'genshin',subgroup:'Top-Up',images:['/prod_1.jpg']},
+  {id:2,name:'Blessing Welkin Moon (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'Bonus 300 Genesis + 90 Daily Primogem',cat:'genshin',subgroup:'Top-Up',images:['/prod_2.jpg']},
+  {id:3,name:'Joki Spiral Abyss Floor 9-12',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star 36★ Abyss dijamin aman',cat:'genshin',subgroup:'Spiral Abyss',images:['/prod_3.jpg']},
+  {id:10,name:'Farming Oculus (All Region)',price:25000,badge:'HEMAT',icon:'✨',desc:'Anemo / Geo / Electro / Dendro / Hydro / Pyro Oculus',cat:'genshin',subgroup:'Eksplorasi',images:['/prod_10.jpg']},
+  {id:11,name:'Joki Eksplorasi 100% Map',price:45000,badge:'PRO',icon:'🗺️',desc:'Full chest, teleport waypoint, & statue max level',cat:'genshin',subgroup:'Eksplorasi',images:['/prod_11.jpg']},
+  {id:12,name:'Joki Archon Quest / Story Quest',price:30000,badge:'',icon:'📜',desc:'Selesai babak cerita utama tanpa skip dialog',cat:'genshin',subgroup:'Quest & Misi',images:['/prod_12.jpg']},
+  {id:13,name:'Rawat Akun Harian & Resin (7 Hari)',price:20000,badge:'POPULER',icon:'☕',desc:'Daily commission harian + habisin resin & artifact',cat:'genshin',subgroup:'Rawat Akun',images:['/prod_13.jpg']},
+  {id:14,name:'Farming Material Karakter & Boss',price:20000,badge:'',icon:'🛡️',desc:'Material ascension karakter level 1 sampai 90',cat:'genshin',subgroup:'Farming Material',images:['/prod_14.jpg']},
 
   // HONKAI: STAR RAIL
-  {id:4,name:'Joki MoC Full Star (Memory of Chaos)',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos 36★ jaminan bintang penuh',cat:'hsr',subgroup:'Memory of Chaos'},
-  {id:5,name:'Joki Pure Fiction & Apocalyptic Shadow',price:25000,badge:'',icon:'🔥',desc:'Full star Pure Fiction stage 1-4',cat:'hsr',subgroup:'Pure Fiction'},
-  {id:15,name:'Express Supply Pass (30 Hari)',price:15000,badge:'BEST',icon:'🚂',desc:'300 Oneiric Shard + 90 Stellar Jade harian',cat:'hsr',subgroup:'Top-Up'},
-  {id:16,name:'Rawat Akun HSR & Trailblaze Power (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Misi harian + habisin stamina Trailblaze Power',cat:'hsr',subgroup:'Rawat Akun'},
-  {id:17,name:'Joki Trailblaze Mission Penacony',price:35000,badge:'PRO',icon:'📜',desc:'Progress cerita utama Penacony & side quest',cat:'hsr',subgroup:'Quest & Misi'},
-  {id:18,name:'Farming Relic & Calyx Material',price:25000,badge:'',icon:'💎',desc:'Calyx bud, trace material, & planar ornament',cat:'hsr',subgroup:'Farming Material'},
+  {id:4,name:'Joki MoC Full Star (Memory of Chaos)',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos 36★ jaminan bintang penuh',cat:'hsr',subgroup:'Memory of Chaos',images:['/prod_4.jpg']},
+  {id:5,name:'Joki Pure Fiction & Apocalyptic Shadow',price:25000,badge:'',icon:'🔥',desc:'Full star Pure Fiction stage 1-4',cat:'hsr',subgroup:'Pure Fiction',images:['/prod_5.jpg']},
+  {id:15,name:'Express Supply Pass (30 Hari)',price:15000,badge:'BEST',icon:'🚂',desc:'300 Oneiric Shard + 90 Stellar Jade harian',cat:'hsr',subgroup:'Top-Up',images:['/prod_15.jpg']},
+  {id:16,name:'Rawat Akun HSR & Trailblaze Power (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Misi harian + habisin stamina Trailblaze Power',cat:'hsr',subgroup:'Rawat Akun',images:['/prod_16.jpg']},
+  {id:17,name:'Joki Trailblaze Mission Penacony',price:35000,badge:'PRO',icon:'📜',desc:'Progress cerita utama Penacony & side quest',cat:'hsr',subgroup:'Quest & Misi',images:['/prod_17.jpg']},
+  {id:18,name:'Farming Relic & Calyx Material',price:25000,badge:'',icon:'💎',desc:'Calyx bud, trace material, & planar ornament',cat:'hsr',subgroup:'Farming Material',images:['/prod_18.jpg']},
 
   // WUTHERING WAVES
-  {id:6,name:'Joki Tower of Adversity Full Star',price:40000,badge:'PRO',icon:'🌊',desc:'Hazard Zone full dorong 30 Crest',cat:'wuwa',subgroup:'Tower of Adversity'},
-  {id:7,name:'Joki Weekly Boss & Echo Calamity',price:20000,badge:'',icon:'👹',desc:'All weekly boss drop & Bell-Borne farming',cat:'wuwa',subgroup:'Farming Material'},
-  {id:19,name:'Lunite Subscription (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'300 Lunite + 90 Astrite harian',cat:'wuwa',subgroup:'Top-Up'},
-  {id:20,name:'Joki Eksplorasi Map & Sonance Casket 100%',price:45000,badge:'POPULER',icon:'🗺️',desc:'100% map exploration Jinzhou & Huanglong',cat:'wuwa',subgroup:'Eksplorasi'},
-  {id:21,name:'Rawat Akun WuWa & Waveplate (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Activity harian + habiskan Waveplate optimal',cat:'wuwa',subgroup:'Rawat Akun'},
-  {id:22,name:'Joki Main Quest Huanglong',price:30000,badge:'',icon:'📜',desc:'Cerita utama Rover & Companion Quest',cat:'wuwa',subgroup:'Quest & Misi'},
+  {id:6,name:'Joki Tower of Adversity Full Star',price:40000,badge:'PRO',icon:'🌊',desc:'Hazard Zone full dorong 30 Crest',cat:'wuwa',subgroup:'Tower of Adversity',images:['/prod_6.jpg']},
+  {id:7,name:'Joki Weekly Boss & Echo Calamity',price:20000,badge:'',icon:'👹',desc:'All weekly boss drop & Bell-Borne farming',cat:'wuwa',subgroup:'Farming Material',images:['/prod_7.jpg']},
+  {id:19,name:'Lunite Subscription (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'300 Lunite + 90 Astrite harian',cat:'wuwa',subgroup:'Top-Up',images:['/prod_19.jpg']},
+  {id:20,name:'Joki Eksplorasi Map & Sonance Casket 100%',price:45000,badge:'POPULER',icon:'🗺️',desc:'100% map exploration Jinzhou & Huanglong',cat:'wuwa',subgroup:'Eksplorasi',images:['/prod_20.jpg']},
+  {id:21,name:'Rawat Akun WuWa & Waveplate (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Activity harian + habiskan Waveplate optimal',cat:'wuwa',subgroup:'Rawat Akun',images:['/prod_21.jpg']},
+  {id:22,name:'Joki Main Quest Huanglong',price:30000,badge:'',icon:'📜',desc:'Cerita utama Rover & Companion Quest',cat:'wuwa',subgroup:'Quest & Misi',images:['/prod_22.jpg']},
 
   // NEVERNESS TO EVERNESS
-  {id:8,name:'Joki NTE Main Story Progression',price:25000,badge:'NEW',icon:'🔮',desc:'Story chapter progression & unlock city map',cat:'nte',subgroup:'Quest & Misi'},
-  {id:9,name:'Joki Anomaly Combat & Resource Farming',price:30000,badge:'',icon:'✨',desc:'Anomaly suppression & urban materials',cat:'nte',subgroup:'Farming Material'},
-  {id:23,name:'Rawat Akun NTE Harian & Stamina (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Daily routine, store maintenance, stamina clear',cat:'nte',subgroup:'Rawat Akun'},
-  {id:24,name:'Top-Up NTE Monthly Pass',price:25000,badge:'BEST',icon:'💎',desc:'Monthly pass & exclusive in-game currency',cat:'nte',subgroup:'Top-Up'},
+  {id:8,name:'Joki NTE Main Story Progression',price:25000,badge:'NEW',icon:'🔮',desc:'Story chapter progression & unlock city map',cat:'nte',subgroup:'Quest & Misi',images:['/prod_8.jpg']},
+  {id:9,name:'Joki Anomaly Combat & Resource Farming',price:30000,badge:'',icon:'✨',desc:'Anomaly suppression & urban materials',cat:'nte',subgroup:'Farming Material',images:['/prod_9.jpg']},
+  {id:23,name:'Rawat Akun NTE Harian & Stamina (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Daily routine, store maintenance, stamina clear',cat:'nte',subgroup:'Rawat Akun',images:['/prod_23.jpg']},
+  {id:24,name:'Top-Up NTE Monthly Pass',price:25000,badge:'BEST',icon:'💎',desc:'Monthly pass & exclusive in-game currency',cat:'nte',subgroup:'Top-Up',images:['/prod_24.jpg']},
 
   // JUAL AKUN (LAINNYA)
-  {id:25,name:'Akun Starter Genshin / HSR / WuWa',price:35000,badge:'HOT',icon:'🔑',desc:'Akun fresh AR rendah siap gacha hero idaman',cat:'lainnya',subgroup:'Akun Starter',isAccount:true},
-  {id:26,name:'Akun Mid-End B5 Signature Weapon',price:120000,badge:'BEST',icon:'🌟',desc:'Build rapi siap spiral abyss / MoC / Tower',cat:'lainnya',subgroup:'Akun Mid-End',isAccount:true},
-  {id:27,name:'Akun Endgame / Whale C6 Sultan Terawat',price:350000,badge:'VIP',icon:'👑',desc:'Full B5 constellation tinggi, artifact god tier',cat:'lainnya',subgroup:'Akun Endgame',isAccount:true},
-  {id:28,name:'Akun Reroll Banyak Wish & Gacha Pull',price:20000,badge:'HEMAT',icon:'🎁',desc:'Resource melimpah tinggal gacha karakter favorit',cat:'lainnya',subgroup:'Akun Starter',isAccount:true}
+  {id:25,name:'Akun Starter Genshin / HSR / WuWa',price:35000,badge:'HOT',icon:'🔑',desc:'Akun fresh AR rendah siap gacha hero idaman',cat:'lainnya',subgroup:'Akun Starter',isAccount:true,images:['/prod_25.jpg']},
+  {id:26,name:'Akun Mid-End B5 Signature Weapon',price:120000,badge:'BEST',icon:'🌟',desc:'Build rapi siap spiral abyss / MoC / Tower',cat:'lainnya',subgroup:'Akun Mid-End',isAccount:true,images:['/prod_26.jpg']},
+  {id:27,name:'Akun Endgame / Whale C6 Sultan Terawat',price:350000,badge:'VIP',icon:'👑',desc:'Full B5 constellation tinggi, artifact god tier',cat:'lainnya',subgroup:'Akun Endgame',isAccount:true,images:['/prod_27.jpg']},
+  {id:28,name:'Akun Reroll Banyak Wish & Gacha Pull',price:20000,badge:'HEMAT',icon:'🎁',desc:'Resource melimpah tinggal gacha karakter favorit',cat:'lainnya',subgroup:'Akun Starter',isAccount:true,images:['/prod_28.jpg']}
 ];
 
 const DEFAULT_CAROUSEL = [
@@ -2376,7 +2423,8 @@ function mergeProductsData(parsed){
   parsed.forEach(p => {
     if(!p || typeof p !== 'object' || p.id === undefined) return;
     const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
-    merged.push(dp ? {...dp, ...p} : {...p});
+    let pImgs = (Array.isArray(p.images) && p.images.length > 0) ? p.images : (dp && dp.images ? dp.images : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : []));
+    merged.push(dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs});
     seenIds.add(p.id);
   });
   DEFAULT_PRODUCTS.forEach(dp => {
@@ -4696,7 +4744,9 @@ function getProductImages(){
 function setProductImages(data){
   productImagesCache = data;
   saveImagesCache(data);
-  fbDB.ref('norxstore/images').set(data).catch(e=>{ console.warn('Sync notice: images saved to storage:', e); });
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/images').set(data).catch(e=>{ console.warn('Sync notice: images saved to storage:', e); });
+  }
 }
 
 function getReviewPhotos(){
@@ -4714,13 +4764,15 @@ function purgeReviewPhotosFromProducts(){
 
 function getImagesForProduct(id){
   const all = getProductImages();
-  let list = all[id];
+  let list = all ? all[id] : null;
   if(!Array.isArray(list) || list.length === 0){
     const prod = products.find(p => p.id === id);
     if(prod && Array.isArray(prod.images) && prod.images.length > 0){
       list = [...prod.images];
-      all[id] = [...list];
-      setProductImages(all);
+      if(all){ all[id] = [...list]; }
+    } else if(typeof DEFAULT_PRODUCT_IMAGES === 'object' && DEFAULT_PRODUCT_IMAGES[id]){
+      list = [...DEFAULT_PRODUCT_IMAGES[id]];
+      if(all){ all[id] = [...list]; }
     }
   }
   if(!Array.isArray(list) || list.length === 0) return [];
@@ -4730,7 +4782,10 @@ function getImagesForProduct(id){
 function addImageToProduct(id, url){
   if(!url || !id) return;
   const all = getProductImages();
-  if(!all[id]) all[id] = [];
+  if(!all[id]){
+    const currentImgs = getImagesForProduct(id);
+    all[id] = currentImgs.length > 0 ? [...currentImgs] : [];
+  }
   if(!all[id].includes(url)) all[id].push(url);
   setProductImages(all);
 
@@ -4744,9 +4799,12 @@ function addImageToProduct(id, url){
 
 function removeImageFromProduct(id, idx){
   const all = getProductImages();
+  if(!all[id]){
+    const currentImgs = getImagesForProduct(id);
+    all[id] = currentImgs.length > 0 ? [...currentImgs] : [];
+  }
   if(all[id]){
     all[id].splice(idx, 1);
-    if(all[id].length === 0) delete all[id];
   }
   setProductImages(all);
 
@@ -4852,14 +4910,26 @@ const NORX_SYSTEM_VER = '2026.10.08.v13';
 })();
 
 let productImagesCache = (function(){
+  const base = {};
+  if(typeof DEFAULT_PRODUCT_IMAGES === 'object'){
+    for(const k in DEFAULT_PRODUCT_IMAGES){
+      base[k] = [...DEFAULT_PRODUCT_IMAGES[k]];
+    }
+  }
   try {
     const raw = safeGetItem('norxstore_images_cache', null);
     if(raw){
       const parsed = JSON.parse(raw);
-      if(parsed && typeof parsed === 'object') return parsed;
+      if(parsed && typeof parsed === 'object'){
+        for(const k in parsed){
+          if(Array.isArray(parsed[k]) && parsed[k].length > 0){
+            base[k] = parsed[k];
+          }
+        }
+      }
     }
   }catch(e){}
-  return {};
+  return base;
 })();
 let reviewPhotosCache = (function(){
   try {
@@ -4885,7 +4955,7 @@ function isAdminOpen(){
 
 let splashHidden = false;
 let productsDataReady = Array.isArray(products) && products.length > 0;
-let imagesDataReady = Object.keys(productImagesCache).length > 0;
+let imagesDataReady = true;
 
 function preloadProductImages(){
   try {
@@ -4915,13 +4985,14 @@ preloadProductImages();
       req.onsuccess = () => {
         const idbData = req.result;
         if(idbData && typeof idbData === 'object' && Object.keys(idbData).length > 0){
-          const wasEmpty = Object.keys(productImagesCache).length === 0;
-          productImagesCache = Object.assign({}, idbData, productImagesCache);
+          for(const k in idbData){
+            if(Array.isArray(idbData[k]) && idbData[k].length > 0){
+              productImagesCache[k] = idbData[k];
+            }
+          }
           imagesDataReady = true;
           preloadProductImages();
-          if(wasEmpty){
-            renderProducts();
-          }
+          renderProducts();
         }
       };
     } catch(e){}
@@ -5028,12 +5099,17 @@ fbDB.ref('norxstore/currencyConfig').on('value', snap=>{
 fbDB.ref('norxstore/images').on('value', snap=>{
   const val = snap.val();
   if(val && typeof val === 'object' && Object.keys(val).length > 0){
-    // Merge remote images without dropping user local images
+    // Merge remote images without dropping user local images or defaults
     for(const k in val){
       if(Array.isArray(val[k]) && val[k].length > 0){
         const localList = Array.isArray(productImagesCache[k]) ? productImagesCache[k] : [];
         productImagesCache[k] = Array.from(new Set([...localList, ...val[k]]));
       }
+    }
+  } else {
+    // Jika di Firebase kosong/belum ada data, sinkronkan cache lokal/default ke Firebase agar server terisi
+    if(window.fbAvailable && fbDB && fbDB.ref && Object.keys(productImagesCache).length > 0){
+      fbDB.ref('norxstore/images').set(productImagesCache).catch(e=>{});
     }
   }
   imagesDataReady = true;
@@ -7712,9 +7788,17 @@ function openAdmin(){
   renderFormProductImagesUI();
 
   const sel = document.getElementById('imgProductSelect');
-  sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
-    products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
-  document.getElementById('imgAdminSection').style.display = 'none';
+  if(sel){
+    sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
+      products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
+    if(editingProductId !== null){
+      sel.value = editingProductId;
+      onImageProductChange();
+    } else {
+      const sec = document.getElementById('imgAdminSection');
+      if(sec) sec.style.display = 'none';
+    }
+  }
 
   updateOnlineCountersUI(currentOnlineCount);
   onAdminCountrySelectChange();

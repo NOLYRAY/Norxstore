@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "node server.js",
     "start": "node server.js",
-    "build": "mkdir -p public dist && cp index.html manifest.json sw.js notification.wav icon* apple-touch-icon.png public/ 2>/dev/null || true && cp index.html manifest.json sw.js notification.wav icon* apple-touch-icon.png dist/ 2>/dev/null || true",
+    "build": "mkdir -p public dist && cp -r index.html manifest.json sw.js notification.wav icon* apple-touch-icon.png prod_*.jpg rev_*.jpg *.jpg public/ 2>/dev/null || true && cp -r index.html manifest.json sw.js notification.wav icon* apple-touch-icon.png prod_*.jpg rev_*.jpg *.jpg dist/ 2>/dev/null || true",
     "lint": "node -c server.js"
   },
   "dependencies": {
