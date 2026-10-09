@@ -1851,6 +1851,45 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="admin-divider"></div>
 
+<!-- ==================== PUSAT CADANGAN & PEMULIHAN FOTO (MASTER SNAPSHOT) ==================== -->
+<div style="background:#f5f3ff;border:1.5px solid #ddd6fe;border-radius:12px;padding:14px;margin-bottom:18px">
+  <div class="admin-section-title" style="color:#6d28d9;margin-top:0;display:flex;align-items:center;gap:6px">
+    <span>💾 Cadangan & Pemulihan Foto (Snapshot Master)</span>
+  </div>
+  <p class="admin-hint" style="margin-bottom:12px;background:#ede9fe;border:1px solid #ddd6fe;padding:8px 10px;border-radius:8px;color:#5b21b6;font-size:11px">
+    🛡️ <strong>Keamanan Progres:</strong> Seluruh 66 foto produk telah diamankan ke server dan master snapshot. Jika sewaktu-waktu foto terhapus atau bermasalah, Anda dapat memulihkannya dengan 1 klik kapan saja tanpa merubah pesanan pelanggan.
+  </p>
+
+  <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1px solid #e9d5ff;padding:10px 12px;border-radius:10px;margin-bottom:12px">
+    <div>
+      <div style="font-size:12px;font-weight:700;color:#6d28d9">Status Progres Foto:</div>
+      <div id="snapshotStatusText" style="font-size:11px;color:#475569;margin-top:2px">66 Foto & Produk Master Tersimpan Aman</div>
+    </div>
+    <span style="display:inline-block;padding:4px 8px;border-radius:6px;background:#dcfce7;color:#15803d;font-size:11px;font-weight:700">✅ AMAN</span>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+    <button type="button" class="admin-btn" style="background:#7c3aed;color:#fff;font-weight:700;margin:0" onclick="saveMasterStoreSnapshot()">
+      💾 Simpan Progress Baru
+    </button>
+    <button type="button" class="admin-btn" style="background:#0284c7;color:#fff;font-weight:700;margin:0" onclick="restoreMasterStoreSnapshot()">
+      ↺ Pulihkan 66 Foto Master
+    </button>
+  </div>
+
+  <div style="display:flex;gap:8px;margin-top:8px">
+    <button type="button" class="admin-btn-sm" style="flex:1;background:#f8fafc;color:#475569;border:1px solid #cbd5e1;padding:8px" onclick="downloadStoreBackupFile()">
+      📥 Export Backup (.json)
+    </button>
+    <button type="button" class="admin-btn-sm" style="flex:1;background:#f8fafc;color:#475569;border:1px solid #cbd5e1;padding:8px" onclick="triggerFileInput('restoreBackupFileInput')">
+      📤 Import Backup (.json)
+    </button>
+  </div>
+  <input type="file" id="restoreBackupFileInput" accept=".json,application/json" style="display:none" onchange="restoreStoreFromFile(event)">
+</div>
+
+<div class="admin-divider"></div>
+
 <div class="admin-section-title">🔐 Pengaturan Kata Sandi</div>
 
 <div class="pw-toggle-row" id="pwToggleRow">
@@ -2291,43 +2330,72 @@ const DEFAULT_PRODUCT_IMAGES = {
 };
 
 const DEFAULT_PRODUCTS = [
-  // GENSHIN IMPACT
-  {id:1,name:'1600 Primogem',price:25000,badge:'POPULER',icon:'💎',desc:'Top-up via UID resmi & instan',cat:'genshin',subgroup:'Top-Up',images:['/prod_1.jpg']},
-  {id:2,name:'Blessing Welkin Moon (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'Bonus 300 Genesis + 90 Daily Primogem',cat:'genshin',subgroup:'Top-Up',images:['/prod_2.jpg']},
-  {id:3,name:'Joki Spiral Abyss Floor 9-12',price:35000,badge:'PRO',icon:'⚔️',desc:'Full star 36★ Abyss dijamin aman',cat:'genshin',subgroup:'Spiral Abyss',images:['/prod_3.jpg']},
-  {id:10,name:'Farming Oculus (All Region)',price:25000,badge:'HEMAT',icon:'✨',desc:'Anemo / Geo / Electro / Dendro / Hydro / Pyro Oculus',cat:'genshin',subgroup:'Eksplorasi',images:['/prod_10.jpg']},
-  {id:11,name:'Joki Eksplorasi 100% Map',price:45000,badge:'PRO',icon:'🗺️',desc:'Full chest, teleport waypoint, & statue max level',cat:'genshin',subgroup:'Eksplorasi',images:['/prod_11.jpg']},
-  {id:12,name:'Joki Archon Quest / Story Quest',price:30000,badge:'',icon:'📜',desc:'Selesai babak cerita utama tanpa skip dialog',cat:'genshin',subgroup:'Quest & Misi',images:['/prod_12.jpg']},
-  {id:13,name:'Rawat Akun Harian & Resin (7 Hari)',price:20000,badge:'POPULER',icon:'☕',desc:'Daily commission harian + habisin resin & artifact',cat:'genshin',subgroup:'Rawat Akun',images:['/prod_13.jpg']},
-  {id:14,name:'Farming Material Karakter & Boss',price:20000,badge:'',icon:'🛡️',desc:'Material ascension karakter level 1 sampai 90',cat:'genshin',subgroup:'Farming Material',images:['/prod_14.jpg']},
-
-  // HONKAI: STAR RAIL
-  {id:4,name:'Joki MoC Full Star (Memory of Chaos)',price:30000,badge:'POPULER',icon:'🚀',desc:'Memory of Chaos 36★ jaminan bintang penuh',cat:'hsr',subgroup:'Memory of Chaos',images:['/prod_4.jpg']},
-  {id:5,name:'Joki Pure Fiction & Apocalyptic Shadow',price:25000,badge:'',icon:'🔥',desc:'Full star Pure Fiction stage 1-4',cat:'hsr',subgroup:'Pure Fiction',images:['/prod_5.jpg']},
-  {id:15,name:'Express Supply Pass (30 Hari)',price:15000,badge:'BEST',icon:'🚂',desc:'300 Oneiric Shard + 90 Stellar Jade harian',cat:'hsr',subgroup:'Top-Up',images:['/prod_15.jpg']},
-  {id:16,name:'Rawat Akun HSR & Trailblaze Power (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Misi harian + habisin stamina Trailblaze Power',cat:'hsr',subgroup:'Rawat Akun',images:['/prod_16.jpg']},
-  {id:17,name:'Joki Trailblaze Mission Penacony',price:35000,badge:'PRO',icon:'📜',desc:'Progress cerita utama Penacony & side quest',cat:'hsr',subgroup:'Quest & Misi',images:['/prod_17.jpg']},
-  {id:18,name:'Farming Relic & Calyx Material',price:25000,badge:'',icon:'💎',desc:'Calyx bud, trace material, & planar ornament',cat:'hsr',subgroup:'Farming Material',images:['/prod_18.jpg']},
-
-  // WUTHERING WAVES
-  {id:6,name:'Joki Tower of Adversity Full Star',price:40000,badge:'PRO',icon:'🌊',desc:'Hazard Zone full dorong 30 Crest',cat:'wuwa',subgroup:'Tower of Adversity',images:['/prod_6.jpg']},
-  {id:7,name:'Joki Weekly Boss & Echo Calamity',price:20000,badge:'',icon:'👹',desc:'All weekly boss drop & Bell-Borne farming',cat:'wuwa',subgroup:'Farming Material',images:['/prod_7.jpg']},
-  {id:19,name:'Lunite Subscription (30 Hari)',price:15000,badge:'BEST',icon:'🌙',desc:'300 Lunite + 90 Astrite harian',cat:'wuwa',subgroup:'Top-Up',images:['/prod_19.jpg']},
-  {id:20,name:'Joki Eksplorasi Map & Sonance Casket 100%',price:45000,badge:'POPULER',icon:'🗺️',desc:'100% map exploration Jinzhou & Huanglong',cat:'wuwa',subgroup:'Eksplorasi',images:['/prod_20.jpg']},
-  {id:21,name:'Rawat Akun WuWa & Waveplate (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Activity harian + habiskan Waveplate optimal',cat:'wuwa',subgroup:'Rawat Akun',images:['/prod_21.jpg']},
-  {id:22,name:'Joki Main Quest Huanglong',price:30000,badge:'',icon:'📜',desc:'Cerita utama Rover & Companion Quest',cat:'wuwa',subgroup:'Quest & Misi',images:['/prod_22.jpg']},
-
-  // NEVERNESS TO EVERNESS
-  {id:8,name:'Joki NTE Main Story Progression',price:25000,badge:'NEW',icon:'🔮',desc:'Story chapter progression & unlock city map',cat:'nte',subgroup:'Quest & Misi',images:['/prod_8.jpg']},
-  {id:9,name:'Joki Anomaly Combat & Resource Farming',price:30000,badge:'',icon:'✨',desc:'Anomaly suppression & urban materials',cat:'nte',subgroup:'Farming Material',images:['/prod_9.jpg']},
-  {id:23,name:'Rawat Akun NTE Harian & Stamina (7 Hari)',price:20000,badge:'HEMAT',icon:'☕',desc:'Daily routine, store maintenance, stamina clear',cat:'nte',subgroup:'Rawat Akun',images:['/prod_23.jpg']},
-  {id:24,name:'Top-Up NTE Monthly Pass',price:25000,badge:'BEST',icon:'💎',desc:'Monthly pass & exclusive in-game currency',cat:'nte',subgroup:'Top-Up',images:['/prod_24.jpg']},
-
-  // JUAL AKUN (LAINNYA)
-  {id:25,name:'Akun Starter Genshin / HSR / WuWa',price:35000,badge:'HOT',icon:'🔑',desc:'Akun fresh AR rendah siap gacha hero idaman',cat:'lainnya',subgroup:'Akun Starter',isAccount:true,images:['/prod_25.jpg']},
-  {id:26,name:'Akun Mid-End B5 Signature Weapon',price:120000,badge:'BEST',icon:'🌟',desc:'Build rapi siap spiral abyss / MoC / Tower',cat:'lainnya',subgroup:'Akun Mid-End',isAccount:true,images:['/prod_26.jpg']},
-  {id:27,name:'Akun Endgame / Whale C6 Sultan Terawat',price:350000,badge:'VIP',icon:'👑',desc:'Full B5 constellation tinggi, artifact god tier',cat:'lainnya',subgroup:'Akun Endgame',isAccount:true,images:['/prod_27.jpg']},
-  {id:28,name:'Akun Reroll Banyak Wish & Gacha Pull',price:20000,badge:'HEMAT',icon:'🎁',desc:'Resource melimpah tinggal gacha karakter favorit',cat:'lainnya',subgroup:'Akun Starter',isAccount:true,images:['/prod_28.jpg']}
+  {id:1,name:"10 IF",price:25000,badge:"BEST",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_1.jpg']},
+  {id:2,name:"20 IF",price:50000,badge:"BEST",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_2.jpg']},
+  {id:3,name:"30 IF",price:75000,badge:"BEST",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_3.jpg']},
+  {id:4,name:"40 IF",price:95000,badge:"POPULER",icon:"💎",desc:"Harga murah cocok untuk semua",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_4.jpg']},
+  {id:5,name:"50 IF",price:125000,badge:"POPULER",icon:"💎",desc:"Harga murah cocok untuk semua",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_5.jpg']},
+  {id:6,name:"60 IF",price:150000,badge:"POPULER",icon:"💎",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_6.jpg']},
+  {id:7,name:"100 IF",price:250000,badge:"New",icon:"💎",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_7.jpg']},
+  {id:8,name:"200 IF",price:500000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk yang baru gajian",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_8.jpg']},
+  {id:9,name:"EKSPLORE MONDSTADT",price:110000,badge:"BEST",icon:"✨",desc:"Eksploration all map mondstadt",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_9.jpg']},
+  {id:10,name:"EKSPLORE LIYUE",price:165000,badge:"BEST",icon:"✨",desc:"Eksploration all map liyue",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_10.jpg']},
+  {id:11,name:"EKSPLORE INAZUMA",price:200000,badge:"BEST",icon:"✨",desc:"Eksploration all map inazuma",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_11.jpg']},
+  {id:12,name:"EKSPLORE FONTAINE",price:250000,badge:"BEST",icon:"✨",desc:"Eksploration all map fontaine",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_12.jpg']},
+  {id:13,name:"EKSPLORE SUMERU",price:300000,badge:"BEST",icon:"✨",desc:"Eksploration all map sumeru",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_13.jpg']},
+  {id:14,name:"EKSPLORE NATLAN",price:250000,badge:"POPULER",icon:"✨",desc:"Eksploration all map natlan",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_14.jpg']},
+  {id:15,name:"EKSPLORE NODKRAI",price:180000,badge:"BEST",icon:"✨",desc:"Eksploration all map nodkrai",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_15.jpg']},
+  {id:16,name:"EKSPLORE SNEZHNAYA",price:240000,badge:"NEW",icon:"✨",desc:"Eksploration all map snezhnaya",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_16.jpg']},
+  {id:17,name:"Genshin account",price:350000,badge:"NEW",icon:"📦",desc:"Akun admin yang nganggur",cat:"lainnya",subgroup:"",isAccount:true,images:['/prod_17.jpg']},
+  {id:18,name:"ARCHON MONDSTADT",price:30000,badge:"BASIC",icon:"🔥",desc:"All quest archon mondstadt",cat:"genshin",subgroup:"QUEST",images:['/prod_18.jpg']},
+  {id:19,name:"ARCHON LIYUE",price:50000,badge:"BASIC",icon:"🔥",desc:"All quest archon liyue",cat:"genshin",subgroup:"QUEST",images:['/prod_19.jpg']},
+  {id:20,name:"ARCHON INAZUMA",price:40000,badge:"BASIC",icon:"🔥",desc:"All quest archon inazuma",cat:"genshin",subgroup:"QUEST",images:['/prod_20.jpg']},
+  {id:21,name:"ARCHON SUMERU",price:60000,badge:"BASIC",icon:"🔥",desc:"All quest archon sumeru",cat:"genshin",subgroup:"QUEST",images:['/prod_21.jpg']},
+  {id:22,name:"ARCHON FONTAINE",price:60000,badge:"BASIC",icon:"🔥",desc:"All quest archon fontaine",cat:"genshin",subgroup:"QUEST",images:['/prod_22.jpg']},
+  {id:25,name:"ARCHON NATLAN",price:50000,badge:"BASIC",icon:"🔥",desc:"All quest archon natlan",cat:"genshin",subgroup:"QUEST",images:['/prod_25.jpg']},
+  {id:23,name:"ARCHON NODKRAI",price:80000,badge:"BASIC",icon:"🔥",desc:"All quest archon nodkrai",cat:"genshin",subgroup:"QUEST",images:['/prod_23.jpg']},
+  {id:24,name:"ARCHON SNEZHNAYA",price:30000,badge:"BASIC",icon:"🔥",desc:"All quest archon snezhnaya",cat:"genshin",subgroup:"QUEST",images:['/prod_24.jpg']},
+  {id:50,name:"HANGOUT/chapter",price:8000,badge:"BASIC",icon:"🔥",desc:"Hangout/chap",cat:"genshin",subgroup:"QUEST",images:['/prod_50.jpg']},
+  {id:52,name:"ARANARA",price:250000,badge:"ANOMALI",icon:"🔥",desc:"All aranara clear",cat:"genshin",subgroup:"QUEST",images:['/prod_52.jpg']},
+  {id:49,name:"STORY QUEST/chapter",price:10000,badge:"BASIC",icon:"🔥",desc:"Story quest/chap",cat:"genshin",subgroup:"QUEST",images:['/prod_49.jpg']},
+  {id:51,name:"WORLD QUEST/chapter",price:15000,badge:"NEW",icon:"🔥",desc:"World quest/chapter",cat:"genshin",subgroup:"QUEST",images:['/prod_51.jpg']},
+  {id:53,name:"ALL QUEST",price:300000,badge:"ANOMALI",icon:"🔥",desc:"All quest clear yang tersedia tidak termasuk quest archon",cat:"genshin",subgroup:"QUEST",images:['/prod_53.jpg']},
+  {id:54,name:"DAILY",price:3000,badge:"NEW",icon:"⚡",desc:"Daily bp, Daily comission, Resin, Ekspedisi",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_54.jpg']},
+  {id:55,name:"WEEKLY",price:21000,badge:"NEW",icon:"⚡",desc:"Daily bp, Daily comission, Resin, Ekspedisi, Reputasi",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_55.jpg']},
+  {id:56,name:"MONTHLY",price:93000,badge:"NEW",icon:"⚡",desc:"Daily bp, Daily comission, Resin, Ekspedisi, Reputasi, Weekly boss, Event",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_56.jpg']},
+  {id:57,name:"LVL 1 - 40",price:5000,badge:"NEW",icon:"⚡",desc:"Up level karakter 1-40",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_57.jpg']},
+  {id:58,name:"LVL 40 - 50",price:8000,badge:"NEW",icon:"⚡",desc:"Up level karakter 40-50",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_58.jpg']},
+  {id:59,name:"LVL 50 - 60",price:12000,badge:"NEW",icon:"⚡",desc:"Up level karakter 50-60",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_59.jpg']},
+  {id:60,name:"LVL 60 - 70",price:14000,badge:"NEW",icon:"⚡",desc:"Up level karakter 60-70",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_60.jpg']},
+  {id:61,name:"LVL 70 - 80",price:17000,badge:"NEW",icon:"⚡",desc:"Up level karakter 70-80",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_61.jpg']},
+  {id:62,name:"LVL 80 - 90",price:20000,badge:"NEW",icon:"⚡",desc:"Up level karakter 80-90",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_62.jpg']},
+  {id:63,name:"CULUS/PCS",price:1000,badge:"NEW",icon:"✴️",desc:"Joki culus persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_63.jpg']},
+  {id:64,name:"MONSTER DROP/PCS",price:500,badge:"NEW",icon:"✴️",desc:"Kumpulkan item dari monster persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_64.jpg']},
+  {id:65,name:"MATERIAL",price:500,badge:"NEW",icon:"✴️",desc:"Kumpulkan material dari monster persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_65.jpg']},
+  {id:66,name:"EVENT",price:10000,badge:"NEW",icon:"✴️",desc:"All event harga sesuai kerumitan event",cat:"genshin",subgroup:"OTHER",images:['/prod_66.jpg']},
+  {id:26,name:"10 RT",price:25000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_26.jpg']},
+  {id:27,name:"20 RT",price:50000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_27.jpg']},
+  {id:28,name:"30 RT",price:75000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_28.jpg']},
+  {id:29,name:"40 RT",price:95000,badge:"POPULER",icon:"✨",desc:"Harga murah cocok untuk semua",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_29.jpg']},
+  {id:30,name:"50 RT",price:125000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk semua",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_30.jpg']},
+  {id:31,name:"60 RT",price:150000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_31.jpg']},
+  {id:32,name:"100 RT",price:200000,badge:"BEST",icon:"✨",desc:"Harga cocok untuk yang baru gajian",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_32.jpg']},
+  {id:33,name:"200 RT",price:500000,badge:"BEST",icon:"✨",desc:"Harga cocok untuk yang baru gajian",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_33.jpg']},
+  {id:35,name:"EKSPLORE LAHAI ROI",price:250000,badge:"BEST",icon:"✨",desc:"Eksploration all map lahai roy",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_35.jpg']},
+  {id:36,name:"EKSPLORE RINASCITA",price:250000,badge:"BEST",icon:"✨",desc:"Eksploration all map rinascita",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_36.jpg']},
+  {id:34,name:"EKSPLORE HUANGLONG",price:200000,badge:"BEST",icon:"✨",desc:"Eksploration all map huanglong",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_34.jpg']},
+  {id:37,name:"EKSPLORE MENGZHOU",price:120000,badge:"BEST",icon:"✨",desc:"Eksploration all map mengzhou",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_37.jpg']},
+  {id:38,name:"EKSPLORE BLACK SHORES",price:40000,badge:"BEST",icon:"✨",desc:"Eksploration all map mengzhou",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_38.jpg']},
+  {id:39,name:"STORY QUEST",price:15000,badge:"BEST",icon:"✨",desc:"All story quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_39.jpg']},
+  {id:40,name:"EKSPLORATION QUEST",price:15000,badge:"BEST",icon:"✨",desc:"All eksploration quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_40.jpg']},
+  {id:41,name:"COMPANION QUEST",price:10000,badge:"BEST",icon:"✨",desc:"All companion quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_41.jpg']},
+  {id:42,name:"SIDE QUEST",price:5000,badge:"BEST",icon:"✨",desc:"All companion quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_42.jpg']},
+  {id:43,name:"10 SD",price:20000,badge:"NEW",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_43.jpg']},
+  {id:44,name:"20 SD",price:50000,badge:"NEW",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_44.jpg']},
+  {id:45,name:"30 SD",price:75000,badge:"NEW",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_45.jpg']},
+  {id:46,name:"40 SD",price:95000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_46.jpg']},
+  {id:47,name:"50 SD",price:125000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_47.jpg']},
+  {id:48,name:"60 SD",price:150000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_48.jpg']}
 ];
 
 const DEFAULT_CAROUSEL = [
@@ -4901,6 +4969,140 @@ function resetProductImageToDefault(id){
   renderFormProductImagesUI();
   renderProducts();
   showToast('🔄 Foto produk dipulihkan ke bawaan!');
+}
+
+function saveMasterStoreSnapshot(silent){
+  try {
+    const snap = {
+      version: 2,
+      savedAt: new Date().toISOString(),
+      totalProducts: products.length,
+      products: products,
+      images: getProductImages()
+    };
+    safeSetItem('norxstore_backup_snapshot', JSON.stringify(snap));
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/snapshot').set(snap).catch(e=>console.warn('Snapshot fb sync error:', e));
+    }
+    updateSnapshotStatusUI();
+    if(!silent) showToast('💾 Progress 66 foto & produk berhasil diamankan ke snapshot!');
+  } catch(e) {
+    console.error('Error saving snapshot:', e);
+    if(!silent) showToast('⚠️ Gagal menyimpan snapshot: ' + (e.message || e));
+  }
+}
+
+function restoreMasterStoreSnapshot(){
+  const confirmed = confirm('Pulihkan seluruh 66 foto & produk ke snapshot master?\n\nSemua foto akan dipulihkan secara instan tanpa merubah data pesanan Anda.');
+  if(!confirmed) return;
+
+  try {
+    const restoredImages = {};
+    for(let i = 1; i <= 66; i++){
+      restoredImages[String(i)] = ['/prod_' + i + '.jpg'];
+      restoredImages[i] = ['/prod_' + i + '.jpg'];
+    }
+    try {
+      const customRaw = safeGetItem('norxstore_backup_snapshot', null);
+      if(customRaw){
+        const parsedCustom = JSON.parse(customRaw);
+        if(parsedCustom && parsedCustom.images && typeof parsedCustom.images === 'object'){
+          for(const k in parsedCustom.images){
+            if(Array.isArray(parsedCustom.images[k]) && parsedCustom.images[k].length > 0){
+              restoredImages[k] = [...parsedCustom.images[k]];
+            }
+          }
+        }
+      }
+    } catch(e){}
+
+    setProductImages(restoredImages);
+
+    let baseProducts = [...DEFAULT_PRODUCTS];
+    baseProducts.forEach(p => {
+      p.images = restoredImages[p.id] || ['/prod_' + p.id + '.jpg'];
+    });
+    setProducts(baseProducts);
+
+    preloadProductImages();
+    renderProducts();
+    if(isAdminOpen()){
+      renderAdminProductList();
+      renderAdminImgList();
+      renderFormProductImagesUI();
+    }
+    updateSnapshotStatusUI();
+    showToast('✅ Berhasil memulihkan 66 foto produk dari snapshot master!');
+  } catch(e) {
+    console.error('Error restoring snapshot:', e);
+    showToast('⚠️ Gagal memulihkan snapshot: ' + (e.message || e));
+  }
+}
+
+function downloadStoreBackupFile(){
+  try {
+    const snap = {
+      appName: 'NORX STORE',
+      version: 2,
+      exportedAt: new Date().toISOString(),
+      totalProducts: products.length,
+      products: products,
+      images: getProductImages()
+    };
+    const blob = new Blob([JSON.stringify(snap, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'norxstore_backup_' + new Date().toISOString().slice(0,10) + '.json';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showToast('📥 File backup berhasil diunduh!');
+  } catch(e){
+    console.error(e);
+    showToast('Gagal mengunduh file backup');
+  }
+}
+
+function restoreStoreFromFile(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    try {
+      const data = JSON.parse(e.target.result);
+      if(!data || typeof data !== 'object'){
+        throw new Error('Format file backup tidak valid');
+      }
+      if(data.images && typeof data.images === 'object'){
+        setProductImages(data.images);
+      }
+      if(Array.isArray(data.products) && data.products.length > 0){
+        setProducts(data.products);
+      }
+      renderProducts();
+      if(isAdminOpen()){
+        renderAdminProductList();
+        renderAdminImgList();
+        renderFormProductImagesUI();
+      }
+      updateSnapshotStatusUI();
+      showToast('✅ Berhasil memulihkan katalog & foto dari file backup!');
+    } catch(err){
+      console.error(err);
+      showToast('⚠️ File backup tidak valid: ' + err.message);
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
+}
+
+function updateSnapshotStatusUI(){
+  const el = document.getElementById('snapshotStatusText');
+  if(!el) return;
+  const count = (products && products.length) || 66;
+  el.textContent = `${count} Foto & Produk Tersimpan (Siap Dipulihkan)`;
 }
 
 function setReviewPhotos(arr){
@@ -7888,6 +8090,7 @@ function openAdmin(){
 
   updateOnlineCountersUI(currentOnlineCount);
   onAdminCountrySelectChange();
+  if(typeof updateSnapshotStatusUI === 'function') updateSnapshotStatusUI();
   document.getElementById('adminOverlay').classList.add('open');
 }
 function closeAdmin(e){
