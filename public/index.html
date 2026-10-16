@@ -452,24 +452,29 @@ body.dark-mode .live-pill-mode{
   vertical-align:middle;
 }
 
-.mode-wrapper{position:relative;width:100%}
-.light-section,.dark-section{width:100%;transition:opacity 0.45s cubic-bezier(0.4,0,0.2,1),transform 0.45s cubic-bezier(0.4,0,0.2,1)}
-.light-section{opacity:1;transform:translateY(0);position:relative}
-.dark-section{opacity:0;transform:translateY(16px);position:absolute;top:0;left:0;right:0;pointer-events:none}
-.dark-section.active-mode{opacity:1;transform:translateY(0);position:relative;pointer-events:auto}
-.light-section.inactive-mode{opacity:0;transform:translateY(-16px);position:absolute;top:0;left:0;right:0;pointer-events:none}
+.mode-wrapper{position:relative;width:100%;min-height:360px}
+.light-section,.dark-section{width:100%;position:relative;transition:opacity 0.2s ease}
+.light-section{display:block;opacity:1}
+.dark-section{display:none;opacity:0}
+.dark-section.active-mode{display:block;opacity:1}
+.light-section.inactive-mode{display:none !important;opacity:0}
+.light-section.mode-fade-in,.dark-section.mode-fade-in{animation:modeFadeIn .22s cubic-bezier(0.16,1,0.3,1)}
+@keyframes modeFadeIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
 
 .light-section{padding:16px 0 30px}
 .section-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px;padding:0 16px}
 .section-title{font-size:clamp(13px,3.8vw,16px);font-weight:800;text-transform:uppercase;letter-spacing:0.4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;flex-shrink:1;margin:0;display:flex;align-items:center;gap:5px}
 .section-link{font-size:11px;color:#7c3aed;background:#f3e8ff;padding:4px 10px;border-radius:999px;text-transform:uppercase;font-weight:700;letter-spacing:0.3px;cursor:pointer;white-space:nowrap;flex-shrink:0;display:inline-flex;align-items:center;gap:4px;transition:all .18s ease}
 .section-link:hover{background:#ede9fe;color:#6d28d9;transform:translateX(1px)}
-.cat-chips{display:flex;gap:8px;overflow-x:auto;overflow-y:hidden;padding:6px 16px 10px;margin-bottom:8px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
+.cat-chips{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:8px 16px 12px;margin-bottom:8px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
 .cat-chips.is-dragging{cursor:grabbing;user-select:none}
 .cat-chips::-webkit-scrollbar{display:none;width:0;height:0}
-.cat-chip{padding:8px 17px;border-radius:20px;background:#f5f4fa;border:1px solid #ece9f7;font-size:12px;font-weight:700;letter-spacing:0.4px;text-transform:uppercase;color:#555;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background 0.25s ease,border-color 0.25s ease,color 0.25s ease,transform .15s ease;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
-.cat-chip:hover{border-color:#c4b5fd;color:#7c3aed}
-.cat-chip.active{background:linear-gradient(135deg,#7c3aed,#c026d3);color:#fff;border-color:transparent;box-shadow:0 4px 10px rgba(124,58,237,.3)}
+.cat-chip{padding:9px 18px;border-radius:12px;background:#ffffff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:#475569;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 1px 3px rgba(0,0,0,0.04);display:inline-flex;align-items:center;gap:6px}
+.cat-chip:hover{border-color:#c4b5fd;color:#7c3aed;background:#faf5ff;transform:translateY(-1px)}
+.cat-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.32);transform:translateY(-1px)}
 .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;width:100%}
 .product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;touch-action:pan-y}
 .product-card:hover{transform:translateY(-4px)}
@@ -779,7 +784,483 @@ body.dark-mode .live-pill-mode{
 .ca-upload-row{display:flex;gap:8px;margin-top:8px;margin-bottom:8px}
 .ca-upload-row .admin-btn{flex:1;font-size:12px;padding:10px}
 
-.footer{text-align:center;padding:26px 20px;font-size:11px;color:#b8b3c9;background:linear-gradient(145deg,#1a0b2e,#0f0a1e);width:100%;border-radius:20px 20px 0 0;margin-top:8px;transition:background 0.5s ease,color 0.5s ease}
+/* ============ FOOTER UTAMA LENGKAP & MODERN (RESPONSIF HP, TABLET, PC) ============ */
+.footer{
+  width:100%;
+  background:radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.14) 0%, transparent 65%),
+             linear-gradient(180deg,#0e091b 0%,#090613 55%,#05030a 100%);
+  border-top:1px solid rgba(168,85,247,0.22);
+  box-shadow:0 -10px 40px rgba(124,58,237,0.06);
+  color:#94a3b8;
+  position:relative;
+  margin-top:28px;
+  overflow:hidden;
+  font-family:inherit;
+}
+.footer::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background-image:radial-gradient(1.5px 1.5px at 20px 30px, rgba(255,255,255,0.25), transparent),
+                   radial-gradient(1.5px 1.5px at 150px 70px, rgba(168,85,247,0.3), transparent),
+                   radial-gradient(1px 1px at 300px 120px, rgba(255,255,255,0.2), transparent),
+                   radial-gradient(1.5px 1.5px at 520px 40px, rgba(255,255,255,0.3), transparent),
+                   radial-gradient(1.5px 1.5px at 780px 110px, rgba(192,132,252,0.3), transparent),
+                   radial-gradient(1px 1px at 940px 60px, rgba(255,255,255,0.25), transparent);
+  background-size:1000px 300px;
+  opacity:0.6;
+  pointer-events:none;
+}
+.footer-container{
+  max-width:1220px;
+  margin:0 auto;
+  padding:44px 24px 28px;
+  position:relative;
+  z-index:2;
+}
+
+/* 4 Trust Pillars / Keunggulan Layanan */
+.footer-trust-pillars{
+  display:grid;
+  grid-template-columns:repeat(4, minmax(0, 1fr));
+  gap:16px;
+  margin-bottom:36px;
+}
+.footer-pillar-card{
+  background:linear-gradient(145deg, rgba(255,255,255,0.045) 0%, rgba(255,255,255,0.015) 100%);
+  border:1px solid rgba(168,85,247,0.18);
+  border-radius:14px;
+  padding:16px;
+  display:flex;
+  align-items:center;
+  gap:13px;
+  transition:all .25s ease;
+  backdrop-filter:blur(6px);
+}
+.footer-pillar-card:hover{
+  border-color:rgba(192,132,252,0.45);
+  background:linear-gradient(145deg, rgba(124,58,237,0.12) 0%, rgba(255,255,255,0.03) 100%);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(124,58,237,0.16);
+}
+.footer-pillar-icon{
+  width:44px;
+  height:44px;
+  border-radius:12px;
+  background:linear-gradient(135deg, rgba(124,58,237,0.28), rgba(168,85,247,0.12));
+  border:1px solid rgba(168,85,247,0.32);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+.footer-pillar-content{
+  flex:1;
+  min-width:0;
+}
+.footer-pillar-title{
+  font-size:13px;
+  font-weight:800;
+  color:#f8fafc;
+  margin-bottom:3px;
+  letter-spacing:0.2px;
+}
+.footer-pillar-desc{
+  font-size:11.5px;
+  color:#94a3b8;
+  line-height:1.45;
+}
+
+/* Main Footer Grid */
+.footer-main-grid{
+  display:grid;
+  grid-template-columns:1.5fr 1fr 1.1fr 1.4fr;
+  gap:36px;
+  align-items:start;
+  text-align:left;
+  margin-bottom:36px;
+}
+.footer-col{
+  display:flex;
+  flex-direction:column;
+}
+.footer-col-brand{
+  display:flex;
+  flex-direction:column;
+}
+.footer-brand-title{
+  font-size:22px;
+  font-weight:900;
+  color:#fff;
+  letter-spacing:0.5px;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  cursor:pointer;
+  width:fit-content;
+  user-select:none;
+}
+.footer-brand-title span{
+  background:linear-gradient(135deg,#c084fc,#e879f9);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+.footer-brand-badge{
+  font-size:22px;
+  filter:drop-shadow(0 0 10px rgba(192,132,252,0.6));
+}
+.footer-brand-desc{
+  font-size:12.5px;
+  color:#94a3b8;
+  line-height:1.65;
+  margin:12px 0 16px;
+  max-width:380px;
+}
+.footer-status-pills{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+.footer-pill-item{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:20px;
+  padding:5px 12px;
+  font-size:11px;
+  font-weight:600;
+  color:#e2e8f0;
+}
+
+/* Footer Navigation and Titles */
+.footer-col-title{
+  font-size:12px;
+  font-weight:800;
+  color:#c4b5fd;
+  text-transform:uppercase;
+  letter-spacing:0.8px;
+  margin:0 0 16px;
+  position:relative;
+  padding-bottom:8px;
+  display:inline-block;
+  width:fit-content;
+}
+.footer-col-title::after{
+  content:'';
+  position:absolute;
+  bottom:0;
+  left:0;
+  width:24px;
+  height:2.5px;
+  background:linear-gradient(90deg,#a855f7,transparent);
+  border-radius:2px;
+}
+.footer-nav-list{
+  list-style:none;
+  padding:0;
+  margin:0;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+.footer-nav-link{
+  color:#cbd5e1;
+  text-decoration:none;
+  font-size:12.5px;
+  font-weight:500;
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  transition:all .18s ease;
+  cursor:pointer;
+  width:fit-content;
+  padding:2px 0;
+}
+.footer-nav-link:hover{
+  color:#c084fc;
+  transform:translateX(3px);
+}
+
+/* Payment Badges & Social Links */
+.footer-pay-subhead{
+  font-size:11px;
+  font-weight:700;
+  color:#94a3b8;
+  margin-bottom:10px;
+  text-transform:uppercase;
+  letter-spacing:0.6px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.footer-pay-grid{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:20px;
+}
+.footer-pay-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  background:linear-gradient(145deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:9px;
+  padding:6px 12px;
+  font-size:11.5px;
+  font-weight:700;
+  color:#f1f5f9;
+  transition:all .2s ease;
+  user-select:none;
+}
+.footer-pay-badge:hover{
+  border-color:rgba(192,132,252,0.5);
+  background:linear-gradient(145deg, rgba(124,58,237,0.22) 0%, rgba(255,255,255,0.06) 100%);
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(124,58,237,0.22);
+}
+.footer-pay-icon{
+  font-size:13px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+.footer-social-quick-links{
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+.footer-social-item{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.12);
+  border-radius:10px;
+  padding:6px 12px;
+  font-size:11.5px;
+  font-weight:700;
+  color:#cbd5e1;
+  text-decoration:none;
+  transition:all .2s ease;
+}
+.footer-social-item:hover{
+  background:linear-gradient(135deg, rgba(124,58,237,0.35), rgba(168,85,247,0.25));
+  border-color:#c084fc;
+  color:#fff;
+  transform:translateY(-1px);
+  box-shadow:0 4px 12px rgba(124,58,237,0.25);
+}
+
+/* Bottom bar & disclaimer */
+.footer-bottom-bar{
+  border-top:1px solid rgba(255,255,255,0.08);
+  margin-top:16px;
+  padding-top:22px;
+  text-align:left;
+}
+.footer-disclaimer{
+  font-size:11px;
+  color:#64748b;
+  line-height:1.6;
+  margin-bottom:14px;
+}
+.footer-legal-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  flex-wrap:wrap;
+  gap:12px;
+  font-size:11.5px;
+  color:#94a3b8;
+}
+.footer-country-pill{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.14);
+  border-radius:20px;
+  padding:5px 14px;
+  cursor:pointer;
+  font-size:11.5px;
+  font-weight:700;
+  color:#f8fafc;
+  transition:all .2s ease;
+}
+.footer-country-pill:hover{
+  background:rgba(124,58,237,0.3);
+  border-color:#c084fc;
+  transform:translateY(-1px);
+}
+
+/* Info Modal Styles (Guide, Terms, Privacy) */
+.info-modal-box{
+  max-width:540px;
+  width:92%;
+  background:#1a102f;
+  border:1.5px solid rgba(168,85,247,0.3);
+  border-radius:18px;
+  padding:22px;
+  color:#e2e8f0;
+  box-shadow:0 20px 50px rgba(0,0,0,0.6);
+  max-height:85vh;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+.info-modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  padding-bottom:12px;
+  margin-bottom:16px;
+}
+.info-modal-title{
+  font-size:16px;
+  font-weight:800;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin:0;
+}
+.info-step-card{
+  background:rgba(255,255,255,0.04);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:12px;
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+}
+.info-step-num{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#9333ea);
+  color:#fff;
+  font-size:12px;
+  font-weight:800;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.info-step-body h5{
+  margin:0 0 4px;
+  font-size:13px;
+  font-weight:700;
+  color:#f8fafc;
+}
+.info-step-body p{
+  margin:0;
+  font-size:11.5px;
+  color:#94a3b8;
+  line-height:1.45;
+}
+
+/* ============ RESPONSIVE MEDIA QUERIES FOR FOOTER ============ */
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px){
+  .footer-container{
+    padding:36px 20px 24px;
+  }
+  .footer-trust-pillars{
+    grid-template-columns:repeat(2, minmax(0, 1fr));
+    gap:14px;
+    margin-bottom:30px;
+  }
+  .footer-main-grid{
+    grid-template-columns:1fr 1fr;
+    gap:28px;
+    margin-bottom:30px;
+  }
+  .footer-col-brand{
+    grid-column:span 2;
+    max-width:540px;
+  }
+}
+
+/* Mobile / HP (max-width: 640px) */
+@media (max-width: 640px){
+  .footer{
+    margin-top:20px;
+  }
+  .footer-container{
+    padding:26px 14px 20px;
+  }
+  .footer-trust-pillars{
+    grid-template-columns:1fr;
+    gap:10px;
+    margin-bottom:24px;
+  }
+  .footer-pillar-card{
+    padding:12px 14px;
+    gap:12px;
+    border-radius:12px;
+  }
+  .footer-pillar-icon{
+    width:38px;
+    height:38px;
+    font-size:18px;
+    border-radius:10px;
+  }
+  .footer-pillar-title{
+    font-size:12.5px;
+  }
+  .footer-pillar-desc{
+    font-size:11px;
+  }
+  .footer-main-grid{
+    grid-template-columns:1fr;
+    gap:24px;
+    margin-bottom:24px;
+  }
+  .footer-col-brand{
+    grid-column:span 1;
+    border-bottom:1px solid rgba(255,255,255,0.08);
+    padding-bottom:20px;
+  }
+  .footer-col{
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    padding-bottom:18px;
+  }
+  .footer-col:last-child{
+    border-bottom:none;
+    padding-bottom:0;
+  }
+  .footer-col-title{
+    margin-bottom:12px;
+    font-size:11.5px;
+  }
+  .footer-nav-link{
+    font-size:12px;
+    padding:3px 0;
+  }
+  .footer-pay-badge{
+    padding:5px 10px;
+    font-size:11px;
+    border-radius:8px;
+  }
+  .footer-social-item{
+    padding:5px 11px;
+    font-size:11px;
+    border-radius:8px;
+  }
+  .footer-legal-row{
+    flex-direction:column;
+    align-items:flex-start;
+    gap:10px;
+  }
+  .footer-country-pill{
+    align-self:flex-start;
+  }
+}
 .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(80px);background:#1a1a1a;color:#fff;padding:10px 18px;border-radius:8px;font-size:12px;font-weight:600;z-index:200;opacity:0;transition:all .3s;pointer-events:none}
 .toast.show{transform:translateX(-50%) translateY(0);opacity:1}
 
@@ -861,18 +1342,18 @@ body.dark-mode .live-pill-mode{
 .sg-pop-item.active .sg-pop-check{border-color:#7c3aed;background:linear-gradient(135deg,#7c3aed,#9333ea);box-shadow:0 2px 6px rgba(124,58,237,0.35)}
 
 /* ============ ACTIVE SUB-FILTER BAR (COMPACT & MODERN HORIZONTAL SWIPE) ============ */
-.catalog-subfilter-bar{display:none;align-items:center;padding:4px 16px 12px;margin-bottom:8px;gap:7px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;animation:fadeIn .2s ease;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
+.catalog-subfilter-bar{display:none;align-items:center;padding:6px 16px 12px;margin-bottom:10px;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;animation:fadeIn .2s ease;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
 .catalog-subfilter-bar.is-dragging{cursor:grabbing;user-select:none}
 .catalog-subfilter-bar::-webkit-scrollbar{display:none;width:0;height:0}
 
-.sub-chip{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:20px;font-size:11.5px;font-weight:700;background:#f8f7fd;color:#4b5563;border:1px solid #e2def2;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .18s ease;-webkit-tap-highlight-color:transparent}
+.sub-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:10px;font-size:11.5px;font-weight:700;background:#ffffff;color:#475569;border:1.5px solid #e2e8f0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s ease;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
 .sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd;transform:translateY(-1px)}
-.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 10px rgba(124,58,237,0.3);transform:translateY(-1px)}
-.sub-chip.has-discount{border-color:#fed7aa;background:#fffdf9}
+.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,58,237,0.32);transform:translateY(-1px)}
+.sub-chip.has-discount{border-color:#fcd34d;background:#fffbeb}
 .sub-chip.active.has-discount{background:linear-gradient(135deg,#7c3aed,#9333ea);border-color:transparent}
-.sub-chip-disc{font-size:9.5px;font-weight:800;background:#ef4444;color:#fff;padding:2px 6px;border-radius:10px;line-height:1.2;margin-left:3px}
+.sub-chip-disc{font-size:9.5px;font-weight:800;background:#ef4444;color:#fff;padding:2px 6px;border-radius:8px;line-height:1.2;margin-left:3px}
 .sub-chip.active .sub-chip-disc{background:#fff;color:#dc2626}
-.sub-chip-more{background:#fff;border:1px dashed #c4b5fd;color:#7c3aed}
+.sub-chip-more{background:#fff;border:1.5px dashed #c4b5fd;color:#7c3aed}
 .sub-chip-more:hover{background:#f5f3ff;border-style:solid}
 
 /* ============ PERLINDUNGAN ANTI-DOWNLOAD & PENCURIAN GAMBAR ============ */
@@ -1082,9 +1563,440 @@ button{cursor:pointer;font-family:inherit}
 .dot{position:relative;overflow:hidden;touch-action:pan-y}
 .dot:active{background:rgba(255,255,255,.75)}
 
-/* ============ OPTIMASI PERFORMA SCROLL ============ */
-.cat-chips,.product-img-track,.modal-box,.cart-body,.admin-box,.admin-product-list{
+
+
+.social-hub-section{
+  width:100%;
+  background:linear-gradient(180deg,#120724 0%,#1a0b2e 100%);
+  color:#f8fafc;
+  padding:36px 16px 28px;
+  margin-top:12px;
+  border-radius:24px 24px 0 0;
+  box-shadow:0 -4px 20px rgba(15,10,25,0.12);
+  position:relative;
+}
+.social-hub-inner{
+  max-width:960px;
+  margin:0 auto;
+}
+.social-hub-header{
+  text-align:center;
+  margin-bottom:20px;
+}
+.social-hub-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1px;
+  color:#c084fc;
+  background:rgba(192,132,252,0.12);
+  border:1px solid rgba(192,132,252,0.25);
+  padding:4px 12px;
+  border-radius:20px;
+  margin-bottom:8px;
+  text-transform:uppercase;
+}
+.social-hub-title{
+  font-size:20px;
+  font-weight:800;
+  color:#fff;
+  letter-spacing:-0.4px;
+  margin-bottom:6px;
+  text-wrap:balance;
+}
+.social-hub-subtitle{
+  font-size:12.5px;
+  color:#cbd5e1;
+  max-width:560px;
+  margin:0 auto;
+  line-height:1.5;
+}
+.social-scam-shield{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  background:rgba(234,88,12,0.12);
+  border:1.5px solid rgba(251,146,60,0.35);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:20px;
+}
+.scam-shield-badge{
+  font-size:10px;
+  font-weight:800;
+  background:#ea580c;
+  color:#fff;
+  padding:3px 8px;
+  border-radius:6px;
+  white-space:nowrap;
+  flex-shrink:0;
+  margin-top:2px;
+}
+.scam-shield-text strong{
+  display:block;
+  font-size:12px;
+  color:#fed7aa;
+  margin-bottom:2px;
+}
+.scam-shield-text p{
+  font-size:11px;
+  color:#e2e8f0;
+  margin:0;
+  line-height:1.45;
+}
+.social-hub-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:14px;
+}
+.social-card{
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:16px;
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:12px;
+  transition:all .2s cubic-bezier(.16,1,.3,1);
+  position:relative;
+  backdrop-filter:blur(6px);
+}
+.social-card:hover{
+  background:rgba(255,255,255,0.08);
+  border-color:rgba(192,132,252,0.4);
+  transform:translateY(-2px);
+  box-shadow:0 8px 24px rgba(0,0,0,0.3);
+}
+.social-card-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.social-card-icon{
+  width:42px;
+  height:42px;
+  border-radius:12px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#fff;
+  flex-shrink:0;
+  box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
+.social-card-info{
+  flex:1;
+  min-width:0;
+}
+.social-card-name-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  margin-bottom:2px;
+}
+.social-card-name{
+  font-size:13.5px;
+  font-weight:700;
+  color:#fff;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.social-card-badge{
+  font-size:9.5px;
+  font-weight:800;
+  padding:2px 7px;
+  border-radius:6px;
+  text-transform:uppercase;
+  letter-spacing:0.3px;
+  white-space:nowrap;
+  flex-shrink:0;
+  background:rgba(255,255,255,0.12);
+  color:#e2e8f0;
+}
+.social-card-handle{
+  font-size:12px;
+  font-weight:600;
+  color:#c084fc;
+  font-family:monospace;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.social-card-desc{
+  font-size:11.5px;
+  color:#cbd5e1;
+  line-height:1.4;
+  margin:0;
+}
+.social-card-actions{
+  display:flex;
+  gap:8px;
+  margin-top:auto;
+}
+.social-btn-open{
+  flex:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:8px 12px;
+  border-radius:10px;
+  background:linear-gradient(135deg,#7c3aed,#9333ea);
+  color:#fff;
+  text-decoration:none;
+  font-size:11.5px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+  transition:all .15s ease;
+  white-space:nowrap;
+}
+.social-btn-open:hover{
+  background:linear-gradient(135deg,#6d28d9,#7e22ce);
+  transform:translateY(-1px);
+}
+.social-btn-copy{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  padding:8px 11px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.18);
+  color:#e2e8f0;
+  font-size:11px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s ease;
+  white-space:nowrap;
+}
+.social-btn-copy:hover{
+  background:rgba(255,255,255,0.16);
+  color:#fff;
+}
+.social-btn-copy.copied{
+  background:#10b981;
+  color:#fff;
+  border-color:#10b981;
+}
+
+.footer-social-quick-links{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:12px;
+}
+.footer-social-item{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 10px;
+  border-radius:20px;
+  background:rgba(255,255,255,0.06);
+  border:1px solid rgba(255,255,255,0.12);
+  color:#cbd5e1;
+  font-size:11px;
+  font-weight:600;
+  text-decoration:none;
+  transition:all .15s ease;
+}
+.footer-social-item:hover{
+  background:rgba(124,58,237,0.3);
+  border-color:#a855f7;
+  color:#fff;
+  transform:translateY(-1px);
+}
+
+.social-modal-overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(10,8,20,0.75);
+  backdrop-filter:blur(5px);
+  -webkit-backdrop-filter:blur(5px);
+  display:none;
+  align-items:flex-end;
+  justify-content:center;
+  z-index:320;
+  animation:fadeIn .2s ease;
+}
+.social-modal-overlay.open{
+  display:flex;
+}
+.social-modal-box{
+  background:#181028;
+  color:#fff;
+  border-radius:24px 24px 0 0;
+  width:100%;
+  max-width:480px;
+  max-height:85vh;
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  box-shadow:0 -10px 40px rgba(0,0,0,0.5);
+  animation:slideUp .25s cubic-bezier(.16,1,.3,1);
+  border-top:1.5px solid rgba(192,132,252,0.3);
+}
+@media (min-width:600px){
+  .social-modal-overlay{
+    align-items:center;
+    padding:20px;
+  }
+  .social-modal-box{
+    border-radius:20px;
+    border:1.5px solid rgba(192,132,252,0.3);
+    animation:popIn .2s ease;
+  }
+}
+.social-modal-header{
+  padding:16px 18px;
+  border-bottom:1px solid rgba(255,255,255,0.1);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  background:linear-gradient(135deg,#201138,#2d154f);
+}
+.social-modal-close{
+  width:32px;
+  height:32px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,0.2);
+  background:rgba(255,255,255,0.08);
+  color:#e2e8f0;
+  font-size:16px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.social-modal-close:hover{
+  background:#ef4444;
+  border-color:#ef4444;
+  color:#fff;
+}
+.social-modal-body{
+  padding:14px 16px 24px;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
   -webkit-overflow-scrolling:touch;
+}
+.social-modal-scam-banner{
+  background:rgba(234,88,12,0.15);
+  border:1px solid rgba(251,146,60,0.35);
+  border-radius:10px;
+  padding:8px 12px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:11px;
+  color:#fed7aa;
+}
+.social-modal-item{
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.08);
+  border-radius:14px;
+  padding:10px 12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:all .15s ease;
+}
+.social-modal-item:hover{
+  background:rgba(255,255,255,0.09);
+  border-color:rgba(192,132,252,0.35);
+}
+.social-modal-icon{
+  width:38px;
+  height:38px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  color:#fff;
+  flex-shrink:0;
+}
+.social-modal-info{
+  flex:1;
+  min-width:0;
+}
+.social-modal-title{
+  font-size:12.5px;
+  font-weight:700;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  line-height:1.2;
+}
+.social-modal-handle{
+  font-size:11.5px;
+  color:#c084fc;
+  font-family:monospace;
+  margin-top:2px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.social-modal-actions{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-shrink:0;
+}
+.social-modal-btn{
+  padding:6px 10px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:700;
+  border:none;
+  cursor:pointer;
+  transition:all .15s ease;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.social-modal-btn.primary{
+  background:linear-gradient(135deg,#7c3aed,#9333ea);
+  color:#fff;
+}
+.social-modal-btn.secondary{
+  background:rgba(255,255,255,0.1);
+  color:#e2e8f0;
+  border:1px solid rgba(255,255,255,0.2);
+}
+
+.admin-social-row{
+  background:#fff;
+  border:1.5px solid #f0abfc;
+  border-radius:10px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.admin-social-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+.admin-social-title{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  font-size:13px;
+  font-weight:700;
+  color:#701a75;
 }
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
@@ -1309,20 +2221,158 @@ button{cursor:pointer;font-family:inherit}
 
 <div style="padding:16px 16px 24px;text-align:center">
   <button type="button" class="testi-cta-banner-btn" onclick="switchMode('light')" style="width:100%;max-width:540px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.18);border-radius:12px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;transition:transform .15s ease">
-    <span>🛒 Kembali ke Katalog Layanan</span>
+    <span id="testiBackToCatalogText">🛒 Kembali ke Katalog Layanan</span>
     <span style="font-size:14px">➔</span>
   </button>
 </div>
 </section>
 </div>
 
-<footer class="footer">
-  <div style="margin-bottom:8px;display:inline-flex;align-items:center;justify-content:center;gap:6px;font-size:11px;color:#cbd5e1;background:rgba(255,255,255,.07);padding:4px 12px;border-radius:20px;border:1px solid rgba(255,255,255,.1)">
-    <span class="live-pulse-dot" style="background:#22c55e"></span>
-    <span><strong class="online-user-count">1</strong> Orang Sedang Online di Web</span>
+<!-- ==================== BAGIAN MEDIA SOSIAL & KOMUNITAS ==================== -->
+<section class="social-hub-section" id="socialHubSection">
+  <div class="social-hub-inner">
+    <div class="social-hub-header">
+      <div class="social-hub-kicker" id="socialKickerText">🌐 KOMUNITAS & MEDIA SOSIAL RESMI</div>
+      <h3 class="social-hub-title" id="socialTitleText">Ikuti Media Sosial Resmi NORXSTORE</h3>
+      <p class="social-hub-subtitle" id="socialSubText">Dapatkan info promo kilat, restock akun, event giveaway, & bantuan customer service langsung.</p>
+    </div>
+
+    <!-- Banner Peringatan Keamanan & Anti-Scam -->
+    <div class="social-scam-shield">
+      <div class="scam-shield-badge" id="scamShieldBadge">🛡️ RESMI & AMAN</div>
+      <div class="scam-shield-text">
+        <strong id="scamShieldTitle">Waspada Penipuan Mengatasnamakan NORXSTORE!</strong>
+        <p id="scamShieldDesc">Transaksi dan konsultasi resmi HANYA dilakukan melalui kontak dan tautan akun media sosial yang tertera di halaman ini. Kami tidak pernah meminta password email Anda di luar sistem joki yang aman.</p>
+      </div>
+    </div>
+
+    <!-- Grid Kartu Media Sosial -->
+    <div class="social-hub-grid" id="socialHubGrid"></div>
   </div>
-  <div>© 2026 NORXSTORE — Genshin · HSR · WuWa · NTE</div>
+</section>
+
+<!-- ==================== FOOTER UTAMA LENGKAP ==================== -->
+<footer class="footer" id="siteFooter">
+  <div class="footer-container">
+    <!-- 4 Trust Pillars / Keunggulan Layanan -->
+    <div class="footer-trust-pillars">
+      <div class="footer-pillar-card">
+        <div class="footer-pillar-icon" id="footerPillar1Icon">⚡</div>
+        <div class="footer-pillar-content">
+          <div class="footer-pillar-title" id="footerPillar1Title">Pengiriman Instan & Cepat</div>
+          <div class="footer-pillar-desc" id="footerPillar1Desc">Pesanan diproses otomatis 24 jam nonstop dengan estimasi pengerjaan kilat.</div>
+        </div>
+      </div>
+      <div class="footer-pillar-card">
+        <div class="footer-pillar-icon" id="footerPillar2Icon">🛡️</div>
+        <div class="footer-pillar-content">
+          <div class="footer-pillar-title" id="footerPillar2Title">100% Legal & Terpercaya</div>
+          <div class="footer-pillar-desc" id="footerPillar2Desc">Garansi anti-banned resmi & keamanan data akun terjamin amanah 100%.</div>
+        </div>
+      </div>
+      <div class="footer-pillar-card">
+        <div class="footer-pillar-icon" id="footerPillar3Icon">💳</div>
+        <div class="footer-pillar-content">
+          <div class="footer-pillar-title" id="footerPillar3Title">Metode Bayar Lengkap</div>
+          <div class="footer-pillar-desc" id="footerPillar3Desc">QRIS, E-Wallet, VA Bank, FPX, PayNow & pembayaran instan lokal.</div>
+        </div>
+      </div>
+      <div class="footer-pillar-card">
+        <div class="footer-pillar-icon" id="footerPillar4Icon">💬</div>
+        <div class="footer-pillar-content">
+          <div class="footer-pillar-title" id="footerPillar4Title">Customer Support 24/7</div>
+          <div class="footer-pillar-desc" id="footerPillar4Desc">Admin ramah siap sedia mendampingi order Anda hingga selesai.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Footer 4 Columns Grid -->
+    <div class="footer-main-grid">
+      <!-- Col 1: Brand & Overview -->
+      <div class="footer-col footer-col-brand">
+        <div class="footer-brand-title" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+          <span class="footer-brand-badge">💠</span> NORX<span>STORE</span>
+        </div>
+        <p class="footer-brand-desc" id="footerBrandDesc">
+          Platform terpercaya untuk top-up game, jasa joki profesional, dan jual beli akun game amanah se-Asia Tenggara. Transaksi cepat, amanah, dan bergaransi resmi.
+        </p>
+        <div class="footer-status-pills">
+          <div class="footer-pill-item">
+            <span class="live-pulse-dot" style="background:#22c55e"></span>
+            <span id="footerHoursBadge">🟢 Buka 24 Jam Setiap Hari</span>
+          </div>
+          <div class="footer-pill-item">
+            <span class="live-pulse-dot" style="background:#a855f7"></span>
+            <span><strong class="online-user-count">1</strong> <span id="footerOnlineCountText">Orang Sedang Online di Web</span></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Col 2: Navigation Links -->
+      <div class="footer-col">
+        <h4 class="footer-col-title" id="footerColNavTitle">PETA SITUS & KATALOG</h4>
+        <ul class="footer-nav-list">
+          <li><a href="javascript:void(0)" onclick="filterCat('all');window.scrollTo({top:0,behavior:'smooth'})" class="footer-nav-link" id="footerLinkAll">🛒 Semua Layanan Game</a></li>
+          <li><a href="javascript:void(0)" onclick="filterCat('genshin');window.scrollTo({top:0,behavior:'smooth'})" class="footer-nav-link" id="footerLinkGenshin">✨ Genshin Impact</a></li>
+          <li><a href="javascript:void(0)" onclick="filterCat('hsr');window.scrollTo({top:0,behavior:'smooth'})" class="footer-nav-link" id="footerLinkHsr">🚀 Honkai: Star Rail</a></li>
+          <li><a href="javascript:void(0)" onclick="filterCat('wuwa');window.scrollTo({top:0,behavior:'smooth'})" class="footer-nav-link" id="footerLinkWuwa">🌊 Wuthering Waves</a></li>
+          <li><a href="javascript:void(0)" onclick="filterCat('nte');window.scrollTo({top:0,behavior:'smooth'})" class="footer-nav-link" id="footerLinkNte">🔮 Neverness to Everness</a></li>
+          <li><a href="javascript:void(0)" onclick="filterCat('lainnya');window.scrollTo({top:0,behavior:'smooth'})" class="footer-nav-link" id="footerLinkAccount">🔑 Akun Store & Starter</a></li>
+          <li><a href="javascript:void(0)" onclick="goToTestiSection()" class="footer-nav-link" id="footerLinkReviews">⭐ Ulasan & Testimoni</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 3: Customer Care & Policy -->
+      <div class="footer-col">
+        <h4 class="footer-col-title" id="footerColHelpTitle">PUSAT BANTUAN & KEBIJAKAN</h4>
+        <ul class="footer-nav-list">
+          <li><a href="javascript:void(0)" onclick="openCart('orders')" class="footer-nav-link" id="footerLinkTrack">📦 Lacak Status Pesanan</a></li>
+          <li><a href="javascript:void(0)" onclick="openInfoModal('orderGuide')" class="footer-nav-link" id="footerLinkGuide">📖 Panduan Cara Pemesanan</a></li>
+          <li><a href="javascript:void(0)" onclick="openInfoModal('terms')" class="footer-nav-link" id="footerLinkTerms">⚖️ Syarat & Ketentuan Layanan</a></li>
+          <li><a href="javascript:void(0)" onclick="openInfoModal('privacy')" class="footer-nav-link" id="footerLinkPrivacy">🔒 Kebijakan Privasi & Garansi</a></li>
+          <li><a href="javascript:void(0)" onclick="openSocialModal()" class="footer-nav-link" id="footerLinkCs">💬 Hubungi Customer Support</a></li>
+          <li><a href="javascript:void(0)" onclick="openInfoModal('reportIssue')" class="footer-nav-link" id="footerLinkReport">🚩 Lapor Kendala Pesanan</a></li>
+        </ul>
+      </div>
+
+      <!-- Col 4: Payment Methods & Official Community -->
+      <div class="footer-col">
+        <h4 class="footer-col-title" id="footerColPayTitle">PEMBAYARAN & KOMUNITAS</h4>
+        <div class="footer-pay-subhead" id="footerPayMethodsTitle">Metode Pembayaran Resmi:</div>
+        <div class="footer-pay-grid" id="footerPaymentBadges">
+          <!-- Otomatis disesuaikan sesuai negara (QRIS / TNG / PayNow / dll) -->
+        </div>
+
+        <div class="footer-pay-subhead" style="margin-top:16px" id="footerSocialTitle">Komunitas & Media Sosial:</div>
+        <div class="footer-social-quick-links" id="footerSocialQuickLinks"></div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright & Disclaimer -->
+    <div class="footer-bottom-bar">
+      <div class="footer-disclaimer" id="footerDisclaimerText">
+        NORXSTORE adalah platform independen penyedia layanan game. Seluruh hak cipta, nama dagang, dan aset game adalah milik penerbit masing-masing (HoYoverse, Kuro Games, Hotta Studio).
+      </div>
+      <div class="footer-legal-row">
+        <div>© 2026 <strong style="color:#fff">NORXSTORE</strong>. <span id="footerRightsText">Hak Cipta Dilindungi Undang-Undang.</span></div>
+        <div class="footer-country-pill" onclick="openCountryCurrencyModal()">
+          <span id="footerCountryFlag">🇮🇩</span> <span id="footerCountryName">Indonesia (IDR)</span> ▾
+        </div>
+      </div>
+    </div>
+  </div>
 </footer>
+
+<!-- ==================== MODAL PANDUAN, SYARAT, & PRIVASI ==================== -->
+<div class="social-modal-overlay" id="infoModalOverlay" onclick="closeInfoModal(event)">
+  <div class="info-modal-box" onclick="event.stopPropagation()">
+    <div class="info-modal-header">
+      <h4 class="info-modal-title" id="infoModalTitle">📖 Informasi</h4>
+      <button type="button" class="social-modal-close" onclick="closeInfoModal()">✕</button>
+    </div>
+    <div id="infoModalContent"></div>
+  </div>
+</div>
 
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
 <div class="modal-box" onclick="event.stopPropagation()">
@@ -1783,6 +2833,175 @@ button{cursor:pointer;font-family:inherit}
 </div>
 
 <div class="admin-divider"></div>
+
+<!-- ==================== BAGIAN KELOLA MEDIA SOSIAL & FOOTER LENGKAP ==================== -->
+<div style="background:#fdf4ff;border:1.5px solid #f0abfc;border-radius:12px;padding:14px;margin-bottom:18px">
+  <div class="admin-section-title" style="color:#86198f;margin-top:0;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+    <span style="display:flex;align-items:center;gap:6px">🌐 Kelola Media Sosial & Informasi Footer</span>
+    <span style="font-size:11px;background:#fae8ff;color:#a21caf;padding:3px 8px;border-radius:8px;font-weight:700" id="adminSocialCountBadge">6 Platform</span>
+  </div>
+  <p class="admin-hint" style="margin-bottom:12px;background:#fdf2f8;border:1px solid #fbcfe8;padding:8px 10px;border-radius:8px;color:#9d174d;font-size:11.5px;line-height:1.4">
+    💡 <strong>Atur Seluruh Info Publik Toko:</strong> Anda dapat mengubah akun media sosial resmi, teks banner waspada penipuan (anti-scam), 4 pilar keunggulan layanan, serta deskripsi & jam buka toko pada footer.
+  </p>
+
+  <!-- Sub Navigation Tabs di Panel Admin -->
+  <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch" id="adminSocialSubNav">
+    <button type="button" class="admin-tab-chip active" id="tabAdminSocialBtn" onclick="switchAdminSocialSubTab('social')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #d946ef;background:#fae8ff;color:#86198f;cursor:pointer;white-space:nowrap">📱 Akun Medsos</button>
+    <button type="button" class="admin-tab-chip" id="tabAdminScamBtn" onclick="switchAdminSocialSubTab('scam')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">🛡️ Header & Anti-Scam</button>
+    <button type="button" class="admin-tab-chip" id="tabAdminPillarsBtn" onclick="switchAdminSocialSubTab('pillars')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">⚡ 4 Pilar Keunggulan</button>
+    <button type="button" class="admin-tab-chip" id="tabAdminFooterBtn" onclick="switchAdminSocialSubTab('footer')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">🏬 Info Toko & Footer</button>
+  </div>
+
+  <!-- TAB 1: AKUN MEDIA SOSIAL -->
+  <div id="adminPanelSocialTab" style="display:block">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;flex-wrap:wrap;gap:6px">
+      <span style="font-size:11.5px;font-weight:700;color:#701a75">Daftar Akun Media Sosial:</span>
+      <button type="button" onclick="addNewSocialPlatformPrompt()" style="background:#f3e8ff;color:#7c3aed;border:1px solid #d8b4fe;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:4px">➕ Tambah Medsos Baru</button>
+    </div>
+    <div id="adminSocialInputsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px"></div>
+  </div>
+
+  <!-- TAB 2: HEADER MEDSOS & ANTI-SCAM -->
+  <div id="adminPanelScamTab" style="display:none;background:#fff;border:1px solid #f0abfc;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:800;color:#701a75;margin-bottom:10px">🛡️ Pengaturan Header Komunitas & Waspada Penipuan</div>
+    
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Kicker / Kategori Kecil Atas:</label>
+      <input type="text" id="adminCfg_socialKicker" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="🌐 KOMUNITAS & MEDIA SOSIAL RESMI">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Judul Utama Bagian Medsos:</label>
+      <input type="text" id="adminCfg_socialTitle" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Ikuti Media Sosial Resmi NORXSTORE">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Subjudul / Penjelasan Singkat:</label>
+      <input type="text" id="adminCfg_socialSubtitle" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Dapatkan info promo kilat, restock akun, event giveaway, & bantuan CS...">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Badge Banner Anti-Scam:</label>
+      <input type="text" id="adminCfg_scamShieldBadge" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="🛡️ RESMI & AMAN">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Judul Peringatan Anti-Scam:</label>
+      <input type="text" id="adminCfg_scamShieldTitle" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Waspada Penipuan Mengatasnamakan NORXSTORE!">
+    </div>
+
+    <div>
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Deskripsi Peringatan Anti-Scam:</label>
+      <textarea id="adminCfg_scamShieldDesc" class="admin-input" rows="3" style="font-size:12px;margin-bottom:0;resize:vertical" placeholder="Transaksi dan konsultasi resmi HANYA dilakukan melalui kontak..."></textarea>
+    </div>
+  </div>
+
+  <!-- TAB 3: 4 PILAR KEUNGGULAN TOKO -->
+  <div id="adminPanelPillarsTab" style="display:none;background:#fff;border:1px solid #f0abfc;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:800;color:#701a75;margin-bottom:10px">⚡ Pengaturan 4 Pilar Keunggulan Toko di Footer</div>
+
+    <!-- Pilar 1 -->
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px;margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:8px;margin-bottom:6px">
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Icon 1:</label>
+          <input type="text" id="adminCfg_pillar1Icon" class="admin-input" style="font-size:14px;text-align:center;margin-bottom:0" placeholder="⚡">
+        </div>
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Judul Pilar 1:</label>
+          <input type="text" id="adminCfg_pillar1Title" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Pengiriman Instan & Cepat">
+        </div>
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:10px;margin-bottom:2px">Deskripsi Pilar 1:</label>
+        <input type="text" id="adminCfg_pillar1Desc" class="admin-input" style="font-size:11.5px;margin-bottom:0" placeholder="Pesanan diproses otomatis 24 jam nonstop...">
+      </div>
+    </div>
+
+    <!-- Pilar 2 -->
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px;margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:8px;margin-bottom:6px">
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Icon 2:</label>
+          <input type="text" id="adminCfg_pillar2Icon" class="admin-input" style="font-size:14px;text-align:center;margin-bottom:0" placeholder="🛡️">
+        </div>
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Judul Pilar 2:</label>
+          <input type="text" id="adminCfg_pillar2Title" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="100% Legal & Terpercaya">
+        </div>
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:10px;margin-bottom:2px">Deskripsi Pilar 2:</label>
+        <input type="text" id="adminCfg_pillar2Desc" class="admin-input" style="font-size:11.5px;margin-bottom:0" placeholder="Garansi anti-banned resmi...">
+      </div>
+    </div>
+
+    <!-- Pilar 3 -->
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px;margin-bottom:10px">
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:8px;margin-bottom:6px">
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Icon 3:</label>
+          <input type="text" id="adminCfg_pillar3Icon" class="admin-input" style="font-size:14px;text-align:center;margin-bottom:0" placeholder="💳">
+        </div>
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Judul Pilar 3:</label>
+          <input type="text" id="adminCfg_pillar3Title" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Metode Bayar Lengkap">
+        </div>
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:10px;margin-bottom:2px">Deskripsi Pilar 3:</label>
+        <input type="text" id="adminCfg_pillar3Desc" class="admin-input" style="font-size:11.5px;margin-bottom:0" placeholder="QRIS, E-Wallet, VA Bank...">
+      </div>
+    </div>
+
+    <!-- Pilar 4 -->
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px">
+      <div style="display:grid;grid-template-columns:60px 1fr;gap:8px;margin-bottom:6px">
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Icon 4:</label>
+          <input type="text" id="adminCfg_pillar4Icon" class="admin-input" style="font-size:14px;text-align:center;margin-bottom:0" placeholder="💬">
+        </div>
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Judul Pilar 4:</label>
+          <input type="text" id="adminCfg_pillar4Title" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Customer Support 24/7">
+        </div>
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:10px;margin-bottom:2px">Deskripsi Pilar 4:</label>
+        <input type="text" id="adminCfg_pillar4Desc" class="admin-input" style="font-size:11.5px;margin-bottom:0" placeholder="Admin ramah siap sedia mendampingi...">
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 4: INFO TOKO & TEKS FOOTER -->
+  <div id="adminPanelFooterTab" style="display:none;background:#fff;border:1px solid #f0abfc;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="font-size:12px;font-weight:800;color:#701a75;margin-bottom:10px">🏬 Pengaturan Informasi Toko & Disclaimer Footer</div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Deskripsi Toko di Footer (Tentang NORXSTORE):</label>
+      <textarea id="adminCfg_brandDesc" class="admin-input" rows="3" style="font-size:12px;margin-bottom:0;resize:vertical" placeholder="Platform terpercaya untuk top-up game, jasa joki profesional..."></textarea>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Teks Jam Operasional Toko:</label>
+      <input type="text" id="adminCfg_operatingHours" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="🟢 Buka 24 Jam Setiap Hari">
+    </div>
+
+    <div>
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Teks Disclaimer Hak Cipta di Bagian Bawah:</label>
+      <textarea id="adminCfg_disclaimerText" class="admin-input" rows="3" style="font-size:12px;margin-bottom:0;resize:vertical" placeholder="NORXSTORE adalah platform independen..."></textarea>
+    </div>
+  </div>
+
+  <!-- Tombol Aksi Simpan & Reset -->
+  <div style="display:flex;gap:8px">
+    <button type="button" class="admin-btn" style="flex:2;background:linear-gradient(135deg,#c026d3,#9333ea);color:#fff;font-weight:700" onclick="saveAdminSocialAndFooterConfig()">💾 Simpan Semua Pengaturan Medsos & Footer</button>
+    <button type="button" class="admin-btn-sm" style="flex:1;background:#fdf4ff;color:#86198f;border:1px solid #f0abfc;font-weight:700" onclick="resetAdminSocialAndFooterConfig()">🔄 Reset Default</button>
+  </div>
+  <div class="admin-status" id="adminSocialStatus">✅ Pengaturan media sosial dan footer berhasil disimpan!</div>
+</div>
+
+<div class="admin-divider"></div>
 <div style="background:#fffbeb;border:1.5px solid #fde68a;border-radius:12px;padding:14px;margin-bottom:18px">
   <div class="admin-section-title" style="color:#b45309;margin-top:0;display:flex;align-items:center;justify-content:space-between">
     <span>⭐ Kelola Rating & Ulasan Pelanggan</span>
@@ -2095,8 +3314,8 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <div class="order-notif-actions">
-      <button type="button" class="order-notif-btn" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2)" onclick="closeOrderNotif()">✕ Tutup Jendela</button>
-      <button type="button" class="order-notif-btn" style="background:rgba(124,58,237,0.2);color:#c084fc;border:1px solid rgba(124,58,237,0.4)" onclick="onOrderNotifOpenCart()">🛒 Buka Riwayat Pesanan</button>
+      <button type="button" class="order-notif-btn" id="orderNotifCloseBtn" style="background:rgba(255,255,255,0.1);color:#fff;border:1px solid rgba(255,255,255,0.2)" onclick="closeOrderNotif()">✕ Tutup Jendela</button>
+      <button type="button" class="order-notif-btn" id="orderNotifHistoryBtn" style="background:rgba(124,58,237,0.2);color:#c084fc;border:1px solid rgba(124,58,237,0.4)" onclick="onOrderNotifOpenCart()">🛒 Buka Riwayat Pesanan</button>
     </div>
   </div>
 </div>
@@ -2254,7 +3473,31 @@ button{cursor:pointer;font-family:inherit}
       </button>
     </div>
   </div>
+<!-- ==================== MODAL MEDIA SOSIAL RESMI ==================== -->
+<div class="social-modal-overlay" id="socialModalOverlay" onclick="closeSocialModal(event)">
+  <div class="social-modal-box" onclick="event.stopPropagation()">
+    <div class="social-modal-header">
+      <div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:18px">📱</span>
+          <h4 style="margin:0;font-size:16px;font-weight:800;color:#fff" id="socialModalHeading">Media Sosial & Komunitas</h4>
+        </div>
+        <p style="margin:3px 0 0;font-size:11.5px;color:#c4b5fd" id="socialModalSub">Semua channel resmi terverifikasi NORXSTORE</p>
+      </div>
+      <button type="button" class="social-modal-close" onclick="closeSocialModal()" title="Tutup">✕</button>
+    </div>
+    
+    <div class="social-modal-body">
+      <div class="social-modal-scam-banner">
+        <span style="font-size:15px">🛡️</span>
+        <small id="socialModalScamText">Semua channel di bawah ini adalah <strong>kontak & akun resmi terverifikasi</strong> NORXSTORE. Waspada akun palsu!</small>
+      </div>
+
+      <div class="social-modal-list" id="socialModalList"></div>
+    </div>
+  </div>
 </div>
+
 
 <div class="toast" id="toast"></div>
 
@@ -3100,16 +4343,102 @@ const I18N = {
     subPromoText: '⚡ Promo Diskon {n}% · {c} layanan',
     subCountText: '{c} layanan tersedia',
     subScrollPrev: 'Geser ke kiri',
-    subScrollNext: 'Geser ke kanan'
+    subScrollNext: 'Geser ke kanan',
+    socialKicker: '🌐 KOMUNITAS & MEDIA SOSIAL RESMI',
+    socialHeading: 'Ikuti Media Sosial Resmi NORXSTORE',
+    socialSubtitle: 'Dapatkan info promo kilat, restock akun, event giveaway, & bantuan customer service langsung.',
+    scamWarningTitle: 'Waspada Penipuan Mengatasnamakan NORXSTORE!',
+    scamWarningDesc: 'Transaksi dan konsultasi resmi HANYA dilakukan melalui kontak dan tautan akun media sosial yang tertera di halaman ini. Kami tidak pernah meminta password email Anda di luar sistem joki yang aman.',
+    socialBtnOpen: 'Kunjungi ➔',
+    socialBtnChat: 'Chat WhatsApp ➔',
+    socialBtnCopy: 'Salin',
+    socialCopied: 'Disalin! ✓',
+    socialModalTitle: 'Media Sosial & Komunitas',
+    socialModalSub: 'Semua channel resmi terverifikasi NORXSTORE',
+    socialModalScam: 'Semua channel di bawah ini adalah <strong>kontak & akun resmi terverifikasi</strong> NORXSTORE. Waspada akun palsu!',
+    socialNavBtn: 'Medsos',
+    socialFloatingBtn: 'Medsos & CS',
+
+    // New keys for complete localization
+    priceRangeHint: '💡 Rentang harga {price} (menyesuaikan varian/jumlah saat chat)',
+    savingsLabel: 'Hemat',
+    orderProcessingNotice: '⏳ Layanan ini sedang diproses. Belum bisa dipesan lagi sampai selesai.',
+    orderWaitFinishedNotice: '⚠️ Pesanan produk ini sebelumnya belum selesai dikerjakan. Belum bisa dipesan lagi!',
+    selectPaymentFirst: 'Pilih metode pembayaran dulu!',
+    selectAdminFirst: 'Pilih admin tujuan chat dulu!',
+    redirectingWa: 'Mengarahkan ke WhatsApp...',
+    clearCartConfirm: 'Yakin ingin mengosongkan keranjang?',
+    cartEmptiedToast: 'Keranjang dikosongkan',
+    accountSoldToast: 'Akun ini sudah terjual',
+    accountReservedToast: 'Akun ini sedang dipesan orang lain, coba lagi nanti',
+    orderFinishedTitle: 'Pesanan Anda Telah Selesai!',
+    orderFinishedSub: 'Admin telah menyelesaikan pengerjaan layanan Anda. Berikan bintang kepuasan Anda di bawah untuk menaikkan rating toko!',
+    orderRatingTitle: '⭐ Beri Bintang Kepuasan Jokian:',
+    orderRatingSubmitBtn: '⭐ Kirim Bintang & Naikkan Rating',
+    orderRatingDoneNotice: '✅ Anda sudah memberikan rating untuk pesanan ini',
+    orderRatingThankYou: 'Terima kasih atas kepercayaan Anda di Norxstore!',
+    phoneNotifTitle: 'Notifikasi HP (Suara & Getar)',
+    phoneNotifActiveDesc: 'Ponsel Anda akan otomatis bergetar & berdering saat pesanan selesai meski web ditutup.',
+    phoneNotifInactiveDesc: 'Tekan untuk mengaktifkan suara & getar di HP saat pesanan selesai meski web ditutup.',
+    phoneNotifBtnActive: '✅ Notif HP Aktif',
+    phoneNotifBtnInactive: '🔔 Aktifkan Notif HP',
+    orderStatusPending: '🟡 Menunggu Konfirmasi',
+    orderStatusProcessing: '🔵 Sedang Diproses',
+    orderStatusCancelled: '🔴 Dibatalkan',
+    orderStatusDone: '🟢 Selesai',
+    orderBtnCancel: '✕ Batalkan',
+    orderBtnDelete: '🗑️ Hapus Riwayat',
+    orderBtnRate: '⭐ Beri Bintang',
+    orderAlreadyRated: '⭐ Sudah Dinilai',
+
+    // Footer keys
+    footerPillar1Title: 'Pengiriman Instan & Cepat',
+    footerPillar1Desc: 'Pesanan diproses otomatis 24 jam nonstop dengan estimasi pengerjaan kilat.',
+    footerPillar2Title: '100% Legal & Terpercaya',
+    footerPillar2Desc: 'Garansi anti-banned resmi & keamanan data akun terjamin amanah 100%.',
+    footerPillar3Title: 'Metode Bayar Lengkap',
+    footerPillar3Desc: 'QRIS, E-Wallet, VA Bank, FPX, PayNow & pembayaran instan lokal.',
+    footerPillar4Title: 'Customer Support 24/7',
+    footerPillar4Desc: 'Admin ramah siap sedia mendampingi order Anda hingga selesai.',
+    footerBrandDesc: 'Platform terpercaya untuk top-up game, jasa joki profesional, dan jual beli akun game amanah se-Asia Tenggara. Transaksi cepat, amanah, dan bergaransi resmi.',
+    footerHoursBadge: '🟢 Buka 24 Jam Setiap Hari',
+    footerOnlineCount: 'Orang Sedang Online di Web',
+    footerColNavTitle: 'PETA SITUS & KATALOG',
+    footerColHelpTitle: 'PUSAT BANTUAN & KEBIJAKAN',
+    footerColPayTitle: 'PEMBAYARAN & KOMUNITAS',
+    footerLinkAll: '🛒 Semua Layanan Game',
+    footerLinkGenshin: '✨ Genshin Impact',
+    footerLinkHsr: '🚀 Honkai: Star Rail',
+    footerLinkWuwa: '🌊 Wuthering Waves',
+    footerLinkNte: '🔮 Neverness to Everness',
+    footerLinkAccount: '🔑 Akun Store & Starter',
+    footerLinkReviews: '⭐ Ulasan & Testimoni',
+    footerLinkTrack: '📦 Lacak Status Pesanan',
+    footerLinkGuide: '📖 Panduan Cara Pemesanan',
+    footerLinkTerms: '⚖️ Syarat & Ketentuan Layanan',
+    footerLinkPrivacy: '🔒 Kebijakan Privasi & Garansi',
+    footerLinkCs: '💬 Hubungi Customer Support',
+    footerLinkReport: '🚩 Lapor Kendala Pesanan',
+    footerPayMethodsTitle: 'Metode Pembayaran Resmi:',
+    footerSocialTitle: 'Komunitas & Media Sosial:',
+    footerDisclaimer: 'NORXSTORE adalah platform independen penyedia layanan game. Seluruh hak cipta, nama dagang, dan aset game adalah milik penerbit masing-masing (HoYoverse, Kuro Games, Hotta Studio).',
+    footerRights: 'Hak Cipta Dilindungi Undang-Undang.',
+    infoGuideTitle: '📖 Panduan Cara Pemesanan',
+    infoTermsTitle: '⚖️ Syarat & Ketentuan Layanan',
+    infoPrivacyTitle: '🔒 Kebijakan Privasi & Garansi',
+    infoReportTitle: '🚩 Lapor Kendala Pesanan',
+    btnOrderNow: '🛒 Pesan Sekarang',
+    orderNotifClose: '✕ Tutup Jendela',
+    orderNotifHistory: '🛒 Buka Riwayat Pesanan'
   },
   MY: {
     langName: 'Bahasa Melayu',
-    searchPlaceholder: 'Cari perkhidmatan joki...',
+    searchPlaceholder: 'Cari perkhidmatan joki & akaun...',
     searchClearTitle: 'Padam carian',
     searchPenelusuran: 'Carian',
     servicesLabel: 'perkhidmatan',
     noServicesFound: 'Tiada perkhidmatan yang sepadan dengan',
-    showAllServices: 'PAPAR SEMUA {n} PERKHIDMATAN DI KATALOG ➔',
+    showAllServices: 'PAPAR SEMUA {n} PERKHIDMATAN DALAM KATALOG ➔',
     countryModalTitle: 'Pilih Negara & Mata Wang',
     countryBtnTitle: 'Pilih Negara & Mata Wang',
     closeBtn: 'TUTUP',
@@ -3215,11 +4544,97 @@ const I18N = {
     subPromoText: '⚡ Promosi Diskaun {n}% · {c} perkhidmatan',
     subCountText: '{c} perkhidmatan tersedia',
     subScrollPrev: 'Geser ke kiri',
-    subScrollNext: 'Geser ke kanan'
+    subScrollNext: 'Geser ke kanan',
+    socialKicker: '🌐 KOMUNITI & MEDIA SOSIAL RASMI',
+    socialHeading: 'Ikuti Media Sosial Rasmi NORXSTORE',
+    socialSubtitle: 'Dapatkan maklumat promosi kilat, restock akaun, event giveaway, & bantuan khidmat pelanggan secara langsung.',
+    scamWarningTitle: 'Berwaspada Terhadap Penipuan Mengatasnamakan NORXSTORE!',
+    scamWarningDesc: 'Transaksi dan perbincangan rasmi HANYA dijalankan melalui kenalan dan pautan media sosial yang tertera di halaman ini. Kami tidak pernah meminta kata laluan e-mel anda di luar sistem joki yang selamat.',
+    socialBtnOpen: 'Lawati ➔',
+    socialBtnChat: 'Sembang WhatsApp ➔',
+    socialBtnCopy: 'Salin',
+    socialCopied: 'Disalin! ✓',
+    socialModalTitle: 'Media Sosial & Komuniti',
+    socialModalSub: 'Semua saluran rasmi terverifikasi NORXSTORE',
+    socialModalScam: 'Semua saluran di bawah ini adalah <strong>kenalan & akaun rasmi disahkan</strong> NORXSTORE. Waspada akaun palsu!',
+    socialNavBtn: 'Medsos',
+    socialFloatingBtn: 'Medsos & CS',
+
+    // New keys for MY
+    priceRangeHint: '💡 Julat harga {price} (mengikut varian/kuantiti semasa sembang)',
+    savingsLabel: 'Penjimatan',
+    orderProcessingNotice: '⏳ Perkhidmatan ini sedang diproses. Belum boleh dipesan lagi sehingga selesai.',
+    orderWaitFinishedNotice: '⚠️ Pesanan perkhidmatan ini sebelum ini belum siap. Belum boleh ditempah lagi!',
+    selectPaymentFirst: 'Sila pilih kaedah pembayaran dahulu!',
+    selectAdminFirst: 'Sila pilih admin sokongan dahulu!',
+    redirectingWa: 'Mengarahkan ke WhatsApp...',
+    clearCartConfirm: 'Adakah anda pasti mahu mengosongkan troli?',
+    cartEmptiedToast: 'Troli telah dikosongkan',
+    accountSoldToast: 'Akaun ini telah habis dijual',
+    accountReservedToast: 'Akaun ini sedang ditempah oleh pelanggan lain, sila cuba sebentar lagi',
+    orderFinishedTitle: 'Pesanan Anda Telah Siap!',
+    orderFinishedSub: 'Admin telah menyelesaikan perkhidmatan anda. Sila beri bintang kepuasan anda di bawah untuk menaikkan rating kedai!',
+    orderRatingTitle: '⭐ Beri Bintang Kepuasan Joki:',
+    orderRatingSubmitBtn: '⭐ Hantar Bintang & Naikkan Rating',
+    orderRatingDoneNotice: '✅ Anda telah memberikan penilaian bagi pesanan ini',
+    orderRatingThankYou: 'Terima kasih atas sokongan dan kepercayaan anda di Norxstore!',
+    phoneNotifTitle: 'Notifikasi Telefon Pintar',
+    phoneNotifActiveDesc: 'Telefon anda akan bergetar & berdering secara automatik apabila pesanan siap walaupun web ditutup.',
+    phoneNotifInactiveDesc: 'Tekan untuk aktifkan bunyi & getaran apabila pesanan anda siap walaupun web ditutup.',
+    phoneNotifBtnActive: '✅ Notif Telefon Aktif',
+    phoneNotifBtnInactive: '🔔 Aktifkan Notif Telefon',
+    orderStatusPending: '🟡 Menunggu Pengesahan',
+    orderStatusProcessing: '🔵 Sedang Diproses',
+    orderStatusCancelled: '🔴 Dibatalkan',
+    orderStatusDone: '🟢 Siap',
+    orderBtnCancel: '✕ Batalkan',
+    orderBtnDelete: '🗑️ Padam Sejarah',
+    orderBtnRate: '⭐ Beri Penilaian',
+    orderAlreadyRated: '⭐ Telah Dinilai',
+
+    // Footer keys for MY
+    footerPillar1Title: 'Penghantaran Segera & Pantas',
+    footerPillar1Desc: 'Pesanan diproses automatik 24 jam tanpa henti dengan anggaran siap terpantas.',
+    footerPillar2Title: '100% Sah & Dipercayai',
+    footerPillar2Desc: 'Jaminan rasmi anti-banned & keselamatan data akaun terjamin 100%.',
+    footerPillar3Title: 'Pelbagai Kaedah Bayaran',
+    footerPillar3Desc: 'Touch \'n Go eWallet, DuitNow QR, FPX, Maybank2u & perbankan dalam talian.',
+    footerPillar4Title: 'Khidmat Pelanggan 24/7',
+    footerPillar4Desc: 'Pasukan admin sedia membantu dan membimbing order anda pada bila-bila masa.',
+    footerBrandDesc: 'Platform dipercayai untuk tambah nilai game, servis joki profesional, dan jual beli akaun game selamat di seluruh Asia Tenggara. Transaksi pantas dan bergaransi rasmi.',
+    footerHoursBadge: '🟢 Beroperasi 24 Jam Setiap Hari',
+    footerOnlineCount: 'Pemain Sedang Dalam Talian',
+    footerColNavTitle: 'PAUTAN PANTAS & KATALOG',
+    footerColHelpTitle: 'PUSAT BANTUAN & DASAR',
+    footerColPayTitle: 'BAYARAN & KOMUNITI',
+    footerLinkAll: '🛒 Semua Perkhidmatan Game',
+    footerLinkGenshin: '✨ Genshin Impact',
+    footerLinkHsr: '🚀 Honkai: Star Rail',
+    footerLinkWuwa: '🌊 Wuthering Waves',
+    footerLinkNte: '🔮 Neverness to Everness',
+    footerLinkAccount: '🔑 Kedai Akaun & Starter',
+    footerLinkReviews: '⭐ Penilaian & Testimoni',
+    footerLinkTrack: '📦 Semak Status Pesanan',
+    footerLinkGuide: '📖 Panduan Cara Membuat Pesanan',
+    footerLinkTerms: '⚖️ Terma & Syarat Perkhidmatan',
+    footerLinkPrivacy: '🔒 Dasar Privasi & Jaminan',
+    footerLinkCs: '💬 Hubungi Khidmat Pelanggan',
+    footerLinkReport: '🚩 Lapor Masalah Pesanan',
+    footerPayMethodsTitle: 'Kaedah Pembayaran Rasmi:',
+    footerSocialTitle: 'Saluran Komuniti Rasmi:',
+    footerDisclaimer: 'NORXSTORE adalah platform bebas perkhidmatan game. Semua hak cipta dan tanda dagangan adalah hak milik penerbit masing-masing (HoYoverse, Kuro Games, Hotta Studio).',
+    footerRights: 'Hak Cipta Terpelihara.',
+    infoGuideTitle: '📖 Panduan Cara Membuat Pesanan',
+    infoTermsTitle: '⚖️ Terma & Syarat Perkhidmatan',
+    infoPrivacyTitle: '🔒 Dasar Privasi & Jaminan',
+    infoReportTitle: '🚩 Lapor Masalah Pesanan',
+    btnOrderNow: '🛒 Pesan Sekarang',
+    orderNotifClose: '✕ Tutup Tetingkap',
+    orderNotifHistory: '🛒 Buka Sejarah Pesanan'
   },
   SG: {
     langName: 'English (Singapore)',
-    searchPlaceholder: 'Search services...',
+    searchPlaceholder: 'Search services, boosts, top-ups...',
     searchClearTitle: 'Clear search',
     searchPenelusuran: 'Search',
     servicesLabel: 'services',
@@ -3330,7 +4745,93 @@ const I18N = {
     subPromoText: '⚡ Promo {n}% Off · {c} services',
     subCountText: '{c} services available',
     subScrollPrev: 'Scroll left',
-    subScrollNext: 'Scroll right'
+    subScrollNext: 'Scroll right',
+    socialKicker: '🌐 OFFICIAL COMMUNITY & SOCIAL MEDIA',
+    socialHeading: 'Follow Official NORXSTORE Channels',
+    socialSubtitle: 'Get the latest promo drops, account restocks, giveaways & direct customer support.',
+    scamWarningTitle: 'Beware of Impersonation & Scams!',
+    scamWarningDesc: 'Official transactions and support are STRICTLY conducted through the verified contacts and links listed on this page. We never request your email passwords arbitrarily.',
+    socialBtnOpen: 'Visit ➔',
+    socialBtnChat: 'Chat WhatsApp ➔',
+    socialBtnCopy: 'Copy',
+    socialCopied: 'Copied! ✓',
+    socialModalTitle: 'Official Social & Community',
+    socialModalSub: 'All verified official NORXSTORE channels',
+    socialModalScam: 'All channels listed below are <strong>strictly verified official contacts</strong> of NORXSTORE. Beware of fake accounts!',
+    socialNavBtn: 'Social',
+    socialFloatingBtn: 'Social & CS',
+
+    // New keys for SG (Singapore / English)
+    priceRangeHint: '💡 Price range {price} (depends on variant/quantity upon chat)',
+    savingsLabel: 'Savings',
+    orderProcessingNotice: '⏳ This service is currently being processed. Cannot be re-ordered until completed.',
+    orderWaitFinishedNotice: '⚠️ A previous order for this service is still in progress. Please wait until completed!',
+    selectPaymentFirst: 'Please select a payment method first!',
+    selectAdminFirst: 'Please select a support admin first!',
+    redirectingWa: 'Redirecting to WhatsApp...',
+    clearCartConfirm: 'Are you sure you want to empty your cart?',
+    cartEmptiedToast: 'Shopping cart has been emptied',
+    accountSoldToast: 'This account has already been sold',
+    accountReservedToast: 'This account is currently reserved by another customer, please check back later',
+    orderFinishedTitle: 'Your Order Has Been Completed!',
+    orderFinishedSub: 'Our team has completed your order! Please submit your satisfaction rating below to help support our store!',
+    orderRatingTitle: '⭐ Rate Your Service Experience:',
+    orderRatingSubmitBtn: '⭐ Submit Rating & Boost Score',
+    orderRatingDoneNotice: '✅ You have already submitted a review for this order',
+    orderRatingThankYou: 'Thank you for choosing NORXSTORE!',
+    phoneNotifTitle: 'Mobile Push Alerts (Sound & Vibrate)',
+    phoneNotifActiveDesc: 'Your device will automatically vibrate & sound when your order finishes, even if the web is closed.',
+    phoneNotifInactiveDesc: 'Tap to enable sound & vibration alerts when your order finishes.',
+    phoneNotifBtnActive: '✅ Mobile Alerts Active',
+    phoneNotifBtnInactive: '🔔 Enable Mobile Alerts',
+    orderStatusPending: '🟡 Awaiting Confirmation',
+    orderStatusProcessing: '🔵 In Progress',
+    orderStatusCancelled: '🔴 Cancelled',
+    orderStatusDone: '🟢 Completed',
+    orderBtnCancel: '✕ Cancel',
+    orderBtnDelete: '🗑️ Delete History',
+    orderBtnRate: '⭐ Rate Order',
+    orderAlreadyRated: '⭐ Rated',
+
+    // Footer keys for SG
+    footerPillar1Title: 'Instant & Fast Delivery',
+    footerPillar1Desc: 'Automated order processing 24/7 non-stop with rapid turnaround time.',
+    footerPillar2Title: '100% Legal & Secure',
+    footerPillar2Desc: 'Official anti-banned guarantee & complete customer account privacy.',
+    footerPillar3Title: 'Multi-Currency & Local Pay',
+    footerPillar3Desc: 'PayNow QR, GrabPay, DBS PayLah!, Cards & major payment channels.',
+    footerPillar4Title: '24/7 Dedicated Support',
+    footerPillar4Desc: 'Friendly gaming support team available anytime to assist your orders.',
+    footerBrandDesc: 'Southeast Asia\'s leading destination for game top-ups, rank boosting, and safe account trading. Fast automated checkout, competitive rates, and full official warranty.',
+    footerHoursBadge: '🟢 Open 24/7 Everyday',
+    footerOnlineCount: 'Gamers Online on Site',
+    footerColNavTitle: 'QUICK LINKS & CATALOG',
+    footerColHelpTitle: 'CUSTOMER CARE & POLICIES',
+    footerColPayTitle: 'PAYMENT & COMMUNITY',
+    footerLinkAll: '🛒 All Game Services',
+    footerLinkGenshin: '✨ Genshin Impact',
+    footerLinkHsr: '🚀 Honkai: Star Rail',
+    footerLinkWuwa: '🌊 Wuthering Waves',
+    footerLinkNte: '🔮 Neverness to Everness',
+    footerLinkAccount: '🔑 Accounts Store & Starters',
+    footerLinkReviews: '⭐ Reviews & Testimonials',
+    footerLinkTrack: '📦 Track My Order Status',
+    footerLinkGuide: '📖 How to Order Guide',
+    footerLinkTerms: '⚖️ Terms of Service',
+    footerLinkPrivacy: '🔒 Privacy Policy & Warranty',
+    footerLinkCs: '💬 Contact Support on WhatsApp',
+    footerLinkReport: '🚩 Report an Issue',
+    footerPayMethodsTitle: 'Supported Payment Methods:',
+    footerSocialTitle: 'Official Communities:',
+    footerDisclaimer: 'NORXSTORE is an independent marketplace & gaming service provider. All game titles, trademarks, and artwork are properties of their respective owners (HoYoverse, Kuro Games, Hotta Studio).',
+    footerRights: 'All Rights Reserved.',
+    infoGuideTitle: '📖 How to Order Guide',
+    infoTermsTitle: '⚖️ Terms of Service',
+    infoPrivacyTitle: '🔒 Privacy Policy & Warranty',
+    infoReportTitle: '🚩 Report an Issue',
+    btnOrderNow: '🛒 Order Now',
+    orderNotifClose: '✕ Close Window',
+    orderNotifHistory: '🛒 View Order History'
   }
 };
 
@@ -3407,6 +4908,174 @@ const DESC_EXACT_MAP = {
   "Story clear, anomaly farming, & resource.": {
     MY: "Cerita selesai, farming anomali & sumber.",
     SG: "Story clear, anomaly farming & resources."
+  },
+  "Harga murah cocok untuk semua": {
+    MY: "Harga berpatutan sesuai untuk semua pemain",
+    SG: "Affordable price, suitable for everyone"
+  },
+  "Harga murah cocok untuk yang baru dapat uang": {
+    MY: "Harga mampu milik sesuai untuk yang baru dapat gaji",
+    SG: "Budget-friendly price, perfect treat after payday"
+  },
+  "Harga cocok untuk yang baru gajian": {
+    MY: "Pakej berbaloi sesuai waktu baru dapat gaji",
+    SG: "Great value package for payday top-up"
+  },
+  "Eksploration all map mondstadt": {
+    MY: "100% Eksplorasi seluruh peta Mondstadt",
+    SG: "100% Exploration across Mondstadt map"
+  },
+  "Eksploration all map liyue": {
+    MY: "100% Eksplorasi seluruh peta Liyue",
+    SG: "100% Exploration across Liyue map"
+  },
+  "Eksploration all map inazuma": {
+    MY: "100% Eksplorasi seluruh peta Inazuma",
+    SG: "100% Exploration across Inazuma map"
+  },
+  "Eksploration all map fontaine": {
+    MY: "100% Eksplorasi seluruh peta Fontaine",
+    SG: "100% Exploration across Fontaine map"
+  },
+  "Eksploration all map sumeru": {
+    MY: "100% Eksplorasi seluruh peta Sumeru",
+    SG: "100% Exploration across Sumeru map"
+  },
+  "Eksploration all map natlan": {
+    MY: "100% Eksplorasi seluruh peta Natlan",
+    SG: "100% Exploration across Natlan map"
+  },
+  "Eksploration all map nodkrai": {
+    MY: "100% Eksplorasi seluruh peta Nodkrai",
+    SG: "100% Exploration across Nodkrai map"
+  },
+  "Eksploration all map snezhnaya": {
+    MY: "100% Eksplorasi seluruh peta Snezhnaya",
+    SG: "100% Exploration across Snezhnaya map"
+  },
+  "Eksploration all map lahai roy": {
+    MY: "100% Eksplorasi seluruh peta Lahai Roi",
+    SG: "100% Exploration across Lahai Roi map"
+  },
+  "Eksploration all map rinascita": {
+    MY: "100% Eksplorasi seluruh peta Rinascita",
+    SG: "100% Exploration across Rinascita map"
+  },
+  "Eksploration all map huanglong": {
+    MY: "100% Eksplorasi seluruh peta Huanglong",
+    SG: "100% Exploration across Huanglong map"
+  },
+  "Eksploration all map mengzhou": {
+    MY: "100% Eksplorasi seluruh peta Mengzhou",
+    SG: "100% Exploration across Mengzhou map"
+  },
+  "All quest archon mondstadt": {
+    MY: "Selesai semua quest Archon Mondstadt",
+    SG: "Complete all Mondstadt Archon Quests"
+  },
+  "All quest archon liyue": {
+    MY: "Selesai semua quest Archon Liyue",
+    SG: "Complete all Liyue Archon Quests"
+  },
+  "All quest archon inazuma": {
+    MY: "Selesai semua quest Archon Inazuma",
+    SG: "Complete all Inazuma Archon Quests"
+  },
+  "All quest archon sumeru": {
+    MY: "Selesai semua quest Archon Sumeru",
+    SG: "Complete all Sumeru Archon Quests"
+  },
+  "All quest archon fontaine": {
+    MY: "Selesai semua quest Archon Fontaine",
+    SG: "Complete all Fontaine Archon Quests"
+  },
+  "All quest archon natlan": {
+    MY: "Selesai semua quest Archon Natlan",
+    SG: "Complete all Natlan Archon Quests"
+  },
+  "All quest archon nodkrai": {
+    MY: "Selesai semua quest Archon Nodkrai",
+    SG: "Complete all Nodkrai Archon Quests"
+  },
+  "All quest archon snezhnaya": {
+    MY: "Selesai semua quest Archon Snezhnaya",
+    SG: "Complete all Snezhnaya Archon Quests"
+  },
+  "Hangout/chap": {
+    MY: "Hangout event setiap bab",
+    SG: "Hangout event per chapter"
+  },
+  "All aranara clear": {
+    MY: "Selesai semua quest hutan Aranara 100%",
+    SG: "Complete all Aranara forest quests 100%"
+  },
+  "Story quest/chap": {
+    MY: "Story quest setiap bab",
+    SG: "Story quest per chapter"
+  },
+  "World quest/chapter": {
+    MY: "World quest setiap bab",
+    SG: "World quest per chapter"
+  },
+  "All quest clear yang tersedia tidak termasuk quest archon": {
+    MY: "Selesai semua quest yang tersedia (tidak termasuk quest Archon)",
+    SG: "Clear all available world quests (excluding Archon quests)"
+  },
+  "Daily bp, Daily comission, Resin, Ekspedisi": {
+    MY: "Daily BP, Misi Harian, Resin, Ekspedisi",
+    SG: "Daily BP, Commissions, Resin burning, Expeditions"
+  },
+  "Daily bp, Daily comission, Resin, Ekspedisi, Reputasi": {
+    MY: "Daily BP, Misi Harian, Resin, Ekspedisi, Reputasi",
+    SG: "Daily BP, Commissions, Resin, Expeditions, Reputation"
+  },
+  "Daily bp, Daily comission, Resin, Ekspedisi, Reputasi, Weekly boss, Event": {
+    MY: "Daily BP, Misi Harian, Resin, Ekspedisi, Reputasi, Weekly Boss, Event Semasa",
+    SG: "Daily BP, Commissions, Resin, Expeditions, Reputation, Weekly Bosses, Active Events"
+  },
+  "Up level karakter 1-40": {
+    MY: "Naikkan tahap karakter 1-40",
+    SG: "Level up character 1-40"
+  },
+  "Up level karakter 40-50": {
+    MY: "Naikkan tahap karakter 40-50",
+    SG: "Level up character 40-50"
+  },
+  "Up level karakter 50-60": {
+    MY: "Naikkan tahap karakter 50-60",
+    SG: "Level up character 50-60"
+  },
+  "Up level karakter 60-70": {
+    MY: "Naikkan tahap karakter 60-70",
+    SG: "Level up character 60-70"
+  },
+  "Up level karakter 70-80": {
+    MY: "Naikkan tahap karakter 70-80",
+    SG: "Level up character 70-80"
+  },
+  "Up level karakter 80-90": {
+    MY: "Naikkan tahap karakter 80-90",
+    SG: "Level up character 80-90"
+  },
+  "Joki culus persatunya": {
+    MY: "Kutipan Oculus setiap satu",
+    SG: "Collect Oculus per piece"
+  },
+  "Kumpulkan item dari monster persatunya": {
+    MY: "Kumpul bahan daripada raksasa setiap satu",
+    SG: "Farming monster drop materials per piece"
+  },
+  "Kumpulkan material dari monster persatunya": {
+    MY: "Kumpul bahan material setiap satu",
+    SG: "Farming materials & items per piece"
+  },
+  "All event harga sesuai kerumitan event": {
+    MY: "Selesai event penuh, harga mengikut kerumitan event",
+    SG: "Limited event clear, price depends on event complexity"
+  },
+  "Akun admin yang nganggur": {
+    MY: "Akaun admin sedia ada, rekod selamat & bersih",
+    SG: "Verified idle admin account, safe & clean record"
   }
 };
 
@@ -3686,6 +5355,207 @@ function getProductDesc(p, lang = null){
   if(currentLang === 'ID' && p.desc_id) return p.desc_id;
   const baseDesc = p.desc || '';
   return translateProductDesc(baseDesc, currentLang);
+}
+
+// ==================== PRODUCT NAME TRANSLATION ENGINE ====================
+const NAME_EXACT_MAP = {
+  // Genshin IF
+  "10 IF": { MY: "10 Intertwined Fate", SG: "10 Intertwined Fate" },
+  "20 IF": { MY: "20 Intertwined Fate", SG: "20 Intertwined Fate" },
+  "30 IF": { MY: "30 Intertwined Fate", SG: "30 Intertwined Fate" },
+  "40 IF": { MY: "40 Intertwined Fate", SG: "40 Intertwined Fate" },
+  "50 IF": { MY: "50 Intertwined Fate", SG: "50 Intertwined Fate" },
+  "60 IF": { MY: "60 Intertwined Fate", SG: "60 Intertwined Fate" },
+  "100 IF": { MY: "100 Intertwined Fate", SG: "100 Intertwined Fate" },
+  "200 IF": { MY: "200 Intertwined Fate", SG: "200 Intertwined Fate" },
+
+  // WuWa RT
+  "10 RT": { MY: "10 Radiant Tide", SG: "10 Radiant Tide" },
+  "20 RT": { MY: "20 Radiant Tide", SG: "20 Radiant Tide" },
+  "30 RT": { MY: "30 Radiant Tide", SG: "30 Radiant Tide" },
+  "40 RT": { MY: "40 Radiant Tide", SG: "40 Radiant Tide" },
+  "50 RT": { MY: "50 Radiant Tide", SG: "50 Radiant Tide" },
+  "60 RT": { MY: "60 Radiant Tide", SG: "60 Radiant Tide" },
+  "100 RT": { MY: "100 Radiant Tide", SG: "100 Radiant Tide" },
+  "200 RT": { MY: "200 Radiant Tide", SG: "200 Radiant Tide" },
+
+  // Genshin Exploration
+  "EKSPLORE MONDSTADT": { MY: "Eksplorasi Mondstadt 100%", SG: "Mondstadt 100% Exploration" },
+  "EKSPLORE LIYUE": { MY: "Eksplorasi Liyue 100%", SG: "Liyue 100% Exploration" },
+  "EKSPLORE INAZUMA": { MY: "Eksplorasi Inazuma 100%", SG: "Inazuma 100% Exploration" },
+  "EKSPLORE FONTAINE": { MY: "Eksplorasi Fontaine 100%", SG: "Fontaine 100% Exploration" },
+  "EKSPLORE SUMERU": { MY: "Eksplorasi Sumeru 100%", SG: "Sumeru 100% Exploration" },
+  "EKSPLORE NATLAN": { MY: "Eksplorasi Natlan 100%", SG: "Natlan 100% Exploration" },
+  "EKSPLORE NODKRAI": { MY: "Eksplorasi Nodkrai 100%", SG: "Nodkrai 100% Exploration" },
+  "EKSPLORE SNEZHNAYA": { MY: "Eksplorasi Snezhnaya 100%", SG: "Snezhnaya 100% Exploration" },
+
+  // WuWa Exploration
+  "EKSPLORE LAHAI ROI": { MY: "Eksplorasi Lahai Roi 100%", SG: "Lahai Roi 100% Exploration" },
+  "EKSPLORE RINASCITA": { MY: "Eksplorasi Rinascita 100%", SG: "Rinascita 100% Exploration" },
+  "EKSPLORE HUANGLONG": { MY: "Eksplorasi Huanglong 100%", SG: "Huanglong 100% Exploration" },
+  "EKSPLORE MENGZHOU": { MY: "Eksplorasi Mengzhou 100%", SG: "Mengzhou 100% Exploration" },
+
+  // Quests & Story
+  "ARCHON MONDSTADT": { MY: "Quest Archon Mondstadt", SG: "Mondstadt Archon Quest" },
+  "ARCHON LIYUE": { MY: "Quest Archon Liyue", SG: "Liyue Archon Quest" },
+  "ARCHON INAZUMA": { MY: "Quest Archon Inazuma", SG: "Inazuma Archon Quest" },
+  "ARCHON SUMERU": { MY: "Quest Archon Sumeru", SG: "Sumeru Archon Quest" },
+  "ARCHON FONTAINE": { MY: "Quest Archon Fontaine", SG: "Fontaine Archon Quest" },
+  "ARCHON NATLAN": { MY: "Quest Archon Natlan", SG: "Natlan Archon Quest" },
+  "ARCHON NODKRAI": { MY: "Quest Archon Nodkrai", SG: "Nodkrai Archon Quest" },
+  "ARCHON SNEZHNAYA": { MY: "Quest Archon Snezhnaya", SG: "Snezhnaya Archon Quest" },
+  "HANGOUT/chapter": { MY: "Hangout Event (Setiap Bab)", SG: "Hangout Event (Per Chapter)" },
+  "ARANARA": { MY: "Semua Quest Aranara Selesai", SG: "Aranara All Quests Clear" },
+  "STORY QUEST/chapter": { MY: "Story Quest (Setiap Bab)", SG: "Story Quest (Per Chapter)" },
+  "WORLD QUEST/chapter": { MY: "World Quest (Setiap Bab)", SG: "World Quest (Per Chapter)" },
+  "ALL QUEST": { MY: "Semua Quest Dunia Selesai", SG: "All World Quests Clear" },
+
+  // Rawat Account / Maintenance
+  "DAILY": { MY: "Rawat Akaun Harian (Misi + Resin)", SG: "Daily Maintenance (Commissions + Resin)" },
+  "WEEKLY": { MY: "Rawat Akaun Mingguan (Harian + Boss)", SG: "Weekly Maintenance (Daily + Bosses)" },
+  "MONTHLY": { MY: "Rawat Akaun Bulanan Pakej Penuh", SG: "Monthly Maintenance Full Pack" },
+
+  // Levels
+  "LVL 1 - 40": { MY: "Naik Level Karakter 1 - 40", SG: "Level Up Character 1 - 40" },
+  "LVL 40 - 50": { MY: "Naik Level Karakter 40 - 50", SG: "Level Up Character 40 - 50" },
+  "LVL 50 - 60": { MY: "Naik Level Karakter 50 - 60", SG: "Level Up Character 50 - 60" },
+  "LVL 60 - 70": { MY: "Naik Level Karakter 60 - 70", SG: "Level Up Character 60 - 70" },
+  "LVL 70 - 80": { MY: "Naik Level Karakter 70 - 80", SG: "Level Up Character 70 - 80" },
+  "LVL 80 - 90": { MY: "Naik Level Karakter 80 - 90", SG: "Level Up Character 80 - 90" },
+
+  // Farming & Misc
+  "CULUS/PCS": { MY: "Kutipan Oculus / Biji", SG: "Oculus Collection / Pcs" },
+  "MONSTER DROP/PCS": { MY: "Bahan Raksasa / Biji", SG: "Monster Drops Farming / Pcs" },
+  "MATERIAL": { MY: "Kumpul Bahan Material / Pcs", SG: "Material Farming / Pcs" },
+  "EVENT": { MY: "Servis Selesai Event", SG: "Event Completion Service" },
+  "Genshin account": { MY: "Akaun Sah Genshin Impact", SG: "Genshin Impact Verified Account" },
+  "Genshin Account": { MY: "Akaun Sah Genshin Impact", SG: "Genshin Impact Verified Account" },
+
+  // WuWa The Black Shores & Extra Quests
+  "EKSPLORE BLACK SHORES": { MY: "Eksplorasi The Black Shores 100%", SG: "The Black Shores 100% Exploration" },
+  "STORY QUEST": { MY: "Quest Jalan Cerita Penuh", SG: "Main Story Quest Clear" },
+  "EKSPLORATION QUEST": { MY: "Quest Eksplorasi Kawasan", SG: "Exploration Quest Clear" },
+  "COMPANION QUEST": { MY: "Quest Rakan / Companion", SG: "Companion Story Quest Clear" },
+  "SIDE QUEST": { MY: "Quest Sampingan", SG: "Side Quest Clear" },
+
+  // NTE Stellar Dice
+  "10 SD": { MY: "10 Stellar Dice", SG: "10 Stellar Dice" },
+  "20 SD": { MY: "20 Stellar Dice", SG: "20 Stellar Dice" },
+  "30 SD": { MY: "30 Stellar Dice", SG: "30 Stellar Dice" },
+  "40 SD": { MY: "40 Stellar Dice", SG: "40 Stellar Dice" },
+  "50 SD": { MY: "50 Stellar Dice", SG: "50 Stellar Dice" },
+  "60 SD": { MY: "60 Stellar Dice", SG: "60 Stellar Dice" }
+};
+
+const NAME_WORD_MAP_MY = [
+  [/\beksplore\s+all\s+map\b/gi, 'Eksplorasi Semua Peta 100%'],
+  [/\beksplore\b/gi, 'Eksplorasi'],
+  [/\brawat account\b/gi, 'Rawat Akaun'],
+  [/\brawat akun\b/gi, 'Rawat Akaun'],
+  [/\bjual beli akun\b/gi, 'Jual Beli Akaun'],
+  [/\bjual akun\b/gi, 'Akaun Untuk Dijual'],
+  [/\bakun starter\b/gi, 'Akaun Starter'],
+  [/\bakun reroll\b/gi, 'Akaun Reroll'],
+  [/\bakun polosan\b/gi, 'Akaun Kosong'],
+  [/\bakun admin yang nganggur\b/gi, 'Akaun Admin Sedia Ada'],
+  [/\bakun admin\b/gi, 'Akaun Admin'],
+  [/\bakun pribadi\b/gi, 'Akaun Peribadi'],
+  [/\bakun pensiun\b/gi, 'Akaun Pencen'],
+  [/\bakun pensi\b/gi, 'Akaun Pencen'],
+  [/\bpensiun\b/gi, 'Pencen'],
+  [/\bpensi\b/gi, 'Pencen'],
+  [/\bakun\b/gi, 'Akaun'],
+  [/\baccount\b/gi, 'Akaun'],
+  [/\blayanan\b/gi, 'Perkhidmatan'],
+  [/\bpersatunya\b/gi, 'setiap satu'],
+  [/\bpaket hemat\b/gi, 'Pakej Jimat'],
+  [/\bpaket\b/gi, 'Pakej'],
+  [/\bterawat\b/gi, 'Dijaga Rapi'],
+  [/\bsiap pakai\b/gi, 'Sedia Digunakan'],
+  [/\bsiap main\b/gi, 'Sedia Dimainkan'],
+  [/\bgaransi\b/gi, 'Jaminan'],
+  [/\bmurah\b/gi, 'Mampu Milik'],
+  [/\bharian\b/gi, 'Harian'],
+  [/\bmingguan\b/gi, 'Mingguan'],
+  [/\bbulanan\b/gi, 'Bulanan'],
+  [/\bselesai\b/gi, 'Siap']
+];
+
+const NAME_WORD_MAP_SG = [
+  [/\beksplore\s+all\s+map\b/gi, '100% Map Exploration'],
+  [/\beksplore\b/gi, 'Exploration'],
+  [/\beksplorasi\b/gi, 'Exploration'],
+  [/\brawat account\b/gi, 'Account Maintenance'],
+  [/\brawat akun\b/gi, 'Account Maintenance'],
+  [/\bjual beli akun\b/gi, 'Buy & Sell Accounts'],
+  [/\bjual akun\b/gi, 'Account For Sale'],
+  [/\bakun starter\b/gi, 'Starter Account'],
+  [/\bakun reroll\b/gi, 'Reroll Account'],
+  [/\bakun polosan\b/gi, 'Clean Account'],
+  [/\bakun admin yang nganggur\b/gi, 'Idle Admin Account'],
+  [/\bakun admin\b/gi, 'Admin Account'],
+  [/\bakun pribadi\b/gi, 'Personal Account'],
+  [/\bakun pensiun\b/gi, 'Retired Account'],
+  [/\bakun pensi\b/gi, 'Retired Account'],
+  [/\bpensiun\b/gi, 'Retired'],
+  [/\bpensi\b/gi, 'Retired'],
+  [/\bakun\b/gi, 'Account'],
+  [/\baccount\b/gi, 'Account'],
+  [/\blayanan\b/gi, 'Service'],
+  [/\bjoki\b/gi, 'Boost / Service'],
+  [/\bpersatunya\b/gi, 'per piece'],
+  [/\bkarakter\b/gi, 'Character'],
+  [/\bchar\b/gi, 'Character'],
+  [/\bbintang\b/gi, 'Stars'],
+  [/\bpaket hemat\b/gi, 'Value Pack'],
+  [/\bpaket\b/gi, 'Package'],
+  [/\bterawat\b/gi, 'Maintained'],
+  [/\bsiap pakai\b/gi, 'Ready to Play'],
+  [/\bsiap main\b/gi, 'Ready to Play'],
+  [/\bgaransi\b/gi, 'Warranty'],
+  [/\bmurah\b/gi, 'Budget'],
+  [/\bharian\b/gi, 'Daily'],
+  [/\bmingguan\b/gi, 'Weekly'],
+  [/\bbulanan\b/gi, 'Monthly'],
+  [/\bselesai\b/gi, 'Completed']
+];
+
+function translateProductName(name, lang){
+  if(!name || typeof name !== 'string') return '';
+  const trimmed = name.trim();
+  if(!trimmed) return '';
+
+  const targetLang = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  if(targetLang === 'ID') return name;
+
+  if(NAME_EXACT_MAP[trimmed] && NAME_EXACT_MAP[trimmed][targetLang]){
+    return NAME_EXACT_MAP[trimmed][targetLang];
+  }
+  const lower = trimmed.toLowerCase();
+  for(const k in NAME_EXACT_MAP){
+    if(k.toLowerCase() === lower && NAME_EXACT_MAP[k][targetLang]){
+      return NAME_EXACT_MAP[k][targetLang];
+    }
+  }
+
+  let s = name;
+  const wordMap = (targetLang === 'MY') ? NAME_WORD_MAP_MY : (targetLang === 'SG' ? NAME_WORD_MAP_SG : []);
+  wordMap.forEach(([regex, rep]) => {
+    s = s.replace(regex, rep);
+  });
+  return s;
+}
+
+function getProductName(p, lang = null){
+  if(!p) return '';
+  const currentLang = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  if(typeof p === 'object' && p !== null){
+    if(currentLang === 'MY' && p.name_my) return p.name_my;
+    if(currentLang === 'SG' && (p.name_sg || p.name_en)) return p.name_sg || p.name_en;
+    if(currentLang === 'ID' && p.name_id) return p.name_id;
+  }
+  const baseName = (typeof p === 'string') ? p : (p.name || '');
+  return translateProductName(baseName, currentLang);
 }
 
 // ==================== CUSTOMER REVIEW TRANSLATION ENGINE ====================
@@ -4241,8 +6111,95 @@ function updateLanguageUI(){
 
   if(typeof updateRatingStatsUI === 'function') updateRatingStatsUI();
   if(typeof renderCustomerReviews === 'function') renderCustomerReviews();
-  if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
   if(typeof renderCarousel === 'function') renderCarousel();
+  
+  // 5. Social Media UI & Anti-Scam Shield
+  const navSocialText = document.getElementById('navSocialText');
+  if(navSocialText) navSocialText.textContent = t('socialNavBtn');
+  const floatingSocialText = document.getElementById('floatingSocialText');
+  if(floatingSocialText) floatingSocialText.textContent = t('socialFloatingBtn');
+  const socialKicker = document.getElementById('socialKickerText');
+  if(socialKicker) socialKicker.textContent = t('socialKicker');
+  const socialTitle = document.getElementById('socialTitleText');
+  if(socialTitle) socialTitle.textContent = t('socialHeading');
+  const socialSub = document.getElementById('socialSubText');
+  if(socialSub) socialSub.textContent = t('socialSubtitle');
+  const scamTitle = document.getElementById('scamShieldTitle');
+  if(scamTitle) scamTitle.textContent = t('scamWarningTitle');
+  const scamDesc = document.getElementById('scamShieldDesc');
+  if(scamDesc) scamDesc.textContent = t('scamWarningDesc');
+  const socialModalHeading = document.getElementById('socialModalHeading');
+  if(socialModalHeading) socialModalHeading.textContent = t('socialModalTitle');
+  const socialModalSub = document.getElementById('socialModalSub');
+  if(socialModalSub) socialModalSub.textContent = t('socialModalSub');
+  const socialModalScam = document.getElementById('socialModalScamText');
+  if(socialModalScam) socialModalScam.innerHTML = t('socialModalScam');
+
+  if(typeof renderSocialCards === 'function') renderSocialCards();
+  if(typeof renderSocialModalList === 'function') renderSocialModalList();
+  if(typeof renderFooterQuickSocialLinks === 'function') renderFooterQuickSocialLinks();
+  if(typeof renderFooterContent === 'function') renderFooterContent();
+
+  // 6. Complete Footer UI Localization
+  const fp1T = document.getElementById('footerPillar1Title'); if(fp1T) fp1T.textContent = t('footerPillar1Title');
+  const fp1D = document.getElementById('footerPillar1Desc'); if(fp1D) fp1D.textContent = t('footerPillar1Desc');
+  const fp2T = document.getElementById('footerPillar2Title'); if(fp2T) fp2T.textContent = t('footerPillar2Title');
+  const fp2D = document.getElementById('footerPillar2Desc'); if(fp2D) fp2D.textContent = t('footerPillar2Desc');
+  const fp3T = document.getElementById('footerPillar3Title'); if(fp3T) fp3T.textContent = t('footerPillar3Title');
+  const fp3D = document.getElementById('footerPillar3Desc'); if(fp3D) fp3D.textContent = t('footerPillar3Desc');
+  const fp4T = document.getElementById('footerPillar4Title'); if(fp4T) fp4T.textContent = t('footerPillar4Title');
+  const fp4D = document.getElementById('footerPillar4Desc'); if(fp4D) fp4D.textContent = t('footerPillar4Desc');
+
+  const fbDesc = document.getElementById('footerBrandDesc'); if(fbDesc) fbDesc.textContent = t('footerBrandDesc');
+  const fbHours = document.getElementById('footerHoursBadge'); if(fbHours) fbHours.textContent = t('footerHoursBadge');
+  const fbOnline = document.getElementById('footerOnlineCountText'); if(fbOnline) fbOnline.textContent = t('footerOnlineCount');
+
+  const fcNavT = document.getElementById('footerColNavTitle'); if(fcNavT) fcNavT.textContent = t('footerColNavTitle');
+  const fcHelpT = document.getElementById('footerColHelpTitle'); if(fcHelpT) fcHelpT.textContent = t('footerColHelpTitle');
+  const fcPayT = document.getElementById('footerColPayTitle'); if(fcPayT) fcPayT.textContent = t('footerColPayTitle');
+
+  const flAll = document.getElementById('footerLinkAll'); if(flAll) flAll.textContent = t('footerLinkAll');
+  const flGen = document.getElementById('footerLinkGenshin'); if(flGen) flGen.textContent = t('footerLinkGenshin');
+  const flHsr = document.getElementById('footerLinkHsr'); if(flHsr) flHsr.textContent = t('footerLinkHsr');
+  const flWuwa = document.getElementById('footerLinkWuwa'); if(flWuwa) flWuwa.textContent = t('footerLinkWuwa');
+  const flNte = document.getElementById('footerLinkNte'); if(flNte) flNte.textContent = t('footerLinkNte');
+  const flAcc = document.getElementById('footerLinkAccount'); if(flAcc) flAcc.textContent = t('footerLinkAccount');
+  const flRev = document.getElementById('footerLinkReviews'); if(flRev) flRev.textContent = t('footerLinkReviews');
+
+  const flTrk = document.getElementById('footerLinkTrack'); if(flTrk) flTrk.textContent = t('footerLinkTrack');
+  const flGde = document.getElementById('footerLinkGuide'); if(flGde) flGde.textContent = t('footerLinkGuide');
+  const flTrm = document.getElementById('footerLinkTerms'); if(flTrm) flTrm.textContent = t('footerLinkTerms');
+  const flPrv = document.getElementById('footerLinkPrivacy'); if(flPrv) flPrv.textContent = t('footerLinkPrivacy');
+  const flCs = document.getElementById('footerLinkCs'); if(flCs) flCs.textContent = t('footerLinkCs');
+  const flRep = document.getElementById('footerLinkReport'); if(flRep) flRep.textContent = t('footerLinkReport');
+
+  const fPayTitle = document.getElementById('footerPayMethodsTitle'); if(fPayTitle) fPayTitle.textContent = t('footerPayMethodsTitle');
+  const fSocTitle = document.getElementById('footerSocialTitle'); if(fSocTitle) fSocTitle.textContent = t('footerSocialTitle');
+  const fDiscText = document.getElementById('footerDisclaimerText'); if(fDiscText) fDiscText.textContent = t('footerDisclaimer');
+  const fRights = document.getElementById('footerRightsText'); if(fRights) fRights.textContent = t('footerRights');
+
+  const cInfo = (typeof getCountryConfig === 'function') ? getCountryConfig(currentSelectedCountry) : { flag: '🇮🇩', name: 'Indonesia', currency: 'IDR' };
+  const fCFlag = document.getElementById('footerCountryFlag'); if(fCFlag) fCFlag.textContent = cInfo.flag;
+  const fCName = document.getElementById('footerCountryName'); if(fCName) fCName.textContent = `${cInfo.name} (${cInfo.currency})`;
+
+  if(typeof renderFooterPaymentBadges === 'function') renderFooterPaymentBadges();
+
+  // Photo viewer buy button
+  const prodPhotoBuyBtn = document.getElementById('prodPhotoBuyBtn');
+  if(prodPhotoBuyBtn) prodPhotoBuyBtn.textContent = t('btnOrderNow');
+
+  // Order notification modal buttons
+  const onClsBtn = document.getElementById('orderNotifCloseBtn');
+  if(onClsBtn) onClsBtn.textContent = t('orderNotifClose');
+  const onHstBtn = document.getElementById('orderNotifHistoryBtn');
+  if(onHstBtn) onHstBtn.textContent = t('orderNotifHistory');
+
+  // Testimonial back to catalog button
+  const testiBack = document.getElementById('testiBackToCatalogText');
+  if(testiBack){
+    testiBack.textContent = (currentSelectedCountry === 'SG') ? '🛒 Back to Services Catalog' : ((currentSelectedCountry === 'MY') ? '🛒 Kembali ke Katalog Perkhidmatan' : '🛒 Kembali ke Katalog Layanan');
+  }
+
   const sgModal = document.getElementById('subgroupPopupOverlay');
   if(sgModal && sgModal.classList.contains('open') && typeof openSubgroupPopup === 'function' && currentCatFilter && currentCatFilter !== 'all'){
     openSubgroupPopup(currentCatFilter);
@@ -4824,6 +6781,1042 @@ function resetCurrentCountryConfig(){
     renderProducts();
     showToast(`🔄 Pengaturan kurs ${cfg.countries[code].name} direset ke default.`);
   }
+}
+
+// ==================== SISTEM MEDIA SOSIAL & KOMUNITAS ====================
+const SOCIAL_ICONS = {
+  whatsapp: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.66 2.59 15.36 3.45 16.86L2.05 22L7.3 20.62C8.75 21.41 10.38 21.83 12.04 21.83C17.5 21.83 21.95 17.38 21.95 11.92C21.95 9.27 20.92 6.78 19.05 4.91C17.18 3.03 14.69 2 12.04 2M12.05 3.67C14.25 3.67 16.31 4.53 17.87 6.09C19.42 7.65 20.28 9.72 20.28 11.92C20.28 16.46 16.58 20.15 12.04 20.15C10.56 20.15 9.11 19.76 7.85 19L7.55 18.83L4.43 19.65L5.26 16.61L5.06 16.29C4.24 14.99 3.8 13.47 3.8 11.91C3.81 7.37 7.5 3.67 12.05 3.67M9.53 7.33C9.33 7.33 9 7.41 8.75 7.69C8.5 7.97 7.78 8.64 7.78 10C7.78 11.36 8.78 12.68 8.92 12.87C9.06 13.06 11 16.03 13.91 17.29C14.6 17.59 15.14 17.77 15.56 17.91C16.25 18.13 16.88 18.1 17.38 18.03C17.94 17.94 19.1 17.32 19.34 16.65C19.58 15.97 19.58 15.39 19.51 15.27C19.44 15.15 19.24 15.08 18.94 14.93C18.64 14.78 17.18 14.06 16.91 13.96C16.64 13.86 16.44 13.81 16.25 14.11C16.05 14.41 15.48 15.08 15.3 15.28C15.13 15.48 14.96 15.5 14.66 15.35C14.36 15.2 13.4 14.89 12.26 13.88C11.38 13.09 10.78 12.11 10.63 11.81C10.48 11.51 10.61 11.35 10.76 11.2C10.9 11.07 11.06 10.85 11.21 10.68C11.36 10.5 11.41 10.38 11.51 10.18C11.61 9.97 11.56 9.8 11.49 9.65C11.41 9.5 10.84 8.08 10.6 7.53C10.37 7 10.14 7.07 9.96 7.07C9.8 7.06 9.61 7.06 9.42 7.06L9.53 7.33Z"/></svg>`,
+  instagram: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>`,
+  tiktok: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>`,
+  discord: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>`,
+  telegram: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>`,
+  youtube: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
+};
+
+const DEFAULT_SOCIAL_CONFIG = {
+  whatsapp: {
+    enabled: true,
+    name: 'WhatsApp Admin',
+    handle: '+62 812-3456-7890',
+    url: 'https://wa.me/6281234567890?text=Halo%20Admin%20NORXSTORE%2C%20saya%20mau%20tanya%20layanan%20joki%20game...',
+    badge: 'Fast Response 24 Jam',
+    desc: 'Layanan konsultasi joki, order instan & bantuan pembayaran resmi.',
+    icon: '💬',
+    brandColor: '#25D366'
+  },
+  instagram: {
+    enabled: true,
+    name: 'Instagram Resmi',
+    handle: '@norxstore.id',
+    url: 'https://instagram.com/norxstore.id',
+    badge: 'Official Feed',
+    desc: 'Katalog harian, update pricelist diskon, & story giveaway.',
+    icon: '📸',
+    brandColor: '#E1306C'
+  },
+  tiktok: {
+    enabled: true,
+    name: 'TikTok Official',
+    handle: '@norxstore',
+    url: 'https://tiktok.com/@norxstore',
+    badge: 'Video & Live',
+    desc: 'Showcase build karakter, review akun, & video gameplay joki.',
+    icon: '🎵',
+    brandColor: '#0f172a'
+  },
+  discord: {
+    enabled: true,
+    name: 'Discord Community',
+    handle: 'discord.gg/norxstore',
+    url: 'https://discord.gg/norxstore',
+    badge: 'Komunitas Gamer',
+    desc: 'Tempat kumpul mabar Genshin, HSR, WuWa & diskusi build meta.',
+    icon: '🎮',
+    brandColor: '#5865F2'
+  },
+  telegram: {
+    enabled: true,
+    name: 'Telegram Channel',
+    handle: 't.me/norxstore',
+    url: 'https://t.me/norxstore',
+    badge: 'Notifikasi Cepat',
+    desc: 'Broadcast restock akun baru & info diskon terbatas.',
+    icon: '✈️',
+    brandColor: '#0284c7'
+  },
+  youtube: {
+    enabled: true,
+    name: 'YouTube Channel',
+    handle: '@norxstore',
+    url: 'https://youtube.com/@norxstore',
+    badge: 'Gameplay & Guide',
+    desc: 'Video panduan Spiral Abyss, boss guide, & showcase akun.',
+    icon: '▶️',
+    brandColor: '#dc2626'
+  }
+};
+
+let socialConfigCache = null;
+
+function getSocialConfig(){
+  if(socialConfigCache) return socialConfigCache;
+  try {
+    const raw = safeGetItem('norxstore_social_config', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
+        for(const k in parsed){
+          if(parsed[k]){
+            merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...parsed[k] };
+          }
+        }
+        socialConfigCache = merged;
+        return socialConfigCache;
+      }
+    }
+  } catch(e){}
+  socialConfigCache = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
+  return socialConfigCache;
+}
+
+function saveSocialConfig(cfg){
+  socialConfigCache = cfg;
+  safeSetItem('norxstore_social_config', JSON.stringify(cfg));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/socialConfig').set(cfg).catch(e => {
+      console.warn('Sync notice: socialConfig disimpan di penyimpanan lokal');
+    });
+  }
+  renderSocialCards();
+  renderSocialModalList();
+  renderFooterQuickSocialLinks();
+}
+
+function renderSocialCards(){
+  const grid = document.getElementById('socialHubGrid');
+  if(!grid) return;
+  const cfg = getSocialConfig();
+  const keys = Object.keys(cfg);
+  
+  let html = '';
+  keys.forEach(key => {
+    const item = cfg[key];
+    if(!item || item.enabled === false) return;
+    const svg = SOCIAL_ICONS[key] || `<span style="font-size:20px">${item.icon || '🌐'}</span>`;
+    const openBtnText = (key === 'whatsapp') ? (t('socialBtnChat') || 'Chat WhatsApp ➔') : (t('socialBtnOpen') || 'Kunjungi ➔');
+    const copyBtnText = t('socialBtnCopy') || 'Salin';
+
+    html += `
+      <div class="social-card" data-platform="${key}">
+        <div>
+          <div class="social-card-top">
+            <div class="social-card-icon" style="background:${item.brandColor || '#7c3aed'}">
+              ${svg}
+            </div>
+            <div class="social-card-info">
+              <div class="social-card-name-row">
+                <span class="social-card-name">${escapeHtml(item.name)}</span>
+                <span class="social-card-badge">${escapeHtml(item.badge || 'Resmi')}</span>
+              </div>
+              <div class="social-card-handle">${escapeHtml(item.handle || item.url || '')}</div>
+            </div>
+          </div>
+          <p class="social-card-desc" style="margin-top:10px">${escapeHtml(item.desc || '')}</p>
+        </div>
+        <div class="social-card-actions">
+          <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="social-btn-open">
+            <span>${openBtnText}</span>
+          </a>
+          <button type="button" class="social-btn-copy" onclick="copySocialLink('${key}', event, this)" title="Salin link / username">
+            <span>📋</span>
+            <span>${copyBtnText}</span>
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  if(!html){
+    html = `<p style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:12px;padding:16px">Semua media sosial sedang dalam pemeliharaan.</p>`;
+  }
+
+  grid.innerHTML = html;
+}
+
+function renderSocialModalList(){
+  const list = document.getElementById('socialModalList');
+  if(!list) return;
+  const cfg = getSocialConfig();
+  const keys = Object.keys(cfg);
+
+  let html = '';
+  keys.forEach(key => {
+    const item = cfg[key];
+    if(!item || item.enabled === false) return;
+    const svg = SOCIAL_ICONS[key] || `<span style="font-size:18px">${item.icon || '🌐'}</span>`;
+    const openBtnText = (key === 'whatsapp') ? 'Chat' : (t('socialBtnOpen') || 'Buka');
+    const copyBtnText = t('socialBtnCopy') || 'Salin';
+
+    html += `
+      <div class="social-modal-item">
+        <div class="social-modal-icon" style="background:${item.brandColor || '#7c3aed'}">
+          ${svg}
+        </div>
+        <div class="social-modal-info">
+          <div class="social-modal-title">
+            <span>${escapeHtml(item.name)}</span>
+            <span style="font-size:9.5px;padding:2px 6px;border-radius:4px;background:rgba(255,255,255,0.12);color:#cbd5e1;font-weight:700">${escapeHtml(item.badge || 'Resmi')}</span>
+          </div>
+          <div class="social-modal-handle">${escapeHtml(item.handle || item.url || '')}</div>
+        </div>
+        <div class="social-modal-actions">
+          <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="social-modal-btn primary">
+            <span>${openBtnText}</span>
+          </a>
+          <button type="button" class="social-modal-btn secondary" onclick="copySocialLink('${key}', event, this)" title="Salin">
+            <span>📋</span>
+          </button>
+        </div>
+      </div>
+    `;
+  });
+
+  list.innerHTML = html;
+}
+
+function renderFooterQuickSocialLinks(){
+  const wrap = document.getElementById('footerSocialQuickLinks');
+  if(!wrap) return;
+  const cfg = getSocialConfig();
+  const keys = Object.keys(cfg);
+
+  let html = '';
+  keys.forEach(key => {
+    const item = cfg[key];
+    if(!item || item.enabled === false) return;
+    const cleanName = item.name.replace(/(Official|Resmi|Channel|Community|Admin)/gi, '').trim() || item.name;
+    html += `
+      <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="footer-social-item" title="${escapeHtml(item.name)}">
+        <span>${item.icon || '🌐'}</span>
+        <span>${escapeHtml(cleanName)}</span>
+      </a>
+    `;
+  });
+
+  wrap.innerHTML = html;
+}
+
+function renderFooterPaymentBadges(){
+  const container = document.getElementById('footerPaymentBadges');
+  if(!container) return;
+  const lang = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID';
+  
+  let badges = [];
+  if(lang === 'MY'){
+    badges = [
+      { name: "Touch 'n Go", icon: "📱" },
+      { name: "DuitNow QR", icon: "🇲🇾" },
+      { name: "FPX Online", icon: "⚡" },
+      { name: "Maybank2u", icon: "🟡" },
+      { name: "CIMB Clicks", icon: "🔴" },
+      { name: "Debit / Credit", icon: "💳" }
+    ];
+  } else if(lang === 'SG'){
+    badges = [
+      { name: "PayNow QR", icon: "🇸🇬" },
+      { name: "GrabPay", icon: "🟢" },
+      { name: "DBS PayLah!", icon: "🔴" },
+      { name: "OCBC Pay Anyone", icon: "🔵" },
+      { name: "UOB TMRW", icon: "🟣" },
+      { name: "Cards / Visa", icon: "💳" }
+    ];
+  } else {
+    badges = [
+      { name: "QRIS Resmi", icon: "📱" },
+      { name: "DANA", icon: "💙" },
+      { name: "GoPay", icon: "💚" },
+      { name: "OVO", icon: "🟣" },
+      { name: "ShopeePay", icon: "🟠" },
+      { name: "BCA / Mandiri / BRI", icon: "🏦" }
+    ];
+  }
+
+  container.innerHTML = badges.map(b => `
+    <div class="footer-pay-badge" title="${escapeHtml(b.name)}">
+      <span class="footer-pay-icon">${b.icon}</span>
+      <span>${escapeHtml(b.name)}</span>
+    </div>
+  `).join('');
+}
+
+// ==================== SISTEM PENGATURAN FOOTER & INFO TOKO ====================
+const DEFAULT_FOOTER_CONFIG = {
+  // Social Hub & Scam Warning
+  socialKicker: '🌐 KOMUNITAS & MEDIA SOSIAL RESMI',
+  socialTitle: 'Ikuti Media Sosial Resmi NORXSTORE',
+  socialSubtitle: 'Dapatkan info promo kilat, restock akun, event giveaway, & bantuan customer service langsung.',
+  scamShieldBadge: '🛡️ RESMI & AMAN',
+  scamShieldTitle: 'Waspada Penipuan Mengatasnamakan NORXSTORE!',
+  scamShieldDesc: 'Transaksi dan konsultasi resmi HANYA dilakukan melalui kontak dan tautan akun media sosial yang tertera di halaman ini. Kami tidak pernah meminta password email Anda di luar sistem joki yang aman.',
+  
+  // 4 Trust Pillars
+  pillar1Icon: '⚡',
+  pillar1Title: 'Pengiriman Instan & Cepat',
+  pillar1Desc: 'Pesanan diproses otomatis 24 jam nonstop dengan estimasi pengerjaan kilat.',
+  
+  pillar2Icon: '🛡️',
+  pillar2Title: '100% Legal & Terpercaya',
+  pillar2Desc: 'Garansi anti-banned resmi & keamanan data akun terjamin amanah 100%.',
+  
+  pillar3Icon: '💳',
+  pillar3Title: 'Metode Bayar Lengkap',
+  pillar3Desc: 'QRIS, E-Wallet, VA Bank, FPX, PayNow & pembayaran instan lokal.',
+  
+  pillar4Icon: '💬',
+  pillar4Title: 'Customer Support 24/7',
+  pillar4Desc: 'Admin ramah siap sedia mendampingi order Anda hingga selesai.',
+
+  // Store Brand, Hours & Disclaimer
+  brandDesc: 'Platform terpercaya untuk top-up game, jasa joki profesional, dan jual beli akun game amanah se-Asia Tenggara. Transaksi cepat, amanah, dan bergaransi resmi.',
+  operatingHours: '🟢 Buka 24 Jam Setiap Hari',
+  disclaimerText: 'NORXSTORE adalah platform independen penyedia layanan game. Seluruh hak cipta, nama dagang, dan aset game adalah milik penerbit masing-masing (HoYoverse, Kuro Games, Hotta Studio).'
+};
+
+let footerConfigCache = null;
+
+function getFooterConfig(){
+  if(footerConfigCache) return footerConfigCache;
+  try {
+    const raw = safeGetItem('norxstore_footer_config', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        const merged = JSON.parse(JSON.stringify(DEFAULT_FOOTER_CONFIG));
+        for(const k in DEFAULT_FOOTER_CONFIG){
+          if(parsed[k] !== undefined && parsed[k] !== null && parsed[k] !== ''){
+            merged[k] = parsed[k];
+          }
+        }
+        footerConfigCache = merged;
+        return footerConfigCache;
+      }
+    }
+  } catch(e){}
+  footerConfigCache = JSON.parse(JSON.stringify(DEFAULT_FOOTER_CONFIG));
+  return footerConfigCache;
+}
+
+function saveFooterConfig(cfg){
+  footerConfigCache = cfg;
+  safeSetItem('norxstore_footer_config', JSON.stringify(cfg));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/footerConfig').set(cfg).catch(e => {
+      console.warn('Sync notice: footerConfig disimpan di penyimpanan lokal');
+    });
+  }
+  renderFooterContent();
+}
+
+function renderFooterContent(){
+  const fcfg = getFooterConfig();
+  const lang = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID';
+  const isDefaultLang = (lang === 'ID');
+
+  const kickerEl = document.getElementById('socialKickerText');
+  if(kickerEl){
+    kickerEl.textContent = (!isDefaultLang && fcfg.socialKicker === DEFAULT_FOOTER_CONFIG.socialKicker) 
+      ? (t('socialKicker') || fcfg.socialKicker) 
+      : fcfg.socialKicker;
+  }
+  const titleEl = document.getElementById('socialTitleText');
+  if(titleEl){
+    titleEl.textContent = (!isDefaultLang && fcfg.socialTitle === DEFAULT_FOOTER_CONFIG.socialTitle)
+      ? (t('socialHeading') || fcfg.socialTitle)
+      : fcfg.socialTitle;
+  }
+  const subEl = document.getElementById('socialSubText');
+  if(subEl){
+    subEl.textContent = (!isDefaultLang && fcfg.socialSubtitle === DEFAULT_FOOTER_CONFIG.socialSubtitle)
+      ? (t('socialSubtitle') || fcfg.socialSubtitle)
+      : fcfg.socialSubtitle;
+  }
+  const scamBadgeEl = document.getElementById('scamShieldBadge');
+  if(scamBadgeEl) scamBadgeEl.textContent = fcfg.scamShieldBadge || '🛡️ RESMI & AMAN';
+  const scamTitleEl = document.getElementById('scamShieldTitle');
+  if(scamTitleEl){
+    scamTitleEl.textContent = (!isDefaultLang && fcfg.scamShieldTitle === DEFAULT_FOOTER_CONFIG.scamShieldTitle)
+      ? (t('scamWarningTitle') || fcfg.scamShieldTitle)
+      : fcfg.scamShieldTitle;
+  }
+  const scamDescEl = document.getElementById('scamShieldDesc');
+  if(scamDescEl){
+    scamDescEl.textContent = (!isDefaultLang && fcfg.scamShieldDesc === DEFAULT_FOOTER_CONFIG.scamShieldDesc)
+      ? (t('scamWarningDesc') || fcfg.scamShieldDesc)
+      : fcfg.scamShieldDesc;
+  }
+
+  // 4 Pillars
+  const p1I = document.getElementById('footerPillar1Icon'); if(p1I) p1I.textContent = fcfg.pillar1Icon || '⚡';
+  const p1T = document.getElementById('footerPillar1Title');
+  if(p1T) p1T.textContent = (!isDefaultLang && fcfg.pillar1Title === DEFAULT_FOOTER_CONFIG.pillar1Title) ? (t('footerPillar1Title') || fcfg.pillar1Title) : fcfg.pillar1Title;
+  const p1D = document.getElementById('footerPillar1Desc');
+  if(p1D) p1D.textContent = (!isDefaultLang && fcfg.pillar1Desc === DEFAULT_FOOTER_CONFIG.pillar1Desc) ? (t('footerPillar1Desc') || fcfg.pillar1Desc) : fcfg.pillar1Desc;
+
+  const p2I = document.getElementById('footerPillar2Icon'); if(p2I) p2I.textContent = fcfg.pillar2Icon || '🛡️';
+  const p2T = document.getElementById('footerPillar2Title');
+  if(p2T) p2T.textContent = (!isDefaultLang && fcfg.pillar2Title === DEFAULT_FOOTER_CONFIG.pillar2Title) ? (t('footerPillar2Title') || fcfg.pillar2Title) : fcfg.pillar2Title;
+  const p2D = document.getElementById('footerPillar2Desc');
+  if(p2D) p2D.textContent = (!isDefaultLang && fcfg.pillar2Desc === DEFAULT_FOOTER_CONFIG.pillar2Desc) ? (t('footerPillar2Desc') || fcfg.pillar2Desc) : fcfg.pillar2Desc;
+
+  const p3I = document.getElementById('footerPillar3Icon'); if(p3I) p3I.textContent = fcfg.pillar3Icon || '💳';
+  const p3T = document.getElementById('footerPillar3Title');
+  if(p3T) p3T.textContent = (!isDefaultLang && fcfg.pillar3Title === DEFAULT_FOOTER_CONFIG.pillar3Title) ? (t('footerPillar3Title') || fcfg.pillar3Title) : fcfg.pillar3Title;
+  const p3D = document.getElementById('footerPillar3Desc');
+  if(p3D) p3D.textContent = (!isDefaultLang && fcfg.pillar3Desc === DEFAULT_FOOTER_CONFIG.pillar3Desc) ? (t('footerPillar3Desc') || fcfg.pillar3Desc) : fcfg.pillar3Desc;
+
+  const p4I = document.getElementById('footerPillar4Icon'); if(p4I) p4I.textContent = fcfg.pillar4Icon || '💬';
+  const p4T = document.getElementById('footerPillar4Title');
+  if(p4T) p4T.textContent = (!isDefaultLang && fcfg.pillar4Title === DEFAULT_FOOTER_CONFIG.pillar4Title) ? (t('footerPillar4Title') || fcfg.pillar4Title) : fcfg.pillar4Title;
+  const p4D = document.getElementById('footerPillar4Desc');
+  if(p4D) p4D.textContent = (!isDefaultLang && fcfg.pillar4Desc === DEFAULT_FOOTER_CONFIG.pillar4Desc) ? (t('footerPillar4Desc') || fcfg.pillar4Desc) : fcfg.pillar4Desc;
+
+  // Brand overview, hours, and disclaimer
+  const bDesc = document.getElementById('footerBrandDesc');
+  if(bDesc) bDesc.textContent = (!isDefaultLang && fcfg.brandDesc === DEFAULT_FOOTER_CONFIG.brandDesc) ? (t('footerBrandDesc') || fcfg.brandDesc) : fcfg.brandDesc;
+  const bHours = document.getElementById('footerHoursBadge');
+  if(bHours) bHours.textContent = (!isDefaultLang && fcfg.operatingHours === DEFAULT_FOOTER_CONFIG.operatingHours) ? (t('footerHoursBadge') || fcfg.operatingHours) : fcfg.operatingHours;
+  const bDisc = document.getElementById('footerDisclaimerText');
+  if(bDisc) bDisc.textContent = (!isDefaultLang && fcfg.disclaimerText === DEFAULT_FOOTER_CONFIG.disclaimerText) ? (t('footerDisclaimer') || fcfg.disclaimerText) : fcfg.disclaimerText;
+}
+
+function openInfoModal(type){
+  const overlay = document.getElementById('infoModalOverlay');
+  const titleEl = document.getElementById('infoModalTitle');
+  const contentEl = document.getElementById('infoModalContent');
+  if(!overlay || !titleEl || !contentEl) return;
+
+  const lang = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID';
+
+  let title = '';
+  let html = '';
+
+  if(type === 'orderGuide'){
+    title = (lang === 'SG') ? '📖 How to Order Guide' : ((lang === 'MY') ? '📖 Panduan Cara Membuat Pesanan' : '📖 Panduan Cara Pemesanan');
+    if(lang === 'SG'){
+      html = `
+        <div class="info-guide-steps">
+          <div class="info-step-card">
+            <div class="info-step-num">1</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Select Your Service or Account</div>
+              <div class="info-step-desc">Browse our catalog for your game (Genshin Impact, Honkai Star Rail, Wuthering Waves, or Accounts Store). Click <strong>"Buy"</strong> or <strong>"+ Cart"</strong> for multiple items.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">2</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Select Local Payment Method & Admin</div>
+              <div class="info-step-desc">Pick your preferred local payment method (PayNow, GrabPay, QRIS) and choose which friendly support admin you want to chat with.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">3</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Instant Checkout via WhatsApp</div>
+              <div class="info-step-desc">Click <strong>"Send to WhatsApp"</strong>. Your complete order summary and invoice will be formatted automatically. Our admin will confirm within 1-3 minutes.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">4</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Fast Execution & Completion Alert</div>
+              <div class="info-step-desc">Sit back and relax while our verified pilots work on your order. You will receive real-time web alerts and sound chime when completed!</div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else if(lang === 'MY'){
+      html = `
+        <div class="info-guide-steps">
+          <div class="info-step-card">
+            <div class="info-step-num">1</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Pilih Perkhidmatan atau Akaun Kegemaran</div>
+              <div class="info-step-desc">Semak katalog game anda (Genshin Impact, Wuthering Waves, Honkai Star Rail, atau Kedai Akaun). Klik <strong>"Beli"</strong> atau <strong>"+ Troli"</strong> untuk pesanan banyak.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">2</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Pilih Kaedah Bayaran & Admin Sokongan</div>
+              <div class="info-step-desc">Pilih kaedah bayaran tempatan (Touch 'n Go eWallet, DuitNow QR, FPX) dan pilih admin WhatsApp yang bertugas.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">3</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Sahkan Tempahan Melalui WhatsApp</div>
+              <div class="info-step-desc">Tekan butang <strong>"Hantar ke WhatsApp"</strong>. Mesej rasmi format pesanan tersedia secara automatik. Admin kami akan mengesahkan dalam masa 1-3 minit.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">4</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Pelaksanaan Pantas & Notifikasi Siap</div>
+              <div class="info-step-desc">Pilot profesional kami akan melaksanakan pesanan anda dengan selamat. Anda akan menerima deringan dan notifikasi apabila pesanan siap!</div>
+            </div>
+          </div>
+        </div>
+      `;
+    } else {
+      html = `
+        <div class="info-guide-steps">
+          <div class="info-step-card">
+            <div class="info-step-num">1</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Pilih Layanan atau Akun Game Favorit</div>
+              <div class="info-step-desc">Jelajahi katalog game pilihan (Genshin, WuWa, HSR, NTE, atau Akun Store). Klik <strong>"Beli"</strong> atau <strong>"+ Keranjang"</strong> untuk memesan beberapa layanan sekaligus.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">2</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Pilih Metode Pembayaran & Admin</div>
+              <div class="info-step-desc">Pilih jalur pembayaran resmi (QRIS, DANA, GoPay, OVO, Bank Transfer) dan tentukan admin yang ingin Anda hubungi.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">3</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Checkout Otomatis ke WhatsApp Admin</div>
+              <div class="info-step-desc">Tekan tombol <strong>"Kirim ke WhatsApp"</strong>. Draf invoice dan detail order tersusun rapi otomatis. Admin akan membalas kilat 1-3 menit.</div>
+            </div>
+          </div>
+          <div class="info-step-card">
+            <div class="info-step-num">4</div>
+            <div class="info-step-body">
+              <div class="info-step-title">Pengerjaan Cepat & Notifikasi Selesai</div>
+              <div class="info-step-desc">Joki dikerjakan secara 100% manual dan amanah. Saat pesanan selesai, ponsel Anda akan berdering, bergetar, dan menampilkan modal pemberian bintang!</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  } else if(type === 'terms'){
+    title = (lang === 'SG') ? '⚖️ Terms of Service & Warranty' : ((lang === 'MY') ? '⚖️ Terma & Syarat Perkhidmatan' : '⚖️ Syarat & Ketentuan Layanan');
+    if(lang === 'SG'){
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🛡️ 1. 100% Manual Execution & Anti-Banned Guarantee</div>
+            <div class="info-policy-text">All boosting and piloting services are performed manually by verified veteran players without any third-party tools, scripts, or illegal software. Your account safety is our highest priority.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">💰 2. Full Refund & Transaction Protection</div>
+            <div class="info-policy-text">If our team fails to deliver the promised service according to specifications, a 100% money-back guarantee will be issued promptly.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">🔒 3. Customer Account Confidentiality</div>
+            <div class="info-policy-text">We strictly safeguard your login credentials. Customers are advised to change their passwords immediately once orders are marked completed.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">💬 4. Official Channels Only</div>
+            <div class="info-policy-text">Transactions must only be conducted through the official verified WhatsApp contacts and links displayed on this website to ensure official store coverage.</div>
+          </div>
+        </div>
+      `;
+    } else if(lang === 'MY'){
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🛡️ 1. Jaminan Pelaksanaan 100% Manual & Anti-Banned</div>
+            <div class="info-policy-text">Semua perkhidmatan joki dijalankan secara manual oleh pemain berpengalaman tanpa sebarang perisian pihak ketiga atau bot haram. Keselamatan akaun anda terjamin 100%.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">💰 2. Jaminan Wang Dikembalikan & Perlindungan Pesanan</div>
+            <div class="info-policy-text">Sekiranya perkhidmatan tidak dapat disiapkan mengikut syarat yang dipersetujui, kami menyediakan jaminan pemulangan wang 100% tanpa sebarang potongan.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">🔒 3. Kerahsiaan Data & Akaun Pelanggan</div>
+            <div class="info-policy-text">Data log masuk anda dilindungi sepenuhnya. Pelanggan dinasihatkan untuk menukar kata laluan sebaik sahaja pesanan disahkan siap.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">💬 4. Urus Niaga Saluran Rasmi Sahaja</div>
+            <div class="info-policy-text">Semua perbincangan dan pembayaran WAJIB dilakukan melalui pautan dan nombor WhatsApp rasmi yang tertera di laman web ini.</div>
+          </div>
+        </div>
+      `;
+    } else {
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🛡️ 1. Pengerjaan 100% Manual & Garansi Anti-Banned Resmi</div>
+            <div class="info-policy-text">Seluruh pengerjaan joki dilakukan secara manual oleh tim joki profesional tanpa script, cheat, atau bot ilegal. Keamanan akun Anda adalah prioritas nomor satu kami.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">💰 2. Garansi Uang Kembali 100%</div>
+            <div class="info-policy-text">Jika layanan tidak selesai sesuai kesepakatan, dana Anda akan dikembalikan 100% penuh tanpa potongan ribet.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">🔒 3. Kerahasiaan Akun & Privasi Terjamin</div>
+            <div class="info-policy-text">Data login Anda disimpan secara aman dan wajib Anda ubah kata sandinya setelah pengerjaan selesai demi keamanan bersama.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">💬 4. Transaksi Resmi Hanya Lewat Kontak Web Ini</div>
+            <div class="info-policy-text">Hindari oknum penipuan. Transaksi sah HANYA melalui kontak admin resmi yang tertera pada website NORXSTORE ini.</div>
+          </div>
+        </div>
+      `;
+    }
+  } else if(type === 'privacy'){
+    title = (lang === 'SG') ? '🔒 Privacy Policy & Data Security' : ((lang === 'MY') ? '🔒 Dasar Privasi & Keselamatan Data' : '🔒 Kebijakan Privasi & Garansi');
+    if(lang === 'SG'){
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🛡️ Privacy Standards</div>
+            <div class="info-policy-text">NORXSTORE respects customer privacy. We never share, sell, or distribute your email or game credentials to any unauthorized third parties.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">⚡ Encrypted Communication</div>
+            <div class="info-policy-text">All orders and direct inquiries are conducted through end-to-end encrypted WhatsApp communication with official verified staff.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">🔔 Notification Privacy</div>
+            <div class="info-policy-text">Browser and device notification tokens are stored locally on your device solely for informing you of order progress and completion.</div>
+          </div>
+        </div>
+      `;
+    } else if(lang === 'MY'){
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🛡️ Standard Privasi Data</div>
+            <div class="info-policy-text">NORXSTORE menghormati privasi pelanggan kami. Kami tidak pernah berkongsi atau menjual maklumat log masuk atau emel anda kepada mana-mana pihak ketiga.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">⚡ Komunikasi Dilindungi</div>
+            <div class="info-policy-text">Semua komunikasi pesanan dijalankan melalui saluran WhatsApp rasmi yang dilindungi penyulitan hujung ke hujung.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">🔔 Notifikasi Peranti</div>
+            <div class="info-policy-text">Token notifikasi web disimpan dalam peranti anda semata-mata untuk memaklumkan status siap pesanan joki anda.</div>
+          </div>
+        </div>
+      `;
+    } else {
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🛡️ Standar Privasi Terjamin</div>
+            <div class="info-policy-text">NORXSTORE menjaga kerahasiaan identitas dan akun pelanggan. Kami tidak pernah membagikan atau menyalahgunakan data login Anda kepada pihak luar mana pun.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">⚡ Keamanan Jalur Transaksi</div>
+            <div class="info-policy-text">Seluruh transaksi diproses langsung bersama admin resmi melalui jalur WhatsApp berenkripsi untuk kenyamanan Anda.</div>
+          </div>
+          <div class="info-policy-item" style="margin-top:12px">
+            <div class="info-policy-head">🔔 Notifikasi Pesanan Real-Time</div>
+            <div class="info-policy-text">Sistem web push & getar HP hanya digunakan untuk memberi tahu progres dan saat pesanan Anda telah rampung dikerjakan.</div>
+          </div>
+        </div>
+      `;
+    }
+  } else if(type === 'reportIssue'){
+    title = (lang === 'SG') ? '🚩 Report an Issue / Priority Escalation' : ((lang === 'MY') ? '🚩 Lapor Masalah Pesanan' : '🚩 Lapor Kendala Pesanan');
+    if(lang === 'SG'){
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🚨 Priority Customer Assistance</div>
+            <div class="info-policy-text">Encountering any delay or issue with your order? Our escalation desk is active 24/7. Connect directly with our Senior Support Admin for immediate resolution within minutes:</div>
+          </div>
+          <div style="margin-top:16px;text-align:center">
+            <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal();openSocialModal()" style="font-size:12px;padding:10px 18px">
+              💬 Contact Verified Support Admin
+            </button>
+          </div>
+        </div>
+      `;
+    } else if(lang === 'MY'){
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🚨 Bantuan Keutamaan Pelanggan</div>
+            <div class="info-policy-text">Menghadapi sebarang kesulitan atau kelewatan dengan pesanan anda? Pasukan pemantau kami beroperasi 24/7. Hubungi Admin Kanan kami secara langsung untuk penyelesaian segera:</div>
+          </div>
+          <div style="margin-top:16px;text-align:center">
+            <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal();openSocialModal()" style="font-size:12px;padding:10px 18px">
+              💬 Hubungi Admin Khidmat Pelanggan
+            </button>
+          </div>
+        </div>
+      `;
+    } else {
+      html = `
+        <div class="info-policy-box">
+          <div class="info-policy-item">
+            <div class="info-policy-head">🚨 Layanan Pengaduan Prioritas</div>
+            <div class="info-policy-text">Mengalami kendala, keterlambatan pengerjaan, atau pertanyaan terkait pesanan Anda? Tim pengawas kami siap sedia 24/7. Hubungi Admin Pusat untuk penyelesaian kilat:</div>
+          </div>
+          <div style="margin-top:16px;text-align:center">
+            <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal();openSocialModal()" style="font-size:12px;padding:10px 18px">
+              💬 Hubungi Admin Customer Service Resmi
+            </button>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  titleEl.innerHTML = title;
+  contentEl.innerHTML = html;
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeInfoModal(e){
+  if(e && e.target && !e.target.classList.contains('social-modal-overlay') && !e.target.classList.contains('social-modal-close') && e.target.id !== 'infoModalOverlay'){
+    return;
+  }
+  const overlay = document.getElementById('infoModalOverlay');
+  if(overlay){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function openSocialModal(){
+  const overlay = document.getElementById('socialModalOverlay');
+  if(!overlay) return;
+  renderSocialModalList();
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeSocialModal(e){
+  if(e && e.target && !e.target.classList.contains('social-modal-overlay') && !e.target.classList.contains('social-modal-close')) {
+    return;
+  }
+  const overlay = document.getElementById('socialModalOverlay');
+  if(overlay){
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+}
+
+function copySocialLink(key, event, btnEl){
+  if(event) event.stopPropagation();
+  const cfg = getSocialConfig();
+  const item = cfg[key];
+  if(!item) return;
+  const toCopy = item.url || item.handle || '';
+
+  const doSuccessFeedback = () => {
+    showToast(`✅ Link ${item.name} berhasil disalin!`);
+    if(btnEl){
+      const originalHTML = btnEl.innerHTML;
+      btnEl.classList.add('copied');
+      btnEl.innerHTML = `<span>✓</span><span>${t('socialCopied') || 'Disalin!'}</span>`;
+      setTimeout(() => {
+        btnEl.classList.remove('copied');
+        btnEl.innerHTML = originalHTML;
+      }, 1800);
+    }
+  };
+
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(toCopy).then(doSuccessFeedback).catch(() => {
+      legacyCopyText(toCopy, item.name);
+      if(btnEl) btnEl.innerHTML = `<span>✓</span>`;
+    });
+  } else {
+    legacyCopyText(toCopy, item.name);
+    if(btnEl) btnEl.innerHTML = `<span>✓</span>`;
+  }
+}
+
+function legacyCopyText(text, name){
+  try {
+    const tempInput = document.createElement('input');
+    tempInput.value = text;
+    document.body.appendChild(tempInput);
+    tempInput.select();
+    document.execCommand('copy');
+    document.body.removeChild(tempInput);
+    showToast(`✅ Link ${name} berhasil disalin!`);
+  } catch(e){
+    showToast(`📋 ${text}`);
+  }
+}
+
+function switchAdminSocialSubTab(tab){
+  const tabs = ['social', 'scam', 'pillars', 'footer'];
+  tabs.forEach(t => {
+    const btn = document.getElementById('tabAdmin' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
+    const panel = document.getElementById('adminPanel' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab');
+    if(btn){
+      if(t === tab){
+        btn.classList.add('active');
+        btn.style.borderColor = '#d946ef';
+        btn.style.background = '#fae8ff';
+        btn.style.color = '#86198f';
+      } else {
+        btn.classList.remove('active');
+        btn.style.borderColor = '#e2e8f0';
+        btn.style.background = '#ffffff';
+        btn.style.color = '#475569';
+      }
+    }
+    if(panel){
+      panel.style.display = (t === tab) ? 'block' : 'none';
+    }
+  });
+}
+
+function renderAdminSocialInputs(){
+  const container = document.getElementById('adminSocialInputsList');
+  if(!container) return;
+  const cfg = getSocialConfig();
+  const keys = Object.keys(cfg);
+  
+  let html = '';
+  keys.forEach(key => {
+    const item = cfg[key];
+    const isChecked = item.enabled !== false;
+    const isDefaultKey = !!DEFAULT_SOCIAL_CONFIG[key];
+    
+    html += `
+      <div class="admin-social-row" id="adminSocialCard_${key}">
+        <div class="admin-social-head">
+          <div class="admin-social-title">
+            <span style="font-size:16px">${item.icon || '🌐'}</span>
+            <strong>${escapeHtml(item.name || key)}</strong>
+            ${!isDefaultKey ? `<span style="font-size:10px;background:#f3e8ff;color:#7c3aed;padding:2px 6px;border-radius:4px;font-weight:700">Kustom</span>` : ''}
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <label style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;cursor:pointer">
+              <span style="color:#64748b">${isChecked ? 'Tampil di Web' : 'Sembunyi'}</span>
+              <input type="checkbox" id="adminSocial_enable_${key}" ${isChecked ? 'checked' : ''} style="width:16px;height:16px;accent-color:#9333ea;cursor:pointer">
+            </label>
+            ${!isDefaultKey ? `
+              <button type="button" onclick="deleteCustomSocialPlatform('${key}')" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);font-size:11px;padding:3px 8px;border-radius:6px;cursor:pointer" title="Hapus platform ini">🗑️</button>
+            ` : ''}
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <label class="admin-label" style="font-size:11px;margin-bottom:2px">Nama Platform:</label>
+            <input type="text" id="adminSocial_name_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.name || '')}" placeholder="Contoh: Instagram Resmi">
+          </div>
+          <div>
+            <label class="admin-label" style="font-size:11px;margin-bottom:2px">Icon / Emoji:</label>
+            <input type="text" id="adminSocial_icon_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.icon || '🌐')}" placeholder="📸">
+          </div>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div>
+            <label class="admin-label" style="font-size:11px;margin-bottom:2px">Handle / Username / Nomor:</label>
+            <input type="text" id="adminSocial_handle_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.handle || '')}" placeholder="Contoh: @norxstore">
+          </div>
+          <div>
+            <label class="admin-label" style="font-size:11px;margin-bottom:2px">Badge Singkat:</label>
+            <input type="text" id="adminSocial_badge_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.badge || '')}" placeholder="Contoh: Official Feed">
+          </div>
+        </div>
+
+        <div>
+          <label class="admin-label" style="font-size:11px;margin-bottom:2px">URL / Link Lengkap:</label>
+          <input type="text" id="adminSocial_url_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.url || '')}" placeholder="https://...">
+        </div>
+
+        <div>
+          <label class="admin-label" style="font-size:11px;margin-bottom:2px">Deskripsi Singkat:</label>
+          <input type="text" id="adminSocial_desc_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.desc || '')}" placeholder="Deskripsi untuk pembeli">
+        </div>
+      </div>
+    `;
+  });
+
+  container.innerHTML = html;
+  const countBadge = document.getElementById('adminSocialCountBadge');
+  if(countBadge){
+    const activeCount = keys.filter(k => cfg[k].enabled !== false).length;
+    countBadge.textContent = `${activeCount} / ${keys.length} Aktif`;
+  }
+}
+
+function renderAdminFooterInputs(){
+  const fcfg = getFooterConfig();
+
+  const setVal = (id, val) => {
+    const el = document.getElementById(id);
+    if(el) el.value = (val !== undefined && val !== null) ? val : '';
+  };
+
+  // Header & Scam Banner
+  setVal('adminCfg_socialKicker', fcfg.socialKicker);
+  setVal('adminCfg_socialTitle', fcfg.socialTitle);
+  setVal('adminCfg_socialSubtitle', fcfg.socialSubtitle);
+  setVal('adminCfg_scamShieldBadge', fcfg.scamShieldBadge);
+  setVal('adminCfg_scamShieldTitle', fcfg.scamShieldTitle);
+  setVal('adminCfg_scamShieldDesc', fcfg.scamShieldDesc);
+
+  // 4 Pillars
+  setVal('adminCfg_pillar1Icon', fcfg.pillar1Icon);
+  setVal('adminCfg_pillar1Title', fcfg.pillar1Title);
+  setVal('adminCfg_pillar1Desc', fcfg.pillar1Desc);
+
+  setVal('adminCfg_pillar2Icon', fcfg.pillar2Icon);
+  setVal('adminCfg_pillar2Title', fcfg.pillar2Title);
+  setVal('adminCfg_pillar2Desc', fcfg.pillar2Desc);
+
+  setVal('adminCfg_pillar3Icon', fcfg.pillar3Icon);
+  setVal('adminCfg_pillar3Title', fcfg.pillar3Title);
+  setVal('adminCfg_pillar3Desc', fcfg.pillar3Desc);
+
+  setVal('adminCfg_pillar4Icon', fcfg.pillar4Icon);
+  setVal('adminCfg_pillar4Title', fcfg.pillar4Title);
+  setVal('adminCfg_pillar4Desc', fcfg.pillar4Desc);
+
+  // Store Brand, Hours & Disclaimer
+  setVal('adminCfg_brandDesc', fcfg.brandDesc);
+  setVal('adminCfg_operatingHours', fcfg.operatingHours);
+  setVal('adminCfg_disclaimerText', fcfg.disclaimerText);
+}
+
+function addNewSocialPlatformPrompt(){
+  const name = prompt('Masukkan nama platform media sosial baru (contoh: Facebook, Threads, Line):');
+  if(!name || !name.trim()) return;
+  const cleanName = name.trim();
+  const slug = cleanName.toLowerCase().replace(/[^a-z0-9]/g, '_') || 'custom_' + Date.now();
+
+  const cfg = getSocialConfig();
+  if(cfg[slug]){
+    showToast('⚠️ Platform dengan nama tersebut sudah ada.');
+    return;
+  }
+
+  let defaultIcon = '🌐';
+  let defaultColor = '#7c3aed';
+  if(slug.includes('facebook') || slug.includes('fb')){ defaultIcon = '📘'; defaultColor = '#1877F2'; }
+  else if(slug.includes('threads')){ defaultIcon = '🧵'; defaultColor = '#000000'; }
+  else if(slug.includes('line')){ defaultIcon = '🟢'; defaultColor = '#06C755'; }
+  else if(slug.includes('twitter') || slug.includes('x')){ defaultIcon = '𝕏'; defaultColor = '#000000'; }
+
+  cfg[slug] = {
+    enabled: true,
+    name: cleanName,
+    handle: '@' + slug,
+    url: 'https://',
+    badge: 'Official',
+    desc: `Akun resmi ${cleanName} Norxstore.`,
+    icon: defaultIcon,
+    brandColor: defaultColor
+  };
+
+  saveSocialConfig(cfg);
+  renderAdminSocialInputs();
+  showToast(`✅ Platform "${cleanName}" berhasil ditambahkan! Silakan lengkapi link dan simpan.`);
+}
+
+function deleteCustomSocialPlatform(key){
+  if(DEFAULT_SOCIAL_CONFIG[key]){
+    showToast('⚠️ Platform bawaan tidak dapat dihapus, gunakan tombol toggle untuk menyembunyikannya.');
+    return;
+  }
+  if(!confirm(`Apakah Anda yakin ingin menghapus platform "${key}"?`)) return;
+
+  const cfg = getSocialConfig();
+  delete cfg[key];
+  saveSocialConfig(cfg);
+  renderAdminSocialInputs();
+  showToast(`🗑️ Platform berhasil dihapus.`);
+}
+
+function saveAdminSocialAndFooterConfig(){
+  // 1. Simpan Media Sosial
+  const cfg = getSocialConfig();
+  const newSocialCfg = JSON.parse(JSON.stringify(cfg));
+  const keys = Object.keys(newSocialCfg);
+
+  keys.forEach(key => {
+    const enableEl = document.getElementById(`adminSocial_enable_${key}`);
+    const nameEl = document.getElementById(`adminSocial_name_${key}`);
+    const iconEl = document.getElementById(`adminSocial_icon_${key}`);
+    const handleEl = document.getElementById(`adminSocial_handle_${key}`);
+    const badgeEl = document.getElementById(`adminSocial_badge_${key}`);
+    const urlEl = document.getElementById(`adminSocial_url_${key}`);
+    const descEl = document.getElementById(`adminSocial_desc_${key}`);
+
+    if(enableEl) newSocialCfg[key].enabled = enableEl.checked;
+    if(nameEl && nameEl.value.trim()) newSocialCfg[key].name = nameEl.value.trim();
+    if(iconEl && iconEl.value.trim()) newSocialCfg[key].icon = iconEl.value.trim();
+    if(handleEl) newSocialCfg[key].handle = handleEl.value.trim();
+    if(badgeEl) newSocialCfg[key].badge = badgeEl.value.trim();
+    if(urlEl) newSocialCfg[key].url = urlEl.value.trim();
+    if(descEl) newSocialCfg[key].desc = descEl.value.trim();
+  });
+  saveSocialConfig(newSocialCfg);
+
+  // 2. Simpan Footer & Scam Shield Info
+  const fcfg = getFooterConfig();
+  const newFooterCfg = JSON.parse(JSON.stringify(fcfg));
+
+  const getVal = (id, fallback) => {
+    const el = document.getElementById(id);
+    return (el && el.value.trim()) ? el.value.trim() : fallback;
+  };
+
+  newFooterCfg.socialKicker = getVal('adminCfg_socialKicker', DEFAULT_FOOTER_CONFIG.socialKicker);
+  newFooterCfg.socialTitle = getVal('adminCfg_socialTitle', DEFAULT_FOOTER_CONFIG.socialTitle);
+  newFooterCfg.socialSubtitle = getVal('adminCfg_socialSubtitle', DEFAULT_FOOTER_CONFIG.socialSubtitle);
+  newFooterCfg.scamShieldBadge = getVal('adminCfg_scamShieldBadge', DEFAULT_FOOTER_CONFIG.scamShieldBadge);
+  newFooterCfg.scamShieldTitle = getVal('adminCfg_scamShieldTitle', DEFAULT_FOOTER_CONFIG.scamShieldTitle);
+  newFooterCfg.scamShieldDesc = getVal('adminCfg_scamShieldDesc', DEFAULT_FOOTER_CONFIG.scamShieldDesc);
+
+  newFooterCfg.pillar1Icon = getVal('adminCfg_pillar1Icon', DEFAULT_FOOTER_CONFIG.pillar1Icon);
+  newFooterCfg.pillar1Title = getVal('adminCfg_pillar1Title', DEFAULT_FOOTER_CONFIG.pillar1Title);
+  newFooterCfg.pillar1Desc = getVal('adminCfg_pillar1Desc', DEFAULT_FOOTER_CONFIG.pillar1Desc);
+
+  newFooterCfg.pillar2Icon = getVal('adminCfg_pillar2Icon', DEFAULT_FOOTER_CONFIG.pillar2Icon);
+  newFooterCfg.pillar2Title = getVal('adminCfg_pillar2Title', DEFAULT_FOOTER_CONFIG.pillar2Title);
+  newFooterCfg.pillar2Desc = getVal('adminCfg_pillar2Desc', DEFAULT_FOOTER_CONFIG.pillar2Desc);
+
+  newFooterCfg.pillar3Icon = getVal('adminCfg_pillar3Icon', DEFAULT_FOOTER_CONFIG.pillar3Icon);
+  newFooterCfg.pillar3Title = getVal('adminCfg_pillar3Title', DEFAULT_FOOTER_CONFIG.pillar3Title);
+  newFooterCfg.pillar3Desc = getVal('adminCfg_pillar3Desc', DEFAULT_FOOTER_CONFIG.pillar3Desc);
+
+  newFooterCfg.pillar4Icon = getVal('adminCfg_pillar4Icon', DEFAULT_FOOTER_CONFIG.pillar4Icon);
+  newFooterCfg.pillar4Title = getVal('adminCfg_pillar4Title', DEFAULT_FOOTER_CONFIG.pillar4Title);
+  newFooterCfg.pillar4Desc = getVal('adminCfg_pillar4Desc', DEFAULT_FOOTER_CONFIG.pillar4Desc);
+
+  newFooterCfg.brandDesc = getVal('adminCfg_brandDesc', DEFAULT_FOOTER_CONFIG.brandDesc);
+  newFooterCfg.operatingHours = getVal('adminCfg_operatingHours', DEFAULT_FOOTER_CONFIG.operatingHours);
+  newFooterCfg.disclaimerText = getVal('adminCfg_disclaimerText', DEFAULT_FOOTER_CONFIG.disclaimerText);
+
+  saveFooterConfig(newFooterCfg);
+
+  const statusEl = document.getElementById('adminSocialStatus');
+  if(statusEl){
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 2500);
+  }
+  showToast('✅ Pengaturan media sosial & footer berhasil disimpan dan disinkronkan!');
+  renderAdminSocialInputs();
+  renderAdminFooterInputs();
+}
+
+function resetAdminSocialAndFooterConfig(){
+  if(!confirm('Apakah Anda yakin ingin mengembalikan seluruh media sosial dan teks footer ke bawaan default?')) return;
+  saveSocialConfig(JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG)));
+  saveFooterConfig(JSON.parse(JSON.stringify(DEFAULT_FOOTER_CONFIG)));
+  renderAdminSocialInputs();
+  renderAdminFooterInputs();
+  showToast('🔄 Seluruh media sosial & footer berhasil direset ke bawaan default.');
 }
 
 const DEFAULT_REVIEW_PHOTOS = ['/rev_0.jpg', '/rev_1.jpg', '/rev_2.jpg', '/rev_3.jpg', '/rev_4.jpg'];
@@ -5444,6 +8437,38 @@ fbDB.ref('norxstore/pwEnabled').on('value', snap=>{
   const val = snap.val();
   pwEnabledCache = (val === null || val === undefined) ? true : val;
 });
+fbDB.ref('norxstore/socialConfig').on('value', snap=>{
+  const val = snap.val();
+  if(val && typeof val === 'object'){
+    const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
+    for(const k in val){
+      if(val[k]){
+        merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...val[k] };
+      }
+    }
+    socialConfigCache = merged;
+    safeSetItem('norxstore_social_config', JSON.stringify(socialConfigCache));
+    renderSocialCards();
+    renderSocialModalList();
+    renderFooterQuickSocialLinks();
+    if(isAdminOpen()) renderAdminSocialInputs();
+  }
+});
+fbDB.ref('norxstore/footerConfig').on('value', snap=>{
+  const val = snap.val();
+  if(val && typeof val === 'object'){
+    const merged = JSON.parse(JSON.stringify(DEFAULT_FOOTER_CONFIG));
+    for(const k in DEFAULT_FOOTER_CONFIG){
+      if(val[k] !== undefined && val[k] !== null && val[k] !== ''){
+        merged[k] = val[k];
+      }
+    }
+    footerConfigCache = merged;
+    safeSetItem('norxstore_footer_config', JSON.stringify(footerConfigCache));
+    renderFooterContent();
+    if(isAdminOpen()) renderAdminFooterInputs();
+  }
+});
 let cart = JSON.parse(safeGetItem('norxstore_cart', '[]'));
 
 function normalizeCartItems(){
@@ -5807,11 +8832,11 @@ function renderMyOrders(){
   }
 
   const isGranted = ("Notification" in window) && Notification.permission === "granted";
-  const btnLabel = isGranted ? '✅ Notif HP Aktif' : '🔔 Aktifkan Notif HP';
+  const btnLabel = isGranted ? t('phoneNotifBtnActive') : t('phoneNotifBtnInactive');
   const btnClass = isGranted ? 'phone-notif-btn active' : 'phone-notif-btn';
   const descText = isGranted
-    ? 'Ponsel Anda akan otomatis bergetar & berdering saat pesanan selesai meski web ditutup.'
-    : 'Tekan untuk mengaktifkan suara & getar di HP saat pesanan selesai meski web ditutup.';
+    ? t('phoneNotifActiveDesc')
+    : t('phoneNotifInactiveDesc');
 
   const isDismissed = sessionStorage.getItem('norx_dismiss_phone_notif') === '1';
   const bannerHtml = isDismissed ? '' : `
@@ -5819,39 +8844,40 @@ function renderMyOrders(){
       <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
         <span style="font-size:22px;flex-shrink:0">📲</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:12px;font-weight:700;color:#1e1b4b">Notifikasi HP (Suara & Getar)</div>
+          <div style="font-size:12px;font-weight:700;color:#1e1b4b">${t('phoneNotifTitle')}</div>
           <div style="font-size:10px;color:#6b7280;line-height:1.35;margin-top:2px">${descText}</div>
         </div>
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
         <button type="button" class="${btnClass}" onclick="enablePhonePushNotifications()">${btnLabel}</button>
-        <button type="button" onclick="dismissPhoneNotifBanner(event)" title="Tutup Banner" style="background:none;border:none;color:#94a3b8;font-size:15px;cursor:pointer;padding:2px 4px;line-height:1">✕</button>
+        <button type="button" onclick="dismissPhoneNotifBanner(event)" title="Tutup" style="background:none;border:none;color:#94a3b8;font-size:15px;cursor:pointer;padding:2px 4px;line-height:1">✕</button>
       </div>
     </div>
   `;
 
   section.innerHTML = bannerHtml + myOrders.map(o => {
-    const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
+    const itemsText = o.items.map(it => (getProductName(it) || it.name) + ' x' + it.qty).join(', ');
     let statusBadge = '';
     let cancelAction = '';
     if(o.status === 'pending'){
-      statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu Konfirmasi</span>';
-      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="Batalkan Pesanan">✕ Batalkan</button>`;
+      statusBadge = `<span class="order-status-badge" style="background:#fef3c7;color:#92400e">${t('orderStatusPending')}</span>`;
+      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnCancel')}">${t('orderBtnCancel')}</button>`;
     }
     else if(o.status === 'processing'){
-      statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Sedang Diproses${o.estimate ? ' · Estimasi ' + o.estimate : ''}</span>`;
-      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="Batalkan Pesanan">✕ Batalkan</button>`;
+      const estLabel = o.estimate ? ((currentSelectedCountry === 'SG') ? ' · Est. ' : ((currentSelectedCountry === 'MY') ? ' · Anggaran ' : ' · Estimasi ')) + o.estimate : '';
+      statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">${t('orderStatusProcessing')}${estLabel}</span>`;
+      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnCancel')}">${t('orderBtnCancel')}</button>`;
     }
     else if(o.status === 'cancelled'){
-      statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
-      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="Hapus dari daftar Pesanan Saya">🗑️ Hapus Riwayat</button>`;
+      statusBadge = `<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">${t('orderStatusCancelled')}</span>`;
+      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
     }
     else {
-      statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">🟢 Selesai</span>';
+      statusBadge = `<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">${t('orderStatusDone')}</span>`;
       if(isOrderRated(o.id)){
-        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;display:inline-flex;align-items:center;gap:3px">⭐ Sudah Dinilai</span><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
+        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;display:inline-flex;align-items:center;gap:3px">${t('orderAlreadyRated')}</span><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
       } else {
-        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;box-shadow:0 2px 6px rgba(217,119,6,0.3);cursor:pointer" title="Beri rating untuk jokian ini">⭐ Beri Bintang</button><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="Hapus dari riwayat pesanan">🗑️ Hapus</button>`;
+        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;box-shadow:0 2px 6px rgba(217,119,6,0.3);cursor:pointer" title="${t('orderBtnRate')}">${t('orderBtnRate')}</button><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
       }
     }
     return `
@@ -6120,12 +9146,11 @@ function checkOrderNotifications(newOrders){
 
 function triggerOrderFinishedNotification(order){
   playNotificationChime();
-  sendBrowserNotification(
-    '🎉 Pesanan Anda Selesai! - Norxstore',
-    `Layanan "${order.items.map(i=>i.name).join(', ')}" telah selesai dikerjakan.`
-  );
+  const itemsText = order.items.map(i => `${getProductName(i) || i.name} (x${i.qty})`).join(', ');
+  const notifTitle = (currentSelectedCountry === 'SG') ? '🎉 Order Completed! - Norxstore' : ((currentSelectedCountry === 'MY') ? '🎉 Pesanan Anda Siap! - Norxstore' : '🎉 Pesanan Anda Selesai! - Norxstore');
+  const notifBody = (currentSelectedCountry === 'SG') ? `Service "${itemsText}" has been completed.` : ((currentSelectedCountry === 'MY') ? `Perkhidmatan "${itemsText}" telah siap dilaksanakan.` : `Layanan "${itemsText}" telah selesai dikerjakan.`);
+  sendBrowserNotification(notifTitle, notifBody);
   
-  const itemsText = order.items.map(i => `${i.name} (x${i.qty})`).join(', ');
   const titleEl = document.getElementById('orderNotifTitle');
   const subEl = document.getElementById('orderNotifSubtitle');
   const nameEl = document.getElementById('orderNotifItemName');
@@ -6133,10 +9158,10 @@ function triggerOrderFinishedNotification(order){
   const iconEl = document.getElementById('orderNotifIcon');
   
   if(iconEl) iconEl.textContent = '🎉';
-  if(titleEl) titleEl.textContent = 'Pesanan Anda Telah Selesai!';
-  if(subEl) subEl.textContent = 'Admin telah menyelesaikan pengerjaan layanan Anda. Berikan bintang kepuasan Anda di bawah untuk menaikkan rating toko!';
+  if(titleEl) titleEl.textContent = t('orderFinishedTitle');
+  if(subEl) subEl.textContent = t('orderFinishedSub');
   if(nameEl) nameEl.textContent = itemsText;
-  if(metaEl) metaEl.textContent = `Total: ${formatPrice(order.total)} · Status: 🟢 Selesai`;
+  if(metaEl) metaEl.textContent = `Total: ${formatPrice(order.total)} · Status: ${t('orderStatusDone')}`;
 
   // Tampilkan form rating otomatis di dalam modal pesanan selesai
   currentFinishedOrderToRate = order;
@@ -6146,8 +9171,8 @@ function triggerOrderFinishedNotification(order){
       ratingBox.innerHTML = `
         <div style="padding:10px;text-align:center">
           <div style="font-size:24px;margin-bottom:4px">⭐</div>
-          <div style="font-size:12.5px;font-weight:700;color:#4ade80">✅ Anda sudah memberikan rating untuk pesanan ini</div>
-          <div style="font-size:11px;color:#cbd5e1;margin-top:2px">Terima kasih atas kepercayaan Anda di Norxstore!</div>
+          <div style="font-size:12.5px;font-weight:700;color:#4ade80">${t('orderRatingDoneNotice')}</div>
+          <div style="font-size:11px;color:#cbd5e1;margin-top:2px">${t('orderRatingThankYou')}</div>
         </div>
       `;
     } else {
@@ -6164,18 +9189,18 @@ function triggerOrderFinishedNotification(order){
   
   const overlay = document.getElementById('orderNotifOverlay');
   if(overlay) overlay.classList.add('open');
-  showToast('🎉 Pesanan Anda telah selesai dikerjakan!');
+  showToast('🎉 ' + t('orderFinishedTitle'));
   updateOrderNotifDot();
 }
 
 function triggerOrderProcessingNotification(order){
   playNotificationChime();
-  const estText = order.estimate ? `Estimasi: ${order.estimate}` : 'Sedang diproses';
-  sendBrowserNotification(
-    '⚡ Pesanan Sedang Diproses - Norxstore',
-    `Layanan "${order.items.map(i=>i.name).join(', ')}" sedang diproses (${estText})`
-  );
-  showToast(`⚡ Pesanan sedang diproses! ${estText}`);
+  const estText = order.estimate ? ((currentSelectedCountry === 'SG') ? `Est: ${order.estimate}` : ((currentSelectedCountry === 'MY') ? `Anggaran: ${order.estimate}` : `Estimasi: ${order.estimate}`)) : t('orderStatusProcessing');
+  const itemsText = order.items.map(i => getProductName(i) || i.name).join(', ');
+  const notifTitle = (currentSelectedCountry === 'SG') ? '⚡ Order In Progress - Norxstore' : ((currentSelectedCountry === 'MY') ? '⚡ Pesanan Sedang Diproses - Norxstore' : '⚡ Pesanan Sedang Diproses - Norxstore');
+  const notifBody = (currentSelectedCountry === 'SG') ? `Service "${itemsText}" is now in progress (${estText})` : ((currentSelectedCountry === 'MY') ? `Perkhidmatan "${itemsText}" sedang diproses (${estText})` : `Layanan "${itemsText}" sedang diproses (${estText})`);
+  sendBrowserNotification(notifTitle, notifBody);
+  showToast(`⚡ ${t('orderStatusProcessing')}! ${estText}`);
 }
 
 function closeOrderNotif(event){
@@ -6580,10 +9605,10 @@ function submitNotifRating(){
 function goToTestiSection(){
   switchMode('dark');
   switchTestiTab('reviews');
-  setTimeout(() => {
+  requestAnimationFrame(() => {
     const sec = document.getElementById('darkSection');
     if(sec) sec.scrollIntoView({behavior:'smooth'});
-  }, 460);
+  });
 }
 
 // ==================== FORM RATING HERO INLINE (ANTI-BUG) ====================
@@ -7769,7 +10794,7 @@ function renderCart(){
     const isBusy = !!activeOrd;
     const busyWarning = isBusy ? `
       <div style="font-size:10px;color:#1e40af;background:#eff6ff;border:1px solid #bfdbfe;padding:4px 7px;border-radius:6px;margin-top:5px;font-weight:600;display:flex;align-items:center;gap:4px">
-        <span>🔵</span> <span>Sedang dalam proses pesanan Anda${activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : ''}. Harap tunggu sampai selesai atau hapus dari keranjang.</span>
+        <span>🔵</span> <span>${currentSelectedCountry === 'SG' ? ('Currently in progress for your order' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Please wait until completed or remove from cart.') : (currentSelectedCountry === 'MY' ? ('Sedang diproses dalam pesanan anda' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Sila tunggu sehingga selesai atau keluarkan dari troli.') : ('Sedang dalam proses pesanan Anda' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Harap tunggu sampai selesai atau hapus dari keranjang.'))}</span>
       </div>
     ` : '';
     const oldPriceDisplay = hasRange ? `${formatPrice(itemSub)} - ${formatPrice(itemMax)}` : formatPrice(itemSub);
@@ -7781,7 +10806,7 @@ function renderCart(){
     <div class="cart-item" style="${isBusy ? 'background:#f8fafc;border:1px solid #bfdbfe;' : ''}">
       <div class="cart-item-thumb">${thumb}</div>
       <div class="cart-item-info">
-        <p class="cart-item-name">${item.name}</p>
+        <p class="cart-item-name">${getProductName(item)}</p>
         <p class="cart-item-meta" style="font-size:11px;color:#64748b;margin:2px 0 4px">${getProductDesc(item)}</p>
         <div class="cart-item-price-row">
           ${hasDisc ? `<span class="cart-item-price-old">${oldPriceDisplay}</span>` : ''}
@@ -7811,7 +10836,7 @@ function renderCart(){
     discRow.style.display = 'flex';
     const discLabel = (discountConfig && discountConfig.mode === 'all')
       ? `${discountConfig.global}%`
-      : 'Hemat';
+      : t('savingsLabel');
     document.getElementById('cartDiscountLabel').textContent = discLabel;
     document.getElementById('cartDiscountAmount').textContent = '-' + formatPrice(totalDiscountAmount);
   } else {
@@ -7868,7 +10893,7 @@ function openCart(preferredTab){
 function openCartCheckoutStep(){
   const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
   if(busyItems.length > 0){
-    showToast(`⚠️ Produk "${busyItems[0].name}" sedang ada pesanan yang belum selesai. Hapus dulu dari keranjang untuk lanjut.`);
+    showToast(t('orderWaitFinishedNotice'));
     return;
   }
   document.getElementById('cartTotalStep').textContent = document.getElementById('cartTotal').textContent;
@@ -7906,11 +10931,11 @@ function checkoutCart(){
   if(cart.length===0) return;
   const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
   if(busyItems.length > 0){
-    showToast(`⚠️ Produk "${busyItems[0].name}" sedang ada pesanan yang belum selesai. Belum bisa dipesan lagi sampai selesai!`);
+    showToast(t('orderWaitFinishedNotice'));
     return;
   }
-  if(!selectedCartPayment){ showToast('Pilih metode pembayaran dulu!'); return; }
-  if(!selectedCartAdmin){ showToast('Pilih admin tujuan chat dulu!'); return; }
+  if(!selectedCartPayment){ showToast(t('selectPaymentFirst')); return; }
+  if(!selectedCartAdmin){ showToast(t('selectAdminFirst')); return; }
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
   let totalDiscountAmount = 0;
   const itemsText = cart.map(item=>{
@@ -7922,7 +10947,8 @@ function checkoutCart(){
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
     const itemFinal = itemSub - itemDiscAmount;
-    return `• ${item.name} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (Diskon ${itemDisc}%)` : ''}`;
+    const locItemName = getProductName(item);
+    return `• ${locItemName} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (${t('cartDiscount')} ${itemDisc}%)` : ''}`;
   }).join('\n');
   const total = subtotal - totalDiscountAmount;
   let text = `${t('waGreeting')}:\n\n${itemsText}\n\n`;
@@ -7941,7 +10967,7 @@ function checkoutCart(){
   const url = getWaLink(text, selectedCartAdmin);
   const adminObj = WA_NUMBERS.find(a => a.number === selectedCartAdmin);
   createOrder(
-    cart.map(item => ({id: item.id, name:item.name, qty:item.qty, price:item.price, cat: item.cat})),
+    cart.map(item => ({id: item.id, name: getProductName(item), qty:item.qty, price:item.price, cat: item.cat})),
     total,
     selectedCartPayment,
     adminObj ? adminObj.name : ''
@@ -7955,7 +10981,7 @@ function checkoutCart(){
   renderProducts();
   renderMyOrders();
   closeCartCheckoutStep();
-  showToast('Mengarahkan ke WhatsApp...');
+  showToast(t('redirectingWa'));
   setTimeout(()=>openWhatsApp(url),800);
 }
 
@@ -8074,6 +11100,9 @@ function openAdmin(){
   renderAdminOrders();
   refreshSubgroupFormUI();
   renderFormProductImagesUI();
+  renderAdminSocialInputs();
+  renderAdminFooterInputs();
+  switchAdminSocialSubTab('social');
 
   const sel = document.getElementById('imgProductSelect');
   if(sel){
@@ -8600,36 +11629,42 @@ function toggleMode(){
     sw.classList.add('on');
     lblLight.classList.remove('active');
     lblDark.classList.add('active');
+    
     lightSec.classList.add('inactive-mode');
-    setTimeout(() => {
-      lightSec.classList.remove('inactive-mode');
-      lightSec.style.display = 'none';
-      darkSec.style.display = 'block';
-      void darkSec.offsetWidth;
-      darkSec.classList.add('active-mode');
-      document.body.style.background = '#0a0a0f';
-      document.body.style.color = '#e2e2e8';
-      switchTestiTab('reviews');
-      updateLanguageUI();
-      updateRatingStatsUI();
-      renderCustomerReviews();
-      modeTransitioning = false;
-    }, 450);
+    lightSec.style.display = 'none';
+    
+    darkSec.style.display = 'block';
+    darkSec.classList.add('active-mode');
+    darkSec.classList.remove('mode-fade-in');
+    void darkSec.offsetWidth;
+    darkSec.classList.add('mode-fade-in');
+    
+    document.body.style.background = '#0a0a0f';
+    document.body.style.color = '#e2e2e8';
+    
+    switchTestiTab(currentTestiTab || 'reviews');
+    updateLanguageUI();
+    updateRatingStatsUI();
+    renderCustomerReviews();
+    modeTransitioning = false;
   } else {
     document.body.classList.remove('dark-mode');
     sw.classList.remove('on');
     lblLight.classList.add('active');
     lblDark.classList.remove('active');
+    
     darkSec.classList.remove('active-mode');
-    setTimeout(() => {
-      darkSec.style.display = 'none';
-      lightSec.style.display = 'block';
-      void lightSec.offsetWidth;
-      lightSec.classList.remove('inactive-mode');
-      document.body.style.background = '#ffffff';
-      document.body.style.color = '#1a1a1a';
-      modeTransitioning = false;
-    }, 450);
+    darkSec.style.display = 'none';
+    
+    lightSec.classList.remove('inactive-mode');
+    lightSec.style.display = 'block';
+    lightSec.classList.remove('mode-fade-in');
+    void lightSec.offsetWidth;
+    lightSec.classList.add('mode-fade-in');
+    
+    document.body.style.background = '#ffffff';
+    document.body.style.color = '#1a1a1a';
+    modeTransitioning = false;
   }
 }
 
@@ -9172,7 +12207,13 @@ function updateCategoryChipsUI(){
     } else {
       const subs = getExistingSubgroups(currentCatFilter);
       if(subs.length > 0){
-        let chipsHtml = '';
+        const isAllActive = (!currentSubgroupFilter || currentSubgroupFilter === 'all');
+        const allLabel = (currentSelectedCountry === 'SG') ? 'All' : 'Semua';
+        let chipsHtml = `
+          <button type="button" class="sub-chip ${isAllActive ? 'active' : ''}" onclick="selectSubgroupFilter('all', this)">
+            🌟 ${allLabel}
+          </button>
+        `;
         subs.forEach(s => {
           const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
           const sDisc = getDiscount(currentCatFilter, s);
@@ -9207,7 +12248,7 @@ function renderProductCard(p, discount, idx){
   const isAboveFold = (idx === undefined || idx < 8);
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
     <div class="product-img-slide" data-index="${i}" onclick="openProductImageViewer(${p.id},${i},event)" style="cursor:zoom-in" title="Perbesar foto produk">
-      <img src="${url}" alt="${p.name}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}" onerror="if(!this.dataset.erred){this.dataset.erred='1';this.src='/prod_${p.id}.jpg';}">
+      <img src="${url}" alt="${getProductName(p)}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}" onerror="if(!this.dataset.erred){this.dataset.erred='1';this.src='/prod_${p.id}.jpg';}">
       <div class="slide-protect-shield"></div>
     </div>
   `).join('') : (!imagesDataReady ? `
@@ -9262,7 +12303,7 @@ function renderProductCard(p, discount, idx){
       ${imgDots}
     </div>
     <div class="product-info" onclick="openModal(${p.id})" style="cursor:pointer">
-      <p class="product-name">${p.name}</p>
+      <p class="product-name">${getProductName(p)}</p>
       <div class="price-row">
         ${hasDisc ? `<span class="product-price-old">${formatProductPrice(p, false)}</span>` : ''}
         <span class="${hasDisc ? 'product-price-discount' : 'product-price'}">${formatProductPrice(p, hasDisc)}</span>
@@ -9522,8 +12563,10 @@ function renderSearchSuggestions(query){
 
   // Filter produk yang cocok
   const matches = products.filter(p => {
-    const nameMatch = p.name && p.name.toLowerCase().includes(q);
-    const descMatch = p.desc && p.desc.toLowerCase().includes(q);
+    const locName = getProductName(p).toLowerCase();
+    const locDesc = getProductDesc(p).toLowerCase();
+    const nameMatch = (p.name && p.name.toLowerCase().includes(q)) || locName.includes(q);
+    const descMatch = (p.desc && p.desc.toLowerCase().includes(q)) || locDesc.includes(q);
     const subMatch = p.subgroup && p.subgroup.toLowerCase().includes(q);
     const catMatch = p.cat && p.cat.toLowerCase().includes(q);
     return nameMatch || descMatch || subMatch || catMatch;
@@ -9550,9 +12593,11 @@ function renderSearchSuggestions(query){
 
   // Render hingga 6 produk teratas
   matches.slice(0, 6).forEach(p => {
+    const locProdName = getProductName(p);
+    const locProdDesc = getProductDesc(p) || p.subgroup || '';
     const imgs = getImagesForProduct(p.id);
     const imgHtml = (imgs && imgs.length > 0)
-      ? `<img src="${escapeHtml(imgs[0])}" alt="${escapeHtml(p.name)}" />`
+      ? `<img src="${escapeHtml(imgs[0])}" alt="${escapeHtml(locProdName)}" />`
       : `<span class="emoji-icon">${p.icon || '💠'}</span>`;
     
     const disc = getDiscount(p);
@@ -9567,10 +12612,10 @@ function renderSearchSuggestions(query){
           ${imgHtml}
         </div>
         <div class="search-sug-info">
-          <div class="search-sug-title">${highlightQuery(p.name, query)}</div>
+          <div class="search-sug-title">${highlightQuery(locProdName, query)}</div>
           <div class="search-sug-meta">
             <span class="search-sug-cat">${escapeHtml(catName)}</span>
-            <span class="search-sug-desc">${highlightQuery(p.desc || p.subgroup || '', query)}</span>
+            <span class="search-sug-desc">${highlightQuery(locProdDesc, query)}</span>
           </div>
         </div>
         <div class="search-sug-price">
@@ -9866,7 +12911,10 @@ function updateProductImageViewerContent(){
   if(catTagEl) catTagEl.textContent = catInfo.shortName + (prod.subgroup ? ' • ' + prod.subgroup : '');
 
   const titleEl = document.getElementById('prodPhotoTitle');
-  if(titleEl) titleEl.textContent = prod.name + (prod.isAccount ? ' 🔑' : '');
+  if(titleEl) titleEl.textContent = getProductName(prod) + (prod.isAccount ? ' 🔑' : '');
+
+  const buyBtn = document.getElementById('prodPhotoBuyBtn');
+  if(buyBtn) buyBtn.textContent = t('btnOrderNow');
 
   const disc = getDiscount(prod);
   const discPrice = getDiscountedPrice(prod.price, prod);
@@ -9932,15 +12980,12 @@ function openModal(id){
   if(!selectedProduct) return;
   if(selectedProduct.isAccount){
     const eff = getEffectiveAccountStatus(selectedProduct);
-    if(eff === 'sold'){ showToast('Akun ini sudah terjual'); return; }
-    if(eff === 'reserved'){ showToast('Akun ini sedang dipesan orang lain, coba lagi nanti'); return; }
+    if(eff === 'sold'){ showToast(t('accountSoldToast')); return; }
+    if(eff === 'reserved'){ showToast(t('accountReservedToast')); return; }
   }
   const activeOrder = getActiveOrderForProduct(selectedProduct.id);
   if(activeOrder){
-    const stName = activeOrder.status === 'processing'
-      ? `sedang diproses${activeOrder.estimate ? ' (estimasi ' + activeOrder.estimate + ')' : ''}`
-      : 'sedang dalam antrean pesanan belum selesai';
-    showToast(`⏳ Layanan ini ${stName}. Belum bisa dipesan lagi sampai selesai.`);
+    showToast(t('orderProcessingNotice'));
     return;
   }
   const discount = getDiscount(selectedProduct);
@@ -9950,17 +12995,17 @@ function openModal(id){
   const finalPriceFormatted = formatProductPrice(selectedProduct, hasDisc);
   const imgs = getImagesForProduct(id);
   const hasProdImgs = imgs.length > 0;
-  const thumbImg = hasProdImgs ? `<img src="${imgs[0]}" alt="" title="Klik untuk lihat foto penuh">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
+  const thumbImg = hasProdImgs ? `<img src="${imgs[0]}" alt="" title="${t('viewFullPhoto')}">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
   document.getElementById('modalProduct').innerHTML=`
-    <div class="modal-thumb" ${hasProdImgs ? `onclick="openProductImageViewer(${id},0)" style="cursor:pointer" title="Klik untuk perbesar foto"` : ''}>${thumbImg}</div>
+    <div class="modal-thumb" ${hasProdImgs ? `onclick="openProductImageViewer(${id},0)" style="cursor:pointer" title="${t('viewFullPhoto')}"` : ''}>${thumbImg}</div>
     <div class="modal-detail">
-      <p class="name">${selectedProduct.name}</p>
+      <p class="name">${getProductName(selectedProduct)}</p>
       <div class="price-row">
         ${hasDisc ? `<span class="price-old">${oldPriceFormatted}</span>` : ''}
         <p class="${hasDisc ? 'price-discount' : 'price'}">${finalPriceFormatted}</p>
         ${hasDisc ? `<span class="discount-tag">-${discount}%</span>` : ''}
       </div>
-      ${hasRange ? `<div style="font-size:11px;color:#7c3aed;font-weight:600;margin:2px 0 3px">💡 Rentang harga ${finalPriceFormatted} (menyesuaikan varian/jumlah saat chat)</div>` : ''}
+      ${hasRange ? `<div style="font-size:11px;color:#7c3aed;font-weight:600;margin:2px 0 3px">${t('priceRangeHint', {price: finalPriceFormatted})}</div>` : ''}
       <p class="desc" style="font-size:12px;color:#64748b;margin:3px 0 4px">${getProductDesc(selectedProduct)}</p>
       ${hasProdImgs ? `<div style="margin-top:3px"><span style="font-size:11px;color:#7c3aed;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px" onclick="openProductImageViewer(${id},0)">${t('viewFullPhoto')}</span></div>` : ''}
     </div>`;
@@ -9989,7 +13034,7 @@ function updateWA(){
   const hasDisc = discount > 0;
   const hasRange = selectedProduct.maxPrice && selectedProduct.maxPrice > selectedProduct.price;
   const priceDisplay = formatProductPrice(selectedProduct, hasDisc);
-  let text = `${t('waGreeting')} ${selectedProduct.name}`;
+  let text = `${t('waGreeting')} ${getProductName(selectedProduct)}`;
   if(discount > 0){
     text += ` (${t('cartDiscount')} ${discount}%)`;
   }
@@ -10012,7 +13057,7 @@ function sendWA(){
   if(selectedProduct){
     const activeOrder = getActiveOrderForProduct(selectedProduct.id);
     if(activeOrder){
-      showToast('⚠️ Pesanan produk ini sebelumnya belum selesai dikerjakan. Belum bisa dipesan lagi!');
+      showToast(t('orderWaitFinishedNotice'));
       return;
     }
   }
@@ -11115,8 +14160,15 @@ setInterval(()=>{
     }
   }, { passive: false });
 
-  // Keyboard navigation untuk Product Photo Viewer (Esc tutup, panah navigasi)
+  // Keyboard navigation untuk Product Photo Viewer & Social Modal (Esc tutup, panah navigasi)
   document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape'){
+      const sModal = document.getElementById('socialModalOverlay');
+      if(sModal && sModal.classList.contains('open')){
+        closeSocialModal();
+        return;
+      }
+    }
     const overlay = document.getElementById('prodPhotoOverlay');
     if(!overlay || !overlay.classList.contains('open')) return;
     if(e.key === 'Escape'){
