@@ -120,6 +120,8 @@ const I18N = {
     socialSubtitle: 'Dapatkan info promo kilat, restock akun, event giveaway, & bantuan customer service langsung.',
     scamWarningTitle: 'Waspada Penipuan Mengatasnamakan NORXSTORE!',
     scamWarningDesc: 'Transaksi dan konsultasi resmi HANYA dilakukan melalui kontak dan tautan akun media sosial yang tertera di halaman ini. Kami tidak pernah meminta password email Anda di luar sistem joki yang aman.',
+    scamShieldBadge: '🛡️ RESMI & AMAN',
+    liveVisitorsTitle: 'Pengunjung aktif di website saat ini',
     socialBtnOpen: 'Kunjungi ➔',
     socialBtnChat: 'Chat WhatsApp ➔',
     socialBtnCopy: 'Salin',
@@ -321,6 +323,8 @@ const I18N = {
     socialSubtitle: 'Dapatkan maklumat promosi kilat, restock akaun, event giveaway, & bantuan khidmat pelanggan secara langsung.',
     scamWarningTitle: 'Berwaspada Terhadap Penipuan Mengatasnamakan NORXSTORE!',
     scamWarningDesc: 'Transaksi dan perbincangan rasmi HANYA dijalankan melalui kenalan dan pautan media sosial yang tertera di halaman ini. Kami tidak pernah meminta kata laluan e-mel anda di luar sistem joki yang selamat.',
+    scamShieldBadge: '🛡️ RASMI & SELAMAT',
+    liveVisitorsTitle: 'Pelawat aktif di laman web sekarang',
     socialBtnOpen: 'Lawati ➔',
     socialBtnChat: 'Sembang WhatsApp ➔',
     socialBtnCopy: 'Salin',
@@ -522,6 +526,8 @@ const I18N = {
     socialSubtitle: 'Get the latest promo drops, account restocks, giveaways & direct customer support.',
     scamWarningTitle: 'Beware of Impersonation & Scams!',
     scamWarningDesc: 'Official transactions and support are STRICTLY conducted through the verified contacts and links listed on this page. We never request your email passwords arbitrarily.',
+    scamShieldBadge: '🛡️ OFFICIAL & VERIFIED',
+    liveVisitorsTitle: 'Active visitors browsing the store right now',
     socialBtnOpen: 'Visit ➔',
     socialBtnChat: 'Chat WhatsApp ➔',
     socialBtnCopy: 'Copy',
@@ -848,6 +854,38 @@ const DESC_EXACT_MAP = {
   "Akun admin yang nganggur": {
     MY: "Akaun admin sedia ada, rekod selamat & bersih",
     SG: "Verified idle admin account, safe & clean record"
+  },
+  "Harga cocok untuk semua": {
+    MY: "Harga berpatutan sesuai untuk semua pemain",
+    SG: "Affordable price, suitable for everyone"
+  },
+  "All story quest": {
+    MY: "Semua quest jalan cerita utama selesai",
+    SG: "All main story quests clear"
+  },
+  "All eksploration quest": {
+    MY: "Semua quest eksplorasi peta selesai",
+    SG: "All exploration quests clear"
+  },
+  "All companion quest": {
+    MY: "Semua quest rakan pengembara selesai",
+    SG: "All companion story quests clear"
+  },
+  "Genshin Impact — Joki & Top-Up": {
+    MY: "Genshin Impact — Servis Joki & Tambah Nilai",
+    SG: "Genshin Impact — Pilot Boost & Top-Up"
+  },
+  "Honkai: Star Rail — Joki MoC & PF": {
+    MY: "Honkai: Star Rail — Joki MoC & Pure Fiction",
+    SG: "Honkai: Star Rail — MoC & Pure Fiction"
+  },
+  "Wuthering Waves — Joki Tower & Boss": {
+    MY: "Wuthering Waves — Joki Tower & Bos Mingguan",
+    SG: "Wuthering Waves — Tower of Adversity & Boss Boost"
+  },
+  "Neverness to Everness — Joki Progress": {
+    MY: "Neverness to Everness — Joki Kemajuan Cerita",
+    SG: "Neverness to Everness — Story & Progression Boost"
   }
 };
 
@@ -906,7 +944,15 @@ const WORD_MAP_MY = [
 
   // Selling & General
   [/\bharga murah cocok untuk pertama kali\b/gi, 'harga berpatutan sesuai untuk kali pertama'],
+  [/\bharga cocok untuk semua\b/gi, 'harga berpatutan sesuai untuk semua'],
   [/\bharga murah\b/gi, 'harga berpatutan'],
+  [/\bharga cocok\b/gi, 'harga berpatutan'],
+  [/\bharga\b/gi, 'harga'],
+  [/\bpersatunya\b/gi, 'setiap satu'],
+  [/\bpersatu\b/gi, 'setiap satu'],
+  [/\ball story quest\b/gi, 'semua quest jalan cerita selesai'],
+  [/\ball eksploration quest\b/gi, 'semua quest eksplorasi selesai'],
+  [/\ball companion quest\b/gi, 'semua quest rakan selesai'],
   [/\bcocok untuk pertama kali\b/gi, 'sesuai untuk kali pertama'],
   [/\bpertama kali\b/gi, 'kali pertama'],
   [/\bcocok untuk\b/gi, 'sesuai untuk'],
@@ -1017,7 +1063,34 @@ const WORD_MAP_SG = [
 
   // Selling & General
   [/\bharga murah cocok untuk pertama kali\b/gi, 'Affordable price, perfect for first time'],
+  [/\bharga murah cocok untuk semua\b/gi, 'Affordable price, suitable for everyone'],
+  [/\bharga cocok untuk semua\b/gi, 'Affordable price, suitable for everyone'],
+  [/\bharga murah cocok untuk yang baru dapat uang\b/gi, 'Budget-friendly price, perfect treat after payday'],
+  [/\bharga cocok untuk yang baru gajian\b/gi, 'Great value package for payday top-up'],
   [/\bharga murah\b/gi, 'affordable price'],
+  [/\bharga cocok\b/gi, 'affordable price'],
+  [/\bharga berpatutan\b/gi, 'affordable price'],
+  [/\bharga\b/gi, 'price'],
+  [/\bpersatunya\b/gi, 'per piece'],
+  [/\bpersatu\b/gi, 'per piece'],
+  [/\bkumpulkan item dari monster persatunya\b/gi, 'Farming monster drop materials per piece'],
+  [/\bkumpulkan material dari monster persatunya\b/gi, 'Farming materials & items per piece'],
+  [/\bkumpulkan\b/gi, 'collect / farm'],
+  [/\bjoki culus persatunya\b/gi, 'Collect Oculus per piece'],
+  [/\bjoki culus\b/gi, 'Oculus collection service'],
+  [/\bjoki\b/gi, 'boosting / service'],
+  [/\bjokian\b/gi, 'order / service'],
+  [/\ball event harga sesuai kerumitan event\b/gi, 'Limited event clear, price depends on event complexity'],
+  [/\bkerumitan\b/gi, 'complexity'],
+  [/\bsesuai\b/gi, 'depends on'],
+  [/\btidak termasuk\b/gi, 'excluding'],
+  [/\btermasuk\b/gi, 'including'],
+  [/\byang tersedia\b/gi, 'available'],
+  [/\btersedia\b/gi, 'available'],
+  [/\ball quest clear yang tersedia tidak termasuk quest archon\b/gi, 'Clear all available world quests (excluding Archon quests)'],
+  [/\ball eksploration quest\b/gi, 'All exploration quests clear'],
+  [/\ball companion quest\b/gi, 'All companion story quests clear'],
+  [/\ball story quest\b/gi, 'All main story quests clear'],
   [/\bcocok untuk pertama kali\b/gi, 'perfect for first time'],
   [/\bpertama kali\b/gi, 'first time'],
   [/\bcocok untuk\b/gi, 'suitable for'],
