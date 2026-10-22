@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta http-equiv="Pragma" content="no-cache">
-<meta http-equiv="Expires" content="0">
 <title>NORXSTORE</title>
+<link rel="preconnect" href="https://www.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app">
 <meta name="description" content="NORXSTORE — Toko Game Online Terpercaya.">
 <meta property="og:title" content="NORXSTORE">
 <meta property="og:description" content="NORXSTORE — Toko Game Online Terpercaya.">
@@ -2149,15 +2148,15 @@ button{cursor:pointer;font-family:inherit}
   <!-- FORM RATING INLINE LANGSUNG DI HALAMAN TESTIMONI -->
   <div class="hero-rating-form-card" id="heroRatingFormCard" style="display:none;margin-top:14px;background:#181329;border:1.5px solid #f59e0b;border-radius:18px;padding:18px 16px;max-width:440px;width:calc(100% - 32px);text-align:center;box-shadow:0 14px 40px rgba(0,0,0,0.6);animation:scaleUp .25s ease">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <div style="font-size:14px;font-weight:800;color:#fde047">⭐ Beri Bintang & Ulasan Jokian</div>
+      <div id="heroRatingCardTitle" style="font-size:14px;font-weight:800;color:#fde047">⭐ Beri Bintang & Ulasan Jokian</div>
       <button type="button" onclick="toggleHeroRatingForm(false)" style="background:rgba(255,255,255,0.1);border:none;color:#cbd5e1;font-size:14px;cursor:pointer;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center" title="Tutup">✕</button>
     </div>
-    <p style="font-size:11.5px;color:#cbd5e1;margin-bottom:12px;line-height:1.4">
+    <p id="heroRatingCardSubtitle" style="font-size:11.5px;color:#cbd5e1;margin-bottom:12px;line-height:1.4">
       Bintang kepuasan Anda akan otomatis menaikkan rating toko secara real-time.
     </p>
 
     <div style="text-align:center;margin-bottom:12px">
-      <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:4px">PILIH BINTANG KEPUASAN:</div>
+      <div id="heroRatingCardStarsPickerTitle" style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:4px">PILIH BINTANG KEPUASAN:</div>
       <div class="interactive-stars-wrap" id="heroStarsPicker">
         <span class="interactive-star active" data-val="1" onclick="setHeroRatingStars(1)">★</span>
         <span class="interactive-star active" data-val="2" onclick="setHeroRatingStars(2)">★</span>
@@ -2169,7 +2168,7 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <div id="heroRatingOrderSelectWrap" style="margin-bottom:10px;text-align:left">
-      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Layanan / Jokian yang Dikerjakan:</label>
+      <label id="heroRatingServiceLabel" style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Layanan / Jokian yang Dikerjakan:</label>
       <select id="heroRatingOrderSelect" class="rating-field-input" style="background:#241d3d;cursor:pointer" onchange="handleHeroOrderSelectChange()">
         <option value="">-- Pilih Dari Pesanan Selesai Anda --</option>
       </select>
@@ -2179,12 +2178,12 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <div style="margin-bottom:8px;text-align:left">
-      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Nama Anda / In-Game Name:</label>
+      <label id="heroRatingNameLabel" style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Nama Anda / In-Game Name:</label>
       <input type="text" id="heroReviewerName" class="rating-field-input" placeholder="Contoh: Dimas / Traveler (opsional)">
     </div>
 
     <div style="margin-bottom:14px;text-align:left">
-      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Ulasan / Pengalaman Jokian:</label>
+      <label id="heroRatingReviewLabel" style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Ulasan / Pengalaman Jokian:</label>
       <textarea id="heroReviewComment" class="rating-field-input" rows="2" placeholder="Ceritakan bagaimana pengerjaan jokian Anda... (cepat, akun aman, ramah, dll.)"></textarea>
     </div>
 
@@ -2377,22 +2376,22 @@ button{cursor:pointer;font-family:inherit}
 <div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
 <div class="modal-box" onclick="event.stopPropagation()">
 <div class="modal-header">
-<h4>Pilih Metode Pembayaran</h4>
+<h4 id="modalPayTitle">Pilih Metode Pembayaran</h4>
 <button class="modal-close" onclick="closeModal()">×</button>
 </div>
 <div class="modal-product" id="modalProduct"></div>
 <div class="modal-body">
-<div class="modal-label">Metode Pembayaran</div>
+<div class="modal-label" id="modalPayMethodLabel">Metode Pembayaran</div>
 <div class="pay-grid" id="modalPayGrid">
 <div class="pay-option" data-method="QRIS" onclick="selectPay(this,'QRIS')"><span class="pay-check">✓</span><span class="pay-icon">📱</span><span class="pay-name">QRIS</span></div>
 <div class="pay-option" data-method="DANA" onclick="selectPay(this,'DANA')"><span class="pay-check">✓</span><span class="pay-icon">💙</span><span class="pay-name">DANA</span></div>
 <div class="pay-option" data-method="GoPay" onclick="selectPay(this,'GoPay')"><span class="pay-check">✓</span><span class="pay-icon">💚</span><span class="pay-name">GoPay</span></div>
 <div class="pay-option" data-method="OVO" onclick="selectPay(this,'OVO')"><span class="pay-check">✓</span><span class="pay-icon">🟣</span><span class="pay-name">OVO</span></div>
 </div>
-<div class="modal-label" style="margin-top:12px">Chat ke Admin</div>
+<div class="modal-label" id="modalChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridModal"></div>
 <div class="wa-preview" id="waPreview" style="display:none">
-<div class="wa-preview-label">Pesan WhatsApp</div>
+<div class="wa-preview-label" id="waPreviewLabel">Pesan WhatsApp</div>
 <p class="wa-preview-text" id="waText"></p>
 <button class="wa-btn" id="waBtn" onclick="sendWA()">💬 Kirim ke WhatsApp</button>
 </div>
@@ -2408,11 +2407,11 @@ button{cursor:pointer;font-family:inherit}
 </div>
 <div class="cart-tabs-nav">
   <button type="button" class="cart-tab-btn active" id="cartTabBtnCart" onclick="switchCartPanelTab('cart')">
-    <span>🛒 Keranjang</span>
+    <span id="cartTabBtnCartText">🛒 Keranjang</span>
     <span class="cart-tab-badge" id="cartTabBadge" style="display:none">0</span>
   </button>
   <button type="button" class="cart-tab-btn" id="cartTabBtnOrders" onclick="switchCartPanelTab('orders')">
-    <span>📦 Pesanan Saya</span>
+    <span id="cartTabBtnOrdersText">📦 Pesanan Saya</span>
     <span class="cart-tab-badge" id="ordersTabBadge" style="display:none">0</span>
   </button>
 </div>
@@ -2421,8 +2420,8 @@ button{cursor:pointer;font-family:inherit}
     <div id="cartItemsList">
       <div class="cart-empty" id="cartEmptyMsg">
         <span class="cart-empty-icon">🛒</span>
-        <p>Keranjang masih kosong</p>
-        <p style="font-size:12px;margin-top:4px">Yuk tambah layanan favoritmu!</p>
+        <p id="cartEmptyText1">Keranjang masih kosong</p>
+        <p id="cartEmptyText2" style="font-size:12px;margin-top:4px">Yuk tambah layanan favoritmu!</p>
       </div>
     </div>
   </div>
@@ -2432,7 +2431,7 @@ button{cursor:pointer;font-family:inherit}
 </div>
 <div class="cart-footer" id="cartFooter" style="display:none">
 <div class="cart-subtotal-row" id="cartSubtotalRow" style="display:none">
-<span class="cart-subtotal-label">Subtotal</span>
+<span class="cart-subtotal-label" id="cartSubtotalLabel">Subtotal</span>
 <span class="cart-subtotal-price" id="cartSubtotal">Rp0</span>
 </div>
 <div class="cart-discount-row" id="cartDiscountRow" style="display:none">
@@ -2440,29 +2439,29 @@ button{cursor:pointer;font-family:inherit}
 <span class="cart-discount-price" id="cartDiscountAmount">-Rp0</span>
 </div>
 <div class="cart-total-row">
-<span class="cart-total-label">Total</span>
+<span class="cart-total-label" id="cartTotalLabel">Total</span>
 <span class="cart-total-price" id="cartTotal">Rp0</span>
 </div>
 <button class="cart-checkout" id="cartCheckoutBtn" style="margin-top:12px" onclick="openCartCheckoutStep()">💬 Checkout via WhatsApp</button>
-<p class="cart-clear" onclick="clearCart()">Kosongkan Keranjang</p>
+<p class="cart-clear" id="cartClearText" onclick="clearCart()">Kosongkan Keranjang</p>
 </div>
 
 <div class="cart-checkout-step" id="cartCheckoutStep" style="display:none">
 <div class="cart-total-row">
-<span class="cart-total-label">Total</span>
+<span class="cart-total-label" id="cartStepTotalLabel">Total</span>
 <span class="cart-total-price" id="cartTotalStep">Rp0</span>
 </div>
-<div class="modal-label" style="margin-top:12px">Metode Pembayaran</div>
+<div class="modal-label" id="cartStepPayMethodLabel" style="margin-top:12px">Metode Pembayaran</div>
 <div class="pay-grid" id="cartPayGrid">
 <div class="pay-option" data-method="QRIS" onclick="selectCartPay(this,'QRIS')"><span class="pay-check">✓</span><span class="pay-icon">📱</span><span class="pay-name">QRIS</span></div>
 <div class="pay-option" data-method="DANA" onclick="selectCartPay(this,'DANA')"><span class="pay-check">✓</span><span class="pay-icon">💙</span><span class="pay-name">DANA</span></div>
 <div class="pay-option" data-method="GoPay" onclick="selectCartPay(this,'GoPay')"><span class="pay-check">✓</span><span class="pay-icon">💚</span><span class="pay-name">GoPay</span></div>
 <div class="pay-option" data-method="OVO" onclick="selectCartPay(this,'OVO')"><span class="pay-check">✓</span><span class="pay-icon">🟣</span><span class="pay-name">OVO</span></div>
 </div>
-<div class="modal-label" style="margin-top:12px">Chat ke Admin</div>
+<div class="modal-label" id="cartStepChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridCart"></div>
-<button class="cart-checkout" style="margin-top:12px" onclick="checkoutCart()">✅ Konfirmasi & Kirim</button>
-<p class="cart-clear" onclick="closeCartCheckoutStep()">← Kembali ke Keranjang</p>
+<button class="cart-checkout" id="cartConfirmCheckoutBtn" style="margin-top:12px" onclick="checkoutCart()">✅ Konfirmasi & Kirim</button>
+<p class="cart-clear" id="cartBackToCartBtn" onclick="closeCartCheckoutStep()">← Kembali ke Keranjang</p>
 </div>
 </div>
 </div>
@@ -3299,7 +3298,7 @@ button{cursor:pointer;font-family:inherit}
 
     <!-- WIDGET RATING LANGSUNG JOKIAN SELESAI -->
     <div id="orderNotifRatingBox" style="background:rgba(255,255,255,0.06);border:1px solid rgba(250,204,21,0.3);border-radius:14px;padding:12px;margin-bottom:12px;text-align:center">
-      <div style="font-size:12px;font-weight:800;color:#fde047;margin-bottom:6px">⭐ Beri Bintang Kepuasan Jokian:</div>
+      <div id="orderNotifRatingHead" style="font-size:12px;font-weight:800;color:#fde047;margin-bottom:6px">⭐ Beri Bintang Kepuasan Jokian:</div>
       <div class="interactive-stars-wrap" id="notifStarsPicker" style="margin-bottom:6px">
         <span class="interactive-star active" data-val="1" onclick="setNotifRatingStars(1)">★</span>
         <span class="interactive-star active" data-val="2" onclick="setNotifRatingStars(2)">★</span>
@@ -3326,7 +3325,7 @@ button{cursor:pointer;font-family:inherit}
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px">
       <div style="display:flex;align-items:center;gap:8px;min-width:0;flex:1">
         <span style="font-size:22px;flex-shrink:0">🌍</span>
-        <h4 style="font-size:15px;font-weight:800;margin:0;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pilih Negara & Mata Uang</h4>
+        <h4 id="countryCurrencyModalTitle" style="font-size:15px;font-weight:800;margin:0;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Pilih Negara & Mata Uang</h4>
       </div>
       <button type="button" class="modal-close" onclick="closeCountryCurrencyModal('force')" style="color:#64748b;font-weight:800;width:30px;height:30px;border-radius:8px;border:1px solid #e2e8f0;background:#f8fafc;cursor:pointer;flex-shrink:0">✕</button>
     </div>
@@ -3334,7 +3333,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="country-currency-grid" id="countryCurrencyList"></div>
 
     <div style="margin-top:14px">
-      <button type="button" class="admin-btn" style="background:#f1f5f9;color:#475569;border:none;padding:10px;font-size:12px;border-radius:10px;font-weight:700;width:100%;cursor:pointer" onclick="closeCountryCurrencyModal('force')">Tutup</button>
+      <button type="button" class="admin-btn" id="countryCurrencyModalCloseBtn" style="background:#f1f5f9;color:#475569;border:none;padding:10px;font-size:12px;border-radius:10px;font-weight:700;width:100%;cursor:pointer" onclick="closeCountryCurrencyModal('force')">Tutup</button>
     </div>
   </div>
 </div>
@@ -3343,15 +3342,15 @@ button{cursor:pointer;font-family:inherit}
 <div class="modal-overlay" id="giveRatingModal" style="z-index:500" onclick="closeGiveRatingModal(event)">
   <div class="modal-box" onclick="event.stopPropagation()" style="background:#161324;border:1.5px solid #8b5cf6;color:#fff;max-width:420px;padding:20px;border-radius:20px">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-      <div style="font-size:16px;font-weight:800;color:#fde047">⭐ Beri Bintang & Ulasan Jokian</div>
+      <div id="giveRatingModalTitle" style="font-size:16px;font-weight:800;color:#fde047">⭐ Beri Bintang & Ulasan Jokian</div>
       <button type="button" class="modal-close" onclick="closeGiveRatingModal()" style="color:#cbd5e1">✕</button>
     </div>
-    <p style="font-size:11.5px;color:#cbd5e1;line-height:1.45;margin-bottom:12px">
+    <p id="giveRatingModalSub" style="font-size:11.5px;color:#cbd5e1;line-height:1.45;margin-bottom:12px">
       Rating Anda akan otomatis dihitung dan menaikkan bintang toko secara transparan dan real-time.
     </p>
     
     <div id="giveRatingOrderSelectWrap" style="margin-bottom:10px">
-      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Layanan / Jokian:</label>
+      <label id="giveRatingServiceLabel" style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Layanan / Jokian:</label>
       <select id="giveRatingOrderSelect" class="rating-field-input" style="background:#231e3d;cursor:pointer" onchange="handleModalOrderSelectChange()">
         <option value="">-- Pilih Dari Pesanan Selesai Anda --</option>
       </select>
@@ -3361,7 +3360,7 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <div style="text-align:center;margin:12px 0 8px">
-      <div style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:4px">PILIH BINTANG KEPUASAN:</div>
+      <div id="giveRatingStarsTitle" style="font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:4px">PILIH BINTANG KEPUASAN:</div>
       <div class="interactive-stars-wrap" id="modalStarsPicker">
         <span class="interactive-star active" data-val="1" onclick="setModalRatingStars(1)">★</span>
         <span class="interactive-star active" data-val="2" onclick="setModalRatingStars(2)">★</span>
@@ -3373,12 +3372,12 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <div style="margin-bottom:8px">
-      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Nama Anda / In-Game Name:</label>
+      <label id="modalNameLabel" style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Nama Anda / In-Game Name:</label>
       <input type="text" id="modalReviewerName" class="rating-field-input" placeholder="Contoh: Dimas / Traveler">
     </div>
 
     <div style="margin-bottom:14px">
-      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Ulasan / Pengalaman Jokian:</label>
+      <label id="modalReviewLabel" style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">Ulasan / Pengalaman Jokian:</label>
       <textarea id="modalReviewComment" class="rating-field-input" rows="3" placeholder="Ceritakan bagaimana pengerjaan jokian Anda... (cepat, akun aman, ramah, dll.)"></textarea>
     </div>
 
@@ -3473,6 +3472,62 @@ button{cursor:pointer;font-family:inherit}
       </button>
     </div>
   </div>
+</div>
+
+<!-- Modal Atur Durasi / Estimasi Pengerjaan Pesanan (Admin) -->
+<div class="modal-overlay" id="orderDurationModal" style="z-index:350;align-items:center;padding:16px" onclick="closeOrderDurationModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="background:#fff;border-radius:20px;max-width:440px;width:calc(100% - 24px);margin:auto;padding:22px 20px;box-shadow:0 25px 60px rgba(0,0,0,0.35);box-sizing:border-box">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;border-bottom:1px solid #f1f5f9;padding-bottom:12px">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span style="font-size:24px">⏱️</span>
+        <div>
+          <h3 style="margin:0;font-size:16px;font-weight:800;color:#1e1b4b">Atur Durasi Proses Pesanan</h3>
+          <p style="margin:2px 0 0;font-size:11px;color:#64748b">Tentukan berapa lama proses pengerjaan layanan ini</p>
+        </div>
+      </div>
+      <button type="button" class="modal-close" onclick="closeOrderDurationModal()" style="font-size:18px;background:#f1f5f9;border:none;border-radius:8px;width:30px;height:30px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#475569">✕</button>
+    </div>
+
+    <!-- Info Pesanan -->
+    <div id="orderDurationSummary" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:10px 12px;margin-bottom:14px;font-size:12px">
+    </div>
+
+    <!-- Pilihan Cepat Durasi -->
+    <div style="margin-bottom:12px">
+      <label style="font-size:11px;font-weight:700;color:#475569;display:block;margin-bottom:6px">
+        ⚡ Pilihan Durasi Cepat:
+      </label>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px" id="orderDurationQuickGrid">
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('15 Menit')">⚡ 15 Menit</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('30 Menit')">⏱️ 30 Menit</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('1 Jam')">⏳ 1 Jam</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('2 Jam')">⏳ 2 Jam</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('3 Jam')">⌛ 3 Jam</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('6 Jam')">⌛ 6 Jam</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('12 Jam')">📅 12 Jam</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('1 Hari')">📅 1 Hari</button>
+        <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:8px 4px;font-weight:700" onclick="selectQuickDuration('2-3 Hari')">📅 2-3 Hari</button>
+      </div>
+    </div>
+
+    <!-- Input Kustom / Manual -->
+    <div style="margin-bottom:16px">
+      <label style="font-size:11px;font-weight:700;color:#475569;display:block;margin-bottom:4px">
+        ✍️ Atau Ketik Estimasi Durasi Sendiri:
+      </label>
+      <input type="text" id="orderDurationCustomInput" class="admin-input" placeholder="Contoh: 45 Menit, 1-2 Jam, 1 Minggu" style="font-size:12px;padding:10px 12px;margin:0;width:100%;box-sizing:border-box">
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button type="button" class="admin-btn" style="flex:2;background:linear-gradient(135deg,#3b82f6,#2563eb);color:#fff;font-weight:700;padding:12px;border-radius:12px;font-size:13px" onclick="saveOrderDurationFromModal()">
+        💾 Simpan Durasi & Mulai Proses
+      </button>
+      <button type="button" onclick="closeOrderDurationModal()" style="flex:1;background:#f1f5f9;color:#64748b;border:none;padding:12px;border-radius:12px;font-size:12px;font-weight:700;cursor:pointer">
+        Batal
+      </button>
+    </div>
+  </div>
+</div>
 <!-- ==================== MODAL MEDIA SOSIAL RESMI ==================== -->
 <div class="social-modal-overlay" id="socialModalOverlay" onclick="closeSocialModal(event)">
   <div class="social-modal-box" onclick="event.stopPropagation()">
@@ -3526,36 +3581,13 @@ const DEFAULT_PRODUCT_IMAGES = {
   20: ['/prod_20.jpg'],
   21: ['/prod_21.jpg'],
   22: ['/prod_22.jpg'],
+  25: ['/prod_25.jpg'],
   23: ['/prod_23.jpg'],
   24: ['/prod_24.jpg'],
-  25: ['/prod_25.jpg'],
-  26: ['/prod_26.jpg'],
-  27: ['/prod_27.jpg'],
-  28: ['/prod_28.jpg'],
-  29: ['/prod_29.jpg'],
-  30: ['/prod_30.jpg'],
-  31: ['/prod_31.jpg'],
-  32: ['/prod_32.jpg'],
-  33: ['/prod_33.jpg'],
-  34: ['/prod_34.jpg'],
-  35: ['/prod_35.jpg'],
-  36: ['/prod_36.jpg'],
-  37: ['/prod_37.jpg'],
-  38: ['/prod_38.jpg'],
-  39: ['/prod_39.jpg'],
-  40: ['/prod_40.jpg'],
-  41: ['/prod_41.jpg'],
-  42: ['/prod_42.jpg'],
-  43: ['/prod_43.jpg'],
-  44: ['/prod_44.jpg'],
-  45: ['/prod_45.jpg'],
-  46: ['/prod_46.jpg'],
-  47: ['/prod_47.jpg'],
-  48: ['/prod_48.jpg'],
-  49: ['/prod_49.jpg'],
   50: ['/prod_50.jpg'],
-  51: ['/prod_51.jpg'],
   52: ['/prod_52.jpg'],
+  49: ['/prod_49.jpg'],
+  51: ['/prod_51.jpg'],
   53: ['/prod_53.jpg'],
   54: ['/prod_54.jpg'],
   55: ['/prod_55.jpg'],
@@ -3569,76 +3601,121 @@ const DEFAULT_PRODUCT_IMAGES = {
   63: ['/prod_63.jpg'],
   64: ['/prod_64.jpg'],
   65: ['/prod_65.jpg'],
-  66: ['/prod_66.jpg']
+  66: ['/prod_66.jpg'],
+  26: ['/prod_26.jpg'],
+  27: ['/prod_27.jpg'],
+  28: ['/prod_28.jpg'],
+  29: ['/prod_29.jpg'],
+  30: ['/prod_30.jpg'],
+  31: ['/prod_31.jpg'],
+  32: ['/prod_32.jpg'],
+  33: ['/prod_33.jpg'],
+  35: ['/prod_35.jpg'],
+  36: ['/prod_36.jpg'],
+  34: ['/prod_34.jpg'],
+  37: ['/prod_37.jpg'],
+  38: ['/prod_38.jpg'],
+  39: ['/prod_39.jpg'],
+  40: ['/prod_40.jpg'],
+  41: ['/prod_41.jpg'],
+  42: ['/prod_42.jpg'],
+  74: ['/prod_74.jpg'],
+  75: ['/prod_75.jpg'],
+  76: ['/prod_76.jpg'],
+  43: ['/prod_43.jpg'],
+  44: ['/prod_44.jpg'],
+  45: ['/prod_45.jpg'],
+  46: ['/prod_46.jpg'],
+  47: ['/prod_47.jpg'],
+  48: ['/prod_48.jpg'],
+  77: ['/prod_77.jpg'],
+  67: ['/prod_67.jpg'],
+  68: ['/prod_68.jpg'],
+  69: ['/prod_69.jpg'],
+  70: ['/prod_70.jpg'],
+  71: ['/prod_71.jpg'],
+  72: ['/prod_72.jpg'],
+  73: ['/prod_73.jpg']
 };
 
 const DEFAULT_PRODUCTS = [
-  {id:1,name:"10 IF",price:25000,badge:"BEST",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_1.jpg']},
-  {id:2,name:"20 IF",price:50000,badge:"BEST",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_2.jpg']},
-  {id:3,name:"30 IF",price:75000,badge:"BEST",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_3.jpg']},
-  {id:4,name:"40 IF",price:95000,badge:"POPULER",icon:"💎",desc:"Harga murah cocok untuk semua",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_4.jpg']},
-  {id:5,name:"50 IF",price:125000,badge:"POPULER",icon:"💎",desc:"Harga murah cocok untuk semua",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_5.jpg']},
-  {id:6,name:"60 IF",price:150000,badge:"POPULER",icon:"💎",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_6.jpg']},
-  {id:7,name:"100 IF",price:250000,badge:"New",icon:"💎",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_7.jpg']},
-  {id:8,name:"200 IF",price:500000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk yang baru gajian",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_8.jpg']},
-  {id:9,name:"EKSPLORE MONDSTADT",price:110000,badge:"BEST",icon:"✨",desc:"Eksploration all map mondstadt",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_9.jpg']},
-  {id:10,name:"EKSPLORE LIYUE",price:165000,badge:"BEST",icon:"✨",desc:"Eksploration all map liyue",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_10.jpg']},
-  {id:11,name:"EKSPLORE INAZUMA",price:200000,badge:"BEST",icon:"✨",desc:"Eksploration all map inazuma",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_11.jpg']},
-  {id:12,name:"EKSPLORE FONTAINE",price:250000,badge:"BEST",icon:"✨",desc:"Eksploration all map fontaine",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_12.jpg']},
-  {id:13,name:"EKSPLORE SUMERU",price:300000,badge:"BEST",icon:"✨",desc:"Eksploration all map sumeru",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_13.jpg']},
-  {id:14,name:"EKSPLORE NATLAN",price:250000,badge:"POPULER",icon:"✨",desc:"Eksploration all map natlan",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_14.jpg']},
-  {id:15,name:"EKSPLORE NODKRAI",price:180000,badge:"BEST",icon:"✨",desc:"Eksploration all map nodkrai",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_15.jpg']},
-  {id:16,name:"EKSPLORE SNEZHNAYA",price:240000,badge:"NEW",icon:"✨",desc:"Eksploration all map snezhnaya",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_16.jpg']},
-  {id:17,name:"Genshin account",price:350000,badge:"NEW",icon:"📦",desc:"Akun admin yang nganggur",cat:"lainnya",subgroup:"",isAccount:true,images:['/prod_17.jpg']},
-  {id:18,name:"ARCHON MONDSTADT",price:30000,badge:"BASIC",icon:"🔥",desc:"All quest archon mondstadt",cat:"genshin",subgroup:"QUEST",images:['/prod_18.jpg']},
-  {id:19,name:"ARCHON LIYUE",price:50000,badge:"BASIC",icon:"🔥",desc:"All quest archon liyue",cat:"genshin",subgroup:"QUEST",images:['/prod_19.jpg']},
-  {id:20,name:"ARCHON INAZUMA",price:40000,badge:"BASIC",icon:"🔥",desc:"All quest archon inazuma",cat:"genshin",subgroup:"QUEST",images:['/prod_20.jpg']},
-  {id:21,name:"ARCHON SUMERU",price:60000,badge:"BASIC",icon:"🔥",desc:"All quest archon sumeru",cat:"genshin",subgroup:"QUEST",images:['/prod_21.jpg']},
-  {id:22,name:"ARCHON FONTAINE",price:60000,badge:"BASIC",icon:"🔥",desc:"All quest archon fontaine",cat:"genshin",subgroup:"QUEST",images:['/prod_22.jpg']},
-  {id:25,name:"ARCHON NATLAN",price:50000,badge:"BASIC",icon:"🔥",desc:"All quest archon natlan",cat:"genshin",subgroup:"QUEST",images:['/prod_25.jpg']},
-  {id:23,name:"ARCHON NODKRAI",price:80000,badge:"BASIC",icon:"🔥",desc:"All quest archon nodkrai",cat:"genshin",subgroup:"QUEST",images:['/prod_23.jpg']},
-  {id:24,name:"ARCHON SNEZHNAYA",price:30000,badge:"BASIC",icon:"🔥",desc:"All quest archon snezhnaya",cat:"genshin",subgroup:"QUEST",images:['/prod_24.jpg']},
-  {id:50,name:"HANGOUT/chapter",price:8000,badge:"BASIC",icon:"🔥",desc:"Hangout/chap",cat:"genshin",subgroup:"QUEST",images:['/prod_50.jpg']},
-  {id:52,name:"ARANARA",price:250000,badge:"ANOMALI",icon:"🔥",desc:"All aranara clear",cat:"genshin",subgroup:"QUEST",images:['/prod_52.jpg']},
-  {id:49,name:"STORY QUEST/chapter",price:10000,badge:"BASIC",icon:"🔥",desc:"Story quest/chap",cat:"genshin",subgroup:"QUEST",images:['/prod_49.jpg']},
-  {id:51,name:"WORLD QUEST/chapter",price:15000,badge:"NEW",icon:"🔥",desc:"World quest/chapter",cat:"genshin",subgroup:"QUEST",images:['/prod_51.jpg']},
-  {id:53,name:"ALL QUEST",price:300000,badge:"ANOMALI",icon:"🔥",desc:"All quest clear yang tersedia tidak termasuk quest archon",cat:"genshin",subgroup:"QUEST",images:['/prod_53.jpg']},
-  {id:54,name:"DAILY",price:3000,badge:"NEW",icon:"⚡",desc:"Daily bp, Daily comission, Resin, Ekspedisi",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_54.jpg']},
-  {id:55,name:"WEEKLY",price:21000,badge:"NEW",icon:"⚡",desc:"Daily bp, Daily comission, Resin, Ekspedisi, Reputasi",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_55.jpg']},
-  {id:56,name:"MONTHLY",price:93000,badge:"NEW",icon:"⚡",desc:"Daily bp, Daily comission, Resin, Ekspedisi, Reputasi, Weekly boss, Event",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_56.jpg']},
-  {id:57,name:"LVL 1 - 40",price:5000,badge:"NEW",icon:"⚡",desc:"Up level karakter 1-40",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_57.jpg']},
-  {id:58,name:"LVL 40 - 50",price:8000,badge:"NEW",icon:"⚡",desc:"Up level karakter 40-50",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_58.jpg']},
-  {id:59,name:"LVL 50 - 60",price:12000,badge:"NEW",icon:"⚡",desc:"Up level karakter 50-60",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_59.jpg']},
-  {id:60,name:"LVL 60 - 70",price:14000,badge:"NEW",icon:"⚡",desc:"Up level karakter 60-70",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_60.jpg']},
-  {id:61,name:"LVL 70 - 80",price:17000,badge:"NEW",icon:"⚡",desc:"Up level karakter 70-80",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_61.jpg']},
-  {id:62,name:"LVL 80 - 90",price:20000,badge:"NEW",icon:"⚡",desc:"Up level karakter 80-90",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_62.jpg']},
-  {id:63,name:"CULUS/PCS",price:1000,badge:"NEW",icon:"✴️",desc:"Joki culus persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_63.jpg']},
-  {id:64,name:"MONSTER DROP/PCS",price:500,badge:"NEW",icon:"✴️",desc:"Kumpulkan item dari monster persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_64.jpg']},
-  {id:65,name:"MATERIAL",price:500,badge:"NEW",icon:"✴️",desc:"Kumpulkan material dari monster persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_65.jpg']},
-  {id:66,name:"EVENT",price:10000,badge:"NEW",icon:"✴️",desc:"All event harga sesuai kerumitan event",cat:"genshin",subgroup:"OTHER",images:['/prod_66.jpg']},
-  {id:26,name:"10 RT",price:25000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_26.jpg']},
-  {id:27,name:"20 RT",price:50000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_27.jpg']},
-  {id:28,name:"30 RT",price:75000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_28.jpg']},
-  {id:29,name:"40 RT",price:95000,badge:"POPULER",icon:"✨",desc:"Harga murah cocok untuk semua",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_29.jpg']},
-  {id:30,name:"50 RT",price:125000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk semua",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_30.jpg']},
-  {id:31,name:"60 RT",price:150000,badge:"BEST",icon:"✨",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_31.jpg']},
-  {id:32,name:"100 RT",price:200000,badge:"BEST",icon:"✨",desc:"Harga cocok untuk yang baru gajian",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_32.jpg']},
-  {id:33,name:"200 RT",price:500000,badge:"BEST",icon:"✨",desc:"Harga cocok untuk yang baru gajian",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_33.jpg']},
-  {id:35,name:"EKSPLORE LAHAI ROI",price:250000,badge:"BEST",icon:"✨",desc:"Eksploration all map lahai roy",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_35.jpg']},
-  {id:36,name:"EKSPLORE RINASCITA",price:250000,badge:"BEST",icon:"✨",desc:"Eksploration all map rinascita",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_36.jpg']},
-  {id:34,name:"EKSPLORE HUANGLONG",price:200000,badge:"BEST",icon:"✨",desc:"Eksploration all map huanglong",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_34.jpg']},
-  {id:37,name:"EKSPLORE MENGZHOU",price:120000,badge:"BEST",icon:"✨",desc:"Eksploration all map mengzhou",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_37.jpg']},
-  {id:38,name:"EKSPLORE BLACK SHORES",price:40000,badge:"BEST",icon:"✨",desc:"Eksploration all map mengzhou",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_38.jpg']},
-  {id:39,name:"STORY QUEST",price:15000,badge:"BEST",icon:"✨",desc:"All story quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_39.jpg']},
-  {id:40,name:"EKSPLORATION QUEST",price:15000,badge:"BEST",icon:"✨",desc:"All eksploration quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_40.jpg']},
-  {id:41,name:"COMPANION QUEST",price:10000,badge:"BEST",icon:"✨",desc:"All companion quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_41.jpg']},
-  {id:42,name:"SIDE QUEST",price:5000,badge:"BEST",icon:"✨",desc:"All companion quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_42.jpg']},
-  {id:43,name:"10 SD",price:20000,badge:"NEW",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_43.jpg']},
-  {id:44,name:"20 SD",price:50000,badge:"NEW",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_44.jpg']},
-  {id:45,name:"30 SD",price:75000,badge:"NEW",icon:"💎",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_45.jpg']},
-  {id:46,name:"40 SD",price:95000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_46.jpg']},
-  {id:47,name:"50 SD",price:125000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_47.jpg']},
-  {id:48,name:"60 SD",price:150000,badge:"NEW",icon:"💎",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_48.jpg']}
+  {id:1,name:"10 IF",price:25000,badge:"BEST",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_1.jpg']},
+  {id:2,name:"20 IF",price:50000,badge:"BEST",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_2.jpg']},
+  {id:3,name:"30 IF",price:75000,badge:"BEST",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_3.jpg']},
+  {id:4,name:"40 IF",price:95000,badge:"POPULER",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk semua",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_4.jpg']},
+  {id:5,name:"50 IF",price:125000,badge:"POPULER",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk semua",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_5.jpg']},
+  {id:6,name:"60 IF",price:150000,badge:"POPULER",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_6.jpg']},
+  {id:7,name:"100 IF",price:250000,badge:"New",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_7.jpg']},
+  {id:8,name:"200 IF",price:500000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk yang baru gajian",cat:"genshin",subgroup:"INTERTWINED FATE",images:['/prod_8.jpg']},
+  {id:9,name:"EKSPLORE MONDSTADT",price:110000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map mondstadt",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_9.jpg']},
+  {id:10,name:"EKSPLORE LIYUE",price:165000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map liyue",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_10.jpg']},
+  {id:11,name:"EKSPLORE INAZUMA",price:200000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map inazuma",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_11.jpg']},
+  {id:12,name:"EKSPLORE FONTAINE",price:250000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map fontaine",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_12.jpg']},
+  {id:13,name:"EKSPLORE SUMERU",price:300000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map sumeru",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_13.jpg']},
+  {id:14,name:"EKSPLORE NATLAN",price:250000,badge:"POPULER",icon:"\u2728",desc:"Eksploration all map natlan",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_14.jpg']},
+  {id:15,name:"EKSPLORE NODKRAI",price:180000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map nodkrai",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_15.jpg']},
+  {id:16,name:"EKSPLORE SNEZHNAYA",price:240000,badge:"NEW",icon:"\u2728",desc:"Eksploration all map snezhnaya",cat:"genshin",subgroup:"EKSPLORATION",images:['/prod_16.jpg']},
+  {id:17,name:"Genshin account",price:350000,badge:"NEW",icon:"\ud83d\udce6",desc:"Akun admin yang nganggur",cat:"lainnya",subgroup:"",isAccount:true,images:['/prod_17.jpg']},
+  {id:18,name:"ARCHON MONDSTADT",price:30000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon mondstadt",cat:"genshin",subgroup:"QUEST",images:['/prod_18.jpg']},
+  {id:19,name:"ARCHON LIYUE",price:50000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon liyue",cat:"genshin",subgroup:"QUEST",images:['/prod_19.jpg']},
+  {id:20,name:"ARCHON INAZUMA",price:40000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon inazuma",cat:"genshin",subgroup:"QUEST",images:['/prod_20.jpg']},
+  {id:21,name:"ARCHON SUMERU",price:60000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon sumeru",cat:"genshin",subgroup:"QUEST",images:['/prod_21.jpg']},
+  {id:22,name:"ARCHON FONTAINE",price:60000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon fontaine",cat:"genshin",subgroup:"QUEST",images:['/prod_22.jpg']},
+  {id:25,name:"ARCHON NATLAN",price:50000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon natlan",cat:"genshin",subgroup:"QUEST",images:['/prod_25.jpg']},
+  {id:23,name:"ARCHON NODKRAI",price:80000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon nodkrai",cat:"genshin",subgroup:"QUEST",images:['/prod_23.jpg']},
+  {id:24,name:"ARCHON SNEZHNAYA",price:30000,badge:"BASIC",icon:"\ud83d\udd25",desc:"All quest archon snezhnaya",cat:"genshin",subgroup:"QUEST",images:['/prod_24.jpg']},
+  {id:50,name:"HANGOUT/chapter",price:8000,badge:"BASIC",icon:"\ud83d\udd25",desc:"Hangout/chap",cat:"genshin",subgroup:"QUEST",images:['/prod_50.jpg']},
+  {id:52,name:"ARANARA",price:250000,badge:"ANOMALI",icon:"\ud83d\udd25",desc:"All aranara clear",cat:"genshin",subgroup:"QUEST",images:['/prod_52.jpg']},
+  {id:49,name:"STORY QUEST/chapter",price:10000,badge:"BASIC",icon:"\ud83d\udd25",desc:"Story quest/chap",cat:"genshin",subgroup:"QUEST",images:['/prod_49.jpg']},
+  {id:51,name:"WORLD QUEST/chapter",price:15000,badge:"NEW",icon:"\ud83d\udd25",desc:"World quest/chapter",cat:"genshin",subgroup:"QUEST",images:['/prod_51.jpg']},
+  {id:53,name:"ALL QUEST",price:300000,badge:"ANOMALI",icon:"\ud83d\udd25",desc:"All quest clear yang tersedia tidak termasuk quest archon",cat:"genshin",subgroup:"QUEST",images:['/prod_53.jpg']},
+  {id:54,name:"DAILY",price:3000,badge:"NEW",icon:"\u26a1",desc:"Daily bp, Daily comission, Resin, Ekspedisi",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_54.jpg']},
+  {id:55,name:"WEEKLY",price:21000,badge:"NEW",icon:"\u26a1",desc:"Daily bp, Daily comission, Resin, Ekspedisi, Reputasi",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_55.jpg']},
+  {id:56,name:"MONTHLY",price:93000,badge:"NEW",icon:"\u26a1",desc:"Daily bp, Daily comission, Resin, Ekspedisi, Reputasi, Weekly boss, Event",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_56.jpg']},
+  {id:57,name:"LVL 1 - 40",price:5000,badge:"NEW",icon:"\u26a1",desc:"Up level karakter 1-40",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_57.jpg']},
+  {id:58,name:"LVL 40 - 50",price:8000,badge:"NEW",icon:"\u26a1",desc:"Up level karakter 40-50",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_58.jpg']},
+  {id:59,name:"LVL 50 - 60",price:12000,badge:"NEW",icon:"\u26a1",desc:"Up level karakter 50-60",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_59.jpg']},
+  {id:60,name:"LVL 60 - 70",price:14000,badge:"NEW",icon:"\u26a1",desc:"Up level karakter 60-70",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_60.jpg']},
+  {id:61,name:"LVL 70 - 80",price:17000,badge:"NEW",icon:"\u26a1",desc:"Up level karakter 70-80",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_61.jpg']},
+  {id:62,name:"LVL 80 - 90",price:20000,badge:"NEW",icon:"\u26a1",desc:"Up level karakter 80-90",cat:"genshin",subgroup:"RAWAT ACCOUNT",images:['/prod_62.jpg']},
+  {id:63,name:"CULUS/PCS",price:1000,badge:"NEW",icon:"\u2734\ufe0f",desc:"Joki culus persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_63.jpg']},
+  {id:64,name:"MONSTER DROP/PCS",price:500,badge:"NEW",icon:"\u2734\ufe0f",desc:"Kumpulkan item dari monster persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_64.jpg']},
+  {id:65,name:"MATERIAL",price:500,badge:"NEW",icon:"\u2734\ufe0f",desc:"Kumpulkan material dari monster persatunya",cat:"genshin",subgroup:"OTHER",images:['/prod_65.jpg']},
+  {id:66,name:"EVENT",price:10000,badge:"NEW",icon:"\u2734\ufe0f",desc:"All event harga sesuai kerumitan event",cat:"genshin",subgroup:"OTHER",maxPrice:35000,priceRaw:"10000-35000",images:['/prod_66.jpg']},
+  {id:26,name:"10 RT",price:25000,badge:"BEST",icon:"\u2728",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_26.jpg']},
+  {id:27,name:"20 RT",price:50000,badge:"BEST",icon:"\u2728",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_27.jpg']},
+  {id:28,name:"30 RT",price:75000,badge:"BEST",icon:"\u2728",desc:"Harga murah cocok untuk pertama kali",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_28.jpg']},
+  {id:29,name:"40 RT",price:95000,badge:"POPULER",icon:"\u2728",desc:"Harga murah cocok untuk semua",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_29.jpg']},
+  {id:30,name:"50 RT",price:125000,badge:"BEST",icon:"\u2728",desc:"Harga murah cocok untuk semua",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_30.jpg']},
+  {id:31,name:"60 RT",price:150000,badge:"BEST",icon:"\u2728",desc:"Harga murah cocok untuk yang baru dapat uang",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_31.jpg']},
+  {id:32,name:"100 RT",price:200000,badge:"BEST",icon:"\u2728",desc:"Harga cocok untuk yang baru gajian",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_32.jpg']},
+  {id:33,name:"200 RT",price:500000,badge:"BEST",icon:"\u2728",desc:"Harga cocok untuk yang baru gajian",cat:"wuwa",subgroup:"RADIANT TIDE",images:['/prod_33.jpg']},
+  {id:35,name:"EKSPLORE LAHAI ROI",price:250000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map lahai roy",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_35.jpg']},
+  {id:36,name:"EKSPLORE RINASCITA",price:250000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map rinascita",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_36.jpg']},
+  {id:34,name:"EKSPLORE HUANGLONG",price:200000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map huanglong",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_34.jpg']},
+  {id:37,name:"EKSPLORE MENGZHOU",price:120000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map mengzhou",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_37.jpg']},
+  {id:38,name:"EKSPLORE BLACK SHORES",price:40000,badge:"BEST",icon:"\u2728",desc:"Eksploration all map mengzhou",cat:"wuwa",subgroup:"EKSPLORATION",images:['/prod_38.jpg']},
+  {id:39,name:"STORY QUEST",price:15000,badge:"BEST",icon:"\u2728",desc:"All story quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_39.jpg']},
+  {id:40,name:"EKSPLORATION QUEST",price:15000,badge:"BEST",icon:"\u2728",desc:"All eksploration quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_40.jpg']},
+  {id:41,name:"COMPANION QUEST",price:10000,badge:"BEST",icon:"\u2728",desc:"All companion quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_41.jpg']},
+  {id:42,name:"SIDE QUEST",price:5000,badge:"BEST",icon:"\u2728",desc:"All companion quest",cat:"wuwa",subgroup:"QUEST",images:['/prod_42.jpg']},
+  {id:74,name:"DAILY",price:4000,badge:"BEST",icon:"\ud83d\udce6",desc:"Daily activity, Waveplate, Daily bp. Nightmare purification",cat:"wuwa",subgroup:"RAWAT AKUN",images:['/prod_74.jpg']},
+  {id:75,name:"WEEKLY",price:28000,badge:"BEST",icon:"\ud83d\udce6",desc:"Daily activity, Waveplate, Daily bp, Nightmare purification, Weekly boss, Fantasies of the Thousand Gatewaypurification",cat:"wuwa",subgroup:"RAWAT AKUN",images:['/prod_75.jpg']},
+  {id:76,name:"MONTHLY",price:120000,badge:"BEST",icon:"\ud83d\udce6",desc:"Daily Activity, Waveplate, Daily Bp, Nightmare Purification, wekkly boss, Fantasies of the Thousand Gateway, Event, Endgame Content(menyesuaikan akun)",cat:"wuwa",subgroup:"RAWAT AKUN",images:['/prod_76.jpg']},
+  {id:43,name:"10 SD",price:20000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_43.jpg']},
+  {id:44,name:"20 SD",price:50000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_44.jpg']},
+  {id:45,name:"30 SD",price:75000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"nte",subgroup:"SOLID DISK",images:['/prod_45.jpg']},
+  {id:46,name:"40 SD",price:95000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_46.jpg']},
+  {id:47,name:"50 SD",price:125000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_47.jpg']},
+  {id:48,name:"60 SD",price:150000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk semua",cat:"nte",subgroup:"SOLID DISK",images:['/prod_48.jpg']},
+  {id:77,name:"BRIGDE CROSSINGS",price:60000,badge:"NEW",icon:"\ud83c\udf1f",desc:"All map brigde crossings",cat:"nte",subgroup:"EKSPLORATION",images:['/prod_77.jpg']},
+  {id:67,name:"10 SP",price:20000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"hsr",subgroup:"STAR RAIL SPECIAL PASS",images:['/prod_67.jpg']},
+  {id:68,name:"20 SP",price:40000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga murah cocok untuk pertama kali",cat:"hsr",subgroup:"STAR RAIL SPECIAL PASS",images:['/prod_68.jpg']},
+  {id:69,name:"30 SP",price:60000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk semua",cat:"hsr",subgroup:"STAR RAIL SPECIAL PASS",images:['/prod_69.jpg']},
+  {id:70,name:"40 SP",price:80000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk semua",cat:"hsr",subgroup:"STAR RAIL SPECIAL PASS",images:['/prod_70.jpg']},
+  {id:71,name:"50 SP",price:100000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk semua",cat:"hsr",subgroup:"STAR RAIL SPECIAL PASS",images:['/prod_71.jpg']},
+  {id:72,name:"60 SP",price:120000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk yang baru dapat uang",cat:"hsr",subgroup:"STAR RAIL SPECIAL PASS",images:['/prod_72.jpg']},
+  {id:73,name:"100 SP",price:200000,badge:"NEW",icon:"\ud83d\udc8e",desc:"Harga cocok untuk yang baru dapat uang",cat:"hsr",subgroup:"STAR RAIL SPECIAL PASS",images:['/prod_73.jpg']}
 ];
 
 const DEFAULT_CAROUSEL = [
@@ -3749,14 +3826,25 @@ function saveReviewsCache(arr){
 }
 
 function mergeProductsData(parsed){
-  if(!Array.isArray(parsed) || parsed.length === 0) return [...DEFAULT_PRODUCTS];
+  let rawList = [];
+  if(Array.isArray(parsed)){
+    rawList = parsed.filter(Boolean);
+  } else if(parsed && typeof parsed === 'object'){
+    rawList = Object.values(parsed).filter(Boolean);
+  }
+  if(rawList.length === 0) return [...DEFAULT_PRODUCTS];
+
   // Pertahankan urutan eksak sesuai yang diatur admin (drag & drop)
   const merged = [];
   const seenIds = new Set();
-  parsed.forEach(p => {
+  rawList.forEach(p => {
     if(!p || typeof p !== 'object' || p.id === undefined) return;
     const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
-    let pImgs = Array.isArray(p.images) ? p.images : (dp && Array.isArray(dp.images) ? dp.images : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : []));
+    let pImgs = (Array.isArray(p.images) && p.images.length > 0)
+      ? p.images
+      : (dp && Array.isArray(dp.images) && dp.images.length > 0
+          ? dp.images
+          : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : [`/prod_${p.id}.jpg`]));
     merged.push(dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs});
     seenIds.add(p.id);
   });
@@ -3779,17 +3867,46 @@ function setProducts(data){
   }
 }
 function getNextProductId(){
-  const prods = getProducts();
-  return Math.max(...prods.map(p => p.id), 0) + 1;
+  const prods = Array.isArray(products) ? products : (getProducts() || []);
+  const dp = Array.isArray(DEFAULT_PRODUCTS) ? DEFAULT_PRODUCTS : [];
+  const allIds = [...prods, ...dp]
+    .map(p => Number(p && p.id))
+    .filter(n => !isNaN(n) && n > 0);
+  return (allIds.length > 0 ? Math.max(...allIds) : 0) + 1;
 }
 
 const RESERVE_DURATION_MS = 20 * 60 * 1000; // 20 menit
 let reservationsCache = {};
 function getEffectiveAccountStatus(p){
-  if(!p.isAccount) return null;
+  if(!p) return null;
+  // HANYA produk akun / stok 1 yang memiliki status sold / reserved
+  // Produk joki layanan normal (seperti di NTE, Genshin, HSR, Wuwa) selalu tersedia dan BUKAN akun!
+  if(!p.isAccount && p.stock !== 1) return null;
+
   const r = reservationsCache[p.id];
+  // 1. Prioritas utama: status eksplisit dari reservationsCache (jika di-refund / dikembalikan, status jadi 'available')
+  if(r && r.status === 'available') return 'available';
+  if(r && r.status === 'sold') return 'sold';
+
+  // 2. Cek jika produk ini pernah diselesaikan dalam pesanan (status: 'done' dan BUKAN 'refunded')
+  if(allOrders && typeof allOrders === 'object'){
+    const deletedIds = (typeof getDeletedOrderIds === 'function') ? getDeletedOrderIds() : [];
+    for(const ordId in allOrders){
+      if(deletedIds.includes(ordId)) continue;
+      const ord = allOrders[ordId];
+      if(ord && ord.status === 'done' && ord.status !== 'refunded' && Array.isArray(ord.items)){
+        const hasItem = ord.items.some(it => {
+          if(it.id !== undefined && it.id !== null && it.id !== '') return Number(it.id) === Number(p.id);
+          return it.name && p.name && it.name.trim().toLowerCase() === p.name.trim().toLowerCase();
+        });
+        if(hasItem){
+          return 'sold';
+        }
+      }
+    }
+  }
+
   if(!r) return 'available';
-  if(r.status === 'sold') return 'sold';
   if(r.status === 'reserved' && r.reservedAt){
     const elapsed = Date.now() - r.reservedAt;
     if(elapsed < RESERVE_DURATION_MS) return 'reserved';
@@ -3810,11 +3927,100 @@ function reserveAccount(id){
   fbDB.ref('norxstore/reservations/' + id).set({status:'reserved', reservedAt: Date.now()}).catch(e=>console.error(e));
 }
 function setAccountStatus(id, status){
-  fbDB.ref('norxstore/reservations/' + id).set({
+  const data = {
     status: status,
-    reservedAt: status === 'reserved' ? Date.now() : null
-  }).catch(e=>console.error(e));
-  showToast(status === 'sold' ? 'Ditandai Terjual' : 'Produk tersedia kembali');
+    reservedAt: status === 'reserved' ? Date.now() : null,
+    soldAt: status === 'sold' ? Date.now() : null
+  };
+  fbDB.ref('norxstore/reservations/' + id).set(data).catch(e=>console.error(e));
+  reservationsCache[id] = data;
+  showToast(status === 'sold' ? '🔒 Produk ditandai Sold Out (Terjual)' : '✅ Produk tersedia kembali');
+  renderProducts();
+  if(isAdminOpen()) renderAdminProductList();
+}
+// FITUR REFUND / KEMBALIKAN AKUN:
+function refundSingleProductAccount(productId){
+  const prod = products.find(p => Number(p.id) === Number(productId));
+  const prodName = prod ? prod.name : ('Produk #' + productId);
+  if(!confirm(`Pelanggan mengembalikan akun "${prodName}"?\n\nKembalikan stok akun ini agar TERSEDIA kembali di katalog untuk dibeli pelanggan lain?`)) return;
+
+  const refundTime = Date.now();
+  const availData = {
+    status: 'available',
+    refundedAt: refundTime
+  };
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/reservations/' + productId).set(availData).catch(e => console.error(e));
+  }
+  reservationsCache[productId] = availData;
+
+  // Jika ada pesanan terkait di allOrders yang berstatus 'done', ubah status pesanan menjadi 'refunded'
+  if(allOrders && typeof allOrders === 'object'){
+    for(const ordId in allOrders){
+      const ord = allOrders[ordId];
+      if(ord && ord.status === 'done' && Array.isArray(ord.items)){
+        const hasIt = ord.items.some(it => (it.id !== undefined && Number(it.id) === Number(productId)) || (it.name && prod && it.name.trim().toLowerCase() === prod.name.trim().toLowerCase()));
+        if(hasIt){
+          ord.status = 'refunded';
+          ord.refundedAt = refundTime;
+          if(window.fbAvailable && fbDB && fbDB.ref){
+            fbDB.ref('norxstore/orders/' + ordId).update({ status: 'refunded', refundedAt: refundTime }).catch(e => console.error(e));
+          }
+        }
+      }
+    }
+  }
+
+  showToast(`✅ Akun "${prodName}" berhasil di-refund & kini TERSEDIA kembali di katalog!`);
+  renderProducts();
+  renderMyOrders();
+  if(isAdminOpen()){
+    renderAdminProductList();
+    renderAdminOrders();
+  }
+}
+function refundOrderAccount(orderId){
+  const o = allOrders[orderId];
+  if(!o) return;
+  const itemsText = o.items ? o.items.map(it => it.name).join(', ') : 'Pesanan Akun';
+  if(!confirm(`Pelanggan mengembalikan akun dari pesanan ini (${itemsText})?\n\nUbah status akun agar TERSEDIA kembali di katalog untuk pelanggan lain?`)) return;
+
+  const refundTime = Date.now();
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/' + orderId).update({
+      status: 'refunded',
+      refundedAt: refundTime
+    }).catch(e => console.error(e));
+  }
+  if(allOrders[orderId]){
+    allOrders[orderId].status = 'refunded';
+    allOrders[orderId].refundedAt = refundTime;
+  }
+
+  if(Array.isArray(o.items)){
+    o.items.forEach(it => {
+      const prod = products.find(p => (it.id !== undefined && it.id !== null && Number(p.id) === Number(it.id)) || (p.name && it.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase()));
+      if(prod){
+        const availData = {
+          status: 'available',
+          refundedAt: refundTime,
+          refundedFromOrderId: orderId
+        };
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/reservations/' + prod.id).set(availData).catch(e => console.error(e));
+        }
+        reservationsCache[prod.id] = availData;
+      }
+    });
+  }
+
+  showToast('✅ Akun berhasil di-refund! Produk kini sudah TERSEDIA lagi di katalog.');
+  renderProducts();
+  renderMyOrders();
+  if(isAdminOpen()){
+    renderAdminOrders();
+    renderAdminProductList();
+  }
 }
 function autoReleaseExpiredReservations(){
   products.forEach(p => {
@@ -3849,16 +4055,21 @@ function setAdminPassword(pass){
 
 // ==================== DISCOUNT ENGINE (GLOBAL, PER-CATEGORY, & PER-SUBGROUP) ====================
 const DEFAULT_DISCOUNT_CONFIG = {
-  mode: 'all', // 'all', 'category', atau 'subgroup'
+  mode: 'subgroup', // 'all', 'category', atau 'subgroup'
   global: 0,
   categories: {
     genshin: 0,
     hsr: 0,
-    wuwa: 0,
+    wuwa: 20,
     nte: 0,
-    lainnya: 0
+    lainnya: 20
   },
-  subgroups: {} // format: { "genshin:::intertwined fate": 10, "genshin:::eksploration": 20, ... }
+  subgroups: {
+    "genshin:::eksploration": 20,
+    "genshin:::intertwined fate": 20,
+    "hsr:::star rail special pass": 10,
+    "lainnya:::__none__": 50
+  }
 };
 
 function normalizeDiscountConfig(raw){
@@ -4349,6 +4560,8 @@ const I18N = {
     socialSubtitle: 'Dapatkan info promo kilat, restock akun, event giveaway, & bantuan customer service langsung.',
     scamWarningTitle: 'Waspada Penipuan Mengatasnamakan NORXSTORE!',
     scamWarningDesc: 'Transaksi dan konsultasi resmi HANYA dilakukan melalui kontak dan tautan akun media sosial yang tertera di halaman ini. Kami tidak pernah meminta password email Anda di luar sistem joki yang aman.',
+    scamShieldBadge: '🛡️ RESMI & AMAN',
+    liveVisitorsTitle: 'Pengunjung aktif di website saat ini',
     socialBtnOpen: 'Kunjungi ➔',
     socialBtnChat: 'Chat WhatsApp ➔',
     socialBtnCopy: 'Salin',
@@ -4429,7 +4642,19 @@ const I18N = {
     infoReportTitle: '🚩 Lapor Kendala Pesanan',
     btnOrderNow: '🛒 Pesan Sekarang',
     orderNotifClose: '✕ Tutup Jendela',
-    orderNotifHistory: '🛒 Buka Riwayat Pesanan'
+    orderNotifHistory: '🛒 Buka Riwayat Pesanan',
+    confirmClearCart: 'Yakin ingin mengosongkan keranjang?',
+    cartClearedToast: 'Keranjang dikosongkan',
+    cartMaxOneToast: '⚠️ Maksimal 1 pesanan untuk produk ini. Silakan pilih produk lain!',
+    confirmCancelOrder: 'Batalkan pesanan ini? Layanan akan langsung kembali bisa dipesan.',
+    orderCancelledToast: 'Pesanan berhasil dibatalkan. Layanan kembali bisa dipesan.',
+    confirmDeleteOrderHistory: 'Hapus riwayat pesanan ini dari daftar Anda?',
+    orderHistoryDeletedToast: 'Riwayat pesanan berhasil dihapus',
+    imageProtectedToast: '🔒 Gambar dilindungi hak cipta Norxstore',
+    zoomProductPhoto: 'Perbesar foto produk',
+    notifRatingSentTitle: 'Bintang & Penilaian Terkirim!',
+    notifRatingSentSub: 'Terima kasih atas penilaian ⭐{stars} bintang Anda. Rating toko berhasil naik!',
+    ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang Anda berhasil menaikkan rating toko.'
   },
   MY: {
     langName: 'Bahasa Melayu',
@@ -4550,6 +4775,8 @@ const I18N = {
     socialSubtitle: 'Dapatkan maklumat promosi kilat, restock akaun, event giveaway, & bantuan khidmat pelanggan secara langsung.',
     scamWarningTitle: 'Berwaspada Terhadap Penipuan Mengatasnamakan NORXSTORE!',
     scamWarningDesc: 'Transaksi dan perbincangan rasmi HANYA dijalankan melalui kenalan dan pautan media sosial yang tertera di halaman ini. Kami tidak pernah meminta kata laluan e-mel anda di luar sistem joki yang selamat.',
+    scamShieldBadge: '🛡️ RASMI & SELAMAT',
+    liveVisitorsTitle: 'Pelawat aktif di laman web sekarang',
     socialBtnOpen: 'Lawati ➔',
     socialBtnChat: 'Sembang WhatsApp ➔',
     socialBtnCopy: 'Salin',
@@ -4630,7 +4857,20 @@ const I18N = {
     infoReportTitle: '🚩 Lapor Masalah Pesanan',
     btnOrderNow: '🛒 Pesan Sekarang',
     orderNotifClose: '✕ Tutup Tetingkap',
-    orderNotifHistory: '🛒 Buka Sejarah Pesanan'
+    orderNotifHistory: '🛒 Buka Sejarah Pesanan',
+    confirmClearCart: 'Pasti ingin mengosongkan troli?',
+    cartClearedToast: 'Troli dikosongkan',
+    cartMaxOneToast: '⚠️ Maksimum 1 pesanan untuk item ini. Sila pilih perkhidmatan lain!',
+    confirmCancelOrder: 'Batalkan pesanan ini? Perkhidmatan akan segera boleh ditempah semula.',
+    orderCancelledToast: 'Pesanan berjaya dibatalkan. Perkhidmatan kembali boleh ditempah.',
+    confirmDeleteOrderHistory: 'Padamkan rekod pesanan ini daripada senarai anda?',
+    orderHistoryDeletedToast: 'Rekod pesanan berjaya dipadamkan',
+    imageProtectedToast: '🔒 Gambar dilindungi hak cipta Norxstore',
+    zoomProductPhoto: 'Besarkan foto produk',
+    notifRatingSentTitle: 'Penilaian & Ulasan Dihantar!',
+    notifRatingSentSub: 'Terima kasih atas penilaian ⭐{stars} bintang anda. Penilaian kedai berjaya dinaikkan!',
+    ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang anda berjaya menaikkan rating kedai.',
+    orderStatusRefunded: '↩️ Dikembalikan (Refund)'
   },
   SG: {
     langName: 'English (Singapore)',
@@ -4751,6 +4991,8 @@ const I18N = {
     socialSubtitle: 'Get the latest promo drops, account restocks, giveaways & direct customer support.',
     scamWarningTitle: 'Beware of Impersonation & Scams!',
     scamWarningDesc: 'Official transactions and support are STRICTLY conducted through the verified contacts and links listed on this page. We never request your email passwords arbitrarily.',
+    scamShieldBadge: '🛡️ OFFICIAL & VERIFIED',
+    liveVisitorsTitle: 'Active visitors browsing the store right now',
     socialBtnOpen: 'Visit ➔',
     socialBtnChat: 'Chat WhatsApp ➔',
     socialBtnCopy: 'Copy',
@@ -4831,7 +5073,20 @@ const I18N = {
     infoReportTitle: '🚩 Report an Issue',
     btnOrderNow: '🛒 Order Now',
     orderNotifClose: '✕ Close Window',
-    orderNotifHistory: '🛒 View Order History'
+    orderNotifHistory: '🛒 View Order History',
+    confirmClearCart: 'Are you sure you want to empty your cart?',
+    cartClearedToast: 'Shopping cart has been emptied',
+    cartMaxOneToast: '⚠️ Maximum 1 order for this item. Please select another service!',
+    confirmCancelOrder: 'Cancel this order? The service will become available again immediately.',
+    orderCancelledToast: 'Order cancelled successfully. Service is available again.',
+    confirmDeleteOrderHistory: 'Remove this order history from your list?',
+    orderHistoryDeletedToast: 'Order history removed',
+    imageProtectedToast: '🔒 Images are copyright protected by Norxstore',
+    zoomProductPhoto: 'Zoom product photo',
+    notifRatingSentTitle: 'Rating & Review Submitted!',
+    notifRatingSentSub: 'Thank you for your ⭐{stars} star review! Store rating updated successfully.',
+    ratingThankYouToast: '🎉 Thank you! Your ⭐{stars} star review has been submitted.',
+    orderStatusRefunded: '↩️ Refunded'
   }
 };
 
@@ -5076,6 +5331,70 @@ const DESC_EXACT_MAP = {
   "Akun admin yang nganggur": {
     MY: "Akaun admin sedia ada, rekod selamat & bersih",
     SG: "Verified idle admin account, safe & clean record"
+  },
+  "Harga cocok untuk semua": {
+    MY: "Harga berpatutan sesuai untuk semua pemain",
+    SG: "Affordable price, suitable for everyone"
+  },
+  "All story quest": {
+    MY: "Semua quest jalan cerita utama selesai",
+    SG: "All main story quests clear"
+  },
+  "All eksploration quest": {
+    MY: "Semua quest eksplorasi peta selesai",
+    SG: "All exploration quests clear"
+  },
+  "All companion quest": {
+    MY: "Semua quest rakan pengembara selesai",
+    SG: "All companion story quests clear"
+  },
+  "Genshin Impact — Joki & Top-Up": {
+    MY: "Genshin Impact — Servis Joki & Tambah Nilai",
+    SG: "Genshin Impact — Pilot Boost & Top-Up"
+  },
+  "Honkai: Star Rail — Joki MoC & PF": {
+    MY: "Honkai: Star Rail — Joki MoC & Pure Fiction",
+    SG: "Honkai: Star Rail — MoC & Pure Fiction"
+  },
+  "Wuthering Waves — Joki Tower & Boss": {
+    MY: "Wuthering Waves — Joki Tower & Bos Mingguan",
+    SG: "Wuthering Waves — Tower of Adversity & Boss Boost"
+  },
+  "Neverness to Everness — Joki Progress": {
+    MY: "Neverness to Everness — Joki Kemajuan Cerita",
+    SG: "Neverness to Everness — Story & Progression Boost"
+  },
+  "Neverness to Everness — Joki": {
+    MY: "Neverness to Everness — Servis Joki",
+    SG: "Neverness to Everness — Pilot & Boost"
+  },
+  "Solid dice, Eksploration, Quest, rawat account, Event, Ascend character": {
+    MY: "Solid dice, Eksplorasi peta, Quest, Rawat akaun, Event, Naik tahap karakter",
+    SG: "Solid dice, Map exploration, Quests, Account maintenance, Events, Character ascension"
+  },
+  "Harga cocok untuk yang baru dapat uang": {
+    MY: "Harga mampu milik sesuai untuk yang baru dapat gaji",
+    SG: "Budget-friendly price, perfect treat after payday"
+  },
+  "All map brigde crossings": {
+    MY: "100% Eksplorasi seluruh peta Bridge Crossings",
+    SG: "100% Exploration across Bridge Crossings map"
+  },
+  "All map bridge crossings": {
+    MY: "100% Eksplorasi seluruh peta Bridge Crossings",
+    SG: "100% Exploration across Bridge Crossings map"
+  },
+  "Daily activity, Waveplate, Daily bp. Nightmare purification": {
+    MY: "Aktiviti harian, Waveplate, Daily BP, Pembersihan Nightmare",
+    SG: "Daily activities, Waveplate, Daily BP, Nightmare purification"
+  },
+  "Daily activity, Waveplate, Daily bp, Nightmare purification, Weekly boss, Fantasies of the Thousand Gatewaypurification": {
+    MY: "Aktiviti harian, Waveplate, Daily BP, Pembersihan Nightmare, Bos Mingguan, Fantasies of the Thousand Gateway",
+    SG: "Daily activities, Waveplate, Daily BP, Nightmare purification, Weekly bosses, Fantasies of the Thousand Gateway"
+  },
+  "Daily Activity, Waveplate, Daily Bp, Nightmare Purification, wekkly boss, Fantasies of the Thousand Gateway, Event, Endgame Content(menyesuaikan akun)": {
+    MY: "Aktiviti Harian, Waveplate, Daily BP, Pembersihan Nightmare, Bos Mingguan, Fantasies of the Thousand Gateway, Event, Kandungan Endgame (mengikut akaun)",
+    SG: "Daily activities, Waveplate, Daily BP, Nightmare purification, Weekly bosses, Fantasies of the Thousand Gateway, Events, Endgame content (adjusted to account)"
   }
 };
 
@@ -5134,7 +5453,15 @@ const WORD_MAP_MY = [
 
   // Selling & General
   [/\bharga murah cocok untuk pertama kali\b/gi, 'harga berpatutan sesuai untuk kali pertama'],
+  [/\bharga cocok untuk semua\b/gi, 'harga berpatutan sesuai untuk semua'],
   [/\bharga murah\b/gi, 'harga berpatutan'],
+  [/\bharga cocok\b/gi, 'harga berpatutan'],
+  [/\bharga\b/gi, 'harga'],
+  [/\bpersatunya\b/gi, 'setiap satu'],
+  [/\bpersatu\b/gi, 'setiap satu'],
+  [/\ball story quest\b/gi, 'semua quest jalan cerita selesai'],
+  [/\ball eksploration quest\b/gi, 'semua quest eksplorasi selesai'],
+  [/\ball companion quest\b/gi, 'semua quest rakan selesai'],
   [/\bcocok untuk pertama kali\b/gi, 'sesuai untuk kali pertama'],
   [/\bpertama kali\b/gi, 'kali pertama'],
   [/\bcocok untuk\b/gi, 'sesuai untuk'],
@@ -5245,7 +5572,34 @@ const WORD_MAP_SG = [
 
   // Selling & General
   [/\bharga murah cocok untuk pertama kali\b/gi, 'Affordable price, perfect for first time'],
+  [/\bharga murah cocok untuk semua\b/gi, 'Affordable price, suitable for everyone'],
+  [/\bharga cocok untuk semua\b/gi, 'Affordable price, suitable for everyone'],
+  [/\bharga murah cocok untuk yang baru dapat uang\b/gi, 'Budget-friendly price, perfect treat after payday'],
+  [/\bharga cocok untuk yang baru gajian\b/gi, 'Great value package for payday top-up'],
   [/\bharga murah\b/gi, 'affordable price'],
+  [/\bharga cocok\b/gi, 'affordable price'],
+  [/\bharga berpatutan\b/gi, 'affordable price'],
+  [/\bharga\b/gi, 'price'],
+  [/\bpersatunya\b/gi, 'per piece'],
+  [/\bpersatu\b/gi, 'per piece'],
+  [/\bkumpulkan item dari monster persatunya\b/gi, 'Farming monster drop materials per piece'],
+  [/\bkumpulkan material dari monster persatunya\b/gi, 'Farming materials & items per piece'],
+  [/\bkumpulkan\b/gi, 'collect / farm'],
+  [/\bjoki culus persatunya\b/gi, 'Collect Oculus per piece'],
+  [/\bjoki culus\b/gi, 'Oculus collection service'],
+  [/\bjoki\b/gi, 'boosting / service'],
+  [/\bjokian\b/gi, 'order / service'],
+  [/\ball event harga sesuai kerumitan event\b/gi, 'Limited event clear, price depends on event complexity'],
+  [/\bkerumitan\b/gi, 'complexity'],
+  [/\bsesuai\b/gi, 'depends on'],
+  [/\btidak termasuk\b/gi, 'excluding'],
+  [/\btermasuk\b/gi, 'including'],
+  [/\byang tersedia\b/gi, 'available'],
+  [/\btersedia\b/gi, 'available'],
+  [/\ball quest clear yang tersedia tidak termasuk quest archon\b/gi, 'Clear all available world quests (excluding Archon quests)'],
+  [/\ball eksploration quest\b/gi, 'All exploration quests clear'],
+  [/\ball companion quest\b/gi, 'All companion story quests clear'],
+  [/\ball story quest\b/gi, 'All main story quests clear'],
   [/\bcocok untuk pertama kali\b/gi, 'perfect for first time'],
   [/\bpertama kali\b/gi, 'first time'],
   [/\bcocok untuk\b/gi, 'suitable for'],
@@ -5444,7 +5798,20 @@ const NAME_EXACT_MAP = {
   "30 SD": { MY: "30 Stellar Dice", SG: "30 Stellar Dice" },
   "40 SD": { MY: "40 Stellar Dice", SG: "40 Stellar Dice" },
   "50 SD": { MY: "50 Stellar Dice", SG: "50 Stellar Dice" },
-  "60 SD": { MY: "60 Stellar Dice", SG: "60 Stellar Dice" }
+  "60 SD": { MY: "60 Stellar Dice", SG: "60 Stellar Dice" },
+
+  // HSR Star Rail Special Pass
+  "10 SP": { MY: "10 Special Pass", SG: "10 Special Pass" },
+  "20 SP": { MY: "20 Special Pass", SG: "20 Special Pass" },
+  "30 SP": { MY: "30 Special Pass", SG: "30 Special Pass" },
+  "40 SP": { MY: "40 Special Pass", SG: "40 Special Pass" },
+  "50 SP": { MY: "50 Special Pass", SG: "50 Special Pass" },
+  "60 SP": { MY: "60 Special Pass", SG: "60 Special Pass" },
+  "100 SP": { MY: "100 Special Pass", SG: "100 Special Pass" },
+
+  // NTE Exploration
+  "BRIGDE CROSSINGS": { MY: "Eksplorasi Bridge Crossings", SG: "Bridge Crossings Exploration" },
+  "BRIDGE CROSSINGS": { MY: "Eksplorasi Bridge Crossings", SG: "Bridge Crossings Exploration" }
 };
 
 const NAME_WORD_MAP_MY = [
@@ -5556,6 +5923,27 @@ function getProductName(p, lang = null){
   }
   const baseName = (typeof p === 'string') ? p : (p.name || '');
   return translateProductName(baseName, currentLang);
+}
+
+function localizeProductBadge(badge, lang = null){
+  if(!badge) return '';
+  const l = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  const b = String(badge).trim();
+  const bu = b.toUpperCase();
+  if(l === 'SG'){
+    if(bu === 'POPULER') return 'POPULAR';
+    if(bu === 'TERLARIS') return 'BEST SELLER';
+    if(bu === 'HEMAT') return 'SAVER';
+    if(bu === 'REKOMENDASI') return 'RECOMMENDED';
+    if(bu === 'BARU') return 'NEW';
+  } else if(l === 'MY'){
+    if(bu === 'POPULER') return 'POPULAR';
+    if(bu === 'TERLARIS') return 'PALING LARIS';
+    if(bu === 'HEMAT') return 'JIMAT';
+    if(bu === 'REKOMENDASI') return 'SYOR';
+    if(bu === 'BARU') return 'BAHARU';
+  }
+  return badge;
 }
 
 // ==================== CUSTOMER REVIEW TRANSLATION ENGINE ====================
@@ -5694,6 +6082,13 @@ function cleanLocalTranslate(text, targetLang){
     [/\bmurah banget\b/gi, 'Very affordable!'],
     [/\baman banget\b/gi, 'Super safe!'],
     [/\bmantap jiwa\b/gi, 'Truly awesome!'],
+    [/\bmantul\b/gi, 'Super awesome!'],
+    [/\bgokil\b/gi, 'Insanely good!'],
+    [/\bgercep\b/gi, 'lightning fast and responsive'],
+    [/\bsat set\b/gi, 'swift and seamless'],
+    [/\bfast respon\b/gi, 'fast response'],
+    [/\bjos gandos\b/gi, 'superb!'],
+    [/\bjos\b/gi, 'excellent!'],
     [/\bjoki disini\b/gi, 'boosting here'],
     [/\bjoki di sini\b/gi, 'boosting here'],
     [/\bakun aman dan selamat\b/gi, 'account is 100% safe and secure'],
@@ -5704,21 +6099,57 @@ function cleanLocalTranslate(text, targetLang){
     [/\bprosesnya kilat\b/gi, 'lightning-fast process'],
     [/\bnext order lagi\b/gi, 'will definitely order again'],
     [/\bnext order\b/gi, 'next order'],
+    [/\bpasti repeat\b/gi, 'definitely ordering again'],
+    [/\brepeat order\b/gi, 'repeat order'],
+    [/\bpasti langganan\b/gi, 'definitely returning again'],
+    [/\blangganan\b/gi, 'regular customer'],
+    [/\bsukses selalu\b/gi, 'wishing you continued success'],
+    [/\bsukses terus\b/gi, 'wishing you continued success'],
+    [/\btanpa kendala\b/gi, 'without any issues'],
+    [/\btanpa minus\b/gi, 'clean and flawless'],
+    [/\bno minus\b/gi, 'clean and flawless'],
     [/\bterima kasih banyak\b/gi, 'thank you very much'],
     [/\bterima kasih min\b/gi, 'thank you admin'],
     [/\bterima kasih\b/gi, 'thank you'],
+    [/\bmakasih banyak\b/gi, 'thank you so much'],
     [/\bmakasih min\b/gi, 'thanks admin'],
+    [/\bmakasih ya\b/gi, 'thank you'],
     [/\bmakasih\b/gi, 'thanks'],
+    [/\btengkyu\b/gi, 'thank you'],
+    [/\btq min\b/gi, 'thanks admin'],
+    [/\btq\b/gi, 'thanks'],
     [/\bamanah dan terpercaya\b/gi, 'trustworthy and reliable'],
+    [/\baman sentosa\b/gi, 'completely safe & secure'],
     [/\bamanah\b/gi, 'trustworthy'],
+    [/\bterpercaya banget\b/gi, 'extremely trustworthy'],
+    [/\bterpercaya bgt\b/gi, 'extremely trustworthy'],
     [/\bterpercaya\b/gi, 'trusted'],
+    [/\brekomended banget\b/gi, 'highly recommended'],
+    [/\brecomended banget\b/gi, 'highly recommended'],
+    [/\brekomended bgt\b/gi, 'highly recommended'],
+    [/\brecomended bgt\b/gi, 'highly recommended'],
     [/\brekomended\b/gi, 'recommended'],
     [/\brekomendasi\b/gi, 'recommended'],
     [/\brecommended\b/gi, 'recommended'],
     [/\bharga murah\b/gi, 'affordable price'],
+    [/\bmurah meriah\b/gi, 'very affordable'],
+    [/\bjangan ragu\b/gi, "don't hesitate"],
+    [/\btidak ragu\b/gi, 'no hesitation'],
+    [/\bgak nyesel\b/gi, 'no regrets'],
+    [/\btidak nyesel\b/gi, 'no regrets'],
+    [/\bbintang 5\b/gi, '5 stars'],
+    [/\bbintang lima\b/gi, '5 stars'],
+    [/\bfull star\b/gi, 'full stars'],
+    [/\bfullstar\b/gi, 'full stars'],
+    [/\bjokian cepat\b/gi, 'fast boost service'],
+    [/\bjokiannya cepat\b/gi, 'fast boost service'],
+    [/\bjokiannya\b/gi, 'the boost service'],
+    [/\bjokian\b/gi, 'boost service'],
+    [/\bjoki\b/gi, 'boosting service'],
     [/\bmantap\b/gi, 'Awesome!'],
     [/\bsekali\b/gi, 'very much'],
     [/\bbanget\b/gi, 'very'],
+    [/\bbgt\b/gi, 'very'],
     [/\bcepet\b/gi, 'fast'],
     [/\bcepat\b/gi, 'fast'],
     [/\bramah\b/gi, 'friendly'],
@@ -5730,9 +6161,14 @@ function cleanLocalTranslate(text, targetLang){
     [/\bselesai\b/gi, 'completed'],
     [/\bberes\b/gi, 'done'],
     [/\bakun\b/gi, 'account'],
-    [/\btokonya\b/gi, 'this shop'],
-    [/\btoko ini\b/gi, 'this shop'],
+    [/\btokonya\b/gi, 'this store'],
+    [/\btoko ini\b/gi, 'this store'],
+    [/\bpelayanan ramah\b/gi, 'friendly customer service'],
+    [/\bpelayanannya ramah\b/gi, 'friendly customer service'],
+    [/\bpelayanan terbaik\b/gi, 'best customer service'],
     [/\bpelayanan\b/gi, 'service'],
+    [/\bseller ramah\b/gi, 'friendly seller'],
+    [/\bseller\b/gi, 'seller'],
     [/\bcuma\b/gi, 'only'],
     [/\bhanya\b/gi, 'only'],
     [/\bmenit\b/gi, 'minutes'],
@@ -5966,19 +6402,31 @@ function getStarDescLabel(val, lang = null){
 function updateGiveRatingModalI18n(){
   const modal = document.getElementById('giveRatingModal');
   if(modal){
-    const title = modal.querySelector('div > div:first-child');
+    const title = document.getElementById('giveRatingModalTitle') || modal.querySelector('div > div:first-child');
     if(title) title.textContent = t('modalGiveRatingTitle');
-    const pSub = modal.querySelector('p');
+    const pSub = document.getElementById('giveRatingModalSub') || modal.querySelector('p');
     if(pSub) pSub.textContent = t('modalGiveRatingSubtitle');
-    const lblService = document.querySelector('#giveRatingOrderSelectWrap label');
+    const lblService = document.getElementById('giveRatingServiceLabel') || document.querySelector('#giveRatingOrderSelectWrap label');
     if(lblService) lblService.textContent = t('modalSelectServiceLabel');
     const optDefault = document.querySelector('#giveRatingOrderSelect option:first-child');
     if(optDefault) optDefault.textContent = t('modalSelectServiceDefault');
-    const lblStar = modal.querySelector('.interactive-stars-wrap')?.previousElementSibling;
+    const customServiceInp = document.getElementById('giveRatingCustomService');
+    if(customServiceInp) {
+      customServiceInp.placeholder = (currentSelectedCountry === 'SG') 
+        ? 'Service Name (e.g. Spiral Abyss Boost, WuWa Boost, etc.)' 
+        : ((currentSelectedCountry === 'MY') ? 'Nama Perkhidmatan (cth: Joki Spiral Abyss, dll)' : 'Nama Layanan (misal: Joki Spiral Abyss, Joki WuWa, dll)');
+    }
+    const lblStar = document.getElementById('giveRatingStarsTitle') || modal.querySelector('.interactive-stars-wrap')?.previousElementSibling;
     if(lblStar) lblStar.textContent = t('modalSelectStarTitle');
-    const lblName = document.querySelector('#modalReviewerName')?.previousElementSibling;
+    const lblName = document.getElementById('modalNameLabel') || document.querySelector('#modalReviewerName')?.previousElementSibling;
     if(lblName) lblName.textContent = t('modalNameLabel');
-    const lblComment = document.querySelector('#modalReviewComment')?.previousElementSibling;
+    const nameInp = document.getElementById('modalReviewerName');
+    if(nameInp){
+      nameInp.placeholder = (currentSelectedCountry === 'SG') 
+        ? 'e.g. Alex / Traveler' 
+        : ((currentSelectedCountry === 'MY') ? 'Contoh: Danial / Traveler' : 'Contoh: Dimas / Traveler');
+    }
+    const lblComment = document.getElementById('modalReviewLabel') || document.querySelector('#modalReviewComment')?.previousElementSibling;
     if(lblComment) lblComment.textContent = t('modalReviewLabel');
     const txtComment = document.getElementById('modalReviewComment');
     if(txtComment) txtComment.placeholder = t('modalReviewPlaceholder');
@@ -5990,19 +6438,31 @@ function updateGiveRatingModalI18n(){
 
   const heroCard = document.getElementById('heroRatingFormCard');
   if(heroCard){
-    const title = heroCard.querySelector('div > div:first-child');
+    const title = document.getElementById('heroRatingCardTitle') || heroCard.querySelector('div > div:first-child');
     if(title) title.textContent = t('modalGiveRatingTitle');
-    const pSub = heroCard.querySelector('p');
+    const pSub = document.getElementById('heroRatingCardSubtitle') || heroCard.querySelector('p');
     if(pSub) pSub.textContent = t('modalGiveRatingSubtitle');
-    const lblService = document.querySelector('#heroRatingOrderSelectWrap label');
+    const lblService = document.getElementById('heroRatingServiceLabel') || document.querySelector('#heroRatingOrderSelectWrap label');
     if(lblService) lblService.textContent = t('modalSelectServiceLabel');
     const optDefault = document.querySelector('#heroRatingOrderSelect option:first-child');
     if(optDefault) optDefault.textContent = t('modalSelectServiceDefault');
-    const lblStar = heroCard.querySelector('.interactive-stars-wrap')?.previousElementSibling;
+    const heroCustomInp = document.getElementById('heroRatingCustomService');
+    if(heroCustomInp) {
+      heroCustomInp.placeholder = (currentSelectedCountry === 'SG') 
+        ? 'Service Name (e.g. Spiral Abyss Boost, WuWa Boost, etc.)' 
+        : ((currentSelectedCountry === 'MY') ? 'Nama Perkhidmatan (cth: Joki Spiral Abyss, dll)' : 'Nama Layanan (misal: Joki Spiral Abyss, Joki WuWa, dll)');
+    }
+    const lblStar = document.getElementById('heroRatingCardStarsPickerTitle') || heroCard.querySelector('.interactive-stars-wrap')?.previousElementSibling;
     if(lblStar) lblStar.textContent = t('modalSelectStarTitle');
-    const lblName = document.querySelector('#heroReviewerName')?.previousElementSibling;
+    const lblName = document.getElementById('heroRatingNameLabel') || document.querySelector('#heroReviewerName')?.previousElementSibling;
     if(lblName) lblName.textContent = t('modalNameLabel');
-    const lblComment = document.querySelector('#heroReviewComment')?.previousElementSibling;
+    const heroNameInp = document.getElementById('heroReviewerName');
+    if(heroNameInp){
+      heroNameInp.placeholder = (currentSelectedCountry === 'SG') 
+        ? 'e.g. Alex / Traveler' 
+        : ((currentSelectedCountry === 'MY') ? 'Contoh: Danial / Traveler' : 'Contoh: Dimas / Traveler');
+    }
+    const lblComment = document.getElementById('heroRatingReviewLabel') || document.querySelector('#heroReviewComment')?.previousElementSibling;
     if(lblComment) lblComment.textContent = t('modalReviewLabel');
     const txtComment = document.getElementById('heroReviewComment');
     if(txtComment) txtComment.placeholder = t('modalReviewPlaceholder');
@@ -6027,6 +6487,10 @@ function updateLanguageUI(){
   if(loginIcon) loginIcon.title = t('accountIconTitle');
   const cartIconWrap = document.querySelector('.nav-icon-wrap');
   if(cartIconWrap) cartIconWrap.title = t('cartIconTitle');
+  const liveVisitorsBadge = document.getElementById('liveVisitorsBadge');
+  if(liveVisitorsBadge) liveVisitorsBadge.title = t('liveVisitorsTitle');
+  const cartDotPulse = document.querySelector('.cart-dot-pulse');
+  if(cartDotPulse) cartDotPulse.title = (currentSelectedCountry === 'SG') ? 'Your order is completed!' : ((currentSelectedCountry === 'MY') ? 'Ada pesanan siap!' : 'Ada pesanan selesai!');
 
   // 3. Catalog header & chips
   const catSectionTitle = document.querySelector('.section-header .section-title');
@@ -6046,43 +6510,57 @@ function updateLanguageUI(){
       ? t('tabMyOrders') 
       : t('cartTitle');
   }
-  const tabCart = document.getElementById('cartTabBtnCart');
-  if(tabCart) tabCart.innerHTML = t('tabCart');
-  const tabOrders = document.getElementById('cartTabBtnOrders');
-  if(tabOrders) tabOrders.innerHTML = t('tabMyOrders');
+  const tabCartText = document.getElementById('cartTabBtnCartText');
+  if(tabCartText) tabCartText.textContent = t('tabCart');
+  const tabOrdersText = document.getElementById('cartTabBtnOrdersText');
+  if(tabOrdersText) tabOrdersText.textContent = t('tabMyOrders');
 
-  const cartSubtotalLbl = document.querySelector('.cart-subtotal-label');
+  const cartEmpty1 = document.getElementById('cartEmptyText1');
+  if(cartEmpty1) cartEmpty1.textContent = t('cartEmptyTitle');
+  const cartEmpty2 = document.getElementById('cartEmptyText2');
+  if(cartEmpty2) cartEmpty2.textContent = t('cartEmptySub');
+
+  const cartSubtotalLbl = document.getElementById('cartSubtotalLabel') || document.querySelector('.cart-subtotal-label');
   if(cartSubtotalLbl) cartSubtotalLbl.textContent = t('cartSubtotal');
-  const cartTotalLbls = document.querySelectorAll('.cart-total-label');
-  cartTotalLbls.forEach(el => el.textContent = t('cartTotal'));
+  const cartTotalLbl = document.getElementById('cartTotalLabel') || document.querySelector('.cart-total-label');
+  if(cartTotalLbl) cartTotalLbl.textContent = t('cartTotal');
   const cartCheckoutBtn = document.getElementById('cartCheckoutBtn');
   if(cartCheckoutBtn) cartCheckoutBtn.innerHTML = t('cartCheckoutBtn');
-
-  const cartClearP = document.querySelector('.cart-footer .cart-clear');
+  const cartClearP = document.getElementById('cartClearText') || document.querySelector('.cart-footer .cart-clear');
   if(cartClearP) cartClearP.textContent = t('cartClear');
-  const cartBackP = document.querySelector('.cart-checkout-step .cart-clear');
-  if(cartBackP) cartBackP.textContent = t('cartBack');
-  const cartConfirmBtn = document.querySelector('.cart-checkout-step .cart-checkout');
-  if(cartConfirmBtn) cartConfirmBtn.innerHTML = t('cartConfirmOrder');
 
-  // Modal checkout labels
-  const modalHeaderH4 = document.querySelector('#modalOverlay .modal-header h4');
-  if(modalHeaderH4) modalHeaderH4.textContent = t('modalHeaderTitle');
-  const modalLabels = document.querySelectorAll('#modalOverlay .modal-label, #cartPanel .modal-label');
-  modalLabels.forEach(el => {
-    const text = el.textContent.trim();
-    if(text.includes('Metode') || text.includes('Kaedah') || text.includes('Payment')) el.textContent = t('payMethodLabel');
-    if(text.includes('Chat') || text.includes('Sembang')) el.textContent = t('chatAdminLabel');
-  });
-  const waLabel = document.querySelector('.wa-preview-label');
+  // Cart checkout step
+  const cartStepTotalLbl = document.getElementById('cartStepTotalLabel');
+  if(cartStepTotalLbl) cartStepTotalLbl.textContent = t('cartTotal');
+  const cartStepPayLbl = document.getElementById('cartStepPayMethodLabel');
+  if(cartStepPayLbl) cartStepPayLbl.textContent = t('payMethodLabel');
+  const cartStepChatLbl = document.getElementById('cartStepChatAdminLabel');
+  if(cartStepChatLbl) cartStepChatLbl.textContent = t('chatAdminLabel');
+  const cartConfirmBtn = document.getElementById('cartConfirmCheckoutBtn') || document.querySelector('.cart-checkout-step .cart-checkout');
+  if(cartConfirmBtn) cartConfirmBtn.innerHTML = t('cartConfirmOrder');
+  const cartBackP = document.getElementById('cartBackToCartBtn') || document.querySelector('.cart-checkout-step .cart-clear');
+  if(cartBackP) cartBackP.textContent = t('cartBack');
+
+  // Single item modal checkout labels
+  const modalPayTitle = document.getElementById('modalPayTitle') || document.querySelector('#modalOverlay .modal-header h4');
+  if(modalPayTitle) modalPayTitle.textContent = t('modalHeaderTitle');
+  const modalPayMethodLabel = document.getElementById('modalPayMethodLabel');
+  if(modalPayMethodLabel) modalPayMethodLabel.textContent = t('payMethodLabel');
+  const modalChatAdminLabel = document.getElementById('modalChatAdminLabel');
+  if(modalChatAdminLabel) modalChatAdminLabel.textContent = t('chatAdminLabel');
+  const waLabel = document.getElementById('waPreviewLabel') || document.querySelector('.wa-preview-label');
   if(waLabel) waLabel.textContent = t('waPreviewLabel');
   const waBtn = document.getElementById('waBtn');
   if(waBtn) waBtn.innerHTML = t('waSendBtn');
 
+  // Order notification inline rating header
+  const orderNotifRatingHead = document.getElementById('orderNotifRatingHead');
+  if(orderNotifRatingHead) orderNotifRatingHead.textContent = t('orderRatingTitle');
+
   // Country modal header & close button
-  const countryModalHeader = document.querySelector('#countryCurrencyModal h4');
+  const countryModalHeader = document.getElementById('countryCurrencyModalTitle') || document.querySelector('#countryCurrencyModal h4');
   if(countryModalHeader) countryModalHeader.textContent = t('countryModalTitle');
-  const countryModalCloseBtn = document.querySelector('#countryCurrencyModal .admin-btn');
+  const countryModalCloseBtn = document.getElementById('countryCurrencyModalCloseBtn') || document.querySelector('#countryCurrencyModal .admin-btn');
   if(countryModalCloseBtn) countryModalCloseBtn.textContent = t('closeBtn');
 
   // Mode switcher bar
@@ -6124,6 +6602,8 @@ function updateLanguageUI(){
   if(socialTitle) socialTitle.textContent = t('socialHeading');
   const socialSub = document.getElementById('socialSubText');
   if(socialSub) socialSub.textContent = t('socialSubtitle');
+  const scamBadge = document.getElementById('scamShieldBadge');
+  if(scamBadge) scamBadge.textContent = t('scamShieldBadge');
   const scamTitle = document.getElementById('scamShieldTitle');
   if(scamTitle) scamTitle.textContent = t('scamWarningTitle');
   const scamDesc = document.getElementById('scamShieldDesc');
@@ -6180,19 +6660,71 @@ function updateLanguageUI(){
 
   const cInfo = (typeof getCountryConfig === 'function') ? getCountryConfig(currentSelectedCountry) : { flag: '🇮🇩', name: 'Indonesia', currency: 'IDR' };
   const fCFlag = document.getElementById('footerCountryFlag'); if(fCFlag) fCFlag.textContent = cInfo.flag;
-  const fCName = document.getElementById('footerCountryName'); if(fCName) fCName.textContent = `${cInfo.name} (${cInfo.currency})`;
+  const fCName = document.getElementById('footerCountryName');
+  if(fCName){
+    const cNameDisplay = (currentSelectedCountry === 'SG') ? (cInfo.code === 'SG' ? 'Singapore' : (cInfo.code === 'MY' ? 'Malaysia' : 'Indonesia')) : cInfo.name;
+    fCName.textContent = `${cNameDisplay} (${cInfo.currency})`;
+  }
 
   if(typeof renderFooterPaymentBadges === 'function') renderFooterPaymentBadges();
 
-  // Photo viewer buy button
+  // Photo viewer labels & buy button
   const prodPhotoBuyBtn = document.getElementById('prodPhotoBuyBtn');
   if(prodPhotoBuyBtn) prodPhotoBuyBtn.textContent = t('btnOrderNow');
+  const prodPhotoTitle = document.getElementById('prodPhotoTitle');
+  if(prodPhotoTitle) prodPhotoTitle.textContent = (currentSelectedCountry === 'SG') ? 'Product Photo' : 'Foto Produk';
+  const prodPhotoPrev = document.getElementById('prodPhotoPrevBtn');
+  if(prodPhotoPrev) prodPhotoPrev.title = (currentSelectedCountry === 'SG') ? 'Previous Photo' : 'Foto Sebelumnya';
+  const prodPhotoNext = document.getElementById('prodPhotoNextBtn');
+  if(prodPhotoNext) prodPhotoNext.title = (currentSelectedCountry === 'SG') ? 'Next Photo' : 'Foto Selanjutnya';
+  const prodPhotoClose = document.querySelector('#prodPhotoOverlay .prod-photo-close-btn');
+  if(prodPhotoClose) prodPhotoClose.title = t('closeBtn');
 
-  // Order notification modal buttons
+  // Testimonial Proof Photo Modal texts
+  const revPhotoCat = document.querySelector('#reviewPhotoOverlay .prod-photo-cat-tag');
+  if(revPhotoCat) revPhotoCat.textContent = (currentSelectedCountry === 'SG') ? '⭐ CUSTOMER TESTIMONIALS' : '⭐ TESTIMONI PELANGGAN';
+  const revPhotoFooter = document.querySelector('#reviewPhotoOverlay .prod-photo-footer p');
+  if(revPhotoFooter) revPhotoFooter.textContent = (currentSelectedCountry === 'SG') 
+    ? '🔒 Official Verified Customer Payment Proof — 100% Trusted & Secure' 
+    : ((currentSelectedCountry === 'MY') ? '🔒 Bukti Transaksi Rasmi Pelanggan Norxstore — 100% Amanah & Dipercayai' : '🔒 Bukti Transaksi Resmi Pelanggan Norxstore — 100% Amanah & Terpercaya');
+  const revPhotoPrev = document.getElementById('revPhotoPrevBtn');
+  if(revPhotoPrev) revPhotoPrev.title = (currentSelectedCountry === 'SG') ? 'Previous Photo' : 'Foto Sebelumnya';
+  const revPhotoNext = document.getElementById('revPhotoNextBtn');
+  if(revPhotoNext) revPhotoNext.title = (currentSelectedCountry === 'SG') ? 'Next Photo' : 'Foto Selanjutnya';
+  const revPhotoClose = document.querySelector('#reviewPhotoOverlay .prod-photo-close-btn');
+  if(revPhotoClose) revPhotoClose.title = t('closeBtn');
+
+  // Order notification modal buttons & badges
+  const onBadge = document.getElementById('orderNotifBadge');
+  if(onBadge) onBadge.textContent = (currentSelectedCountry === 'SG') ? 'ORDER COMPLETED' : ((currentSelectedCountry === 'MY') ? 'JOKI SIAP' : 'JOKIAN SELESAI');
+  const onTitle = document.getElementById('orderNotifTitle');
+  if(onTitle) onTitle.textContent = t('orderFinishedTitle');
+  const onSub = document.getElementById('orderNotifSubtitle');
+  if(onSub) onSub.textContent = t('orderFinishedSub');
+  const onRateTitle = document.querySelector('#orderNotifRatingBox > div:first-child');
+  if(onRateTitle) onRateTitle.textContent = t('orderRatingTitle');
+  const onStarDesc = document.getElementById('notifStarDesc');
+  if(onStarDesc) onStarDesc.textContent = getStarDescLabel(typeof notifSelectedStars !== 'undefined' ? notifSelectedStars : 5);
+  const onNameInp = document.getElementById('notifReviewerName');
+  if(onNameInp) onNameInp.placeholder = (currentSelectedCountry === 'SG') ? 'Your Name / Nickname (optional)' : ((currentSelectedCountry === 'MY') ? 'Nama Anda / Samaran (pilihan)' : 'Nama / Panggilan Anda (opsional)');
+  const onRevInp = document.getElementById('notifReviewText');
+  if(onRevInp) onRevInp.placeholder = (currentSelectedCountry === 'SG') ? 'Your review (e.g. fast completion, safe account, friendly seller!)' : ((currentSelectedCountry === 'MY') ? 'Ulasan anda (cth: pelaksanaan pantas, akaun selamat, mesra!)' : 'Ulasan Anda (misal: \'Joki kilat, akun aman, penjual ramah!\')');
+  const onSubBtn = document.getElementById('btnSubmitNotifRating');
+  if(onSubBtn) onSubBtn.textContent = t('orderRatingSubmitBtn');
   const onClsBtn = document.getElementById('orderNotifCloseBtn');
   if(onClsBtn) onClsBtn.textContent = t('orderNotifClose');
   const onHstBtn = document.getElementById('orderNotifHistoryBtn');
   if(onHstBtn) onHstBtn.textContent = t('orderNotifHistory');
+
+  // Subgroup popup headers
+  const sgPopTitle = document.getElementById('sgPopTitle');
+  if(sgPopTitle && currentCatFilter && currentCatFilter !== 'all') {
+    sgPopTitle.innerHTML = `✨ ${t('sgPopTitle')} ${getCategoryShortName(currentCatFilter)}`;
+  }
+  const sgPopSub = document.getElementById('sgPopSubtitle');
+  if(sgPopSub && currentCatFilter && currentCatFilter !== 'all') {
+    sgPopSub.textContent = t('sgPopSubtitle', { game: getCategoryName(currentCatFilter) });
+  }
 
   // Testimonial back to catalog button
   const testiBack = document.getElementById('testiBackToCatalogText');
@@ -6245,16 +6777,19 @@ const DEFAULT_CURRENCY_CONFIG = {
     },
     SG: {
       code: 'SG',
-      name: 'Singapura',
+      name: 'Singapore',
       currency: 'SGD',
       symbol: 'S$',
       flag: '🇸🇬',
       rate: 12000,
       rounding: 'ceil_0.5',
       markupPercent: 0,
-      note: 'Kelipatan 0.5 S$',
+      note: 'Multiple of S$ 0.5',
       paymentMethods: [
-        { id: 'QRIS_SG', name: 'QRIS (Can be scanned with DBS PayLah! / OCBC / NETS)', icon: '📱' }
+        { id: 'PAYNOW', name: 'PayNow (Instant QR & Mobile Transfer)', icon: '🇸🇬' },
+        { id: 'QRIS_SG', name: 'DBS PayLah! / OCBC / NETS QR', icon: '📱' },
+        { id: 'GRABPAY_SG', name: 'GrabPay Singapore', icon: '💚' },
+        { id: 'CARD_SG', name: 'Debit / Credit Card (Visa & Mastercard)', icon: '💳' }
       ]
     }
   }
@@ -6490,18 +7025,18 @@ function formatPrice(p, countryCode = null){
 }
 
 function formatPriceWithOriginal(p, countryCode = null){
+  const target = (countryCode || currentSelectedCountry || 'ID').toUpperCase();
+  const eqWord = (target === 'SG') ? 'approx. ' : ((target === 'MY') ? 'bersamaan ' : 'setara ');
   if(typeof p === 'object' && p !== null && p.maxPrice && p.maxPrice > p.price){
-    const target = countryCode || currentSelectedCountry || 'ID';
     if(target === 'ID') return `Rp${p.price.toLocaleString('id-ID')} - Rp${p.maxPrice.toLocaleString('id-ID')}`;
     const resMin = convertPrice(p.price, target);
     const resMax = convertPrice(p.maxPrice, target);
-    return `${resMin.formatted} - ${resMax.formatted} (setara Rp${p.price.toLocaleString('id-ID')} - Rp${p.maxPrice.toLocaleString('id-ID')})`;
+    return `${resMin.formatted} - ${resMax.formatted} (${eqWord}Rp${p.price.toLocaleString('id-ID')} - Rp${p.maxPrice.toLocaleString('id-ID')})`;
   }
   if(typeof p !== 'number') p = Number(p) || 0;
-  const target = countryCode || currentSelectedCountry || 'ID';
   if(target === 'ID') return 'Rp' + p.toLocaleString('id-ID');
   const res = convertPrice(p, target);
-  return `${res.formatted} (setara Rp${p.toLocaleString('id-ID')})`;
+  return `${res.formatted} (${eqWord}Rp${p.toLocaleString('id-ID')})`;
 }
 
 function selectCountry(countryCode){
@@ -6516,12 +7051,14 @@ function selectCountry(countryCode){
   renderCartPaymentMethods();
   updateRatingStatsUI();
   renderCustomerReviews();
-  if(typeof renderCart === 'function' && document.getElementById('cartPanel') && document.getElementById('cartPanel').classList.contains('open')){
-    renderCart();
-  }
+  if(typeof renderCarousel === 'function') renderCarousel();
+  if(typeof renderReviews === 'function') renderReviews();
+  if(typeof renderCart === 'function') renderCart();
+  if(typeof renderMyOrders === 'function') renderMyOrders();
   closeCountryCurrencyModal('force');
   const cInfo = cfg.countries[countryCode];
-  showToast(`${cInfo.flag} ${t('toastCountryChanged')} ${cInfo.name} (${cInfo.currency} - ${cInfo.symbol})`);
+  const cName = (countryCode === 'SG') ? 'Singapore' : cInfo.name;
+  showToast(`${cInfo.flag} ${t('toastCountryChanged')} ${cName} (${cInfo.currency} - ${cInfo.symbol})`);
 }
 
 function updateNavCountryBtn(){
@@ -6556,13 +7093,16 @@ function renderCountryCurrencyList(){
     const c = countries[code] || DEFAULT_CURRENCY_CONFIG.countries[code];
     if(!c) return '';
     const isAct = c.code === currentSelectedCountry;
+    const displayName = (currentSelectedCountry === 'SG') 
+      ? (code === 'SG' ? 'Singapore' : (code === 'MY' ? 'Malaysia' : 'Indonesia'))
+      : c.name;
     return `
       <div class="country-card ${isAct ? 'active' : ''}" onclick="selectCountry('${c.code}')">
         <div class="country-card-main">
           <span class="country-card-flag">${c.flag}</span>
           <div class="country-card-info">
             <div class="country-card-top-row">
-              <span class="country-card-title">${escapeHtml(c.name)}</span>
+              <span class="country-card-title">${escapeHtml(displayName)}</span>
               <span class="country-card-badge">${c.currency} (${c.symbol})</span>
             </div>
             <div class="country-card-lang">
@@ -6893,6 +7433,88 @@ function saveSocialConfig(cfg){
   renderFooterQuickSocialLinks();
 }
 
+const SOCIAL_I18N = {
+  SG: {
+    whatsapp: {
+      name: 'WhatsApp Support',
+      badge: '24/7 Fast Response',
+      desc: 'Instant boosting consultation, direct orders & verified local payment support.'
+    },
+    instagram: {
+      name: 'Official Instagram',
+      badge: 'Official Feed',
+      desc: 'Daily catalog updates, discount price lists, & exclusive story giveaways.'
+    },
+    tiktok: {
+      name: 'Official TikTok',
+      badge: 'Video & Live',
+      desc: 'Character showcase builds, account reviews, & live boosting gameplay.'
+    },
+    discord: {
+      name: 'Discord Community',
+      badge: 'Gamers Community',
+      desc: 'Co-op gaming hangout for Genshin, HSR, WuWa & meta build discussions.'
+    },
+    telegram: {
+      name: 'Telegram Channel',
+      badge: 'Instant Alerts',
+      desc: 'Instant broadcast alerts for new account restocks & limited-time discount promos.'
+    },
+    youtube: {
+      name: 'YouTube Channel',
+      badge: 'Guides & Showcases',
+      desc: 'Spiral Abyss clears, boss battle guides, and verified account showcases.'
+    }
+  },
+  MY: {
+    whatsapp: {
+      name: 'WhatsApp Admin',
+      badge: 'Respons Pantas 24 Jam',
+      desc: 'Khidmat rundingan joki, tempahan segera & bantuan bayaran rasmi.'
+    },
+    instagram: {
+      name: 'Instagram Rasmi',
+      badge: 'Suapan Rasmi',
+      desc: 'Kemas kini harian, senarai harga diskaun, & pengumuman giveaway.'
+    },
+    tiktok: {
+      name: 'TikTok Rasmi',
+      badge: 'Video & Siaran Langsung',
+      desc: 'Pameran binaan watak, ulasan akaun, & video gameplay servis joki.'
+    },
+    discord: {
+      name: 'Komuniti Discord',
+      badge: 'Komuniti Pemain',
+      desc: 'Ruang bermain bersama Genshin, HSR, WuWa & perbincangan meta.'
+    },
+    telegram: {
+      name: 'Saluran Telegram',
+      badge: 'Notifikasi Pantas',
+      desc: 'Siaran restock akaun baharu & maklumat diskaun terhad.'
+    },
+    youtube: {
+      name: 'Saluran YouTube',
+      badge: 'Panduan & Showcase',
+      desc: 'Video panduan Spiral Abyss, tutorial boss, & pameran akaun.'
+    }
+  }
+};
+
+function getLocalizedSocialItem(key, rawItem, lang = null){
+  if(!rawItem) return rawItem;
+  const l = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  if((l === 'SG' || l === 'MY') && SOCIAL_I18N[l] && SOCIAL_I18N[l][key]){
+    const i18nItem = SOCIAL_I18N[l][key];
+    return {
+      ...rawItem,
+      name: i18nItem.name || rawItem.name,
+      badge: i18nItem.badge || rawItem.badge,
+      desc: i18nItem.desc || rawItem.desc
+    };
+  }
+  return rawItem;
+}
+
 function renderSocialCards(){
   const grid = document.getElementById('socialHubGrid');
   if(!grid) return;
@@ -6901,8 +7523,9 @@ function renderSocialCards(){
   
   let html = '';
   keys.forEach(key => {
-    const item = cfg[key];
-    if(!item || item.enabled === false) return;
+    const rawItem = cfg[key];
+    if(!rawItem || rawItem.enabled === false) return;
+    const item = getLocalizedSocialItem(key, rawItem);
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:20px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? (t('socialBtnChat') || 'Chat WhatsApp ➔') : (t('socialBtnOpen') || 'Kunjungi ➔');
     const copyBtnText = t('socialBtnCopy') || 'Salin';
@@ -6928,7 +7551,7 @@ function renderSocialCards(){
           <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="social-btn-open">
             <span>${openBtnText}</span>
           </a>
-          <button type="button" class="social-btn-copy" onclick="copySocialLink('${key}', event, this)" title="Salin link / username">
+          <button type="button" class="social-btn-copy" onclick="copySocialLink('${key}', event, this)" title="${escapeHtml(copyBtnText)}">
             <span>📋</span>
             <span>${copyBtnText}</span>
           </button>
@@ -6938,7 +7561,10 @@ function renderSocialCards(){
   });
 
   if(!html){
-    html = `<p style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:12px;padding:16px">Semua media sosial sedang dalam pemeliharaan.</p>`;
+    const maintMsg = (currentSelectedCountry === 'SG')
+      ? 'All social media channels are currently undergoing maintenance.'
+      : ((currentSelectedCountry === 'MY') ? 'Semua saluran media sosial sedang dalam penyelenggaraan.' : 'Semua media sosial sedang dalam pemeliharaan.');
+    html = `<p style="grid-column:1/-1;text-align:center;color:#94a3b8;font-size:12px;padding:16px">${maintMsg}</p>`;
   }
 
   grid.innerHTML = html;
@@ -6952,8 +7578,9 @@ function renderSocialModalList(){
 
   let html = '';
   keys.forEach(key => {
-    const item = cfg[key];
-    if(!item || item.enabled === false) return;
+    const rawItem = cfg[key];
+    if(!rawItem || rawItem.enabled === false) return;
+    const item = getLocalizedSocialItem(key, rawItem);
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:18px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? 'Chat' : (t('socialBtnOpen') || 'Buka');
     const copyBtnText = t('socialBtnCopy') || 'Salin';
@@ -6974,7 +7601,7 @@ function renderSocialModalList(){
           <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="social-modal-btn primary">
             <span>${openBtnText}</span>
           </a>
-          <button type="button" class="social-modal-btn secondary" onclick="copySocialLink('${key}', event, this)" title="Salin">
+          <button type="button" class="social-modal-btn secondary" onclick="copySocialLink('${key}', event, this)" title="${escapeHtml(copyBtnText)}">
             <span>📋</span>
           </button>
         </div>
@@ -7142,7 +7769,11 @@ function renderFooterContent(){
       : fcfg.socialSubtitle;
   }
   const scamBadgeEl = document.getElementById('scamShieldBadge');
-  if(scamBadgeEl) scamBadgeEl.textContent = fcfg.scamShieldBadge || '🛡️ RESMI & AMAN';
+  if(scamBadgeEl){
+    scamBadgeEl.textContent = (!isDefaultLang && fcfg.scamShieldBadge === DEFAULT_FOOTER_CONFIG.scamShieldBadge)
+      ? (t('scamShieldBadge') || '🛡️ OFFICIAL & VERIFIED')
+      : (fcfg.scamShieldBadge || '🛡️ RESMI & AMAN');
+  }
   const scamTitleEl = document.getElementById('scamShieldTitle');
   if(scamTitleEl){
     scamTitleEl.textContent = (!isDefaultLang && fcfg.scamShieldTitle === DEFAULT_FOOTER_CONFIG.scamShieldTitle)
@@ -7514,7 +8145,10 @@ function copySocialLink(key, event, btnEl){
   const toCopy = item.url || item.handle || '';
 
   const doSuccessFeedback = () => {
-    showToast(`✅ Link ${item.name} berhasil disalin!`);
+    const successMsg = (currentSelectedCountry === 'SG') 
+      ? `✅ Link for ${item.name} copied!` 
+      : ((currentSelectedCountry === 'MY') ? `✅ Pautan ${item.name} berjaya disalin!` : `✅ Link ${item.name} berhasil disalin!`);
+    showToast(successMsg);
     if(btnEl){
       const originalHTML = btnEl.innerHTML;
       btnEl.classList.add('copied');
@@ -7545,7 +8179,10 @@ function legacyCopyText(text, name){
     tempInput.select();
     document.execCommand('copy');
     document.body.removeChild(tempInput);
-    showToast(`✅ Link ${name} berhasil disalin!`);
+    const successMsg = (currentSelectedCountry === 'SG') 
+      ? `✅ Link for ${name} copied!` 
+      : ((currentSelectedCountry === 'MY') ? `✅ Pautan ${name} berjaya disalin!` : `✅ Link ${name} berhasil disalin!`);
+    showToast(successMsg);
   } catch(e){
     showToast(`📋 ${text}`);
   }
@@ -8240,24 +8877,41 @@ let splashHidden = false;
 let productsDataReady = Array.isArray(products) && products.length > 0;
 let imagesDataReady = true;
 
-function preloadProductImages(){
+function preloadVisibleProductImages(){
   try {
-    const all = productImagesCache || {};
-    for(const id in all){
-      const urls = all[id];
-      if(Array.isArray(urls)){
-        urls.forEach(url => {
-          if(url && typeof url === 'string'){
-            const img = new Image();
-            img.decoding = 'async';
-            img.src = url;
-          }
-        });
+    const list = (Array.isArray(products) ? products : []).slice(0, 4);
+    list.forEach(p => {
+      const imgs = getImagesForProduct(p.id);
+      if(imgs && imgs[0]){
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = imgs[0];
       }
-    }
+    });
   } catch(e){}
 }
-preloadProductImages();
+preloadVisibleProductImages();
+
+function idlePreloadRemainingImages(){
+  const run = () => {
+    try {
+      const list = (Array.isArray(products) ? products : []).slice(4, 16);
+      list.forEach(p => {
+        const imgs = getImagesForProduct(p.id);
+        if(imgs && imgs[0]){
+          const img = new Image();
+          img.decoding = 'async';
+          img.src = imgs[0];
+        }
+      });
+    } catch(e){}
+  };
+  if('requestIdleCallback' in window){
+    requestIdleCallback(run, { timeout: 3000 });
+  } else {
+    setTimeout(run, 2000);
+  }
+}
 
 (function initImagesFromIDB(){
   openNorxIDB().then(db => {
@@ -8274,7 +8928,7 @@ preloadProductImages();
             }
           }
           imagesDataReady = true;
-          preloadProductImages();
+          preloadVisibleProductImages();
           renderProducts();
         }
       };
@@ -8307,17 +8961,22 @@ function hideSplash(){
   if(splashHidden) return;
   splashHidden = true;
   const el = document.getElementById('splashScreen');
-  if(el) el.classList.add('hide');
+  if(el){
+    el.classList.add('hide');
+    setTimeout(() => {
+      try { if(el && el.parentNode) el.style.display = 'none'; } catch(e){}
+    }, 450);
+  }
 }
 function tryHideSplash(){
   if(productsDataReady && imagesDataReady){
-    renderProducts();
     requestAnimationFrame(()=>{
       hideSplash();
     });
   }
 }
-setTimeout(hideSplash, 2500);
+// Instant safety reveal: never stall splash on mobile phones
+setTimeout(hideSplash, 350);
 
 fbDB.ref('norxstore/products').on('value', snap=>{
   products = mergeProductsData(snap.val());
@@ -8351,6 +9010,7 @@ fbDB.ref('norxstore/discount').on('value', snap=>{
   discountVal = discountConfig.global;
   safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
   renderProducts();
+  if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
   if(cart.length > 0) renderCart();
   if(isAdminOpen()) renderDiscountAdminUI();
 });
@@ -8694,7 +9354,7 @@ function createOrder(items, total, paymentMethod, adminName){
 }
 function removeMyOrder(orderId, event){
   if(event) event.stopPropagation();
-  if(!confirm('Hapus riwayat pesanan ini dari daftar Anda?')) return;
+  if(!confirm(t('confirmDeleteOrderHistory') || 'Hapus riwayat pesanan ini dari daftar Anda?')) return;
   
   // 1. Blacklist ID pesanan agar tidak pernah dimunculkan atau dipulihkan lagi oleh cloud
   markOrderAsDeleted(orderId);
@@ -8729,11 +9389,11 @@ function removeMyOrder(orderId, event){
   renderMyOrders();
   renderProducts();
   updateOrderNotifDot();
-  showToast('Riwayat pesanan berhasil dihapus');
+  showToast(t('orderHistoryDeletedToast') || 'Riwayat pesanan berhasil dihapus');
 }
 function cancelMyOrder(orderId, event){
   if(event) event.stopPropagation();
-  if(!confirm('Batalkan pesanan ini? Layanan akan langsung kembali bisa dipesan.')) return;
+  if(!confirm(t('confirmCancelOrder') || 'Batalkan pesanan ini? Layanan akan langsung kembali bisa dipesan.')) return;
   
   if(window.fbAvailable && fbDB && fbDB.ref){
     fbDB.ref('norxstore/orders/' + orderId).update({
@@ -8754,7 +9414,7 @@ function cancelMyOrder(orderId, event){
   renderMyOrders();
   renderProducts();
   updateOrderNotifDot();
-  showToast('Pesanan berhasil dibatalkan. Layanan kembali bisa dipesan.');
+  showToast(t('orderCancelledToast') || 'Pesanan berhasil dibatalkan. Layanan kembali bisa dipesan.');
 }
 
 let currentCartPanelTab = 'cart';
@@ -8850,7 +9510,7 @@ function renderMyOrders(){
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
         <button type="button" class="${btnClass}" onclick="enablePhonePushNotifications()">${btnLabel}</button>
-        <button type="button" onclick="dismissPhoneNotifBanner(event)" title="Tutup" style="background:none;border:none;color:#94a3b8;font-size:15px;cursor:pointer;padding:2px 4px;line-height:1">✕</button>
+        <button type="button" onclick="dismissPhoneNotifBanner(event)" title="${t('closeBtn')}" style="background:none;border:none;color:#94a3b8;font-size:15px;cursor:pointer;padding:2px 4px;line-height:1">✕</button>
       </div>
     </div>
   `;
@@ -8870,6 +9530,10 @@ function renderMyOrders(){
     }
     else if(o.status === 'cancelled'){
       statusBadge = `<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">${t('orderStatusCancelled')}</span>`;
+      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
+    }
+    else if(o.status === 'refunded'){
+      statusBadge = `<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">${t('orderStatusRefunded') || '↩️ Di-Refund'}</span>`;
       cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
     }
     else {
@@ -8974,14 +9638,14 @@ function playNotificationChime(){
 
 async function enablePhonePushNotifications(silent = false){
   if(!("Notification" in window)){
-    if(!silent) showToast('Perangkat Anda tidak mendukung notifikasi web.');
+    if(!silent) showToast(currentSelectedCountry === 'SG' ? 'Your device does not support web notifications.' : ((currentSelectedCountry === 'MY') ? 'Peranti anda tidak menyokong notifikasi web.' : 'Perangkat Anda tidak mendukung notifikasi web.'));
     return false;
   }
 
   try {
     const permission = await Notification.requestPermission();
     if(permission !== 'granted'){
-      if(!silent) showToast('Izin notifikasi belum diizinkan. Untuk browser Brave/Chrome, aktifkan izin Notifikasi di setelan situs.');
+      if(!silent) showToast(currentSelectedCountry === 'SG' ? 'Notification permission not granted. Please allow Notifications in your browser settings.' : ((currentSelectedCountry === 'MY') ? 'Kebenaran notifikasi belum dibenarkan. Sila aktifkan dalam tetapan pelayar.' : 'Izin notifikasi belum diizinkan. Untuk browser Brave/Chrome, aktifkan izin Notifikasi di setelan situs.'));
       renderMyOrders();
       return false;
     }
@@ -9014,13 +9678,13 @@ async function enablePhonePushNotifications(silent = false){
 
     if(!silent){
       playNotificationChime();
-      showToast('🎉 Notifikasi HP Aktif! Ponsel akan bergetar & bersuara saat pesanan selesai.');
+      showToast(currentSelectedCountry === 'SG' ? '🎉 Phone Notifications Active! Device will vibrate & sound when order is completed.' : ((currentSelectedCountry === 'MY') ? '🎉 Notifikasi Telefon Aktif! Telefon akan bergetar & berbunyi apabila pesanan siap.' : '🎉 Notifikasi HP Aktif! Ponsel akan bergetar & bersuara saat pesanan selesai.'));
     }
     renderMyOrders();
     return true;
   } catch(e){
     console.error('Push registration error:', e);
-    if(!silent) showToast('Gagal mendaftarkan notifikasi: ' + (e.message || ''));
+    if(!silent) showToast((currentSelectedCountry === 'SG' ? 'Failed to enable notifications: ' : ((currentSelectedCountry === 'MY') ? 'Gagal mengaktifkan notifikasi: ' : 'Gagal mendaftarkan notifikasi: ')) + (e.message || ''));
     return false;
   }
 }
@@ -9246,28 +9910,89 @@ function extractCustomerRatingsFromOrders(){
   return list;
 }
 
+const SEED_CUSTOMER_RATINGS = [
+  {
+    id: "RAT-1792489620200-o7gp",
+    type: "rating",
+    isRating: true,
+    stars: 5,
+    customerName: "Faizzz Ganteng",
+    serviceName: "Layanan Joki Norxstore",
+    comment: "Puas banget, udah mah murah, customer service nya juga bagus 😋",
+    createdAt: 1792489620200,
+    country: "ID",
+    lang: "ID"
+  },
+  {
+    id: "RAT-1792489527895-kf5c",
+    type: "rating",
+    isRating: true,
+    stars: 5,
+    customerName: "Pelanggan Norxstore",
+    serviceName: "Layanan Joki Norxstore",
+    comment: "",
+    createdAt: 1792489527895,
+    country: "ID",
+    lang: "ID"
+  },
+  {
+    id: "RAT-1791498992674-h7kz",
+    type: "rating",
+    isRating: true,
+    stars: 5,
+    customerName: "Yitno Tabrani",
+    serviceName: "20 IF",
+    comment: "",
+    createdAt: 1791498992674,
+    country: "ID",
+    lang: "ID"
+  },
+  {
+    id: "RAT-1791194121307-u7pg",
+    type: "rating",
+    isRating: true,
+    stars: 5,
+    customerName: "Pelanggan Norxstore",
+    serviceName: "LVL 1 - 40",
+    comment: "",
+    createdAt: 1791194121307,
+    country: "ID",
+    lang: "ID"
+  }
+];
+
 let customerRatingsCache = null;
 function getCustomerRatings(){
+  if(customerRatingsCache && customerRatingsCache.length > 0) return customerRatingsCache;
   const cloudRatings = extractCustomerRatingsFromOrders();
   let localRatings = [];
   try {
-    const data = JSON.parse(safeGetItem('norxstore_customer_ratings', '[]'));
-    localRatings = Array.isArray(data) ? data : [];
+    const data = JSON.parse(safeGetItem('norxstore_customer_ratings', 'null'));
+    if(Array.isArray(data) && data.length > 0){
+      localRatings = data;
+    }
   } catch(e){
     localRatings = [];
   }
   
   const map = new Map();
-  for(const r of cloudRatings){
+  // 1. Seed ratings agar ulasan dan bintang langsung muncul 0ms tanpa delay
+  for(const r of SEED_CUSTOMER_RATINGS){
     if(r && r.id) map.set(r.id, r);
   }
+  // 2. Cache lokal
   for(const r of localRatings){
-    if(r && r.id && !map.has(r.id)) map.set(r.id, r);
+    if(r && r.id) map.set(r.id, r);
+  }
+  // 3. Realtime Cloud ratings dari Firebase
+  for(const r of cloudRatings){
+    if(r && r.id) map.set(r.id, r);
   }
   
   const merged = Array.from(map.values());
   merged.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
   customerRatingsCache = merged;
+  safeSetItem('norxstore_customer_ratings', JSON.stringify(merged));
   return merged;
 }
 function saveCustomerRatings(list){
@@ -9320,8 +10045,27 @@ function calculateRatingStats(){
 }
 
 function getCompletedOrdersCount(){
-  if(!allOrders || typeof allOrders !== 'object') return 0;
-  return Object.values(allOrders).filter(o => o && o.status === 'done' && !o.isRating && o.type !== 'rating').length;
+  let doneCount = 0;
+  if(allOrders && typeof allOrders === 'object'){
+    doneCount = Object.values(allOrders).filter(o => o && o.status === 'done' && !o.isRating && o.type !== 'rating').length;
+  }
+  const ratingsCount = getCustomerRatings().length;
+  let savedTotal = 0;
+  try {
+    savedTotal = parseInt(safeGetItem('norxstore_total_completed_orders', '0')) || 0;
+  } catch(e){}
+  
+  // Total completed selalu menghormati semua jokian yang pernah diselesaikan / diberi rating, minimal 4 (dari database)
+  return Math.max(doneCount, ratingsCount, savedTotal, 4);
+}
+
+function incrementCompletedOrdersCount(){
+  const cur = getCompletedOrdersCount() + 1;
+  safeSetItem('norxstore_total_completed_orders', String(cur));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/stats/completedOrders').set(cur).catch(e => console.error(e));
+  }
+  updateRatingStatsUI();
 }
 
 function updateRatingStatsUI(){
@@ -9448,11 +10192,11 @@ function renderCustomerReviews(){
     const starsStr = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
     const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString(locale, {day:'numeric',month:'short',year:'numeric'}) : nowWord;
     const authorInitial = (r.customerName || 'P').charAt(0).toUpperCase();
-    const serviceNameText = r.serviceName ? escapeHtml(r.serviceName) : t('defaultServiceReview');
+    const serviceNameText = r.serviceName ? escapeHtml(translateProductName(r.serviceName, currentLang)) : t('defaultServiceReview');
     
     const originLang = getReviewOriginLanguage(r);
     const isSameLanguage = (originLang === currentLang);
-    const isTranslated = !isSameLanguage && !!activeReviewTranslations[r.id];
+    const isTranslated = !isSameLanguage && (activeReviewTranslations[r.id] !== false);
     let commentDisplay = '';
     let translateControls = '';
     
@@ -9482,12 +10226,13 @@ function renderCustomerReviews(){
     }
     
     const deleteBtnHtml = showAdminDelete ? `
-      <button type="button" class="review-delete-action-btn" onclick="requestDeleteCustomerRating('${escapeHtml(r.id)}')" title="Hapus Ulasan (Khusus Admin)">
+      <button type="button" class="review-delete-action-btn" onclick="requestDeleteCustomerRating('${escapeHtml(r.id)}')" title="${currentLang === 'SG' ? 'Delete Review (Admin Only)' : 'Hapus Ulasan (Khusus Admin)'}">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
-        <span>Hapus</span>
+        <span>${currentLang === 'SG' ? 'Delete' : 'Hapus'}</span>
       </button>
     ` : '';
     
+    const defaultCustName = (currentLang === 'SG') ? 'Norxstore Customer' : 'Pelanggan Norxstore';
     return `
       <div class="customer-review-card">
         <div class="customer-review-header">
@@ -9495,7 +10240,7 @@ function renderCustomerReviews(){
             <div class="customer-review-avatar">${authorInitial}</div>
             <div class="customer-review-info">
               <div class="customer-review-name-row">
-                <span class="customer-review-name">${escapeHtml(r.customerName || 'Pelanggan Norxstore')}</span>
+                <span class="customer-review-name">${escapeHtml(r.customerName || defaultCustName)}</span>
                 <span class="customer-review-badge">${t('verifiedReviewBadge')}</span>
               </div>
               <div class="customer-review-meta">
@@ -9559,27 +10304,21 @@ function setNotifRatingStars(val){
   }
   const descEl = document.getElementById('notifStarDesc');
   if(descEl){
-    const starLabels = {
-      1: '⭐ Kurang Puas (1 Bintang)',
-      2: '⭐⭐ Cukup (2 Bintang)',
-      3: '⭐⭐⭐ Baik (3 Bintang)',
-      4: '⭐⭐⭐⭐ Sangat Baik (4 Bintang)',
-      5: '⭐⭐⭐⭐⭐ Sangat Puas! (5 Bintang)'
-    };
-    descEl.textContent = starLabels[val] || `${val} Bintang`;
+    descEl.textContent = getStarDescLabel(val);
   }
 }
 
 function submitNotifRating(){
   if(!currentFinishedOrderToRate){
-    showToast('Pesanan tidak ditemukan');
+    showToast(currentSelectedCountry === 'SG' ? 'Order not found' : (currentSelectedCountry === 'MY' ? 'Pesanan tidak dijumpai' : 'Pesanan tidak ditemukan'));
     return;
   }
   const nameInput = document.getElementById('notifReviewerName');
   const commentInput = document.getElementById('notifReviewText');
   const customerName = (nameInput && nameInput.value) ? nameInput.value.trim() : (currentFinishedOrderToRate.customerName || (currentUser && !currentUser.isAnonymous ? currentUser.displayName : ''));
   const comment = commentInput ? commentInput.value.trim() : '';
-  const serviceName = currentFinishedOrderToRate.items.map(i => i.name).join(', ') || 'Layanan Joki';
+  const defServiceName = (currentSelectedCountry === 'SG') ? 'Boosting Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki' : 'Layanan Joki');
+  const serviceName = currentFinishedOrderToRate.items.map(i => getProductName(i) || i.name).join(', ') || defServiceName;
   
   submitCustomerRating({
     orderId: currentFinishedOrderToRate.id,
@@ -9594,12 +10333,12 @@ function submitNotifRating(){
     ratingBox.innerHTML = `
       <div style="padding:10px;text-align:center">
         <div style="font-size:32px;margin-bottom:6px">🎉</div>
-        <div style="font-size:14px;font-weight:800;color:#4ade80;margin-bottom:4px">Bintang & Penilaian Terkirim!</div>
-        <div style="font-size:11.5px;color:#cbd5e1">Terima kasih atas penilaian ⭐${notifSelectedStars} bintang Anda. Rating toko berhasil naik!</div>
+        <div style="font-size:14px;font-weight:800;color:#4ade80;margin-bottom:4px">${t('notifRatingSentTitle')}</div>
+        <div style="font-size:11.5px;color:#cbd5e1">${t('notifRatingSentSub', {stars: notifSelectedStars})}</div>
       </div>
     `;
   }
-  showToast(`🎉 Terima kasih! Penilaian ⭐${notifSelectedStars} bintang berhasil menaikkan rating toko.`);
+  showToast(t('ratingThankYouToast', {stars: notifSelectedStars}));
 }
 
 function goToTestiSection(){
@@ -9628,13 +10367,18 @@ function toggleHeroRatingForm(forceState, orderId){
     const customWrap = document.getElementById('heroRatingCustomWrap');
     
     if(select){
+      const defaultOpt = t('modalSelectServiceDefault');
+      const customOpt = (currentSelectedCountry === 'SG') ? '➕ Other Service / Enter Manually' : ((currentSelectedCountry === 'MY') ? '➕ Perkhidmatan Lain / Masukkan Manual' : '➕ Layanan Lainnya / Masukkan Manual');
+      const defServiceText = (currentSelectedCountry === 'SG') ? 'Norxstore Boost Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki Norxstore' : 'Layanan Joki Norxstore');
+      const defItemName = (currentSelectedCountry === 'SG') ? 'Boosting Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki' : 'Pesanan Jokian');
+
       if(finishedOrders.length > 0){
-        select.innerHTML = '<option value="">-- Pilih Dari Pesanan Selesai Anda --</option>' + 
+        select.innerHTML = `<option value="">${defaultOpt}</option>` + 
           finishedOrders.map(o => {
-            const itemsTitle = (Array.isArray(o.items) ? o.items : []).map(i => i.name).join(', ') || 'Pesanan Jokian';
-            const ratedBadge = isOrderRated(o.id) ? ' (Sudah Diberi Rating)' : '';
+            const itemsTitle = (Array.isArray(o.items) ? o.items : []).map(i => (getProductName(i) || i.name)).join(', ') || defItemName;
+            const ratedBadge = isOrderRated(o.id) ? ((currentSelectedCountry === 'SG') ? ' (Already Rated)' : ((currentSelectedCountry === 'MY') ? ' (Telah Dinilai)' : ' (Sudah Diberi Rating)')) : '';
             return `<option value="${o.id}">${itemsTitle} - ${formatPrice(o.total || 0)}${ratedBadge}</option>`;
-          }).join('') + '<option value="__custom__">➕ Layanan Lainnya / Masukkan Manual</option>';
+          }).join('') + `<option value="__custom__">${customOpt}</option>`;
         
         if(orderId){
           select.value = orderId;
@@ -9644,7 +10388,7 @@ function toggleHeroRatingForm(forceState, orderId){
         }
         handleHeroOrderSelectChange();
       } else {
-        select.innerHTML = '<option value="__custom__">Layanan Joki Norxstore</option>';
+        select.innerHTML = `<option value="__custom__">${defServiceText}</option>`;
         if(customWrap) customWrap.style.display = 'block';
       }
     }
@@ -9660,11 +10404,11 @@ function toggleHeroRatingForm(forceState, orderId){
     card.style.display = 'block';
     
     const toggleBtn = document.getElementById('btnToggleRatingForm');
-    if(toggleBtn) toggleBtn.innerHTML = '✕ Tutup Form Penilaian';
+    if(toggleBtn) toggleBtn.innerHTML = (currentSelectedCountry === 'SG') ? '✕ Close Rating Form' : ((currentSelectedCountry === 'MY') ? '✕ Tutup Borang Penilaian' : '✕ Tutup Form Penilaian');
   } else {
     card.style.display = 'none';
     const toggleBtn = document.getElementById('btnToggleRatingForm');
-    if(toggleBtn) toggleBtn.innerHTML = '✍️ Beri Bintang & Ulasan Jokian';
+    if(toggleBtn) toggleBtn.innerHTML = t('testiWriteBtn');
   }
 }
 
@@ -9704,18 +10448,19 @@ function submitHeroRating(){
   
   let orderId = null;
   let serviceName = '';
+  const defFallbackService = (currentSelectedCountry === 'SG') ? 'Norxstore Boost Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki Norxstore' : 'Layanan Joki Norxstore');
   
   if(select && select.value && select.value !== '__custom__'){
     orderId = select.value;
     const order = allOrders[orderId];
     if(order && Array.isArray(order.items)){
-      serviceName = order.items.map(i => i.name).join(', ');
+      serviceName = order.items.map(i => (getProductName(i) || i.name)).join(', ');
     }
   } else if(customInput && customInput.value.trim()){
     serviceName = customInput.value.trim();
   }
   
-  if(!serviceName) serviceName = 'Layanan Joki Norxstore';
+  if(!serviceName) serviceName = defFallbackService;
   
   const customerName = nameInput ? nameInput.value.trim() : '';
   const comment = commentInput ? commentInput.value.trim() : '';
@@ -9730,7 +10475,10 @@ function submitHeroRating(){
   
   toggleHeroRatingForm(false);
   switchTestiTab('reviews');
-  showToast(`🎉 Terima kasih! Penilaian ⭐${heroSelectedStars} bintang Anda berhasil menaikkan rating toko.`);
+  const thankYouMsg = (currentSelectedCountry === 'SG') 
+    ? `🎉 Thank you! Your ⭐${heroSelectedStars}-star rating helps improve store reputation.` 
+    : ((currentSelectedCountry === 'MY') ? `🎉 Terima kasih! Penilaian ⭐${heroSelectedStars} bintang anda berjaya menaikkan rating kedai.` : `🎉 Terima kasih! Penilaian ⭐${heroSelectedStars} bintang Anda berhasil menaikkan rating toko.`);
+  showToast(thankYouMsg);
 }
 
 // Bintang interaktif di Modal Mandiri
@@ -9752,14 +10500,19 @@ function openGiveRatingModal(orderId){
   const customInput = document.getElementById('giveRatingCustomService');
   
   if(select){
+    const defaultOpt = t('modalSelectServiceDefault');
+    const customOpt = (currentSelectedCountry === 'SG') ? '➕ Other Service / Enter Manually' : ((currentSelectedCountry === 'MY') ? '➕ Perkhidmatan Lain / Masukkan Manual' : '➕ Layanan Lainnya / Masukkan Manual');
+    const defServiceText = (currentSelectedCountry === 'SG') ? 'Norxstore Boost Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki Norxstore' : 'Layanan Joki Norxstore');
+    const defItemName = (currentSelectedCountry === 'SG') ? 'Boosting Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki' : 'Pesanan Jokian');
+
     if(finishedOrders.length > 0){
       if(selectWrap) selectWrap.style.display = 'block';
-      select.innerHTML = '<option value="">-- Pilih Dari Pesanan Selesai Anda --</option>' + 
+      select.innerHTML = `<option value="">${defaultOpt}</option>` + 
         finishedOrders.map(o => {
-          const itemsTitle = (Array.isArray(o.items) ? o.items : []).map(i => i.name).join(', ') || 'Pesanan Jokian';
-          const ratedBadge = isOrderRated(o.id) ? ' (Sudah Diberi Rating)' : '';
+          const itemsTitle = (Array.isArray(o.items) ? o.items : []).map(i => (getProductName(i) || i.name)).join(', ') || defItemName;
+          const ratedBadge = isOrderRated(o.id) ? ((currentSelectedCountry === 'SG') ? ' (Already Rated)' : ((currentSelectedCountry === 'MY') ? ' (Telah Dinilai)' : ' (Sudah Diberi Rating)')) : '';
           return `<option value="${o.id}">${itemsTitle} - ${formatPrice(o.total || 0)}${ratedBadge}</option>`;
-        }).join('') + '<option value="__custom__">➕ Layanan Lainnya / Masukkan Manual</option>';
+        }).join('') + `<option value="__custom__">${customOpt}</option>`;
       
       if(orderId){
         select.value = orderId;
@@ -9771,7 +10524,7 @@ function openGiveRatingModal(orderId){
     } else {
       if(selectWrap) selectWrap.style.display = 'none';
       if(customWrap) customWrap.style.display = 'block';
-      if(customInput && !customInput.value) customInput.value = 'Layanan Joki Norxstore';
+      if(customInput && !customInput.value) customInput.value = defServiceText;
     }
   }
 
@@ -9828,14 +10581,17 @@ function handleModalOrderSelectChange(){
 
 function submitCustomerRating(ratingData){
   const id = 'RAT-' + Date.now() + '-' + Math.random().toString(36).substr(2, 4);
+  const defCustName = (currentSelectedCountry === 'SG') ? 'Norxstore Customer' : ((currentSelectedCountry === 'MY') ? 'Pelanggan Norxstore' : 'Pelanggan Norxstore');
+  const defServiceFallback = (currentSelectedCountry === 'SG') ? 'Game Boosting Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki Game' : 'Layanan Joki Game');
+
   const newRating = {
     id: id,
     type: 'rating',
     isRating: true,
     orderId: ratingData.orderId || null,
-    customerName: (ratingData.customerName || '').trim() || 'Pelanggan Norxstore',
+    customerName: (ratingData.customerName || '').trim() || defCustName,
     stars: Math.max(1, Math.min(5, parseInt(ratingData.stars, 10) || 5)),
-    serviceName: (ratingData.serviceName || '').trim() || 'Layanan Joki Game',
+    serviceName: (ratingData.serviceName || '').trim() || defServiceFallback,
     comment: (ratingData.comment || '').trim(),
     createdAt: Date.now(),
     country: currentSelectedCountry || 'ID',
@@ -9882,18 +10638,19 @@ function submitModalRating(){
   
   let orderId = null;
   let serviceName = '';
+  const defFallbackService = (currentSelectedCountry === 'SG') ? 'Norxstore Boost Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki Norxstore' : 'Layanan Joki Norxstore');
   
   if(selectWrap && selectWrap.style.display !== 'none' && select && select.value && select.value !== '__custom__'){
     orderId = select.value;
     const order = allOrders[orderId];
     if(order && Array.isArray(order.items)){
-      serviceName = order.items.map(i => i.name).join(', ');
+      serviceName = order.items.map(i => (getProductName(i) || i.name)).join(', ');
     }
   } else if(customInput && customInput.value.trim()){
     serviceName = customInput.value.trim();
   }
   
-  if(!serviceName) serviceName = 'Layanan Joki Norxstore';
+  if(!serviceName) serviceName = defFallbackService;
   
   const customerName = nameInput ? nameInput.value.trim() : '';
   const comment = commentInput ? commentInput.value.trim() : '';
@@ -9907,7 +10664,10 @@ function submitModalRating(){
   });
   
   closeGiveRatingModal();
-  showToast(`🎉 Terima kasih! Penilaian ⭐${modalSelectedStars} bintang Anda berhasil menaikkan rating toko.`);
+  const thankYouMsg = (currentSelectedCountry === 'SG') 
+    ? `🎉 Thank you! Your ⭐${modalSelectedStars}-star rating helps improve store reputation.` 
+    : ((currentSelectedCountry === 'MY') ? `🎉 Terima kasih! Penilaian ⭐${modalSelectedStars} bintang anda berjaya menaikkan rating kedai.` : `🎉 Terima kasih! Penilaian ⭐${modalSelectedStars} bintang Anda berhasil menaikkan rating toko.`);
+  showToast(thankYouMsg);
 }
 
 // ==================== PANEL ADMIN: KELOLA RATING & ULASAN ====================
@@ -10039,6 +10799,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 fbDB.ref('norxstore/orders').on('value', snap=>{
   allOrders = snap.val() || {};
+  customerRatingsCache = null;
   checkOrderNotifications(allOrders);
   renderMyOrders();
   renderProducts();
@@ -10052,6 +10813,19 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
   renderCustomerReviews();
   if(isAdminOpen()) renderAdminRatingsList();
 });
+
+if(window.fbAvailable && fbDB && fbDB.ref){
+  fbDB.ref('norxstore/stats/completedOrders').on('value', snap => {
+    const val = snap.val();
+    if(val !== null && val !== undefined){
+      const num = parseInt(val, 10);
+      if(!isNaN(num) && num > 0){
+        safeSetItem('norxstore_total_completed_orders', String(num));
+        updateRatingStatsUI();
+      }
+    }
+  });
+}
 
 // ==================== LOGIN GOOGLE & SINKRONISASI LINTAS DEVICE ====================
 let currentUser = null;
@@ -10252,16 +11026,19 @@ function renderAdminOrders(){
     let statusBadge, actions;
     if(o.status === 'pending'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#92400e">🟡 Menunggu</span>';
-      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="approveOrder('${o.id}')">⏳ Proses</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="openOrderDurationModal('${o.id}')" title="Atur durasi proses & mulai">⏱️ Atur Durasi / Mulai</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'processing'){
-      statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">🔵 Diproses${o.estimate ? ' · '+o.estimate : ''}</span>`;
-      actions = `<button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+      statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af;cursor:pointer" onclick="openOrderDurationModal('${o.id}')" title="Klik untuk ubah durasi proses">🔵 Diproses${o.estimate ? ' · '+o.estimate : ''} ✏️</span>`;
+      actions = `<button class="admin-btn-sm" style="background:#0284c7" onclick="openOrderDurationModal('${o.id}')" title="Ubah estimasi durasi proses pesanan ini">⏱️ Atur Durasi</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Pelanggan kembalikan akun? Kembalikan stok jadi tersedia lagi">↩️ Refund Akun</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'cancelled'){
       statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
       actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+    } else if(o.status === 'refunded'){
+      statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">↩️ Di-Refund</span>';
+      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
     } else {
       statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
-      actions = `<button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      actions = `<button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Kembalikan akun ke toko agar stok tersedia kembali di katalog">↩️ Refund Akun</button><button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
     }
     return `
     <div class="my-order-card">
@@ -10273,30 +11050,119 @@ function renderAdminOrders(){
     </div>`;
   }).join('');
 }
-function approveOrder(id){
-  const est = prompt('Berapa lama estimasi pengerjaan? (contoh: 2 jam, 1-2 hari)');
-  if(est === null) return;
-  fbDB.ref('norxstore/orders/' + id).update({status:'processing', estimate: est.trim() || null, approvedAt: Date.now()}).catch(e=>console.error(e));
-  if(allOrders[id]){
-    allOrders[id].status = 'processing';
-    allOrders[id].estimate = est.trim() || null;
+
+let currentDurationOrderId = null;
+
+function openOrderDurationModal(orderId){
+  const o = allOrders[orderId];
+  if(!o) return;
+  currentDurationOrderId = orderId;
+
+  const itemsText = o.items ? o.items.map(it => it.name + ' x' + it.qty).join(', ') : 'Layanan Norxstore';
+  const custName = o.customerName || (o.customerEmail ? o.customerEmail : 'Tamu (Pelanggan)');
+  const currentEst = o.estimate || '';
+
+  const summaryEl = document.getElementById('orderDurationSummary');
+  if(summaryEl){
+    summaryEl.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+        <div>
+          <div style="font-weight:700;color:#1e1b4b;font-size:13px">👤 ${custName}</div>
+          <div style="color:#6b21a8;font-weight:700;font-size:12px;margin-top:2px">${itemsText}</div>
+        </div>
+        <span style="font-weight:800;color:#16a34a;font-size:12px">${formatPrice(o.total)}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;color:#64748b;font-size:11px;border-top:1px dashed #e2e8f0;padding-top:6px;margin-top:6px">
+        <span>Status: <strong style="color:${o.status === 'processing' ? '#2563eb' : '#d97706'}">${o.status === 'processing' ? '🔵 Sedang Diproses' : '🟡 Menunggu'}</strong></span>
+        <span>Durasi Saat Ini: <strong style="color:#1e1b4b">${currentEst || 'Belum diatur'}</strong></span>
+      </div>
+    `;
   }
-  const order = allOrders[id];
-  const itemsText = order ? order.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
+
+  const customInput = document.getElementById('orderDurationCustomInput');
+  if(customInput){
+    customInput.value = currentEst;
+  }
+
+  highlightQuickDurationBtn(currentEst);
+
+  const modal = document.getElementById('orderDurationModal');
+  if(modal) modal.classList.add('open');
+}
+
+function closeOrderDurationModal(e){
+  if(e && e.target && e.target !== document.getElementById('orderDurationModal') && !e.target.classList.contains('modal-close')) return;
+  const modal = document.getElementById('orderDurationModal');
+  if(modal) modal.classList.remove('open');
+  currentDurationOrderId = null;
+}
+
+function selectQuickDuration(dur){
+  const customInput = document.getElementById('orderDurationCustomInput');
+  if(customInput) customInput.value = dur;
+  highlightQuickDurationBtn(dur);
+}
+
+function highlightQuickDurationBtn(dur){
+  const grid = document.getElementById('orderDurationQuickGrid');
+  if(!grid) return;
+  const btns = grid.querySelectorAll('button');
+  btns.forEach(btn => {
+    const text = btn.textContent.replace(/[⚡⏱️⏳⌛📅]/g, '').trim();
+    if(dur && text.toLowerCase() === dur.toLowerCase()){
+      btn.style.background = '#dbeafe';
+      btn.style.borderColor = '#2563eb';
+      btn.style.color = '#1e40af';
+      btn.style.fontWeight = '800';
+    } else {
+      btn.style.background = '#f8fafc';
+      btn.style.borderColor = '#e2e8f0';
+      btn.style.color = '#334155';
+      btn.style.fontWeight = '700';
+    }
+  });
+}
+
+function saveOrderDurationFromModal(){
+  if(!currentDurationOrderId) return;
+  const orderId = currentDurationOrderId;
+  const o = allOrders[orderId];
+  if(!o) return;
+
+  const customInput = document.getElementById('orderDurationCustomInput');
+  const durVal = customInput ? customInput.value.trim() : '';
+  const finalEst = durVal || '1-2 Jam';
+
+  fbDB.ref('norxstore/orders/' + orderId).update({
+    status: 'processing',
+    estimate: finalEst,
+    approvedAt: o.approvedAt || Date.now(),
+    durationUpdatedAt: Date.now()
+  }).catch(e=>console.error(e));
+
+  if(allOrders[orderId]){
+    allOrders[orderId].status = 'processing';
+    allOrders[orderId].estimate = finalEst;
+    if(!allOrders[orderId].approvedAt) allOrders[orderId].approvedAt = Date.now();
+  }
+
+  const itemsText = o.items ? o.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
 
   // Kirim Web Push HP secara background
   fetch('/api/send-order-push', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      orderId: id,
+      orderId: orderId,
       status: 'processing',
-      estimate: est.trim() || null,
+      estimate: finalEst,
       itemName: itemsText
     })
   }).catch(e=>console.warn('Push error:', e));
 
-  showToast('Pesanan disetujui, notifikasi HP dikirim ke pembeli');
+  showToast(`⏱️ Estimasi durasi pesanan disimpan: ${finalEst} (Status: Diproses)`);
+  closeOrderDurationModal();
+
   renderMyOrders();
   renderProducts();
   if(isAdminOpen()) {
@@ -10304,13 +11170,39 @@ function approveOrder(id){
     renderAdminProductList();
   }
 }
+
+function approveOrder(id){
+  openOrderDurationModal(id);
+}
+
 function completeOrderStatus(id, silent = false){
   fbDB.ref('norxstore/orders/' + id).update({status:'done', completedAt: Date.now()}).catch(e=>console.error(e));
   if(allOrders[id]) allOrders[id].status = 'done';
   const order = allOrders[id];
   const itemsText = order ? order.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
 
-  // Kirim Web Push HP secara background (HP bergetar & bersuara meski web tertutup)
+  // 1. TANDAI HANYA PRODUK AKUN (STOK 1) DALAM PESANAN SEBAGAI SOLD OUT (TERJUAL) SEGERA
+  if(order && Array.isArray(order.items)){
+    order.items.forEach(it => {
+      const prod = products.find(p => (it.id !== undefined && it.id !== null && Number(p.id) === Number(it.id)) || (p.name && it.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase()));
+      if(prod && (prod.isAccount || prod.stock === 1)){
+        const soldData = {
+          status: 'sold',
+          reservedAt: null,
+          soldAt: Date.now(),
+          soldOrderId: id
+        };
+        // Simpan ke Firebase reservations & update reservationsCache lokal seketika
+        fbDB.ref('norxstore/reservations/' + prod.id).set(soldData).catch(e=>console.error(e));
+        reservationsCache[prod.id] = soldData;
+      }
+    });
+  }
+
+  // Update persistent counter completed orders agar statistik jokian selesai tidak pernah reset ke 0
+  if(typeof incrementCompletedOrdersCount === 'function') incrementCompletedOrdersCount();
+
+  // 2. Kirim Web Push HP secara background (HP bergetar & bersuara meski web tertutup)
   fetch('/api/send-order-push', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -10321,7 +11213,13 @@ function completeOrderStatus(id, silent = false){
     })
   }).catch(e=>console.warn('Push error:', e));
 
-  if(!silent) showToast('✅ Pesanan selesai! Notifikasi HP (suara & getar) dikirim.');
+  // 3. Tampilkan popup notifikasi shoutout selesai jika pesanan milik browser saat ini
+  const myIds = (typeof getMyOrderIds === 'function') ? getMyOrderIds() : [];
+  if(myIds.includes(id) && order && typeof triggerOrderFinishedNotification === 'function'){
+    triggerOrderFinishedNotification(order);
+  }
+
+  if(!silent) showToast('✅ Pesanan selesai! Produk langsung ditandai Sold Out & notifikasi dikirim.');
   renderMyOrders();
   renderProducts();
   if(isAdminOpen()) {
@@ -10634,10 +11532,10 @@ async function sendProofViaWhatsApp(forceDirect = false){
   }
 }
 function cancelOrder(id){
-  if(!confirm('Batalkan pesanan ini? Produk akan otomatis kembali tersedia untuk dipesan pelanggan.')) return;
+  if(!confirm(t('confirmCancelOrder') || 'Batalkan pesanan ini? Layanan akan langsung kembali bisa dipesan.')) return;
   fbDB.ref('norxstore/orders/' + id).update({status:'cancelled', cancelledAt: Date.now()}).catch(e=>console.error(e));
   if(allOrders[id]) allOrders[id].status = 'cancelled';
-  showToast('Pesanan dibatalkan. Produk kembali tersedia.');
+  showToast(t('orderCancelledToast') || 'Pesanan dibatalkan. Layanan kembali bisa dipesan.');
   renderMyOrders();
   renderProducts();
   if(isAdminOpen()) {
@@ -10646,7 +11544,7 @@ function cancelOrder(id){
   }
 }
 function deleteOrder(id){
-  if(!confirm('Hapus riwayat pesanan ini?')) return;
+  if(!confirm(t('confirmDeleteOrderHistory') || 'Hapus riwayat pesanan ini?')) return;
   markOrderAsDeleted(id);
   const o = allOrders[id];
   if(o && o.customerUid){
@@ -10662,7 +11560,7 @@ function deleteOrder(id){
   safeSetItem('norxstore_my_orders', JSON.stringify(localIds));
   delete allOrders[id];
   fbDB.ref('norxstore/orders/' + id).remove().catch(e=>console.error(e));
-  showToast('Riwayat pesanan dihapus');
+  showToast(t('orderHistoryDeletedToast') || 'Riwayat pesanan berhasil dihapus');
   renderMyOrders();
   renderProducts();
   if(isAdminOpen()){
@@ -10683,7 +11581,14 @@ function addToCart(id, event){
   if(event) event.stopPropagation();
   const product = products.find(p=>p.id===id);
   if(!product) return;
+  const eff = getEffectiveAccountStatus(product);
+  const isProdSold = eff === 'sold' || (reservationsCache[product.id] && reservationsCache[product.id].status === 'sold');
+  if(isProdSold){
+    showToast(t('accountSoldToast') || 'Produk sudah terjual (Sold Out)');
+    return;
+  }
   normalizeCartItems();
+  const prodName = getProductName(product) || product.name;
   const existingIdx = cart.findIndex(item=>item.id===id);
   if(existingIdx > -1){
     cart.splice(existingIdx, 1);
@@ -10691,16 +11596,23 @@ function addToCart(id, event){
     updateCartBadge();
     renderCart();
     renderProducts();
-    showToast('🗑️ ' + product.name + ' dihapus dari keranjang');
+    const toastRemoved = (currentSelectedCountry === 'SG')
+      ? `🗑️ ${prodName} removed from cart`
+      : ((currentSelectedCountry === 'MY')
+        ? `🗑️ ${prodName} dikeluarkan daripada troli`
+        : `🗑️ ${prodName} dihapus dari keranjang`);
+    showToast(toastRemoved);
     return;
   }
   // Cegah jika produk masih dalam pesanan aktif yang belum selesai
   const activeOrder = getActiveOrderForProduct(product.id);
   if(activeOrder){
-    const stMsg = activeOrder.status === 'processing'
-      ? `Produk ini sedang dalam pengerjaan${activeOrder.estimate ? ' (estimasi ' + activeOrder.estimate + ')' : ''}`
-      : 'Produk ini sedang dalam antrean pesanan belum selesai';
-    showToast('⏳ ' + stMsg + '. Belum bisa dipesan lagi sampai selesai!');
+    const stMsg = (currentSelectedCountry === 'SG')
+      ? `⏳ ${prodName} is currently in progress${activeOrder.estimate ? ' (est. ' + activeOrder.estimate + ')' : ''}. Cannot be re-ordered until completed!`
+      : ((currentSelectedCountry === 'MY')
+        ? `⏳ ${prodName} sedang dalam pelaksanaan${activeOrder.estimate ? ' (anggaran ' + activeOrder.estimate + ')' : ''}. Belum boleh ditempah lagi sehingga selesai!`
+        : `⏳ Produk ini sedang dalam pengerjaan${activeOrder.estimate ? ' (estimasi ' + activeOrder.estimate + ')' : ''}. Belum bisa dipesan lagi sampai selesai!`);
+    showToast(stMsg);
     return;
   }
   cart.push({
@@ -10717,7 +11629,12 @@ function addToCart(id, event){
   saveCart();
   updateCartBadge();
   renderProducts();
-  showToast('✅ ' + product.name + ' ditambahkan ke keranjang');
+  const toastAdded = (currentSelectedCountry === 'SG')
+    ? `✅ ${prodName} added to cart`
+    : ((currentSelectedCountry === 'MY')
+      ? `✅ ${prodName} ditambah ke troli`
+      : `✅ ${prodName} ditambahkan ke keranjang`);
+  showToast(toastAdded);
 }
 
 function removeFromCart(id){
@@ -10732,7 +11649,7 @@ function changeQty(id, delta){
   const item = cart.find(item=>item.id===id);
   if(!item) return;
   if(delta > 0){
-    showToast('⚠️ Maksimal 1 pesanan untuk produk ini. Silakan pilih produk lain!');
+    showToast(t('cartMaxOneToast') || '⚠️ Maksimal 1 pesanan untuk produk ini. Silakan pilih produk lain!');
     return;
   }
   if(delta < 0){
@@ -10742,7 +11659,7 @@ function changeQty(id, delta){
 }
 
 function clearCart(){
-  if(!confirm('Yakin ingin mengosongkan keranjang?')) return;
+  if(!confirm(t('confirmClearCart') || 'Yakin ingin mengosongkan keranjang?')) return;
   cart = [];
   selectedCartPayment = null;
   selectedCartAdmin = null;
@@ -10752,7 +11669,7 @@ function clearCart(){
   renderProducts();
   closeCartCheckoutStep();
   document.querySelectorAll('#adminGridCart .admin-option').forEach(opt=>opt.classList.remove('selected'));
-  showToast('Keranjang dikosongkan');
+  showToast(t('cartClearedToast') || 'Keranjang dikosongkan');
 }
 
 function renderCart(){
@@ -11682,7 +12599,7 @@ const PREDEFINED_SUBGROUPS_BY_CAT = {
   genshin: ['Eksplorasi', 'Quest & Misi', 'Rawat Akun', 'Spiral Abyss', 'Top-Up', 'Farming Material'],
   hsr: ['Memory of Chaos', 'Pure Fiction', 'Quest & Misi', 'Rawat Akun', 'Top-Up', 'Farming Material'],
   wuwa: ['Eksplorasi', 'Tower of Adversity', 'Quest & Misi', 'Rawat Akun', 'Top-Up', 'Farming Material'],
-  nte: ['Quest & Misi', 'Farming Material', 'Rawat Akun', 'Top-Up'],
+  nte: ['SOLID DISK', 'EKSPLORATION', 'Quest & Misi', 'Rawat Akun', 'Top-Up', 'Farming Material'],
   lainnya: ['Akun Starter', 'Akun Mid-End', 'Akun Endgame']
 };
 
@@ -11755,10 +12672,16 @@ function localizeSubgroupName(sub, lang = null){
   if(currentLang === 'MY'){
     // Bahasa Melayu (Malaysia)
     if(subLower === 'all' || subLower === 'semua') return 'Semua';
+    if(subLower.includes('special pass') || subLower === 'sp') return 'Special Pass';
+    if(subLower.includes('solid disk') || subLower === 'sd') return 'Solid Disk';
+    if(subLower.includes('intertwined') || subLower === 'if') return 'Intertwined Fate';
+    if(subLower.includes('radiant') || subLower === 'rt') return 'Radiant Tide';
+    if(subLower.includes('level') || subLower.includes('lvl')) return 'Tahap / Level Karakter';
     if(subLower.includes('rawat')) return 'Rawat Akaun / Harian';
     if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('oculus')) return 'Eksplorasi Peta';
     if(subLower.includes('quest') || subLower.includes('misi')) return 'Quest & Misi';
     if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('tambah nilai')) return 'Tambah Nilai / Top-Up';
+    if(subLower.includes('event')) return 'Event & Ganjaran';
     if(subLower.includes('joki')) return 'Servis Joki';
     if(subLower.includes('spiral abyss') || subLower.includes('abyss')) return 'Spiral Abyss & Cabaran';
     if(subLower.includes('moc') || subLower.includes('memory of chaos')) return 'Memory of Chaos';
@@ -11774,10 +12697,16 @@ function localizeSubgroupName(sub, lang = null){
   } else if(currentLang === 'SG'){
     // English (Singapore)
     if(subLower === 'all' || subLower === 'semua') return 'All';
+    if(subLower.includes('special pass') || subLower === 'sp') return 'Special Pass';
+    if(subLower.includes('solid disk') || subLower === 'sd') return 'Solid Disk';
+    if(subLower.includes('intertwined') || subLower === 'if') return 'Intertwined Fate';
+    if(subLower.includes('radiant') || subLower === 'rt') return 'Radiant Tide';
+    if(subLower.includes('level') || subLower.includes('lvl')) return 'Character Leveling';
     if(subLower.includes('rawat')) return 'Daily Maintenance';
     if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('oculus')) return 'Map Exploration';
     if(subLower.includes('quest') || subLower.includes('misi')) return 'Quests & Missions';
     if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('tambah nilai')) return 'Top-Up';
+    if(subLower.includes('event')) return 'Events & Challenges';
     if(subLower.includes('joki')) return 'Pilot & Boosting';
     if(subLower.includes('spiral abyss') || subLower.includes('abyss')) return 'Spiral Abyss & Endgame';
     if(subLower.includes('moc') || subLower.includes('memory of chaos')) return 'Memory of Chaos';
@@ -11793,10 +12722,16 @@ function localizeSubgroupName(sub, lang = null){
   } else {
     // Bahasa Indonesia (ID)
     if(subLower === 'all' || subLower === 'semua') return 'Semua';
+    if(subLower.includes('special pass') || subLower === 'sp') return 'Special Pass';
+    if(subLower.includes('solid disk') || subLower === 'sd') return 'Solid Disk';
+    if(subLower.includes('intertwined') || subLower === 'if') return 'Intertwined Fate';
+    if(subLower.includes('radiant') || subLower === 'rt') return 'Radiant Tide';
+    if(subLower.includes('level') || subLower.includes('lvl')) return 'Level Karakter';
     if(subLower.includes('rawat')) return 'Rawat Akun / Harian';
     if(subLower.includes('eksplor') || subLower.includes('explore') || subLower.includes('oculus')) return 'Eksplorasi Map';
     if(subLower.includes('quest') || subLower.includes('misi')) return 'Quest & Misi';
     if(subLower.includes('top-up') || subLower.includes('topup')) return 'Top-Up';
+    if(subLower.includes('event')) return 'Event & Misi';
     if(subLower.includes('joki')) return 'Jasa Joki';
     if(subLower.includes('spiral abyss') || subLower.includes('abyss')) return 'Spiral Abyss';
     if(subLower.includes('moc') || subLower.includes('memory of chaos')) return 'Memory of Chaos';
@@ -12184,7 +13119,8 @@ function updateCategoryChipsUI(){
 
     const catShortName = getCategoryShortName(cat);
     const catDisc = (cat === 'all') ? 0 : getCategoryMaxDiscount(cat);
-    const discBadge = catDisc > 0 ? `<span class="cat-chip-disc" title="Diskon hingga ${catDisc}%">🔥 -${catDisc}%</span>` : '';
+    const discTitle = (currentSelectedCountry === 'SG') ? `Up to ${catDisc}% Off` : ((currentSelectedCountry === 'MY') ? `Diskaun sehingga ${catDisc}%` : `Diskon hingga ${catDisc}%`);
+    const discBadge = catDisc > 0 ? `<span class="cat-chip-disc" title="${discTitle}">🔥 -${catDisc}%</span>` : '';
     
     chip.classList.toggle('active', cat === currentCatFilter);
     chip.innerHTML = `${catShortName}${discBadge ? ' ' + discBadge : ''}`;
@@ -12240,6 +13176,22 @@ function updateCategoryChipsUI(){
   }
 }
 
+function localizeProductBadge(badge, lang = null){
+  if(!badge) return '';
+  const currentLang = (lang || currentSelectedCountry || 'ID').toUpperCase();
+  const b = String(badge).trim();
+  if(currentLang === 'SG'){
+    if(b === 'POPULER') return 'POPULAR';
+    if(b === 'TERLARIS') return 'BESTSELLER';
+    if(b === 'HEMAT') return 'SAVE';
+  } else if(currentLang === 'MY'){
+    if(b === 'POPULER') return 'POPULAR';
+    if(b === 'TERLARIS') return 'PALING LARIS';
+    if(b === 'HEMAT') return 'JIMAT';
+  }
+  return b;
+}
+
 function renderProductCard(p, discount, idx){
   const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p);
   const hasDisc = disc > 0;
@@ -12247,7 +13199,7 @@ function renderProductCard(p, discount, idx){
   const hasImgs = imgs.length > 0;
   const isAboveFold = (idx === undefined || idx < 8);
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
-    <div class="product-img-slide" data-index="${i}" onclick="openProductImageViewer(${p.id},${i},event)" style="cursor:zoom-in" title="Perbesar foto produk">
+    <div class="product-img-slide" data-index="${i}" onclick="openProductImageViewer(${p.id},${i},event)" style="cursor:zoom-in" title="${t('zoomProductPhoto') || 'Perbesar foto produk'}">
       <img src="${url}" alt="${getProductName(p)}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}" onerror="if(!this.dataset.erred){this.dataset.erred='1';this.src='/prod_${p.id}.jpg';}">
       <div class="slide-protect-shield"></div>
     </div>
@@ -12262,7 +13214,7 @@ function renderProductCard(p, discount, idx){
   const imgCount = hasImgs && imgs.length > 1 ? `<span class="img-count" id="imgCount_${p.id}">1 / ${imgs.length}</span>` : '';
 
   const acctStatus = getEffectiveAccountStatus(p);
-  const isSold = acctStatus === 'sold';
+  const isSold = acctStatus === 'sold' || (reservationsCache[p.id] && reservationsCache[p.id].status === 'sold');
   const isReserved = acctStatus === 'reserved';
   const activeOrder = getActiveOrderForProduct(p.id);
   const isOrderProcessing = !!activeOrder;
@@ -12293,7 +13245,7 @@ function renderProductCard(p, discount, idx){
   return `
   <div class="product-card ${hasDisc ? 'has-discount' : ''}" id="prodCard_${p.id}" style="${isLocked ? 'opacity:.82' : ''}">
     <div class="product-img-wrap" id="prodImgWrap_${p.id}">
-      ${!isLocked && p.badge ? `<span class="product-badge">${p.badge}</span>` : ''}
+      ${!isLocked && p.badge ? `<span class="product-badge">${localizeProductBadge(p.badge)}</span>` : ''}
       ${!isLocked && hasDisc ? `<span class="discount-badge">🔥 -${disc}%</span>` : ''}
       ${busyBadge}
       ${imgCount}
@@ -12302,7 +13254,7 @@ function renderProductCard(p, discount, idx){
       </div>
       ${imgDots}
     </div>
-    <div class="product-info" onclick="openModal(${p.id})" style="cursor:pointer">
+    <div class="product-info" onclick="${isLocked ? (isSold ? `showToast('${t('soldBadge')} - ${t('soldBtn')}')` : (isReserved ? `showToast(t('accountReservedToast'))` : `showToast(t('orderProcessingNotice'))`)) : `openModal(${p.id})`}" style="cursor:${isLocked ? 'default' : 'pointer'}">
       <p class="product-name">${getProductName(p)}</p>
       <div class="price-row">
         ${hasDisc ? `<span class="product-price-old">${formatProductPrice(p, false)}</span>` : ''}
@@ -12367,7 +13319,7 @@ function renderProducts(filter, subFilter){
         <span style="font-size:36px;display:block;margin-bottom:8px">🔍</span>
         <p style="font-size:13px;color:#64748b;margin-bottom:12px">${emptyMsg}</p>
         <button type="button" class="sub-chip active" onclick="selectSubgroupFilter('all')" style="margin:0 auto">
-          ${t('catAll') === 'ALL' ? 'View All Services' : (currentSelectedCountry === 'MY' ? 'Papar Semua Perkhidmatan' : 'Tampilkan Semua Layanan')}
+          ${currentSelectedCountry === 'SG' ? 'View All Services' : (currentSelectedCountry === 'MY' ? 'Papar Semua Perkhidmatan' : 'Tampilkan Semua Layanan')}
         </button>
       </div>
     `;
@@ -12594,7 +13546,7 @@ function renderSearchSuggestions(query){
   // Render hingga 6 produk teratas
   matches.slice(0, 6).forEach(p => {
     const locProdName = getProductName(p);
-    const locProdDesc = getProductDesc(p) || p.subgroup || '';
+    const locProdDesc = getProductDesc(p) || (p.subgroup ? localizeSubgroupName(p.subgroup) : '');
     const imgs = getImagesForProduct(p.id);
     const imgHtml = (imgs && imgs.length > 0)
       ? `<img src="${escapeHtml(imgs[0])}" alt="${escapeHtml(locProdName)}" />`
@@ -12604,7 +13556,7 @@ function renderSearchSuggestions(query){
     const hasDisc = disc > 0;
     const oldPriceStr = hasDisc ? formatProductPrice(p, false) : '';
     const curPriceStr = formatProductPrice(p, hasDisc);
-    const catName = (CAT_INFO[p.cat] && CAT_INFO[p.cat].name) ? CAT_INFO[p.cat].name : (p.cat || 'Layanan');
+    const catName = getCategoryName(p.cat, currentSelectedCountry);
 
     html += `
       <div class="search-sug-item" onclick="selectSearchResult(${p.id})">
@@ -12760,18 +13712,21 @@ function renderReviews(){
   const photos = getReviewPhotos();
   const container = document.getElementById('reviewList');
   if(photos.length === 0){
+    const emptyTitle = (currentSelectedCountry === 'SG') ? 'No proof photos yet' : ((currentSelectedCountry === 'MY') ? 'Tiada foto testimoni lagi' : 'Belum ada foto testimoni');
+    const emptySub = (currentSelectedCountry === 'SG') ? 'Admin can upload proofs via Admin Panel' : ((currentSelectedCountry === 'MY') ? 'Admin boleh menambah bukti melalui Panel Admin' : 'Admin bisa menambahkan lewat Panel Admin');
     container.innerHTML = `
       <div class="review-empty">
         <span class="review-empty-icon">🖼️</span>
-        <p>Belum ada foto testimoni</p>
-        <p style="font-size:11px;margin-top:4px;opacity:.7">Admin bisa menambahkan lewat Panel Admin</p>
+        <p>${emptyTitle}</p>
+        <p style="font-size:11px;margin-top:4px;opacity:.7">${emptySub}</p>
       </div>
     `;
     return;
   }
+  const altPrefix = (currentSelectedCountry === 'SG') ? 'Proof photo ' : 'Foto testimoni ';
   container.innerHTML = '<div class="review-photo-grid">' + photos.map((url, idx) => `
     <div class="review-photo" onclick="openReviewPhoto(${idx})">
-      <img src="${url}" alt="Foto testimoni ${idx+1}" draggable="false">
+      <img src="${url}" alt="${altPrefix} ${idx+1}" draggable="false">
       <div class="slide-protect-shield"></div>
     </div>
   `).join('') + '</div>';
@@ -12821,7 +13776,8 @@ function updateReviewPhotoModalUI(){
   const fullImg = document.getElementById('reviewPhotoFull');
   if(fullImg) fullImg.src = photos[currentReviewViewingIndex];
   const title = document.getElementById('revPhotoTitle');
-  if(title) title.textContent = `Bukti Transaksi #${currentReviewViewingIndex + 1}`;
+  const proofTitle = (currentSelectedCountry === 'SG') ? `Payment Proof #${currentReviewViewingIndex + 1}` : ((currentSelectedCountry === 'MY') ? `Bukti Bayaran #${currentReviewViewingIndex + 1}` : `Bukti Transaksi #${currentReviewViewingIndex + 1}`);
+  if(title) title.textContent = proofTitle;
   const counter = document.getElementById('revPhotoCounter');
   if(counter) counter.textContent = `${currentReviewViewingIndex + 1} / ${photos.length}`;
   const prevBtn = document.getElementById('revPhotoPrevBtn');
@@ -12862,7 +13818,7 @@ function openProductImageViewer(productId, imageIndex, event, fallbackUrl){
     const catTag = document.getElementById('prodPhotoCatTag');
     if(catTag) catTag.textContent = 'PREVIEW';
     const title = document.getElementById('prodPhotoTitle');
-    if(title) title.textContent = 'Foto Produk';
+    if(title) title.textContent = (currentSelectedCountry === 'SG') ? 'Product Photo' : 'Foto Produk';
     const oldPrice = document.getElementById('prodPhotoPriceOld');
     if(oldPrice) oldPrice.style.display = 'none';
     const price = document.getElementById('prodPhotoPrice');
@@ -12908,7 +13864,7 @@ function updateProductImageViewerContent(){
 
   const catInfo = CAT_INFO[prod.cat] || { shortName: (prod.cat || 'PRODUK').toUpperCase() };
   const catTagEl = document.getElementById('prodPhotoCatTag');
-  if(catTagEl) catTagEl.textContent = catInfo.shortName + (prod.subgroup ? ' • ' + prod.subgroup : '');
+  if(catTagEl) catTagEl.textContent = catInfo.shortName + (prod.subgroup ? ' • ' + localizeSubgroupName(prod.subgroup) : '');
 
   const titleEl = document.getElementById('prodPhotoTitle');
   if(titleEl) titleEl.textContent = getProductName(prod) + (prod.isAccount ? ' 🔑' : '');
@@ -12978,10 +13934,15 @@ function buyFromProductImageViewer(){
 function openModal(id){
   selectedProduct=products.find(p=>p.id===id);selectedPayment=null;
   if(!selectedProduct) return;
-  if(selectedProduct.isAccount){
-    const eff = getEffectiveAccountStatus(selectedProduct);
-    if(eff === 'sold'){ showToast(t('accountSoldToast')); return; }
-    if(eff === 'reserved'){ showToast(t('accountReservedToast')); return; }
+  const eff = getEffectiveAccountStatus(selectedProduct);
+  const isProdSold = eff === 'sold' || (reservationsCache[selectedProduct.id] && reservationsCache[selectedProduct.id].status === 'sold');
+  if(isProdSold){
+    showToast(t('accountSoldToast') || 'Produk sudah terjual (Sold Out)');
+    return;
+  }
+  if(selectedProduct.isAccount && eff === 'reserved'){
+    showToast(t('accountReservedToast'));
+    return;
   }
   const activeOrder = getActiveOrderForProduct(selectedProduct.id);
   if(activeOrder){
@@ -13077,7 +14038,7 @@ function sendWA(){
     const discPrice = getDiscountedPrice(selectedProduct.price, selectedProduct);
     const adminObj = WA_NUMBERS.find(a => a.number === selectedModalAdmin);
     createOrder(
-      [{id: selectedProduct.id, name:selectedProduct.name, qty:1, price:selectedProduct.price, cat: selectedProduct.cat}],
+      [{id: selectedProduct.id, name: (getProductName(selectedProduct) || selectedProduct.name), qty:1, price:selectedProduct.price, cat: selectedProduct.cat}],
       discPrice,
       selectedPayment,
       adminObj ? adminObj.name : ''
@@ -13085,7 +14046,7 @@ function sendWA(){
     renderMyOrders();
     closeModal();
   }
-  showToast('Mengarahkan ke WhatsApp...');
+  showToast(t('redirectingWa'));
   setTimeout(()=>openWhatsApp(url),800);
 }
 function showToast(msg){
@@ -13109,9 +14070,9 @@ function renderCarousel(){
       <div class="slide-bg" style="${bgStyle}">
         <div class="slide-overlay"></div>
         <div class="slide-content">
-          <span class="slide-tag" style="${slide.tagStyle}">${translateProductDesc(slide.tag)}</span>
-          <p class="slide-title">${translateProductDesc(slide.title)}</p>
-          <p class="slide-desc">${translateProductDesc(slide.desc)}</p>
+          <span class="slide-tag" style="${slide.tagStyle}">${translateProductDesc(slide.tag, currentSelectedCountry)}</span>
+          <p class="slide-title">${translateProductDesc(slide.title, currentSelectedCountry)}</p>
+          <p class="slide-desc">${translateProductDesc(slide.desc, currentSelectedCountry)}</p>
         </div>
       </div>
     </div>
@@ -13488,14 +14449,16 @@ function addNewProduct(){
   const priceRaw = parsedPrice.isRange ? priceInput : '';
   const cat = document.getElementById('newProdCat').value;
   const subgroup = document.getElementById('newProdSubgroup').value.trim();
-  const desc = document.getElementById('newProdDesc').value.trim();
+  let desc = document.getElementById('newProdDesc').value.trim();
   const badge = document.getElementById('newProdBadge').value.trim();
   const icon = document.getElementById('newProdIcon').value.trim() || '💎';
   const isAccount = document.getElementById('newProdIsAccount').classList.contains('on');
 
   if(!name) { showToast('Nama produk wajib diisi!'); return; }
   if(!price || price <= 0) { showToast('Harga harus lebih dari 0 (contoh: 100000 atau 10k - 20k)!'); return; }
-  if(!desc) { showToast('Deskripsi wajib diisi!'); return; }
+  if(!desc) {
+    desc = isAccount ? 'Akun siap pakai aman & bergaransi' : `Layanan ${getCategoryName(cat) || 'Game'} terpercaya`;
+  }
 
   if(editingProductId !== null){
     const savedId = editingProductId;
@@ -13521,7 +14484,7 @@ function addNewProduct(){
       cat: cat,
       subgroup: subgroup,
       isAccount: isAccount,
-      images: [...stagedNewProductImages]
+      images: stagedNewProductImages.length > 0 ? [...stagedNewProductImages] : [`/prod_${newId}.jpg`]
     };
 
     if(stagedNewProductImages.length > 0){
@@ -13532,6 +14495,9 @@ function addNewProduct(){
     }
 
     products.push(newProduct);
+    if(!DEFAULT_PRODUCTS.some(dp => dp.id === newId)){
+      DEFAULT_PRODUCTS.push({...newProduct});
+    }
     setProducts(products);
 
     document.getElementById('newProdName').value = '';
@@ -13545,7 +14511,9 @@ function addNewProduct(){
     showToast('Produk "' + name + '" berhasil ditambahkan!');
   }
 
-  renderProducts();
+  currentCatFilter = cat;
+  currentSubgroupFilter = 'all';
+  renderProducts(cat, 'all');
   renderAdminProductList();
   refreshSubgroupFormUI();
   renderFormProductImagesUI();
@@ -13720,18 +14688,19 @@ function renderAdminProductList(){
     const isDefault = !!DEFAULT_PRODUCTS.find(dp => dp.id === p.id);
     let statusLine = '';
     let statusButtons = '';
-    if(p.isAccount){
-      const eff = getEffectiveAccountStatus(p);
-      if(eff === 'sold'){
-        statusLine = '<p style="font-size:10px;color:#ef4444;font-weight:700;margin-top:2px">🔴 TERJUAL</p>';
-        statusButtons = `<button class="admin-btn-sm" style="background:#22c55e" onclick="setAccountStatus(${p.id},'available')">↩️ Tersedia</button>`;
-      } else if(eff === 'reserved'){
-        statusLine = '<p style="font-size:10px;color:#f59e0b;font-weight:700;margin-top:2px">🟡 SEDANG DIPESAN</p>';
-        statusButtons = `<button class="admin-btn-sm" style="background:#ef4444" onclick="setAccountStatus(${p.id},'sold')">✅ Terjual</button><button class="admin-btn-sm" style="background:#888" onclick="setAccountStatus(${p.id},'available')">🔓 Lepas</button>`;
-      } else {
-        statusLine = '<p style="font-size:10px;color:#22c55e;font-weight:700;margin-top:2px">🟢 TERSEDIA</p>';
-        statusButtons = `<button class="admin-btn-sm" style="background:#ef4444" onclick="setAccountStatus(${p.id},'sold')">✅ Terjual</button>`;
-      }
+    const eff = getEffectiveAccountStatus(p);
+    const isSoldOut = eff === 'sold' || (reservationsCache[p.id] && reservationsCache[p.id].status === 'sold');
+    if(isSoldOut){
+      statusLine = '<p style="font-size:10px;color:#ef4444;font-weight:700;margin-top:2px">🔴 TERJUAL (SOLD OUT)</p>';
+      statusButtons = `<button class="admin-btn-sm" style="background:#22c55e;font-weight:700" onclick="refundSingleProductAccount(${p.id})" title="Pelanggan kembalikan akun? Klik untuk jadikan TERSEDIA lagi di katalog">↩️ Refund / Pulihkan Akun (Tersedia)</button>`;
+    } else if(eff === 'reserved'){
+      statusLine = '<p style="font-size:10px;color:#f59e0b;font-weight:700;margin-top:2px">🟡 SEDANG DIPESAN</p>';
+      statusButtons = `<button class="admin-btn-sm" style="background:#ef4444" onclick="setAccountStatus(${p.id},'sold')" title="Tandai Terjual / Sold Out">🔒 Sold Out</button><button class="admin-btn-sm" style="background:#888" onclick="setAccountStatus(${p.id},'available')">🔓 Lepas</button>`;
+    } else if(p.isAccount || p.stock === 1){
+      statusLine = '<p style="font-size:10px;color:#22c55e;font-weight:700;margin-top:2px">🟢 TERSEDIA (AKUN)</p>';
+      statusButtons = `<button class="admin-btn-sm" style="background:#ef4444" onclick="setAccountStatus(${p.id},'sold')" title="Tandai Terjual / Sold Out">🔒 Sold Out</button>`;
+    } else {
+      statusButtons = `<button class="admin-btn-sm" style="background:#dc2626;font-size:9.5px;padding:4px 7px" onclick="setAccountStatus(${p.id},'sold')" title="Tandai Habis / Sold Out">🔒 Set Sold Out</button>`;
     }
     const activeOrd = getGlobalActiveOrderForProduct(p.id);
     if(activeOrd){
@@ -14114,14 +15083,18 @@ renderModalPaymentMethods();
 renderCartPaymentMethods();
 renderCarousel();
 renderProducts();
+if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
 renderReviews();
 renderCustomerReviews();
 updateRatingStatsUI();
 applyPaymentIcons();
 initPresenceSystem();
-
-if(!window.fbAvailable){
+// Tampilkan antarmuka secara instan di semua smartphone tanpa delay
+requestAnimationFrame(() => {
   hideSplash();
+});
+if(typeof idlePreloadRemainingImages === 'function'){
+  idlePreloadRemainingImages();
 }
 
 updateCartBadge();
