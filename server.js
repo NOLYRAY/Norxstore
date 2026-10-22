@@ -1,4 +1,5 @@
 import express from 'express';
+import compression from 'compression';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
@@ -9,6 +10,12 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const PORT = 3000;
+
+// Enable Gzip/Deflate compression for all responses (reduces HTML/payloads by 85% for instant mobile load)
+app.use(compression({
+  threshold: 1024,
+  level: 6
+}));
 
 app.use(express.json());
 
@@ -55,16 +62,28 @@ function saveSubscriptions() {
 app.get('/sw.js', (req, res) => {
   res.setHeader('Service-Worker-Allowed', '/');
   res.setHeader('Content-Type', 'application/javascript');
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
   res.sendFile(path.join(__dirname, 'sw.js'));
 });
 
 app.get('/manifest.json', (req, res) => {
   res.setHeader('Content-Type', 'application/manifest+json');
+  res.setHeader('Cache-Control', 'public, max-age=86400');
   res.sendFile(path.join(__dirname, 'manifest.json'));
 });
 
-// Static assets
-app.use(express.static(__dirname));
+// Static assets with smart caching: long cache for images/fonts/audio, fresh for HTML
+app.use(express.static(__dirname, {
+  etag: true,
+  lastModified: true,
+  setHeaders: (res, filePath) => {
+    if (filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+    } else if (/\.(jpg|jpeg|png|gif|svg|ico|webp|wav|mp3|woff2?|ttf)$/i.test(filePath)) {
+      res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+    }
+  }
+}));
 
 // Public key endpoint for front-end push registration
 app.get('/api/push-public-key', (req, res) => {
@@ -168,6 +187,7 @@ app.get('/download-html', (req, res) => {
 });
 
 app.get('*', (req, res) => {
+  res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
