@@ -735,23 +735,45 @@ body.dark-mode .live-pill-mode{
 .discount-cat-input-wrap input{margin-bottom:0 !important;padding:6px 8px !important;height:34px;text-align:center;font-weight:700;font-size:13px}
 .discount-cat-input-wrap span{font-size:13px;font-weight:700;color:#7c3aed}
 .admin-price-adjust-box{background:#fdf4ff;border:1.5px solid #e9d5ff;border-radius:14px;padding:14px;margin-bottom:14px;box-sizing:border-box}
-.price-target-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#ede9fe;padding:4px;border-radius:10px;margin-bottom:12px;box-sizing:border-box}
-.price-target-tab{padding:8px 2px;font-size:10px;font-weight:700;border:none;border-radius:8px;background:transparent;color:#5b21b6;cursor:pointer;transition:all .15s ease;display:flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.price-target-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#ede9fe;padding:6px;border-radius:10px;margin-bottom:12px;box-sizing:border-box}
+.price-target-tab{padding:8px 8px;font-size:11.5px;font-weight:700;border:none;border-radius:8px;background:transparent;color:#5b21b6;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;text-align:center}
 .price-target-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.18)}
+
+.price-country-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
+.price-country-tab{padding:8px 10px;border:1.5px solid #e9d5ff;border-radius:10px;background:#fff;color:#475569;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;gap:8px;text-align:left}
+.price-country-tab .pct-info{display:flex;flex-direction:column;line-height:1.2;min-width:0}
+.price-country-tab .pct-info strong{font-size:11.5px;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.price-country-tab .pct-info small{font-size:9.5px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.price-country-tab.active{background:#faf5ff;border-color:#8b5cf6;box-shadow:0 2px 8px rgba(139,92,246,0.18)}
+.price-country-tab.active .pct-info strong{color:#7c3aed}
+.price-country-tab.active .pct-info small{color:#6d28d9}
+
+.country-adjust-card{background:#fff;border:1.5px solid #e9d5ff;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(124,58,237,0.06)}
+.country-adjust-card:last-child{margin-bottom:0}
+.country-adjust-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.country-adjust-head .ca-info{display:flex;align-items:center;gap:8px}
+.country-adjust-head strong{font-size:12.5px;color:#1e1b4b}
+.country-adjust-head small{font-size:10px;color:#6d28d9;font-weight:700}
+
 .price-dir-toggle{display:inline-flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px}
 .price-dir-btn{padding:4px 8px;font-size:10.5px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease}
 .price-dir-btn.active{background:#7c3aed;color:#fff}
-.price-pct-pills{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px}
-.price-pct-pill{flex:1;min-width:44px;padding:6px 4px;font-size:11px;font-weight:700;border:1.5px solid #ddd6fe;border-radius:8px;background:#fff;color:#6d28d9;cursor:pointer;transition:all .15s ease;text-align:center}
+
+.price-pct-pills{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:8px}
+.price-pct-pill{padding:6px 2px;font-size:10.5px;font-weight:700;border:1.5px solid #ddd6fe;border-radius:8px;background:#fff;color:#6d28d9;cursor:pointer;transition:all .15s ease;text-align:center}
 .price-pct-pill.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.25)}
+
 .price-preview-card{background:#fff;border:1.5px solid #ddd6fe;border-radius:12px;padding:10px 12px;margin-bottom:8px;box-sizing:border-box}
-.price-preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-bottom:1px solid #f3e8ff;padding-bottom:6px}
-.price-preview-badge{font-size:10px;font-weight:800;background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:10px}
-.price-preview-list{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto;padding-right:4px}
-.price-preview-item{display:flex;align-items:center;justify-content:space-between;font-size:11px;padding:4px 6px;border-radius:6px;background:#faf5ff}
-.price-preview-item .p-old{color:#64748b;text-decoration:line-through;margin-right:4px}
-.price-preview-item .p-new{font-weight:800;color:#15803d}
-.price-preview-footer{font-size:10.5px;color:#6b7280;margin-top:8px;padding-top:6px;border-top:1px dashed #e9d5ff;display:flex;justify-content:space-between}
+.price-preview-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px;border-bottom:1px solid #f3e8ff;padding-bottom:6px}
+.price-preview-badge{font-size:10px;font-weight:800;background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:10px;white-space:nowrap}
+.price-preview-list{display:flex;flex-direction:column;gap:5px;max-height:180px;overflow-y:auto;padding-right:2px}
+.price-preview-item{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px;padding:5px 8px;border-radius:8px;background:#faf5ff}
+.price-preview-item .p-title{font-weight:600;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;flex:1;min-width:0}
+.price-preview-item .p-price-wrap{text-align:right;white-space:nowrap;flex-shrink:0}
+.price-preview-item .p-old{color:#64748b;text-decoration:line-through;margin-right:4px;font-size:10.5px}
+.price-preview-item .p-new{font-weight:800;color:#15803d;font-size:11.5px}
+.price-preview-item .p-diff{font-size:9.5px;font-weight:700;margin-left:3px}
+.price-preview-footer{font-size:10.5px;color:#6b7280;margin-top:8px;padding-top:6px;border-top:1px dashed #e9d5ff;display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap}
 .admin-divider{height:1px;background:#e5e5e5;margin:16px 0}
 .admin-section-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
 .admin-img-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -2699,14 +2721,14 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="admin-price-adjust-box">
   <p class="admin-hint" style="margin:0 0 12px;line-height:1.45;color:#475569">
-    Naikkan atau sesuaikan harga produk secara instan dan otomatis berdasarkan persentase. Berlaku otomatis ke katalog dan semua mata uang (IDR, MYR, SGD).
+    Sesuaikan persentase kenaikan harga untuk masing-masing negara secara independen (misal: <strong>Indonesia +10%, Malaysia +20%, Singapura +15%</strong>).
   </p>
 
-  <!-- 1. Pilihan Target Kenaikan -->
+  <!-- 1. TARGET PRODUK (2x2 GRID LEGA & RAPI) -->
   <div class="admin-label" style="margin-bottom:6px">1. Target Produk:</div>
   <div class="price-target-tabs">
     <button type="button" class="price-target-tab active" id="tabPriceTargetAll" onclick="switchPriceAdjustTarget('all')">
-      <span>🌐</span><span>Semua Produk</span>
+      <span>📦</span><span>Semua Produk</span>
     </button>
     <button type="button" class="price-target-tab" id="tabPriceTargetCategory" onclick="switchPriceAdjustTarget('category')">
       <span>🎮</span><span>Per Kategori</span>
@@ -2764,70 +2786,227 @@ button{cursor:pointer;font-family:inherit}
     </div>
   </div>
 
-  <!-- 2. Persentase Kenaikan & Tombol Cepat -->
-  <div style="margin-top:10px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
-    <div class="admin-label" style="margin-bottom:0">2. Persentase Penyesuaian:</div>
-    <div class="price-dir-toggle">
-      <button type="button" class="price-dir-btn active" id="btnPriceDirUp" onclick="setPriceAdjustDirection('up')">
-        <span>📈 Naik (+)</span>
-      </button>
-      <button type="button" class="price-dir-btn" id="btnPriceDirDown" onclick="setPriceAdjustDirection('down')">
-        <span>📉 Turun (-)</span>
-      </button>
-    </div>
+  <!-- 2. PILIHAN MODE ATUR NEGARA -->
+  <div style="margin-top:12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+    <div class="admin-label" style="margin-bottom:0">2. Kenaikan Harga Per Negara:</div>
+    <span id="priceCountryModeBadge" style="font-size:10px;font-weight:800;color:#7c3aed;background:#ede9fe;padding:2px 8px;border-radius:8px">
+      Beda-Beda Tiap Negara
+    </span>
   </div>
 
-  <!-- Quick Percentage Pills -->
-  <div class="price-pct-pills" id="priceQuickPills">
-    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(5)">+5%</button>
-    <button type="button" class="price-pct-pill active" onclick="setPriceAdjustPercent(10)">+10%</button>
-    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(15)">+15%</button>
-    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(20)">+20%</button>
-    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(25)">+25%</button>
-    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(50)">+50%</button>
+  <div class="price-country-tabs">
+    <button type="button" class="price-country-tab active" id="tabPriceCountryALL" onclick="switchPriceAdjustCountryMode('ALL')">
+      <span style="font-size:16px">🌐</span>
+      <div class="pct-info">
+        <strong>Semua Negara</strong>
+        <small>Atur Sekaligus (Beda %)</small>
+      </div>
+    </button>
+    <button type="button" class="price-country-tab" id="tabPriceCountryID" onclick="switchPriceAdjustCountryMode('ID')">
+      <span style="font-size:16px">🇮🇩</span>
+      <div class="pct-info">
+        <strong>Indonesia Saja</strong>
+        <small>Rupiah (IDR)</small>
+      </div>
+    </button>
+    <button type="button" class="price-country-tab" id="tabPriceCountryMY" onclick="switchPriceAdjustCountryMode('MY')">
+      <span style="font-size:16px">🇲🇾</span>
+      <div class="pct-info">
+        <strong>Malaysia Saja</strong>
+        <small>Ringgit (MYR)</small>
+      </div>
+    </button>
+    <button type="button" class="price-country-tab" id="tabPriceCountrySG" onclick="switchPriceAdjustCountryMode('SG')">
+      <span style="font-size:16px">🇸🇬</span>
+      <div class="pct-info">
+        <strong>Singapura Saja</strong>
+        <small>Dollar (SGD)</small>
+      </div>
+    </button>
   </div>
 
-  <!-- Custom Input Percent & Rounding -->
-  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
-    <div style="position:relative;flex:1">
-      <input type="number" id="priceAdjustPercentInput" class="admin-input" min="0.1" max="500" step="0.5" value="10" placeholder="10" style="margin-bottom:0;padding-right:32px;font-weight:800;font-size:14px;color:#1e1b4b" oninput="onPriceAdjustPercentInput()">
-      <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:14px">%</span>
+  <!-- DAFTAR KARTU PENGATURAN TIAP NEGARA -->
+  <div id="countryAdjustListContainer" style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px">
+    
+    <!-- KARTU 1: INDONESIA -->
+    <div class="country-adjust-card" id="cardCountry_ID">
+      <div class="country-adjust-head">
+        <div class="ca-info">
+          <span style="font-size:18px">🇮🇩</span>
+          <div>
+            <strong>Indonesia (IDR)</strong>
+            <small id="badgeCountryMarkup_ID" style="display:block">Kurs Acuan Toko</small>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#1e1b4b;cursor:pointer">
+            <input type="checkbox" id="checkCountryActive_ID" checked onchange="onCountryActiveToggle('ID')" style="accent-color:#7c3aed;width:15px;height:15px">
+            <span>Terapkan</span>
+          </label>
+        </div>
+      </div>
+      <div id="bodyCountry_ID">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:11px;color:#64748b;font-weight:600">Arah & Persentase:</span>
+          <div class="price-dir-toggle">
+            <button type="button" class="price-dir-btn active" id="btnDir_ID_up" onclick="setCountryDirection('ID', 'up')">📈 Naik (+)</button>
+            <button type="button" class="price-dir-btn" id="btnDir_ID_down" onclick="setCountryDirection('ID', 'down')">📉 Turun (-)</button>
+          </div>
+        </div>
+        <div class="price-pct-pills" id="pills_ID">
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 5)">+5%</button>
+          <button type="button" class="price-pct-pill active" onclick="setCountryPercent('ID', 10)">+10%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 15)">+15%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 20)">+20%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 25)">+25%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 50)">+50%</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:8px">
+          <div style="position:relative">
+            <input type="number" id="inputPercent_ID" class="admin-input" min="0" max="500" step="0.5" value="10" placeholder="10" style="margin-bottom:0;padding-right:28px;font-weight:800;font-size:13px" oninput="updatePriceAdjustPreview()">
+            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:13px">%</span>
+          </div>
+          <div>
+            <select class="admin-select" id="rounding_ID" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11px;font-weight:700">
+              <option value="1000" selected>Bulatkan Rp 1.000</option>
+              <option value="500">Bulatkan Rp 500</option>
+              <option value="100">Bulatkan Rp 100</option>
+              <option value="none">Tanpa Bulatkan</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
-    <div style="flex:1">
-      <select class="admin-select" id="priceAdjustRounding" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11.5px;font-weight:700">
-        <option value="1000" selected>Bulatkan Rp 1.000 (Rapi)</option>
-        <option value="500">Bulatkan Rp 500</option>
-        <option value="100">Bulatkan Rp 100</option>
-        <option value="none">Tanpa Pembulatan</option>
-      </select>
+
+    <!-- KARTU 2: MALAYSIA -->
+    <div class="country-adjust-card" id="cardCountry_MY">
+      <div class="country-adjust-head">
+        <div class="ca-info">
+          <span style="font-size:18px">🇲🇾</span>
+          <div>
+            <strong>Malaysia (MYR)</strong>
+            <small id="badgeCountryMarkup_MY" style="display:block">Ringgit (RM)</small>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#1e1b4b;cursor:pointer">
+            <input type="checkbox" id="checkCountryActive_MY" checked onchange="onCountryActiveToggle('MY')" style="accent-color:#7c3aed;width:15px;height:15px">
+            <span>Terapkan</span>
+          </label>
+        </div>
+      </div>
+      <div id="bodyCountry_MY">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:11px;color:#64748b;font-weight:600">Arah & Persentase:</span>
+          <div class="price-dir-toggle">
+            <button type="button" class="price-dir-btn active" id="btnDir_MY_up" onclick="setCountryDirection('MY', 'up')">📈 Naik (+)</button>
+            <button type="button" class="price-dir-btn" id="btnDir_MY_down" onclick="setCountryDirection('MY', 'down')">📉 Turun (-)</button>
+          </div>
+        </div>
+        <div class="price-pct-pills" id="pills_MY">
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 5)">+5%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 10)">+10%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 15)">+15%</button>
+          <button type="button" class="price-pct-pill active" onclick="setCountryPercent('MY', 20)">+20%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 25)">+25%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 50)">+50%</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:8px">
+          <div style="position:relative">
+            <input type="number" id="inputPercent_MY" class="admin-input" min="0" max="500" step="0.5" value="20" placeholder="20" style="margin-bottom:0;padding-right:28px;font-weight:800;font-size:13px" oninput="updatePriceAdjustPreview()">
+            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:13px">%</span>
+          </div>
+          <div>
+            <select class="admin-select" id="rounding_MY" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11px;font-weight:700">
+              <option value="1" selected>Bulatkan RM 1</option>
+              <option value="0.5">Bulatkan RM 0.50</option>
+              <option value="0.1">Bulatkan RM 0.10</option>
+              <option value="none">Tanpa Bulatkan</option>
+            </select>
+          </div>
+        </div>
+      </div>
     </div>
+
+    <!-- KARTU 3: SINGAPURA -->
+    <div class="country-adjust-card" id="cardCountry_SG">
+      <div class="country-adjust-head">
+        <div class="ca-info">
+          <span style="font-size:18px">🇸🇬</span>
+          <div>
+            <strong>Singapura (SGD)</strong>
+            <small id="badgeCountryMarkup_SG" style="display:block">Dollar (S$)</small>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <label style="display:flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:#1e1b4b;cursor:pointer">
+            <input type="checkbox" id="checkCountryActive_SG" checked onchange="onCountryActiveToggle('SG')" style="accent-color:#7c3aed;width:15px;height:15px">
+            <span>Terapkan</span>
+          </label>
+        </div>
+      </div>
+      <div id="bodyCountry_SG">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+          <span style="font-size:11px;color:#64748b;font-weight:600">Arah & Persentase:</span>
+          <div class="price-dir-toggle">
+            <button type="button" class="price-dir-btn active" id="btnDir_SG_up" onclick="setCountryDirection('SG', 'up')">📈 Naik (+)</button>
+            <button type="button" class="price-dir-btn" id="btnDir_SG_down" onclick="setCountryDirection('SG', 'down')">📉 Turun (-)</button>
+          </div>
+        </div>
+        <div class="price-pct-pills" id="pills_SG">
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 5)">+5%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 10)">+10%</button>
+          <button type="button" class="price-pct-pill active" onclick="setCountryPercent('SG', 15)">+15%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 20)">+20%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 25)">+25%</button>
+          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 50)">+50%</button>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:8px">
+          <div style="position:relative">
+            <input type="number" id="inputPercent_SG" class="admin-input" min="0" max="500" step="0.5" value="15" placeholder="15" style="margin-bottom:0;padding-right:28px;font-weight:800;font-size:13px" oninput="updatePriceAdjustPreview()">
+            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:13px">%</span>
+          </div>
+          <div>
+            <select class="admin-select" id="rounding_SG" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11px;font-weight:700">
+              <option value="0.5" selected>Bulatkan S$ 0.50</option>
+              <option value="0.1">Bulatkan S$ 0.10</option>
+              <option value="none">Tanpa Bulatkan</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
-  <!-- 3. Kotak Live Preview Kenaikan Harga -->
+  <!-- 3. KOTAK LIVE PREVIEW SIMULASI KENAIKAN HARGA -->
   <div class="price-preview-card" id="priceAdjustPreviewCard">
     <div class="price-preview-header">
       <span style="font-weight:700;font-size:11.5px;color:#5b21b6">🔍 Simulasi Pratinjau Kenaikan:</span>
-      <span class="price-preview-badge" id="pricePreviewTargetBadge">Semua Produk</span>
+      <span class="price-preview-badge" id="pricePreviewTargetBadge">Semua Produk • 3 Negara</span>
     </div>
     <div class="price-preview-list" id="pricePreviewList">
       <!-- Diisi otomatis oleh JavaScript -->
     </div>
     <div class="price-preview-footer" id="pricePreviewFooter">
-      <span>Kenaikan: <strong>+10%</strong></span>
+      <!-- Diisi otomatis oleh JavaScript -->
     </div>
   </div>
 
-  <!-- 4. Tombol Aksi Terapkan & Undo -->
+  <!-- 4. TOMBOL AKSI TERAPKAN & UNDO -->
   <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
-    <button type="button" class="admin-btn" id="btnApplyPriceAdjust" onclick="applyPriceAdjustment()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:800;font-size:13px;padding:12px;border-radius:12px;margin:0;box-shadow:0 4px 15px rgba(124,58,237,0.3)">
-      🚀 Terapkan Kenaikan Harga (+10%)
+    <button type="button" class="admin-btn" id="btnApplyPriceAdjust" onclick="applyPriceAdjustmentMultiCountry()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:800;font-size:13px;padding:12px;border-radius:12px;margin:0;box-shadow:0 4px 15px rgba(124,58,237,0.3)">
+      🚀 Terapkan Kenaikan Harga ke Negara Terpilih
     </button>
-    <div style="display:flex;gap:8px">
-      <button type="button" class="admin-btn-secondary" id="btnUndoPriceAdjust" onclick="undoPriceAdjustment()" style="flex:1;font-size:11px;font-weight:700;padding:8px" disabled>
-        ↺ Batalkan Kenaikan Terakhir (Undo)
+    <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:6px">
+      <button type="button" class="admin-btn-secondary" id="btnUndoPriceAdjust" onclick="undoPriceAdjustment()" style="font-size:10.5px;font-weight:700;padding:8px 4px" disabled>
+        ↺ Undo Terakhir
       </button>
-      <button type="button" class="admin-btn-secondary" onclick="resetPricesToMasterDefault()" style="font-size:11px;color:#b91c1c;border-color:#fecaca;background:#fef2f2;padding:8px 10px;font-weight:700" title="Kembalikan harga ke pricelist asli default toko">
-        ↺ Reset ke Asli
+      <button type="button" class="admin-btn-secondary" onclick="resetSelectedCountriesMarkup()" style="font-size:10.5px;color:#0284c7;border-color:#bae6fd;background:#f0f9ff;padding:8px 4px;font-weight:700" title="Reset markup negara yang dipilih kembali ke kurs bawaan">
+        🔄 Reset Negara
+      </button>
+      <button type="button" class="admin-btn-secondary" onclick="resetPricesToMasterDefault()" style="font-size:10.5px;color:#b91c1c;border-color:#fecaca;background:#fef2f2;padding:8px 4px;font-weight:700" title="Kembalikan harga seluruh produk ke pricelist asli bawaan toko">
+        ⚠️ Reset Master
       </button>
     </div>
   </div>
@@ -4643,10 +4822,10 @@ function saveDiscount(){
   saveDiscountSettings();
 }
 
-// ==================== SISTEM KENAIKAN HARGA OTOMATIS PER PERSEN ====================
-let priceAdjustCurrentCountry = 'ALL'; // 'ALL', 'ID', 'MY', 'SG'
+// ==================== SISTEM KENAIKAN HARGA OTOMATIS PER PERSEN (MULTI-NEGARA) ====================
+let priceAdjustCountryMode = 'ALL'; // 'ALL', 'ID', 'MY', 'SG'
 let priceAdjustCurrentTarget = 'all'; // 'all', 'category', 'subgroup', 'custom'
-let priceAdjustDirection = 'up'; // 'up', 'down'
+let countryDirections = { ID: 'up', MY: 'up', SG: 'up' };
 let priceAdjustSelectedProdIds = new Set();
 let priceAdjustUndoSnapshot = null;
 
@@ -4658,13 +4837,13 @@ function initPriceAdjustUI(){
     priceAdjustUndoSnapshot = null;
   }
   updatePriceUndoButtonState();
-  switchPriceAdjustCountry(priceAdjustCurrentCountry || 'ALL');
+  switchPriceAdjustCountryMode(priceAdjustCountryMode || 'ALL');
   onPriceAdjustSubGameChange();
   updatePriceAdjustPreview();
 }
 
-function switchPriceAdjustCountry(cCode){
-  priceAdjustCurrentCountry = cCode || 'ALL';
+function switchPriceAdjustCountryMode(mode){
+  priceAdjustCountryMode = mode || 'ALL';
   const cMap = {
     ALL: 'tabPriceCountryALL',
     ID: 'tabPriceCountryID',
@@ -4673,49 +4852,84 @@ function switchPriceAdjustCountry(cCode){
   };
   Object.keys(cMap).forEach(k => {
     const el = document.getElementById(cMap[k]);
-    if(el) el.classList.toggle('active', k === priceAdjustCurrentCountry);
+    if(el) el.classList.toggle('active', k === priceAdjustCountryMode);
   });
 
-  const badgeEl = document.getElementById('priceCountryActiveBadge');
+  const badgeEl = document.getElementById('priceCountryModeBadge');
   if(badgeEl){
     const names = {
-      ALL: '🌐 Semua Negara',
-      ID: '🇮🇩 Indonesia',
-      MY: '🇲🇾 Malaysia',
-      SG: '🇸🇬 Singapura'
+      ALL: 'Beda % Tiap Negara (Sekaligus)',
+      ID: '🇮🇩 Khusus Indonesia (IDR)',
+      MY: '🇲🇾 Khusus Malaysia (MYR)',
+      SG: '🇸🇬 Khusus Singapura (SGD)'
     };
-    badgeEl.textContent = names[priceAdjustCurrentCountry] || '🌐 Semua Negara';
+    badgeEl.textContent = names[priceAdjustCountryMode] || 'Beda-Beda Tiap Negara';
   }
 
-  // Update opsi pembulatan yang relevan dengan mata uang negara tersebut
-  const roundSelect = document.getElementById('priceAdjustRounding');
-  if(roundSelect){
-    const prevVal = roundSelect.value;
-    if(priceAdjustCurrentCountry === 'MY'){
-      roundSelect.innerHTML = `
-        <option value="1">Bulatkan RM 1 (Rapi)</option>
-        <option value="0.5">Bulatkan RM 0.50</option>
-        <option value="0.1">Bulatkan RM 0.10</option>
-        <option value="none">Tanpa Pembulatan</option>
-      `;
-      roundSelect.value = (prevVal === '1' || prevVal === '0.5' || prevVal === '0.1' || prevVal === 'none') ? prevVal : '1';
-    } else if(priceAdjustCurrentCountry === 'SG'){
-      roundSelect.innerHTML = `
-        <option value="0.5">Bulatkan S$ 0.50 (Rapi)</option>
-        <option value="0.1">Bulatkan S$ 0.10</option>
-        <option value="none">Tanpa Pembulatan</option>
-      `;
-      roundSelect.value = (prevVal === '0.5' || prevVal === '0.1' || prevVal === 'none') ? prevVal : '0.5';
-    } else {
-      roundSelect.innerHTML = `
-        <option value="1000">Bulatkan Rp 1.000 (Rapi)</option>
-        <option value="500">Bulatkan Rp 500</option>
-        <option value="100">Bulatkan Rp 100</option>
-        <option value="none">Tanpa Pembulatan</option>
-      `;
-      roundSelect.value = (prevVal === '1000' || prevVal === '500' || prevVal === '100' || prevVal === 'none') ? prevVal : '1000';
-    }
+  // Tampilkan atau sembunyikan kartu negara berdasarkan mode
+  const cardID = document.getElementById('cardCountry_ID');
+  const cardMY = document.getElementById('cardCountry_MY');
+  const cardSG = document.getElementById('cardCountry_SG');
+
+  if(cardID) cardID.style.display = (priceAdjustCountryMode === 'ALL' || priceAdjustCountryMode === 'ID') ? 'block' : 'none';
+  if(cardMY) cardMY.style.display = (priceAdjustCountryMode === 'ALL' || priceAdjustCountryMode === 'MY') ? 'block' : 'none';
+  if(cardSG) cardSG.style.display = (priceAdjustCountryMode === 'ALL' || priceAdjustCountryMode === 'SG') ? 'block' : 'none';
+
+  // Sesuaikan status checkbox jika mode tunggal
+  if(priceAdjustCountryMode === 'ID'){
+    const cID = document.getElementById('checkCountryActive_ID'); if(cID) cID.checked = true;
+  } else if(priceAdjustCountryMode === 'MY'){
+    const cMY = document.getElementById('checkCountryActive_MY'); if(cMY) cMY.checked = true;
+  } else if(priceAdjustCountryMode === 'SG'){
+    const cSG = document.getElementById('checkCountryActive_SG'); if(cSG) cSG.checked = true;
   }
+
+  updatePriceAdjustPreview();
+}
+
+// Kompatibilitas jika ada yang memanggil nama lama
+function switchPriceAdjustCountry(cCode){
+  switchPriceAdjustCountryMode(cCode);
+}
+
+function onCountryActiveToggle(cCode){
+  const check = document.getElementById(`checkCountryActive_${cCode}`);
+  const body = document.getElementById(`bodyCountry_${cCode}`);
+  const isChecked = check ? check.checked : true;
+  if(body){
+    body.style.opacity = isChecked ? '1' : '0.4';
+    body.style.pointerEvents = isChecked ? 'auto' : 'none';
+  }
+  updatePriceAdjustPreview();
+}
+
+function setCountryDirection(cCode, dir){
+  countryDirections[cCode] = dir;
+  const btnUp = document.getElementById(`btnDir_${cCode}_up`);
+  const btnDown = document.getElementById(`btnDir_${cCode}_down`);
+  if(btnUp) btnUp.classList.toggle('active', dir === 'up');
+  if(btnDown) btnDown.classList.toggle('active', dir === 'down');
+
+  // Update pills labels (+ vs -)
+  const pills = document.querySelectorAll(`#pills_${cCode} .price-pct-pill`);
+  const sign = dir === 'up' ? '+' : '-';
+  const vals = [5, 10, 15, 20, 25, 50];
+  pills.forEach((p, idx) => {
+    if(vals[idx] !== undefined) p.textContent = sign + vals[idx] + '%';
+  });
+
+  updatePriceAdjustPreview();
+}
+
+function setCountryPercent(cCode, pct){
+  const input = document.getElementById(`inputPercent_${cCode}`);
+  if(input) input.value = pct;
+
+  const pills = document.querySelectorAll(`#pills_${cCode} .price-pct-pill`);
+  pills.forEach(p => {
+    const val = parseFloat(p.textContent.replace(/[^0-9.]/g, ''));
+    p.classList.toggle('active', val === pct);
+  });
 
   updatePriceAdjustPreview();
 }
@@ -4742,50 +4956,6 @@ function switchPriceAdjustTarget(mode){
   if(customWrap) customWrap.style.display = mode === 'custom' ? 'block' : 'none';
 
   if(mode === 'subgroup') onPriceAdjustSubGameChange();
-  updatePriceAdjustPreview();
-}
-
-function setPriceAdjustDirection(dir){
-  priceAdjustDirection = dir;
-  const btnUp = document.getElementById('btnPriceDirUp');
-  const btnDown = document.getElementById('btnPriceDirDown');
-  if(btnUp) btnUp.classList.toggle('active', dir === 'up');
-  if(btnDown) btnDown.classList.toggle('active', dir === 'down');
-
-  // Update pills labels (+ vs -)
-  const pills = document.querySelectorAll('#priceQuickPills .price-pct-pill');
-  const sign = dir === 'up' ? '+' : '-';
-  const vals = [5, 10, 15, 20, 25, 50];
-  pills.forEach((p, idx) => {
-    if(vals[idx] !== undefined) p.textContent = sign + vals[idx] + '%';
-  });
-
-  updatePriceAdjustPreview();
-}
-
-function setPriceAdjustPercent(pct){
-  const input = document.getElementById('priceAdjustPercentInput');
-  if(input) input.value = pct;
-  
-  const pills = document.querySelectorAll('#priceQuickPills .price-pct-pill');
-  pills.forEach(p => {
-    const val = parseFloat(p.textContent.replace(/[^0-9.]/g, ''));
-    p.classList.toggle('active', val === pct);
-  });
-
-  updatePriceAdjustPreview();
-}
-
-function onPriceAdjustPercentInput(){
-  const input = document.getElementById('priceAdjustPercentInput');
-  const currentVal = input ? parseFloat(input.value) : 0;
-  
-  const pills = document.querySelectorAll('#priceQuickPills .price-pct-pill');
-  pills.forEach(p => {
-    const val = parseFloat(p.textContent.replace(/[^0-9.]/g, ''));
-    p.classList.toggle('active', val === currentVal);
-  });
-
   updatePriceAdjustPreview();
 }
 
@@ -4884,26 +5054,47 @@ function getPriceForCountry(p, cCode, isMax = false){
   return convertPrice(baseP, cCode, p, isMax).amount;
 }
 
+function getActiveCountrySettings(){
+  const list = [];
+  const codes = ['ID', 'MY', 'SG'];
+  codes.forEach(c => {
+    if(priceAdjustCountryMode !== 'ALL' && priceAdjustCountryMode !== c) return;
+
+    const check = document.getElementById(`checkCountryActive_${c}`);
+    const isActive = check ? check.checked : true;
+    if(!isActive) return;
+
+    const input = document.getElementById(`inputPercent_${c}`);
+    const pct = Math.max(0, Math.min(500, parseFloat(input ? input.value : 0) || 0));
+    const dir = countryDirections[c] || 'up';
+    const roundEl = document.getElementById(`rounding_${c}`);
+    const roundMode = roundEl ? roundEl.value : (c === 'ID' ? '1000' : (c === 'MY' ? '1' : '0.5'));
+
+    const flags = { ID: '🇮🇩', MY: '🇲🇾', SG: '🇸🇬' };
+    const currs = { ID: 'IDR', MY: 'MYR', SG: 'SGD' };
+    const syms = { ID: 'Rp', MY: 'RM', SG: 'S$' };
+
+    list.push({
+      code: c,
+      name: c === 'ID' ? 'Indonesia' : (c === 'MY' ? 'Malaysia' : 'Singapura'),
+      flag: flags[c],
+      currency: currs[c],
+      symbol: syms[c],
+      percent: pct,
+      direction: dir,
+      rounding: roundMode
+    });
+  });
+  return list;
+}
+
 function updatePriceAdjustPreview(){
-  const pctInput = document.getElementById('priceAdjustPercentInput');
-  const pct = Math.max(0, Math.min(500, parseFloat(pctInput ? pctInput.value : 10) || 0));
-  const roundMode = document.getElementById('priceAdjustRounding') ? document.getElementById('priceAdjustRounding').value : '1000';
+  const activeCountries = getActiveCountrySettings();
   const targets = getTargetProductsForPriceAdjust();
   const badgeEl = document.getElementById('pricePreviewTargetBadge');
   const listEl = document.getElementById('pricePreviewList');
   const footerEl = document.getElementById('pricePreviewFooter');
   const btnApply = document.getElementById('btnApplyPriceAdjust');
-
-  const sign = priceAdjustDirection === 'up' ? '+' : '-';
-  const label = priceAdjustDirection === 'up' ? 'Kenaikan' : 'Penurunan';
-
-  const countryLabels = {
-    ALL: 'Semua Negara',
-    ID: 'Indonesia (IDR)',
-    MY: 'Malaysia (MYR)',
-    SG: 'Singapura (SGD)'
-  };
-  const cName = countryLabels[priceAdjustCurrentCountry] || 'Semua Negara';
 
   if(badgeEl){
     let tName = 'Semua Produk';
@@ -4916,94 +5107,105 @@ function updatePriceAdjustPreview(){
     } else if(priceAdjustCurrentTarget === 'custom'){
       tName = `${targets.length} Produk Terpilih`;
     }
-    badgeEl.textContent = `${tName} • ${cName}`;
+
+    const cDesc = activeCountries.length === 3 
+      ? '3 Negara (ID, MY, SG)'
+      : (activeCountries.length === 0 ? 'Tidak ada negara dipilih' : activeCountries.map(c => c.flag + ' ' + c.code).join(', '));
+    badgeEl.textContent = `${tName} • ${cDesc}`;
   }
 
+  const hasAnyPct = activeCountries.some(c => c.percent > 0);
+  const canApply = targets.length > 0 && activeCountries.length > 0 && hasAnyPct;
+
   if(btnApply){
-    const countrySuffix = priceAdjustCurrentCountry === 'ALL'
-      ? 'Semua Negara'
-      : (priceAdjustCurrentCountry === 'MY' ? '🇲🇾 Khusus Malaysia Saja' : (priceAdjustCurrentCountry === 'SG' ? '🇸🇬 Khusus Singapura Saja' : '🇮🇩 Khusus Indonesia Saja'));
-    btnApply.textContent = `🚀 Terapkan ${label} (${sign}${pct}%) ke ${targets.length} Produk (${countrySuffix})`;
-    btnApply.disabled = (targets.length === 0 || pct <= 0);
-    btnApply.style.opacity = (targets.length === 0 || pct <= 0) ? '0.5' : '1';
-    btnApply.style.cursor = (targets.length === 0 || pct <= 0) ? 'not-allowed' : 'pointer';
+    if(activeCountries.length === 0){
+      btnApply.textContent = '⚠️ Centang Minimal 1 Negara di Atas';
+    } else if(!hasAnyPct){
+      btnApply.textContent = '⚠️ Masukkan Persentase Kenaikan (> 0%)';
+    } else {
+      const summaryParts = activeCountries.map(c => `${c.flag} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(' | ');
+      btnApply.textContent = `🚀 Terapkan ke ${targets.length} Produk (${summaryParts})`;
+    }
+    btnApply.disabled = !canApply;
+    btnApply.style.opacity = canApply ? '1' : '0.5';
+    btnApply.style.cursor = canApply ? 'pointer' : 'not-allowed';
   }
 
   if(!listEl) return;
 
   if(targets.length === 0){
-    listEl.innerHTML = '<div style="padding:10px;text-align:center;font-size:11px;color:#94a3b8">Belum ada produk yang dipilih / cocok dengan target.</div>';
+    listEl.innerHTML = '<div style="padding:12px;text-align:center;font-size:11px;color:#94a3b8">Belum ada produk yang dipilih / cocok dengan filter target.</div>';
     if(footerEl) footerEl.innerHTML = '<span>Pilih target di atas untuk melihat simulasi.</span>';
     return;
   }
 
-  if(pct <= 0){
-    listEl.innerHTML = '<div style="padding:10px;text-align:center;font-size:11px;color:#94a3b8">Ketik persentase penyesuaian (misal: 10%) untuk melihat simulasi.</div>';
-    if(footerEl) footerEl.innerHTML = '<span>Persentase masih 0%.</span>';
+  if(activeCountries.length === 0){
+    listEl.innerHTML = '<div style="padding:12px;text-align:center;font-size:11px;color:#dc2626;font-weight:700">Tidak ada negara yang dicentang. Centang minimal 1 negara di atas untuk menerapkan harga.</div>';
+    if(footerEl) footerEl.innerHTML = '<span>Centang negara untuk melanjutkan.</span>';
     return;
   }
 
-  const sampleCount = Math.min(6, targets.length);
+  const sampleCount = Math.min(4, targets.length);
   const samples = targets.slice(0, sampleCount);
 
   let html = samples.map(p => {
-    let oldVal = getPriceForCountry(p, priceAdjustCurrentCountry, false);
-    let newVal = calculateNewPrice(oldVal, pct, priceAdjustDirection, roundMode, priceAdjustCurrentCountry);
-    let diff = newVal - oldVal;
+    let countryBadgesHtml = activeCountries.map(c => {
+      const oldVal = getPriceForCountry(p, c.code, false);
+      const newVal = calculateNewPrice(oldVal, c.percent, c.direction, c.rounding, c.code);
+      const diff = newVal - oldVal;
 
-    let oldStr = '';
-    let newStr = '';
-    let diffStr = '';
+      let oldStr = '';
+      let newStr = '';
+      let diffStr = '';
 
-    if(priceAdjustCurrentCountry === 'MY'){
-      oldStr = `RM ${Number.isInteger(oldVal) ? oldVal : oldVal.toFixed(2)}`;
-      newStr = `RM ${Number.isInteger(newVal) ? newVal : newVal.toFixed(2)}`;
-      const diffAbs = Math.abs(diff);
-      diffStr = `${diff >= 0 ? '+' : '-'}RM ${Number.isInteger(diffAbs) ? diffAbs : diffAbs.toFixed(2)}`;
-    } else if(priceAdjustCurrentCountry === 'SG'){
-      oldStr = `S$ ${oldVal.toFixed(2)}`;
-      newStr = `S$ ${newVal.toFixed(2)}`;
-      diffStr = `${diff >= 0 ? '+' : '-'}S$ ${Math.abs(diff).toFixed(2)}`;
-    } else {
-      oldStr = `Rp ${Math.round(oldVal).toLocaleString('id-ID')}`;
-      newStr = `Rp ${Math.round(newVal).toLocaleString('id-ID')}`;
-      diffStr = `${diff >= 0 ? '+' : '-'}Rp ${Math.abs(Math.round(diff)).toLocaleString('id-ID')}`;
-    }
-
-    let rangeNote = '';
-    if(p.maxPrice && p.maxPrice > p.price){
-      const oldMax = getPriceForCountry(p, priceAdjustCurrentCountry, true);
-      const newMax = calculateNewPrice(oldMax, pct, priceAdjustDirection, roundMode, priceAdjustCurrentCountry);
-      let maxStr = '';
-      if(priceAdjustCurrentCountry === 'MY'){
-        maxStr = `RM ${Number.isInteger(newMax) ? newMax : newMax.toFixed(2)}`;
-      } else if(priceAdjustCurrentCountry === 'SG'){
-        maxStr = `S$ ${newMax.toFixed(2)}`;
+      if(c.code === 'MY'){
+        oldStr = `RM ${Number.isInteger(oldVal) ? oldVal : oldVal.toFixed(2)}`;
+        newStr = `RM ${Number.isInteger(newVal) ? newVal : newVal.toFixed(2)}`;
+        const diffAbs = Math.abs(diff);
+        diffStr = `${diff >= 0 ? '+' : '-'}RM ${Number.isInteger(diffAbs) ? diffAbs : diffAbs.toFixed(2)}`;
+      } else if(c.code === 'SG'){
+        oldStr = `S$ ${oldVal.toFixed(2)}`;
+        newStr = `S$ ${newVal.toFixed(2)}`;
+        diffStr = `${diff >= 0 ? '+' : '-'}S$ ${Math.abs(diff).toFixed(2)}`;
       } else {
-        maxStr = `Rp ${Math.round(newMax).toLocaleString('id-ID')}`;
+        oldStr = `Rp ${Math.round(oldVal).toLocaleString('id-ID')}`;
+        newStr = `Rp ${Math.round(newVal).toLocaleString('id-ID')}`;
+        diffStr = `${diff >= 0 ? '+' : '-'}Rp ${Math.abs(Math.round(diff)).toLocaleString('id-ID')}`;
       }
-      rangeNote = ` <small style="color:#7c3aed">s/d ${maxStr}</small>`;
-    }
+
+      const diffColor = diff > 0 ? '#16a34a' : (diff < 0 ? '#dc2626' : '#64748b');
+      const signLabel = c.direction === 'up' ? '+' : '-';
+
+      return `
+        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px 8px;margin-top:4px;display:flex;align-items:center;justify-content:space-between;font-size:11px">
+          <div style="display:flex;align-items:center;gap:5px">
+            <span style="font-size:13px">${c.flag}</span>
+            <strong style="color:#1e293b">${c.code} (${signLabel}${c.percent}%):</strong>
+          </div>
+          <div style="display:flex;align-items:center;gap:6px;font-family:monospace">
+            <span style="text-decoration:line-through;color:#94a3b8;font-size:10px">${oldStr}</span>
+            <span style="font-weight:800;color:#0f172a">${newStr}</span>
+            <span style="font-weight:700;color:${diffColor};font-size:10px">(${diffStr})</span>
+          </div>
+        </div>
+      `;
+    }).join('');
 
     return `
-      <div class="price-preview-item">
-        <span class="p-title">
-          ${p.icon} ${escapeHtml(p.name)}
-        </span>
-        <div class="p-price-wrap">
-          <span class="p-old">${oldStr}</span>
-          <span class="p-new">${newStr}</span>
-          ${rangeNote}
-          <span class="p-diff" style="color:${diff >= 0 ? '#16a34a' : '#dc2626'}">(${diffStr})</span>
+      <div style="background:#fff;border:1px solid #ddd6fe;border-radius:10px;padding:8px 10px;margin-bottom:6px">
+        <div style="font-weight:700;font-size:12px;color:#1e1b4b;display:flex;align-items:center;gap:6px">
+          <span>${p.icon || '📦'}</span>
+          <span>${escapeHtml(p.name)}</span>
         </div>
+        ${countryBadgesHtml}
       </div>
     `;
   }).join('');
 
   if(targets.length > sampleCount){
     html += `
-      <div style="font-size:10.5px;color:#7c3aed;text-align:center;padding:4px;font-weight:600">
-        ... dan ${targets.length - sampleCount} produk lainnya akan otomatis diperbarui
+      <div style="font-size:11px;color:#7c3aed;text-align:center;padding:6px;font-weight:700">
+        ✨ ... dan ${targets.length - sampleCount} produk lainnya akan otomatis diperbarui sesuai persentase masing-masing negara
       </div>
     `;
   }
@@ -5011,102 +5213,92 @@ function updatePriceAdjustPreview(){
   listEl.innerHTML = html;
 
   if(footerEl){
-    let rLabel = roundMode;
-    if(priceAdjustCurrentCountry === 'MY'){
-      rLabel = roundMode === '1' ? 'RM 1' : (roundMode === '0.5' ? 'RM 0.50' : (roundMode === '0.1' ? 'RM 0.10' : 'Eksak'));
-    } else if(priceAdjustCurrentCountry === 'SG'){
-      rLabel = roundMode === '0.5' ? 'S$ 0.50' : (roundMode === '0.1' ? 'S$ 0.10' : 'Eksak');
-    } else {
-      rLabel = roundMode === '1000' ? 'Rp 1.000' : (roundMode === '500' ? 'Rp 500' : (roundMode === '100' ? 'Rp 100' : 'Eksak'));
-    }
-
+    const summaryList = activeCountries.map(c => `${c.flag} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(' • ');
     footerEl.innerHTML = `
-      <span>Total Produk: <strong>${targets.length}</strong> (${cName})</span>
-      <span>${label}: <strong>${sign}${pct}%</strong> (${rLabel})</span>
+      <span>Total Target: <strong>${targets.length} Produk</strong></span>
+      <span>Kenaikan: <strong>${summaryList}</strong></span>
     `;
   }
 }
 
-function applyPriceAdjustment(){
-  const pctInput = document.getElementById('priceAdjustPercentInput');
-  const pct = Math.max(0, Math.min(500, parseFloat(pctInput ? pctInput.value : 10) || 0));
-  if(pct <= 0){
-    showToast('⚠️ Masukkan persentase lebih dari 0%!');
+function applyPriceAdjustmentMultiCountry(){
+  const activeCountries = getActiveCountrySettings();
+  if(activeCountries.length === 0){
+    showToast('⚠️ Centang minimal 1 negara yang ingin diterapkan penyesuaian harga!');
     return;
   }
-  const roundMode = document.getElementById('priceAdjustRounding') ? document.getElementById('priceAdjustRounding').value : '1000';
   const targets = getTargetProductsForPriceAdjust();
   if(targets.length === 0){
     showToast('⚠️ Tidak ada produk yang dipilih!');
     return;
   }
 
-  const sign = priceAdjustDirection === 'up' ? '+' : '-';
-  const label = priceAdjustDirection === 'up' ? 'menaikkan' : 'menurunkan';
   const targetDesc = getPriceAdjustTargetSummaryText();
-  const countryNames = {
-    ALL: 'Semua Negara (Global)',
-    ID: 'Indonesia (IDR)',
-    MY: 'Malaysia (MYR)',
-    SG: 'Singapura (SGD)'
-  };
-  const cTargetName = countryNames[priceAdjustCurrentCountry] || 'Semua Negara';
+  const summaryStr = activeCountries.map(c => `${c.flag} ${c.name} (${c.direction === 'up' ? '+' : '-'}${c.percent}%)`).join('\n• ');
 
-  if(!confirm(`Apakah Anda yakin ingin ${label} harga ${targets.length} produk (${targetDesc}) untuk ${cTargetName} sebesar ${sign}${pct}%?\n\n💡 Perubahan ini HANYA berdampak ke negara target yang dipilih. Anda bisa membatalkan kapan saja melalui tombol "Undo".`)){
-    return;
-  }
+  const confirmMsg = `Konfirmasi Kenaikan Harga Per Negara:\n\nTarget: ${targets.length} produk (${targetDesc})\n\nPenyesuaian per negara:\n• ${summaryStr}\n\n💡 Masing-masing negara akan mendapatkan kenaikan sesuai persentase di atas secara terpisah dan independen.\n\nApakah Anda ingin menerapkan sekarang?`;
 
-  // 1. Simpan snapshot Undo sebelum perubahan
+  if(!confirm(confirmMsg)) return;
+
+  // 1. Simpan Snapshot Undo
   const snapshot = {
     timestamp: Date.now(),
     targetText: targetDesc,
-    country: priceAdjustCurrentCountry,
-    percent: pct,
-    direction: priceAdjustDirection,
+    countries: activeCountries.map(c => ({ code: c.code, percent: c.percent, direction: c.direction })),
+    summaryText: activeCountries.map(c => `${c.code} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(', '),
     products: JSON.parse(JSON.stringify(products))
   };
   priceAdjustUndoSnapshot = snapshot;
   safeSetItem('norxstore_price_undo_snapshot', JSON.stringify(snapshot));
 
-  // 2. Update harga produk yang terkena target
+  // 2. Terapkan harga ke produk
   const targetIdSet = new Set(targets.map(p => p.id));
   products = products.map(p => {
     if(!targetIdSet.has(p.id)) return p;
     const cloned = { ...p };
 
-    if(priceAdjustCurrentCountry === 'ALL'){
-      // Naikkan base price IDR
-      const newPrice = calculateNewPrice(cloned.price, pct, priceAdjustDirection, roundMode, 'ALL');
-      let newMax = cloned.maxPrice;
-      let newPriceRaw = cloned.priceRaw;
+    // Simpan harga lama tiap negara terlebih dahulu sebelum modifikasi
+    const oldPrices = {};
+    const oldMaxPrices = {};
+    activeCountries.forEach(c => {
+      oldPrices[c.code] = getPriceForCountry(cloned, c.code, false);
       if(cloned.maxPrice && cloned.maxPrice > cloned.price){
-        newMax = calculateNewPrice(cloned.maxPrice, pct, priceAdjustDirection, roundMode, 'ALL');
-        newPriceRaw = `${newPrice} - ${newMax}`;
+        oldMaxPrices[c.code] = getPriceForCountry(cloned, c.code, true);
       }
-      cloned.price = newPrice;
-      cloned.maxPrice = newMax;
-      cloned.priceRaw = newPriceRaw;
-    } else {
-      // Naikkan harga khusus negara ini (ID, MY, SG)
-      const cCode = priceAdjustCurrentCountry;
-      const oldVal = getPriceForCountry(cloned, cCode, false);
-      const newVal = calculateNewPrice(oldVal, pct, priceAdjustDirection, roundMode, cCode);
+    });
 
-      cloned.countryPrice = cloned.countryPrice ? { ...cloned.countryPrice } : {};
-      cloned.countryPrice[cCode] = newVal;
+    // Proses modifikasi tiap negara yang aktif
+    activeCountries.forEach(c => {
+      const oldVal = oldPrices[c.code];
+      const newVal = calculateNewPrice(oldVal, c.percent, c.direction, c.rounding, c.code);
 
-      cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
-      const currentMarkup = Number(cloned.countryMarkup[cCode]) || 0;
-      const addedPct = pct * (priceAdjustDirection === 'up' ? 1 : -1);
-      cloned.countryMarkup[cCode] = Math.round((currentMarkup + addedPct) * 10) / 10;
+      if(c.code === 'ID'){
+        // Indonesia mengupdate harga master base IDR toko
+        cloned.price = newVal;
+        if(cloned.maxPrice && cloned.maxPrice > cloned.price && oldMaxPrices['ID']){
+          cloned.maxPrice = calculateNewPrice(oldMaxPrices['ID'], c.percent, c.direction, c.rounding, 'ID');
+          cloned.priceRaw = `${cloned.price} - ${cloned.maxPrice}`;
+        } else {
+          cloned.priceRaw = `${cloned.price}`;
+        }
+        cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
+        const curM = Number(cloned.countryMarkup['ID']) || 0;
+        cloned.countryMarkup['ID'] = Math.round((curM + (c.percent * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+      } else {
+        // Malaysia / Singapura: simpan di countryPrice & countryMarkup khusus negara tersebut
+        cloned.countryPrice = cloned.countryPrice ? { ...cloned.countryPrice } : {};
+        cloned.countryPrice[c.code] = newVal;
 
-      if(cloned.maxPrice && cloned.maxPrice > cloned.price){
-        const oldMax = getPriceForCountry(cloned, cCode, true);
-        const newMax = calculateNewPrice(oldMax, pct, priceAdjustDirection, roundMode, cCode);
-        cloned.countryMaxPrice = cloned.countryMaxPrice ? { ...cloned.countryMaxPrice } : {};
-        cloned.countryMaxPrice[cCode] = newMax;
+        cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
+        const curM = Number(cloned.countryMarkup[c.code]) || 0;
+        cloned.countryMarkup[c.code] = Math.round((curM + (c.percent * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+
+        if(cloned.maxPrice && cloned.maxPrice > cloned.price && oldMaxPrices[c.code]){
+          cloned.countryMaxPrice = cloned.countryMaxPrice ? { ...cloned.countryMaxPrice } : {};
+          cloned.countryMaxPrice[c.code] = calculateNewPrice(oldMaxPrices[c.code], c.percent, c.direction, c.rounding, c.code);
+        }
       }
-    }
+    });
 
     return cloned;
   });
@@ -5121,59 +5313,69 @@ function applyPriceAdjustment(){
   updatePriceAdjustPreview();
 
   const statusEl = document.getElementById('priceAdjustStatus');
+  const summaryShort = activeCountries.map(c => `${c.flag} ${c.code} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(' | ');
   if(statusEl){
-    statusEl.textContent = `✅ Berhasil ${label} harga ${targets.length} produk untuk ${cTargetName} sebesar ${sign}${pct}%!`;
+    statusEl.textContent = `✅ Berhasil menerapkan penyesuaian harga ke ${targets.length} produk (${summaryShort})!`;
     statusEl.classList.add('show');
     setTimeout(() => statusEl.classList.remove('show'), 3500);
   }
 
-  showToast(`✅ Berhasil ${label} harga ${targets.length} produk (${cTargetName}) sebesar ${sign}${pct}%!`);
+  showToast(`✅ Berhasil! Penyesuaian harga ${summaryShort} telah diterapkan.`);
 }
 
-function resetCurrentCountryMarkup(){
+// Alias untuk kompatibilitas
+function applyPriceAdjustment(){
+  applyPriceAdjustmentMultiCountry();
+}
+
+function resetSelectedCountriesMarkup(){
+  const activeCountries = getActiveCountrySettings();
+  if(activeCountries.length === 0){
+    showToast('⚠️ Centang negara yang ingin direset markup-nya.');
+    return;
+  }
   const targets = getTargetProductsForPriceAdjust();
   if(targets.length === 0){
     showToast('⚠️ Tidak ada produk yang dipilih!');
     return;
   }
 
-  const countryNames = {
-    ALL: 'Semua Negara (Hapus semua kustomisasi negara)',
-    ID: 'Indonesia (IDR)',
-    MY: 'Malaysia (MYR)',
-    SG: 'Singapura (SGD)'
-  };
-  const cTargetName = countryNames[priceAdjustCurrentCountry] || 'negara ini';
-
-  if(!confirm(`Reset seluruh penyesuaian khusus untuk ${cTargetName} pada ${targets.length} produk?\n\nHarga akan otomatis dikembalikan ke kurs konversi bawaan toko.`)){
+  const cNames = activeCountries.map(c => `${c.flag} ${c.name}`).join(', ');
+  if(!confirm(`Reset penyesuaian harga khusus ${cNames} pada ${targets.length} produk?\n\nHarga negara tersebut akan dikembalikan ke kurs konversi bawaan toko.`)){
     return;
   }
 
   // Backup undo sebelum reset
   priceAdjustUndoSnapshot = {
     timestamp: Date.now(),
-    targetText: `Reset Markup ${cTargetName}`,
-    country: priceAdjustCurrentCountry,
-    percent: 0,
-    direction: 'up',
+    targetText: `Reset Markup ${cNames}`,
+    summaryText: `Reset ${activeCountries.map(c => c.code).join(', ')}`,
     products: JSON.parse(JSON.stringify(products))
   };
   safeSetItem('norxstore_price_undo_snapshot', JSON.stringify(priceAdjustUndoSnapshot));
 
   const targetIdSet = new Set(targets.map(p => p.id));
+  const cCodes = activeCountries.map(c => c.code);
+
   products = products.map(p => {
     if(!targetIdSet.has(p.id)) return p;
     const cloned = { ...p };
-    if(priceAdjustCurrentCountry === 'ALL'){
-      delete cloned.countryPrice;
-      delete cloned.countryMaxPrice;
-      delete cloned.countryMarkup;
-    } else {
-      const c = priceAdjustCurrentCountry;
-      if(cloned.countryPrice) { cloned.countryPrice = { ...cloned.countryPrice }; delete cloned.countryPrice[c]; }
-      if(cloned.countryMaxPrice) { cloned.countryMaxPrice = { ...cloned.countryMaxPrice }; delete cloned.countryMaxPrice[c]; }
-      if(cloned.countryMarkup) { cloned.countryMarkup = { ...cloned.countryMarkup }; delete cloned.countryMarkup[c]; }
-    }
+
+    cCodes.forEach(code => {
+      if(cloned.countryPrice) {
+        cloned.countryPrice = { ...cloned.countryPrice };
+        delete cloned.countryPrice[code];
+      }
+      if(cloned.countryMaxPrice) {
+        cloned.countryMaxPrice = { ...cloned.countryMaxPrice };
+        delete cloned.countryMaxPrice[code];
+      }
+      if(cloned.countryMarkup) {
+        cloned.countryMarkup = { ...cloned.countryMarkup };
+        delete cloned.countryMarkup[code];
+      }
+    });
+
     return cloned;
   });
 
@@ -5184,7 +5386,11 @@ function resetCurrentCountryMarkup(){
 
   updatePriceUndoButtonState();
   updatePriceAdjustPreview();
-  showToast(`🔄 Markup ${cTargetName} berhasil direset ke kurs bawaan!`);
+  showToast(`🔄 Markup ${cNames} berhasil direset ke kurs bawaan!`);
+}
+
+function resetCurrentCountryMarkup(){
+  resetSelectedCountriesMarkup();
 }
 
 function undoPriceAdjustment(){
@@ -5193,9 +5399,8 @@ function undoPriceAdjustment(){
     return;
   }
   const s = priceAdjustUndoSnapshot;
-  const sign = s.direction === 'up' ? '+' : '-';
-  const cLabel = s.country ? `[${s.country}] ` : '';
-  if(!confirm(`Batalkan penyesuaian harga terakhir (${cLabel}${s.targetText} ${sign}${s.percent}%) dan kembalikan seluruh harga ke semula?`)){
+  const label = s.summaryText || s.targetText || 'terakhir';
+  if(!confirm(`Batalkan penyesuaian harga (${label}) dan kembalikan seluruh harga ke semula?`)){
     return;
   }
 
@@ -5220,6 +5425,7 @@ function undoPriceAdjustment(){
 
   showToast('↺ Seluruh harga berhasil dikembalikan ke semula!');
 }
+
 
 function resetPricesToMasterDefault(){
   if(!confirm('⚠️ PERINGATAN:\n\nApakah Anda yakin ingin me-reset SELURUH harga produk ke pricelist master awal toko Norxstore?\n\n(Semua perubahan harga & kustomisasi negara sebelumnya akan diganti ke harga awal master)')) return;
@@ -5276,10 +5482,15 @@ function updatePriceUndoButtonState(){
     btnUndo.style.opacity = hasUndo ? '1' : '0.45';
     btnUndo.style.cursor = hasUndo ? 'pointer' : 'not-allowed';
     if(hasUndo){
-      const sign = priceAdjustUndoSnapshot.direction === 'up' ? '+' : '-';
-      const cPrefix = priceAdjustUndoSnapshot.country ? `${priceAdjustUndoSnapshot.country} ` : '';
-      btnUndo.innerHTML = `↺ Undo (${cPrefix}${sign}${priceAdjustUndoSnapshot.percent}%)`;
-      btnUndo.title = `Kembalikan harga sebelum ${priceAdjustUndoSnapshot.targetText} (${sign}${priceAdjustUndoSnapshot.percent}%)`;
+      let label = priceAdjustUndoSnapshot.summaryText;
+      if(!label && priceAdjustUndoSnapshot.percent !== undefined){
+        const sign = priceAdjustUndoSnapshot.direction === 'up' ? '+' : '-';
+        const cPrefix = priceAdjustUndoSnapshot.country ? `${priceAdjustUndoSnapshot.country} ` : '';
+        label = `${cPrefix}${sign}${priceAdjustUndoSnapshot.percent}%`;
+      }
+      if(!label) label = 'Terakhir';
+      btnUndo.innerHTML = `↺ Undo (${label})`;
+      btnUndo.title = `Kembalikan harga sebelum penyesuaian (${label})`;
     } else {
       btnUndo.innerHTML = `↺ Undo Terakhir`;
       btnUndo.title = `Belum ada riwayat penyesuaian harga`;
