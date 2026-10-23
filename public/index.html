@@ -734,6 +734,24 @@ body.dark-mode .live-pill-mode{
 .discount-cat-input-wrap{display:flex;align-items:center;gap:4px;width:85px;flex-shrink:0}
 .discount-cat-input-wrap input{margin-bottom:0 !important;padding:6px 8px !important;height:34px;text-align:center;font-weight:700;font-size:13px}
 .discount-cat-input-wrap span{font-size:13px;font-weight:700;color:#7c3aed}
+.admin-price-adjust-box{background:#fdf4ff;border:1.5px solid #e9d5ff;border-radius:14px;padding:14px;margin-bottom:14px;box-sizing:border-box}
+.price-target-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;background:#ede9fe;padding:4px;border-radius:10px;margin-bottom:12px;box-sizing:border-box}
+.price-target-tab{padding:8px 2px;font-size:10px;font-weight:700;border:none;border-radius:8px;background:transparent;color:#5b21b6;cursor:pointer;transition:all .15s ease;display:flex;flex-direction:column;align-items:center;gap:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.price-target-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.18)}
+.price-dir-toggle{display:inline-flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px}
+.price-dir-btn{padding:4px 8px;font-size:10.5px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease}
+.price-dir-btn.active{background:#7c3aed;color:#fff}
+.price-pct-pills{display:flex;gap:6px;margin-bottom:10px;overflow-x:auto;padding-bottom:2px}
+.price-pct-pill{flex:1;min-width:44px;padding:6px 4px;font-size:11px;font-weight:700;border:1.5px solid #ddd6fe;border-radius:8px;background:#fff;color:#6d28d9;cursor:pointer;transition:all .15s ease;text-align:center}
+.price-pct-pill.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.25)}
+.price-preview-card{background:#fff;border:1.5px solid #ddd6fe;border-radius:12px;padding:10px 12px;margin-bottom:8px;box-sizing:border-box}
+.price-preview-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;border-bottom:1px solid #f3e8ff;padding-bottom:6px}
+.price-preview-badge{font-size:10px;font-weight:800;background:#ede9fe;color:#7c3aed;padding:2px 8px;border-radius:10px}
+.price-preview-list{display:flex;flex-direction:column;gap:5px;max-height:160px;overflow-y:auto;padding-right:4px}
+.price-preview-item{display:flex;align-items:center;justify-content:space-between;font-size:11px;padding:4px 6px;border-radius:6px;background:#faf5ff}
+.price-preview-item .p-old{color:#64748b;text-decoration:line-through;margin-right:4px}
+.price-preview-item .p-new{font-weight:800;color:#15803d}
+.price-preview-footer{font-size:10.5px;color:#6b7280;margin-top:8px;padding-top:6px;border-top:1px dashed #e9d5ff;display:flex;justify-content:space-between}
 .admin-divider{height:1px;background:#e5e5e5;margin:16px 0}
 .admin-section-title{font-size:13px;font-weight:700;color:#1a1a1a;margin-bottom:10px}
 .admin-img-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
@@ -2669,6 +2687,155 @@ button{cursor:pointer;font-family:inherit}
 
 <div class="admin-divider"></div>
 
+<!-- ==================== FITUR KENAIKAN HARGA OTOMATIS PER PERSEN ==================== -->
+<div class="admin-section-title" style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+  <div style="display:flex;align-items:center;gap:6px">
+    <span>📈 Naikkan Harga Otomatis Per Persen</span>
+  </div>
+  <span id="priceUndoBadge" style="display:none;font-size:10px;font-weight:700;color:#15803d;background:#dcfce7;border:1px solid #bbf7d0;padding:2px 8px;border-radius:10px">
+    ✓ Ada Backup Undo
+  </span>
+</div>
+
+<div class="admin-price-adjust-box">
+  <p class="admin-hint" style="margin:0 0 12px;line-height:1.45;color:#475569">
+    Naikkan atau sesuaikan harga produk secara instan dan otomatis berdasarkan persentase. Berlaku otomatis ke katalog dan semua mata uang (IDR, MYR, SGD).
+  </p>
+
+  <!-- 1. Pilihan Target Kenaikan -->
+  <div class="admin-label" style="margin-bottom:6px">1. Target Produk:</div>
+  <div class="price-target-tabs">
+    <button type="button" class="price-target-tab active" id="tabPriceTargetAll" onclick="switchPriceAdjustTarget('all')">
+      <span>🌐</span><span>Semua Produk</span>
+    </button>
+    <button type="button" class="price-target-tab" id="tabPriceTargetCategory" onclick="switchPriceAdjustTarget('category')">
+      <span>🎮</span><span>Per Kategori</span>
+    </button>
+    <button type="button" class="price-target-tab" id="tabPriceTargetSubgroup" onclick="switchPriceAdjustTarget('subgroup')">
+      <span>⚡</span><span>Per Sub-Kategori</span>
+    </button>
+    <button type="button" class="price-target-tab" id="tabPriceTargetCustom" onclick="switchPriceAdjustTarget('custom')">
+      <span>🎯</span><span>Pilih Produk</span>
+    </button>
+  </div>
+
+  <!-- Opsi Tambahan Jika Kategori -->
+  <div id="priceAdjustCatWrap" style="display:none;margin-bottom:12px">
+    <label class="admin-label" style="font-size:11px">Pilih Kategori Game Target:</label>
+    <select class="admin-select" id="priceAdjustCatSelect" onchange="onPriceAdjustCatChange()" style="font-weight:700;margin-bottom:0">
+      <option value="genshin">✨ Genshin Impact</option>
+      <option value="hsr">🚀 Honkai: Star Rail</option>
+      <option value="wuwa">🌊 Wuthering Waves</option>
+      <option value="nte">🔮 Neverness to Everness</option>
+      <option value="lainnya">🔑 Jual Beli Akun</option>
+    </select>
+  </div>
+
+  <!-- Opsi Tambahan Jika Sub-Kategori -->
+  <div id="priceAdjustSubWrap" style="display:none;margin-bottom:12px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div>
+        <label class="admin-label" style="font-size:11px">Game:</label>
+        <select class="admin-select" id="priceAdjustSubGameSelect" onchange="onPriceAdjustSubGameChange()" style="font-weight:700;margin-bottom:0">
+          <option value="genshin">✨ Genshin</option>
+          <option value="hsr">🚀 HSR</option>
+          <option value="wuwa">🌊 WuWa</option>
+          <option value="nte">🔮 NTE</option>
+          <option value="lainnya">🔑 Akun</option>
+        </select>
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:11px">Sub-Kategori:</label>
+        <select class="admin-select" id="priceAdjustSubSelect" onchange="updatePriceAdjustPreview()" style="font-weight:700;margin-bottom:0">
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Opsi Tambahan Jika Pilih Produk Manual -->
+  <div id="priceAdjustCustomWrap" style="display:none;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border:1.5px solid #ddd6fe;padding:8px 12px;border-radius:10px">
+      <div>
+        <span style="font-size:11px;font-weight:700;color:#6d28d9" id="priceAdjustCustomCountText">0 produk dipilih</span>
+      </div>
+      <button type="button" class="bulk-trigger-btn" onclick="openPriceSelectModal()" style="padding:6px 12px;font-size:11px">
+        🔍 Centang Produk
+      </button>
+    </div>
+  </div>
+
+  <!-- 2. Persentase Kenaikan & Tombol Cepat -->
+  <div style="margin-top:10px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+    <div class="admin-label" style="margin-bottom:0">2. Persentase Penyesuaian:</div>
+    <div class="price-dir-toggle">
+      <button type="button" class="price-dir-btn active" id="btnPriceDirUp" onclick="setPriceAdjustDirection('up')">
+        <span>📈 Naik (+)</span>
+      </button>
+      <button type="button" class="price-dir-btn" id="btnPriceDirDown" onclick="setPriceAdjustDirection('down')">
+        <span>📉 Turun (-)</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Quick Percentage Pills -->
+  <div class="price-pct-pills" id="priceQuickPills">
+    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(5)">+5%</button>
+    <button type="button" class="price-pct-pill active" onclick="setPriceAdjustPercent(10)">+10%</button>
+    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(15)">+15%</button>
+    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(20)">+20%</button>
+    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(25)">+25%</button>
+    <button type="button" class="price-pct-pill" onclick="setPriceAdjustPercent(50)">+50%</button>
+  </div>
+
+  <!-- Custom Input Percent & Rounding -->
+  <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+    <div style="position:relative;flex:1">
+      <input type="number" id="priceAdjustPercentInput" class="admin-input" min="0.1" max="500" step="0.5" value="10" placeholder="10" style="margin-bottom:0;padding-right:32px;font-weight:800;font-size:14px;color:#1e1b4b" oninput="onPriceAdjustPercentInput()">
+      <span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:14px">%</span>
+    </div>
+    <div style="flex:1">
+      <select class="admin-select" id="priceAdjustRounding" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11.5px;font-weight:700">
+        <option value="1000" selected>Bulatkan Rp 1.000 (Rapi)</option>
+        <option value="500">Bulatkan Rp 500</option>
+        <option value="100">Bulatkan Rp 100</option>
+        <option value="none">Tanpa Pembulatan</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- 3. Kotak Live Preview Kenaikan Harga -->
+  <div class="price-preview-card" id="priceAdjustPreviewCard">
+    <div class="price-preview-header">
+      <span style="font-weight:700;font-size:11.5px;color:#5b21b6">🔍 Simulasi Pratinjau Kenaikan:</span>
+      <span class="price-preview-badge" id="pricePreviewTargetBadge">Semua Produk</span>
+    </div>
+    <div class="price-preview-list" id="pricePreviewList">
+      <!-- Diisi otomatis oleh JavaScript -->
+    </div>
+    <div class="price-preview-footer" id="pricePreviewFooter">
+      <span>Kenaikan: <strong>+10%</strong></span>
+    </div>
+  </div>
+
+  <!-- 4. Tombol Aksi Terapkan & Undo -->
+  <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
+    <button type="button" class="admin-btn" id="btnApplyPriceAdjust" onclick="applyPriceAdjustment()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:800;font-size:13px;padding:12px;border-radius:12px;margin:0;box-shadow:0 4px 15px rgba(124,58,237,0.3)">
+      🚀 Terapkan Kenaikan Harga (+10%)
+    </button>
+    <div style="display:flex;gap:8px">
+      <button type="button" class="admin-btn-secondary" id="btnUndoPriceAdjust" onclick="undoPriceAdjustment()" style="flex:1;font-size:11px;font-weight:700;padding:8px" disabled>
+        ↺ Batalkan Kenaikan Terakhir (Undo)
+      </button>
+      <button type="button" class="admin-btn-secondary" onclick="resetPricesToMasterDefault()" style="font-size:11px;color:#b91c1c;border-color:#fecaca;background:#fef2f2;padding:8px 10px;font-weight:700" title="Kembalikan harga ke pricelist asli default toko">
+        ↺ Reset ke Asli
+      </button>
+    </div>
+  </div>
+  <div class="admin-status" id="priceAdjustStatus"></div>
+</div>
+
+<div class="admin-divider"></div>
+
 <div class="admin-section-title">💳 Icon Metode Pembayaran</div>
 <p class="admin-hint" style="margin-bottom:12px">Ganti icon emoji dengan logo/foto asli untuk tiap metode pembayaran.</p>
 <div class="pay-icon-admin-list" id="payIconAdminList"></div>
@@ -3204,6 +3371,42 @@ button{cursor:pointer;font-family:inherit}
       <div style="margin-top:16px;display:flex;gap:8px">
         <button class="admin-btn" style="flex:1" id="bulkApplyBtn" onclick="applyBulkSubcategory()">💾 Terapkan Sub-Kategori</button>
         <button class="admin-btn-secondary" style="width:75px" onclick="closeBulkSubgroupModal()">Batal</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL CENTANG PRODUK UNTUK KENAIKAN HARGA ============ -->
+<div class="bulk-overlay" id="priceSelectOverlay" onclick="closePriceSelectModal(event)">
+  <div class="bulk-box" onclick="event.stopPropagation()">
+    <div class="bulk-header">
+      <div>
+        <h4 style="margin:0;font-size:15px;font-weight:700;color:#fff">🎯 Pilih Produk Kenaikan Harga</h4>
+        <p style="margin:2px 0 0;font-size:11px;color:#c4b5fd">Centang produk yang ingin dinaikkan harganya</p>
+      </div>
+      <button class="admin-close" onclick="closePriceSelectModal()">×</button>
+    </div>
+    
+    <div class="bulk-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+        <span id="priceSelectCounter" style="font-size:11px;font-weight:700;color:#7c3aed;background:#f5f3ff;border:1px solid #ddd6fe;padding:2px 8px;border-radius:10px">0 dipilih</span>
+        <div style="display:flex;gap:6px">
+          <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:4px 8px;font-weight:700" onclick="selectAllPriceSelectProds(true)">Pilih Semua</button>
+          <button type="button" class="admin-btn-secondary" style="font-size:11px;padding:4px 8px;font-weight:700" onclick="selectAllPriceSelectProds(false)">Reset</button>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:8px">
+        <input class="admin-input" type="text" id="priceSelectSearch" placeholder="🔍 Cari nama produk / game..." style="height:36px;font-size:12px;margin:0;flex:1" oninput="filterPriceSelectProductList()">
+      </div>
+
+      <div class="bulk-prod-list" id="priceSelectCheckList">
+        <!-- Diisi otomatis lewat JavaScript -->
+      </div>
+
+      <div style="margin-top:16px;display:flex;gap:8px">
+        <button class="admin-btn" style="flex:1" onclick="savePriceSelectModal()">✓ Selesai Memilih</button>
+        <button class="admin-btn-secondary" style="width:75px" onclick="closePriceSelectModal()">Tutup</button>
       </div>
     </div>
   </div>
@@ -4439,6 +4642,535 @@ function resetAllDiscounts(){
 function saveDiscount(){
   saveDiscountSettings();
 }
+
+// ==================== SISTEM KENAIKAN HARGA OTOMATIS PER PERSEN ====================
+let priceAdjustCurrentTarget = 'all'; // 'all', 'category', 'subgroup', 'custom'
+let priceAdjustDirection = 'up'; // 'up', 'down'
+let priceAdjustSelectedProdIds = new Set();
+let priceAdjustUndoSnapshot = null;
+
+function initPriceAdjustUI(){
+  try {
+    const raw = safeGetItem('norxstore_price_undo_snapshot', '');
+    if(raw) priceAdjustUndoSnapshot = JSON.parse(raw);
+  } catch(e){
+    priceAdjustUndoSnapshot = null;
+  }
+  updatePriceUndoButtonState();
+  onPriceAdjustSubGameChange();
+  updatePriceAdjustPreview();
+}
+
+function switchPriceAdjustTarget(mode){
+  priceAdjustCurrentTarget = mode;
+  const targetMap = {
+    all: 'tabPriceTargetAll',
+    category: 'tabPriceTargetCategory',
+    subgroup: 'tabPriceTargetSubgroup',
+    custom: 'tabPriceTargetCustom'
+  };
+  Object.keys(targetMap).forEach(m => {
+    const btn = document.getElementById(targetMap[m]);
+    if(btn) btn.classList.toggle('active', m === mode);
+  });
+  
+  const catWrap = document.getElementById('priceAdjustCatWrap');
+  const subWrap = document.getElementById('priceAdjustSubWrap');
+  const customWrap = document.getElementById('priceAdjustCustomWrap');
+  
+  if(catWrap) catWrap.style.display = mode === 'category' ? 'block' : 'none';
+  if(subWrap) subWrap.style.display = mode === 'subgroup' ? 'block' : 'none';
+  if(customWrap) customWrap.style.display = mode === 'custom' ? 'block' : 'none';
+
+  if(mode === 'subgroup') onPriceAdjustSubGameChange();
+  updatePriceAdjustPreview();
+}
+
+function setPriceAdjustDirection(dir){
+  priceAdjustDirection = dir;
+  const btnUp = document.getElementById('btnPriceDirUp');
+  const btnDown = document.getElementById('btnPriceDirDown');
+  if(btnUp) btnUp.classList.toggle('active', dir === 'up');
+  if(btnDown) btnDown.classList.toggle('active', dir === 'down');
+
+  // Update pills labels (+ vs -)
+  const pills = document.querySelectorAll('#priceQuickPills .price-pct-pill');
+  const sign = dir === 'up' ? '+' : '-';
+  const vals = [5, 10, 15, 20, 25, 50];
+  pills.forEach((p, idx) => {
+    if(vals[idx] !== undefined) p.textContent = sign + vals[idx] + '%';
+  });
+
+  updatePriceAdjustPreview();
+}
+
+function setPriceAdjustPercent(pct){
+  const input = document.getElementById('priceAdjustPercentInput');
+  if(input) input.value = pct;
+  
+  const pills = document.querySelectorAll('#priceQuickPills .price-pct-pill');
+  pills.forEach(p => {
+    const val = parseFloat(p.textContent.replace(/[^0-9.]/g, ''));
+    p.classList.toggle('active', val === pct);
+  });
+
+  updatePriceAdjustPreview();
+}
+
+function onPriceAdjustPercentInput(){
+  const input = document.getElementById('priceAdjustPercentInput');
+  const currentVal = input ? parseFloat(input.value) : 0;
+  
+  const pills = document.querySelectorAll('#priceQuickPills .price-pct-pill');
+  pills.forEach(p => {
+    const val = parseFloat(p.textContent.replace(/[^0-9.]/g, ''));
+    p.classList.toggle('active', val === currentVal);
+  });
+
+  updatePriceAdjustPreview();
+}
+
+function onPriceAdjustCatChange(){
+  updatePriceAdjustPreview();
+}
+
+function onPriceAdjustSubGameChange(){
+  const gSelect = document.getElementById('priceAdjustSubGameSelect');
+  const sSelect = document.getElementById('priceAdjustSubSelect');
+  if(!gSelect || !sSelect) return;
+  const game = gSelect.value;
+  const subs = getExistingSubgroups(game);
+  if(subs.length === 0){
+    sSelect.innerHTML = '<option value="__all__">Semua Sub-Kategori</option>';
+  } else {
+    sSelect.innerHTML = '<option value="__all__">Semua Sub-Kategori (' + subs.length + ')</option>' +
+      subs.map(s => `<option value="${escapeHtml(s)}">${escapeHtml(localizeSubgroupName(s))}</option>`).join('') +
+      `<option value="__none__">📦 Tanpa Sub-Kategori</option>`;
+  }
+  updatePriceAdjustPreview();
+}
+
+function getTargetProductsForPriceAdjust(){
+  if(!Array.isArray(products)) return [];
+  if(priceAdjustCurrentTarget === 'all'){
+    return [...products];
+  } else if(priceAdjustCurrentTarget === 'category'){
+    const cat = document.getElementById('priceAdjustCatSelect') ? document.getElementById('priceAdjustCatSelect').value : 'genshin';
+    return products.filter(p => p.cat === cat);
+  } else if(priceAdjustCurrentTarget === 'subgroup'){
+    const game = document.getElementById('priceAdjustSubGameSelect') ? document.getElementById('priceAdjustSubGameSelect').value : 'genshin';
+    const sub = document.getElementById('priceAdjustSubSelect') ? document.getElementById('priceAdjustSubSelect').value : '__all__';
+    let list = products.filter(p => p.cat === game);
+    if(sub && sub !== '__all__'){
+      if(sub === '__none__'){
+        list = list.filter(p => !p.subgroup || !p.subgroup.trim());
+      } else {
+        list = list.filter(p => p.subgroup && p.subgroup.trim().toLowerCase() === sub.toLowerCase());
+      }
+    }
+    return list;
+  } else if(priceAdjustCurrentTarget === 'custom'){
+    return products.filter(p => priceAdjustSelectedProdIds.has(p.id));
+  }
+  return [...products];
+}
+
+function calculateNewPrice(oldPrice, pct, direction, roundMode){
+  if(typeof oldPrice !== 'number' || isNaN(oldPrice) || oldPrice <= 0) return 0;
+  const sign = direction === 'up' ? 1 : -1;
+  const delta = oldPrice * (pct / 100) * sign;
+  let rawNew = oldPrice + delta;
+  if(rawNew < 1) rawNew = 1;
+  return applyPriceRounding(rawNew, roundMode);
+}
+
+function applyPriceRounding(val, mode){
+  const num = Math.max(1, Math.round(val));
+  if(mode === '1000'){
+    return Math.max(1000, Math.round(num / 1000) * 1000);
+  } else if(mode === '500'){
+    return Math.max(500, Math.round(num / 500) * 500);
+  } else if(mode === '100'){
+    return Math.max(100, Math.round(num / 100) * 100);
+  }
+  return num;
+}
+
+function updatePriceAdjustPreview(){
+  const pctInput = document.getElementById('priceAdjustPercentInput');
+  const pct = Math.max(0, Math.min(500, parseFloat(pctInput ? pctInput.value : 10) || 0));
+  const roundMode = document.getElementById('priceAdjustRounding') ? document.getElementById('priceAdjustRounding').value : '1000';
+  const targets = getTargetProductsForPriceAdjust();
+  const badgeEl = document.getElementById('pricePreviewTargetBadge');
+  const listEl = document.getElementById('pricePreviewList');
+  const footerEl = document.getElementById('pricePreviewFooter');
+  const btnApply = document.getElementById('btnApplyPriceAdjust');
+
+  const sign = priceAdjustDirection === 'up' ? '+' : '-';
+  const label = priceAdjustDirection === 'up' ? 'Kenaikan' : 'Penurunan';
+
+  if(badgeEl){
+    let tName = 'Semua Produk';
+    if(priceAdjustCurrentTarget === 'category'){
+      const catVal = document.getElementById('priceAdjustCatSelect') ? document.getElementById('priceAdjustCatSelect').value : 'genshin';
+      tName = getCategoryName(catVal) || catVal;
+    } else if(priceAdjustCurrentTarget === 'subgroup'){
+      const subVal = document.getElementById('priceAdjustSubSelect') ? document.getElementById('priceAdjustSubSelect').value : '';
+      tName = subVal && subVal !== '__all__' ? localizeSubgroupName(subVal) : 'Sub-Kategori';
+    } else if(priceAdjustCurrentTarget === 'custom'){
+      tName = 'Produk Pilihan';
+    }
+    badgeEl.textContent = `${tName} (${targets.length} Produk)`;
+  }
+
+  if(btnApply){
+    btnApply.textContent = `🚀 Terapkan ${label} Harga (${sign}${pct}%) ke ${targets.length} Produk`;
+    btnApply.disabled = (targets.length === 0 || pct <= 0);
+    btnApply.style.opacity = (targets.length === 0 || pct <= 0) ? '0.5' : '1';
+    btnApply.style.cursor = (targets.length === 0 || pct <= 0) ? 'not-allowed' : 'pointer';
+  }
+
+  if(!listEl) return;
+
+  if(targets.length === 0){
+    listEl.innerHTML = '<div style="padding:10px;text-align:center;font-size:11px;color:#94a3b8">Belum ada produk yang dipilih / cocok dengan target.</div>';
+    if(footerEl) footerEl.innerHTML = '<span>Pilih target di atas untuk melihat simulasi.</span>';
+    return;
+  }
+
+  if(pct <= 0){
+    listEl.innerHTML = '<div style="padding:10px;text-align:center;font-size:11px;color:#94a3b8">Ketik persentase penyesuaian (misal: 10%) untuk melihat simulasi.</div>';
+    if(footerEl) footerEl.innerHTML = '<span>Persentase masih 0%.</span>';
+    return;
+  }
+
+  const sampleCount = Math.min(6, targets.length);
+  const samples = targets.slice(0, sampleCount);
+
+  let html = samples.map(p => {
+    const oldP = p.price;
+    const newP = calculateNewPrice(oldP, pct, priceAdjustDirection, roundMode);
+    const diff = newP - oldP;
+    const diffText = diff >= 0 ? `(+Rp ${diff.toLocaleString('id-ID')})` : `(-Rp ${Math.abs(diff).toLocaleString('id-ID')})`;
+    
+    let rangeNote = '';
+    if(p.maxPrice && p.maxPrice > p.price){
+      const newMax = calculateNewPrice(p.maxPrice, pct, priceAdjustDirection, roundMode);
+      rangeNote = ` <small style="color:#7c3aed">s/d Rp ${newMax.toLocaleString('id-ID')}</small>`;
+    }
+
+    return `
+      <div class="price-preview-item">
+        <span style="font-weight:600;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:55%">
+          ${p.icon} ${escapeHtml(p.name)}
+        </span>
+        <div style="text-align:right">
+          <span class="p-old">Rp ${oldP.toLocaleString('id-ID')}</span>
+          <span class="p-new">Rp ${newP.toLocaleString('id-ID')}</span>
+          ${rangeNote}
+          <span style="font-size:9.5px;color:${diff >= 0 ? '#16a34a' : '#dc2626'};margin-left:3px">${diffText}</span>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  if(targets.length > sampleCount){
+    html += `
+      <div style="font-size:10.5px;color:#7c3aed;text-align:center;padding:4px;font-weight:600">
+        ... dan ${targets.length - sampleCount} produk lainnya akan otomatis diperbarui
+      </div>
+    `;
+  }
+
+  listEl.innerHTML = html;
+
+  if(footerEl){
+    const rLabel = roundMode === '1000' ? 'Rp 1.000' : (roundMode === '500' ? 'Rp 500' : (roundMode === '100' ? 'Rp 100' : 'Eksak'));
+    footerEl.innerHTML = `
+      <span>Total Produk: <strong>${targets.length}</strong></span>
+      <span>${label}: <strong>${sign}${pct}%</strong> (${rLabel})</span>
+    `;
+  }
+}
+
+function applyPriceAdjustment(){
+  const pctInput = document.getElementById('priceAdjustPercentInput');
+  const pct = Math.max(0, Math.min(500, parseFloat(pctInput ? pctInput.value : 10) || 0));
+  if(pct <= 0){
+    showToast('⚠️ Masukkan persentase lebih dari 0%!');
+    return;
+  }
+  const roundMode = document.getElementById('priceAdjustRounding') ? document.getElementById('priceAdjustRounding').value : '1000';
+  const targets = getTargetProductsForPriceAdjust();
+  if(targets.length === 0){
+    showToast('⚠️ Tidak ada produk yang dipilih!');
+    return;
+  }
+
+  const sign = priceAdjustDirection === 'up' ? '+' : '-';
+  const label = priceAdjustDirection === 'up' ? 'menaikkan' : 'menurunkan';
+  const targetDesc = getPriceAdjustTargetSummaryText();
+
+  if(!confirm(`Apakah Anda yakin ingin ${label} harga ${targets.length} produk (${targetDesc}) sebesar ${sign}${pct}%?\n\n💡 Tenang, ada tombol "Undo / Batalkan" jika Anda ingin membatalkan perubahan ini kapan saja.`)){
+    return;
+  }
+
+  // 1. Simpan snapshot Undo sebelum perubahan
+  const snapshot = {
+    timestamp: Date.now(),
+    targetText: targetDesc,
+    percent: pct,
+    direction: priceAdjustDirection,
+    products: JSON.parse(JSON.stringify(products))
+  };
+  priceAdjustUndoSnapshot = snapshot;
+  safeSetItem('norxstore_price_undo_snapshot', JSON.stringify(snapshot));
+
+  // 2. Update harga produk yang terkena target
+  const targetIdSet = new Set(targets.map(p => p.id));
+  products = products.map(p => {
+    if(!targetIdSet.has(p.id)) return p;
+    const newPrice = calculateNewPrice(p.price, pct, priceAdjustDirection, roundMode);
+    let newMax = p.maxPrice;
+    let newPriceRaw = p.priceRaw;
+    if(p.maxPrice && p.maxPrice > p.price){
+      newMax = calculateNewPrice(p.maxPrice, pct, priceAdjustDirection, roundMode);
+      newPriceRaw = `${newPrice} - ${newMax}`;
+    }
+    return {
+      ...p,
+      price: newPrice,
+      maxPrice: newMax,
+      priceRaw: newPriceRaw
+    };
+  });
+
+  // 3. Simpan dan sinkronkan ke Firebase & cache lokal
+  setProducts(products);
+  renderProducts();
+  if(isAdminOpen()) renderAdminProductList();
+  if(cart.length > 0) renderCart();
+
+  updatePriceUndoButtonState();
+  updatePriceAdjustPreview();
+
+  const statusEl = document.getElementById('priceAdjustStatus');
+  if(statusEl){
+    statusEl.textContent = `✅ Berhasil ${label} harga ${targets.length} produk sebesar ${sign}${pct}%!`;
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 3500);
+  }
+
+  showToast(`✅ Berhasil ${label} harga ${targets.length} produk sebesar ${sign}${pct}%!`);
+}
+
+function undoPriceAdjustment(){
+  if(!priceAdjustUndoSnapshot || !priceAdjustUndoSnapshot.products){
+    showToast('⚠️ Tidak ada riwayat kenaikan harga untuk dibatalkan.');
+    return;
+  }
+  const s = priceAdjustUndoSnapshot;
+  const sign = s.direction === 'up' ? '+' : '-';
+  if(!confirm(`Batalkan penyesuaian harga terakhir (${s.targetText} ${sign}${s.percent}%) dan kembalikan semua harga ke semula?`)){
+    return;
+  }
+
+  products = JSON.parse(JSON.stringify(s.products));
+  setProducts(products);
+  renderProducts();
+  if(isAdminOpen()) renderAdminProductList();
+  if(cart.length > 0) renderCart();
+
+  priceAdjustUndoSnapshot = null;
+  try { localStorage.removeItem('norxstore_price_undo_snapshot'); } catch(e){}
+
+  updatePriceUndoButtonState();
+  updatePriceAdjustPreview();
+
+  const statusEl = document.getElementById('priceAdjustStatus');
+  if(statusEl){
+    statusEl.textContent = '↺ Seluruh harga berhasil dikembalikan ke kondisi semula!';
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 3500);
+  }
+
+  showToast('↺ Seluruh harga berhasil dikembalikan ke semula!');
+}
+
+function resetPricesToMasterDefault(){
+  if(!confirm('⚠️ PERINGATAN:\n\nApakah Anda yakin ingin me-reset SELURUH harga produk ke pricelist master awal toko Norxstore?\n\n(Semua perubahan harga sebelumnya akan diganti ke harga awal master)')) return;
+
+  // Buat snapshot undo sebelum reset
+  priceAdjustUndoSnapshot = {
+    timestamp: Date.now(),
+    targetText: 'Sebelum Reset Master',
+    percent: 0,
+    direction: 'up',
+    products: JSON.parse(JSON.stringify(products))
+  };
+  safeSetItem('norxstore_price_undo_snapshot', JSON.stringify(priceAdjustUndoSnapshot));
+
+  // Ambil harga dari DEFAULT_PRODUCTS
+  const defaultPriceMap = {};
+  DEFAULT_PRODUCTS.forEach(dp => {
+    defaultPriceMap[dp.id] = { price: dp.price, maxPrice: dp.maxPrice, priceRaw: dp.priceRaw };
+  });
+
+  products = products.map(p => {
+    if(defaultPriceMap[p.id]){
+      return {
+        ...p,
+        price: defaultPriceMap[p.id].price,
+        maxPrice: defaultPriceMap[p.id].maxPrice,
+        priceRaw: defaultPriceMap[p.id].priceRaw
+      };
+    }
+    return p;
+  });
+
+  setProducts(products);
+  renderProducts();
+  if(isAdminOpen()) renderAdminProductList();
+  if(cart.length > 0) renderCart();
+
+  updatePriceUndoButtonState();
+  updatePriceAdjustPreview();
+  showToast('↺ Seluruh harga berhasil direset ke pricelist master awal!');
+}
+
+function updatePriceUndoButtonState(){
+  const btnUndo = document.getElementById('btnUndoPriceAdjust');
+  const badgeEl = document.getElementById('priceUndoBadge');
+  const hasUndo = !!(priceAdjustUndoSnapshot && priceAdjustUndoSnapshot.products);
+  if(btnUndo){
+    btnUndo.disabled = !hasUndo;
+    btnUndo.style.opacity = hasUndo ? '1' : '0.45';
+    btnUndo.style.cursor = hasUndo ? 'pointer' : 'not-allowed';
+    if(hasUndo){
+      const sign = priceAdjustUndoSnapshot.direction === 'up' ? '+' : '-';
+      btnUndo.innerHTML = `↺ Undo (${sign}${priceAdjustUndoSnapshot.percent}%)`;
+      btnUndo.title = `Kembalikan harga sebelum ${priceAdjustUndoSnapshot.targetText} (${sign}${priceAdjustUndoSnapshot.percent}%)`;
+    } else {
+      btnUndo.innerHTML = `↺ Undo Penyesuaian`;
+      btnUndo.title = `Belum ada riwayat penyesuaian harga`;
+    }
+  }
+  if(badgeEl){
+    badgeEl.style.display = hasUndo ? 'inline-block' : 'none';
+  }
+}
+
+function getPriceAdjustTargetSummaryText(){
+  if(priceAdjustCurrentTarget === 'all') return 'Semua Produk';
+  if(priceAdjustCurrentTarget === 'category'){
+    const c = document.getElementById('priceAdjustCatSelect') ? document.getElementById('priceAdjustCatSelect').value : 'genshin';
+    return getCategoryName(c) || c;
+  }
+  if(priceAdjustCurrentTarget === 'subgroup'){
+    const s = document.getElementById('priceAdjustSubSelect') ? document.getElementById('priceAdjustSubSelect').value : '';
+    return s && s !== '__all__' ? localizeSubgroupName(s) : 'Sub-Kategori';
+  }
+  if(priceAdjustCurrentTarget === 'custom'){
+    return `${priceAdjustSelectedProdIds.size} Produk Terpilih`;
+  }
+  return 'Produk Target';
+}
+
+function openPriceSelectModal(){
+  const modal = document.getElementById('priceSelectOverlay');
+  if(modal) modal.classList.add('open');
+  const searchInput = document.getElementById('priceSelectSearch');
+  if(searchInput) searchInput.value = '';
+  filterPriceSelectProductList();
+  updatePriceSelectCounter();
+}
+
+function closePriceSelectModal(e){
+  if(!e || e.target === document.getElementById('priceSelectOverlay') || (e.target && e.target.classList.contains('admin-close'))){
+    const modal = document.getElementById('priceSelectOverlay');
+    if(modal) modal.classList.remove('open');
+    updatePriceAdjustPreview();
+  }
+}
+
+function savePriceSelectModal(){
+  const modal = document.getElementById('priceSelectOverlay');
+  if(modal) modal.classList.remove('open');
+  const countEl = document.getElementById('priceAdjustCustomCountText');
+  if(countEl){
+    countEl.textContent = `${priceAdjustSelectedProdIds.size} produk dipilih`;
+  }
+  updatePriceAdjustPreview();
+  showToast(`🎯 ${priceAdjustSelectedProdIds.size} produk dipilih untuk penyesuaian harga.`);
+}
+
+function updatePriceSelectCounter(){
+  const countEl = document.getElementById('priceSelectCounter');
+  if(countEl) countEl.textContent = `${priceAdjustSelectedProdIds.size} dipilih`;
+  const countSummary = document.getElementById('priceAdjustCustomCountText');
+  if(countSummary) countSummary.textContent = `${priceAdjustSelectedProdIds.size} produk dipilih`;
+}
+
+function filterPriceSelectProductList(){
+  const searchInput = document.getElementById('priceSelectSearch');
+  const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
+  const listEl = document.getElementById('priceSelectCheckList');
+  if(!listEl) return;
+
+  let filtered = products || [];
+  if(query){
+    filtered = filtered.filter(p =>
+      p.name.toLowerCase().includes(query) ||
+      (p.cat && p.cat.toLowerCase().includes(query)) ||
+      (p.subgroup && p.subgroup.toLowerCase().includes(query))
+    );
+  }
+
+  if(filtered.length === 0){
+    listEl.innerHTML = '<div style="padding:16px;text-align:center;font-size:12px;color:#94a3b8">Tidak ada produk yang cocok.</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(p => {
+    const isChecked = priceAdjustSelectedProdIds.has(p.id);
+    const catName = getCategoryName(p.cat) || p.cat;
+    return `
+      <div class="bulk-prod-row ${isChecked ? 'selected' : ''}" onclick="togglePriceSelectProd(${p.id})">
+        <input type="checkbox" class="bulk-prod-cb" ${isChecked ? 'checked' : ''} onclick="event.stopPropagation(); togglePriceSelectProd(${p.id});">
+        <span style="font-size:18px">${p.icon}</span>
+        <div style="flex:1;min-width:0">
+          <div class="bulk-prod-title">${escapeHtml(p.name)}</div>
+          <div class="bulk-prod-meta">
+            <span>Rp ${p.price.toLocaleString('id-ID')}</span>
+            <span>•</span>
+            <span>${catName}${p.subgroup ? ' (' + escapeHtml(localizeSubgroupName(p.subgroup)) + ')' : ''}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function togglePriceSelectProd(id){
+  if(priceAdjustSelectedProdIds.has(id)){
+    priceAdjustSelectedProdIds.delete(id);
+  } else {
+    priceAdjustSelectedProdIds.add(id);
+  }
+  filterPriceSelectProductList();
+  updatePriceSelectCounter();
+}
+
+function selectAllPriceSelectProds(selectAll){
+  if(selectAll){
+    products.forEach(p => priceAdjustSelectedProdIds.add(p.id));
+  } else {
+    priceAdjustSelectedProdIds.clear();
+  }
+  filterPriceSelectProductList();
+  updatePriceSelectCounter();
+}
+
 // ==================== MULTI-LANGUAGE & I18N ====================
 const I18N = {
   ID: {
@@ -11999,6 +12731,7 @@ function openAdmin(){
   sessionStorage.setItem('norxstore_admin_unlocked', '1');
   renderCustomerReviews();
   renderDiscountAdminUI();
+  initPriceAdjustUI();
   document.getElementById('adminStatus').classList.remove('show');
   document.getElementById('passStatus').classList.remove('show');
   document.getElementById('passStatusDisable').style.display = 'none';
