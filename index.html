@@ -5208,15 +5208,26 @@ function updatePriceAdjustPreview(){
 
       const diffColor = diff > 0 ? '#16a34a' : (diff < 0 ? '#dc2626' : '#64748b');
       const signLabel = c.direction === 'up' ? '+' : '-';
+      const discPct = getDiscount(p);
+      let discNoteHtml = '';
+      if(discPct > 0){
+        const discVal = c.code === 'ID' 
+          ? (newVal * (100 - discPct) / 100 >= 100 ? Math.round((newVal * (100 - discPct) / 100) / 100) * 100 : Math.round(newVal * (100 - discPct) / 100))
+          : Math.round((newVal * (100 - discPct) / 100) * 100) / 100;
+        discNoteHtml = `<div style="font-size:9.5px;color:#dc2626;font-weight:700;margin-top:2px;text-align:right">🔥 Harga Diskon (-${discPct}%): <strong>${formatCountryAmount(discVal, c.code)}</strong></div>`;
+      }
 
       return `
-        <div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;padding:4px 8px;border-radius:6px;margin-top:3px;font-size:11px">
-          <span style="font-weight:700;color:#334155">${c.flag} ${c.code} (${signLabel}${c.percent}%):</span>
-          <div style="display:flex;align-items:center;gap:6px">
-            <span style="color:#94a3b8;text-decoration:line-through;font-size:10px">${oldStr}</span>
-            <span style="font-weight:800;color:#0f172a">${newStr}</span>
-            <span style="font-weight:700;color:${diffColor};font-size:10px">(${diffStr})</span>
+        <div style="background:#f8fafc;padding:5px 8px;border-radius:6px;margin-top:4px;border:1px solid #f1f5f9">
+          <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px">
+            <span style="font-weight:700;color:#334155">${c.flag} ${c.code} (${signLabel}${c.percent}%):</span>
+            <div style="display:flex;align-items:center;gap:6px">
+              <span style="color:#94a3b8;text-decoration:line-through;font-size:10px">${oldStr}</span>
+              <span style="font-weight:800;color:#0f172a">${newStr}</span>
+              <span style="font-weight:700;color:${diffColor};font-size:10px">(${diffStr})</span>
+            </div>
           </div>
+          ${discNoteHtml}
         </div>
       `;
     }).join('');
@@ -8112,40 +8123,111 @@ function getCountryConfig(code){
   return (cfg.countries && cfg.countries[cCode]) || DEFAULT_CURRENCY_CONFIG.countries.ID;
 }
 
+function formatCountryAmount(val, countryCode = null){
+  const cCode = countryCode || currentSelectedCountry || 'ID';
+  const country = getCountryConfig(cCode);
+  const num = Number(val) || 0;
+  if(cCode === 'ID'){
+    return 'Rp' + Math.round(num).toLocaleString('id-ID');
+  }
+  const formatted = Number.isInteger(num)
+    ? num.toLocaleString('en-US')
+    : num.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  return `${country.symbol} ${formatted}`;
+}
+
+function getCountryOriginalPrice(prod, countryCode = null, isMax = false){
+  if(!prod) return 0;
+  const cCode = countryCode || currentSelectedCountry || 'ID';
+  const country = getCountryConfig(cCode);
+
+  // 1. Cek custom override countryPrice
+  if(!isMax && prod.countryPrice && prod.countryPrice[cCode] !== undefined && prod.countryPrice[cCode] > 0){
+    return Number(prod.countryPrice[cCode]);
+  }
+  if(isMax && prod.countryMaxPrice && prod.countryMaxPrice[cCode] !== undefined && prod.countryMaxPrice[cCode] > 0){
+    return Number(prod.countryMaxPrice[cCode]);
+  }
+
+  // 2. Base IDR price
+  const baseIdr = Number(isMax ? (prod.maxPrice || prod.price || 0) : (prod.price || 0));
+  if(cCode === 'ID' || !country || !country.rate || country.rate <= 0){
+    return baseIdr;
+  }
+
+  // 3. Konversi rate standar + markup
+  let converted = baseIdr / country.rate;
+  let extraMarkup = country.markupPercent && Number(country.markupPercent) > 0 ? Number(country.markupPercent) : 0;
+  if(prod.countryMarkup && prod.countryMarkup[cCode] !== undefined){
+    extraMarkup += Number(prod.countryMarkup[cCode]) || 0;
+  }
+  if(extraMarkup > 0){
+    converted = converted * (1 + (extraMarkup / 100));
+  }
+
+  const rounding = country.rounding || 'ceil_1';
+  let finalAmount = converted;
+  if(rounding === 'ceil_1'){
+    finalAmount = Math.ceil(converted);
+  } else if(rounding === 'ceil_0.5'){
+    finalAmount = Math.ceil(converted * 2) / 2;
+  } else if(rounding === 'ceil_5'){
+    finalAmount = Math.ceil(converted / 5) * 5;
+  } else if(rounding === 'ceil_10'){
+    finalAmount = Math.ceil(converted / 10) * 10;
+  } else if(rounding === 'round_2'){
+    finalAmount = Math.round(converted * 100) / 100;
+  } else if(rounding === 'none'){
+    finalAmount = converted;
+  } else {
+    finalAmount = Math.ceil(converted);
+  }
+  return finalAmount;
+}
+
+function getCountryDiscountedPrice(prod, countryCode = null, isMax = false){
+  const orig = getCountryOriginalPrice(prod, countryCode, isMax);
+  const d = getDiscount(prod);
+  if(d <= 0 || orig <= 0) return orig;
+
+  const cCode = countryCode || currentSelectedCountry || 'ID';
+  const rawDisc = orig * (100 - d) / 100;
+
+  if(cCode === 'ID'){
+    return rawDisc >= 100 ? Math.round(rawDisc / 100) * 100 : Math.round(rawDisc);
+  }
+  return Math.round(rawDisc * 100) / 100;
+}
+
 function convertPrice(idrPrice, targetCountryCode, prod = null, isMax = false){
   const cCode = targetCountryCode || currentSelectedCountry || 'ID';
   const country = getCountryConfig(cCode);
 
   // 1. Cek apakah ada custom override countryPrice untuk produk ini
   if(prod && typeof prod === 'object'){
-    if(!isMax && prod.countryPrice && prod.countryPrice[cCode] !== undefined && prod.countryPrice[cCode] > 0){
-      const val = Number(prod.countryPrice[cCode]);
-      let formatted;
-      if(cCode === 'ID'){
-        formatted = 'Rp' + Math.round(val).toLocaleString('id-ID');
-      } else {
-        formatted = `${country.symbol} ${Number.isInteger(val) ? val.toLocaleString('en-US') : val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+    const hasCustom = !isMax
+      ? (prod.countryPrice && prod.countryPrice[cCode] !== undefined && prod.countryPrice[cCode] > 0)
+      : (prod.countryMaxPrice && prod.countryMaxPrice[cCode] !== undefined && prod.countryMaxPrice[cCode] > 0);
+
+    if(hasCustom){
+      const baseCustom = Number(!isMax ? prod.countryPrice[cCode] : prod.countryMaxPrice[cCode]);
+      const baseIdr = Number(isMax ? (prod.maxPrice || prod.price || 0) : (prod.price || 0));
+      let val = baseCustom;
+
+      // Jika idrPrice yang di-passing lebih kecil dari baseIdr (misal perhitungan diskon proporsional)
+      if(typeof idrPrice === 'number' && idrPrice > 0 && baseIdr > 0 && idrPrice < baseIdr){
+        const ratio = idrPrice / baseIdr;
+        val = baseCustom * ratio;
+        if(cCode === 'ID'){
+          val = val >= 100 ? Math.round(val / 100) * 100 : Math.round(val);
+        } else {
+          val = Math.round(val * 100) / 100;
+        }
       }
+
       return {
         amount: val,
-        formatted: formatted,
-        raw: val,
-        symbol: country.symbol,
-        currency: country.currency,
-        country: country
-      };
-    }
-    if(isMax && prod.countryMaxPrice && prod.countryMaxPrice[cCode] !== undefined && prod.countryMaxPrice[cCode] > 0){
-      const val = Number(prod.countryMaxPrice[cCode]);
-      let formatted;
-      if(cCode === 'ID'){
-        formatted = 'Rp' + Math.round(val).toLocaleString('id-ID');
-      } else {
-        formatted = `${country.symbol} ${Number.isInteger(val) ? val.toLocaleString('en-US') : val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
-      }
-      return {
-        amount: val,
-        formatted: formatted,
+        formatted: formatCountryAmount(val, cCode),
         raw: val,
         symbol: country.symbol,
         currency: country.currency,
@@ -8200,16 +8282,9 @@ function convertPrice(idrPrice, targetCountryCode, prod = null, isMax = false){
     finalAmount = Math.ceil(converted);
   }
 
-  let formattedNumber;
-  if(Number.isInteger(finalAmount)){
-    formattedNumber = finalAmount.toLocaleString('en-US');
-  } else {
-    formattedNumber = finalAmount.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 });
-  }
-
   return {
     amount: finalAmount,
-    formatted: `${country.symbol} ${formattedNumber}`,
+    formatted: formatCountryAmount(finalAmount, cCode),
     raw: converted,
     symbol: country.symbol,
     currency: country.currency,
@@ -8276,27 +8351,26 @@ function parseProductPrice(input){
 
 function formatProductPrice(p, isDiscounted = false, countryCode = null){
   if(!p) return '';
-  const price = (typeof p === 'object' && p !== null) ? (p.price || 0) : Number(p);
-  const maxPrice = (typeof p === 'object' && p !== null) ? (p.maxPrice || 0) : 0;
-  const hasRange = maxPrice > price;
-  const prodObj = (typeof p === 'object' && p !== null) ? p : null;
+  const cCode = countryCode || currentSelectedCountry || 'ID';
+  const prodObj = (typeof p === 'object' && p !== null) ? p : { price: Number(p) || 0, maxPrice: 0 };
+  const hasRange = prodObj.maxPrice && prodObj.maxPrice > prodObj.price;
+  const d = getDiscount(prodObj);
 
-  if(isDiscounted){
-    const d = getDiscount(p);
-    if(d > 0){
-      const minDisc = getDiscountedPrice(price, p);
-      if(hasRange){
-        const maxDisc = getDiscountedPrice(maxPrice, p);
-        return `${formatPrice(minDisc, countryCode, prodObj, false)} - ${formatPrice(maxDisc, countryCode, prodObj, true)}`;
-      }
-      return formatPrice(minDisc, countryCode, prodObj, false);
+  if(isDiscounted && d > 0){
+    const minDisc = getCountryDiscountedPrice(prodObj, cCode, false);
+    if(hasRange){
+      const maxDisc = getCountryDiscountedPrice(prodObj, cCode, true);
+      return `${formatCountryAmount(minDisc, cCode)} - ${formatCountryAmount(maxDisc, cCode)}`;
     }
+    return formatCountryAmount(minDisc, cCode);
   }
 
+  const origMin = getCountryOriginalPrice(prodObj, cCode, false);
   if(hasRange){
-    return `${formatPrice(price, countryCode, prodObj, false)} - ${formatPrice(maxPrice, countryCode, prodObj, true)}`;
+    const origMax = getCountryOriginalPrice(prodObj, cCode, true);
+    return `${formatCountryAmount(origMin, cCode)} - ${formatCountryAmount(origMax, cCode)}`;
   }
-  return formatPrice(price, countryCode, prodObj, false);
+  return formatCountryAmount(origMin, cCode);
 }
 
 function getCategoryMaxDiscount(cat){
@@ -8336,9 +8410,14 @@ function formatPriceWithOriginal(p, countryCode = null){
   const eqWord = (target === 'SG') ? 'approx. ' : ((target === 'MY') ? 'bersamaan ' : 'setara ');
   if(typeof p === 'object' && p !== null && p.maxPrice && p.maxPrice > p.price){
     if(target === 'ID') return `Rp${p.price.toLocaleString('id-ID')} - Rp${p.maxPrice.toLocaleString('id-ID')}`;
-    const resMin = convertPrice(p.price, target);
-    const resMax = convertPrice(p.maxPrice, target);
+    const resMin = convertPrice(p.price, target, p, false);
+    const resMax = convertPrice(p.maxPrice, target, p, true);
     return `${resMin.formatted} - ${resMax.formatted} (${eqWord}Rp${p.price.toLocaleString('id-ID')} - Rp${p.maxPrice.toLocaleString('id-ID')})`;
+  }
+  if(typeof p === 'object' && p !== null){
+    if(target === 'ID') return 'Rp' + (p.price || 0).toLocaleString('id-ID');
+    const res = convertPrice(p.price || 0, target, p, false);
+    return `${res.formatted} (${eqWord}Rp${(p.price || 0).toLocaleString('id-ID')})`;
   }
   if(typeof p !== 'number') p = Number(p) || 0;
   if(target === 'ID') return 'Rp' + p.toLocaleString('id-ID');
@@ -13001,20 +13080,22 @@ function renderCart(){
   }
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
   let totalDiscountAmount = 0;
+  let countrySubtotal = 0;
+  let countryTotal = 0;
 
   body.innerHTML = cart.map(item=>{
-    const prod = products.find(p => p.id === item.id);
-    const itemCat = item.cat || (prod ? prod.cat : '');
-    const itemSubgroup = item.subgroup || (prod ? prod.subgroup : '');
-    const itemDisc = getDiscount(itemCat, itemSubgroup);
+    const prod = products.find(p => p.id === item.id) || item;
+    const itemDisc = getDiscount(prod);
     const itemSub = item.price * 1;
-    const itemMax = (item.maxPrice && item.maxPrice > item.price) ? item.maxPrice : (prod && prod.maxPrice && prod.maxPrice > prod.price ? prod.maxPrice : 0);
-    const hasRange = itemMax > item.price;
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
-    const itemFinal = itemSub - itemDiscAmount;
-    const itemMaxFinal = hasRange ? (itemDisc > 0 ? Math.round(itemMax * (100 - itemDisc) / 100) : itemMax) : 0;
     const hasDisc = itemDisc > 0;
+
+    const origCountry = getCountryOriginalPrice(prod, currentSelectedCountry, false);
+    const discCountry = getCountryDiscountedPrice(prod, currentSelectedCountry, false);
+    countrySubtotal += origCountry;
+    countryTotal += (hasDisc ? discCountry : origCountry);
+
     const imgs = getImagesForProduct(item.id);
     const thumb = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:20px">${item.icon}</span>`;
     const activeOrd = getActiveOrderForProduct(item.id);
@@ -13024,10 +13105,8 @@ function renderCart(){
         <span>🔵</span> <span>${currentSelectedCountry === 'SG' ? ('Currently in progress for your order' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Please wait until completed or remove from cart.') : (currentSelectedCountry === 'MY' ? ('Sedang diproses dalam pesanan anda' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Sila tunggu sehingga selesai atau keluarkan dari troli.') : ('Sedang dalam proses pesanan Anda' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Harap tunggu sampai selesai atau hapus dari keranjang.'))}</span>
       </div>
     ` : '';
-    const oldPriceDisplay = hasRange ? `${formatPrice(itemSub)} - ${formatPrice(itemMax)}` : formatPrice(itemSub);
-    const finalPriceDisplay = hasDisc
-      ? (hasRange ? `${formatPrice(itemFinal)} - ${formatPrice(itemMaxFinal)}` : formatPrice(itemFinal))
-      : (hasRange ? `${formatPrice(itemSub)} - ${formatPrice(itemMax)}` : formatPrice(itemFinal));
+    const oldPriceDisplay = formatProductPrice(prod, false);
+    const finalPriceDisplay = formatProductPrice(prod, hasDisc);
 
     return `
     <div class="cart-item" style="${isBusy ? 'background:#f8fafc;border:1px solid #bfdbfe;' : ''}">
@@ -13050,22 +13129,22 @@ function renderCart(){
     </div>
   `}).join('');
 
-  const total = subtotal - totalDiscountAmount;
-  document.getElementById('cartSubtotal').textContent = formatPrice(subtotal);
-  document.getElementById('cartTotal').textContent = formatPrice(total);
+  const countryDiscAmount = Math.max(0, countrySubtotal - countryTotal);
+  document.getElementById('cartSubtotal').textContent = formatCountryAmount(countrySubtotal, currentSelectedCountry);
+  document.getElementById('cartTotal').textContent = formatCountryAmount(countryTotal, currentSelectedCountry);
   const totalEl = document.getElementById('cartTotal');
-  totalEl.className = totalDiscountAmount > 0 ? 'cart-total-price-discount' : 'cart-total-price';
+  totalEl.className = countryDiscAmount > 0 ? 'cart-total-price-discount' : 'cart-total-price';
 
   const subRow = document.getElementById('cartSubtotalRow');
   const discRow = document.getElementById('cartDiscountRow');
-  if(totalDiscountAmount > 0){
+  if(countryDiscAmount > 0){
     subRow.style.display = 'flex';
     discRow.style.display = 'flex';
     const discLabel = (discountConfig && discountConfig.mode === 'all')
       ? `${discountConfig.global}%`
       : t('savingsLabel');
     document.getElementById('cartDiscountLabel').textContent = discLabel;
-    document.getElementById('cartDiscountAmount').textContent = '-' + formatPrice(totalDiscountAmount);
+    document.getElementById('cartDiscountAmount').textContent = '-' + formatCountryAmount(countryDiscAmount, currentSelectedCountry);
   } else {
     subRow.style.display = 'none';
     discRow.style.display = 'none';
@@ -13165,30 +13244,36 @@ function checkoutCart(){
   if(!selectedCartAdmin){ showToast(t('selectAdminFirst')); return; }
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
   let totalDiscountAmount = 0;
+  let countrySubtotal = 0;
+  let countryTotal = 0;
   const itemsText = cart.map(item=>{
-    const prod = products.find(p => p.id === item.id);
-    const itemCat = item.cat || (prod ? prod.cat : '');
-    const itemSubgroup = item.subgroup || (prod ? prod.subgroup : '');
-    const itemDisc = getDiscount(itemCat, itemSubgroup);
+    const prod = products.find(p => p.id === item.id) || item;
+    const itemDisc = getDiscount(prod);
     const itemSub = item.price * 1;
     const itemDiscAmount = itemDisc > 0 ? Math.round(itemSub * itemDisc / 100) : 0;
     totalDiscountAmount += itemDiscAmount;
-    const itemFinal = itemSub - itemDiscAmount;
+    const hasDisc = itemDisc > 0;
+    const origCountry = getCountryOriginalPrice(prod, currentSelectedCountry, false);
+    const discCountry = getCountryDiscountedPrice(prod, currentSelectedCountry, false);
+    countrySubtotal += origCountry;
+    countryTotal += (hasDisc ? discCountry : origCountry);
     const locItemName = getProductName(item);
-    return `• ${locItemName} = ${formatPrice(itemFinal)}${itemDisc > 0 ? ` (${t('cartDiscount')} ${itemDisc}%)` : ''}`;
+    const priceDisplay = formatProductPrice(prod, hasDisc);
+    return `• ${locItemName} = ${priceDisplay}${hasDisc ? ` (${t('cartDiscount')} ${itemDisc}%)` : ''}`;
   }).join('\n');
   const total = subtotal - totalDiscountAmount;
+  const countryDiscAmount = Math.max(0, countrySubtotal - countryTotal);
   let text = `${t('waGreeting')}:\n\n${itemsText}\n\n`;
-  if(totalDiscountAmount > 0){
+  if(countryDiscAmount > 0){
     const discSummary = (discountConfig && discountConfig.mode === 'all') ? ` (${discountConfig.global}%)` : '';
-    text += `${t('cartSubtotal')}: ${formatPrice(subtotal)}\nTotal ${t('cartDiscount')}: -${formatPrice(totalDiscountAmount)}${discSummary}\n`;
+    text += `${t('cartSubtotal')}: ${formatCountryAmount(countrySubtotal, currentSelectedCountry)}\nTotal ${t('cartDiscount')}: -${formatCountryAmount(countryDiscAmount, currentSelectedCountry)}${discSummary}\n`;
   }
   if(currentSelectedCountry && currentSelectedCountry !== 'ID'){
     const cInfo = getCountryConfig(currentSelectedCountry);
-    text += `${t('cartTotal')}: ${formatPrice(total)} (${t('waEquivalent')} Rp ${total.toLocaleString('id-ID')})\n`;
+    text += `${t('cartTotal')}: ${formatCountryAmount(countryTotal, currentSelectedCountry)} (${t('waEquivalent')} Rp ${total.toLocaleString('id-ID')})\n`;
     text += `${currentSelectedCountry === 'SG' ? 'Currency' : (currentSelectedCountry === 'MY' ? 'Mata Wang' : 'Mata Uang')}: ${cInfo.flag} ${cInfo.name} (${cInfo.currency} - ${cInfo.symbol})\n`;
   } else {
-    text += `${t('cartTotal')}: ${formatPrice(total)}\n`;
+    text += `${t('cartTotal')}: ${formatCountryAmount(countryTotal, currentSelectedCountry)}\n`;
   }
   text += `${t('payMethodLabel')}: ${selectedCartPayment}\n\n${t('waClosing')}`;
   const url = getWaLink(text, selectedCartAdmin);
