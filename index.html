@@ -4214,7 +4214,14 @@ function mergeProductsData(parsed){
   } else if(parsed && typeof parsed === 'object'){
     rawList = Object.values(parsed).filter(Boolean);
   }
-  if(rawList.length === 0) return [...DEFAULT_PRODUCTS];
+  if(rawList.length === 0) rawList = [...DEFAULT_PRODUCTS];
+
+  // Muat saved price adjustments agar perubahan admin tidak pernah tertimpa
+  let savedPriceAdjustments = {};
+  try {
+    const rawAdj = safeGetItem('norxstore_price_adjustments', '');
+    if(rawAdj) savedPriceAdjustments = JSON.parse(rawAdj) || {};
+  } catch(e){}
 
   // Pertahankan urutan eksak sesuai yang diatur admin (drag & drop)
   const merged = [];
@@ -4227,12 +4234,35 @@ function mergeProductsData(parsed){
       : (dp && Array.isArray(dp.images) && dp.images.length > 0
           ? dp.images
           : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : [`/prod_${p.id}.jpg`]));
-    merged.push(dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs});
+    let item = dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs};
+
+    // Terapkan override harga admin jika ada
+    if(savedPriceAdjustments[item.id]){
+      const adj = savedPriceAdjustments[item.id];
+      if(adj.price !== undefined) item.price = Number(adj.price);
+      if(adj.maxPrice !== undefined) item.maxPrice = Number(adj.maxPrice);
+      if(adj.priceRaw !== undefined) item.priceRaw = adj.priceRaw;
+      if(adj.countryPrice) item.countryPrice = { ...adj.countryPrice };
+      if(adj.countryMaxPrice) item.countryMaxPrice = { ...adj.countryMaxPrice };
+      if(adj.countryMarkup) item.countryMarkup = { ...adj.countryMarkup };
+    }
+
+    merged.push(item);
     seenIds.add(p.id);
   });
   DEFAULT_PRODUCTS.forEach(dp => {
     if(!seenIds.has(dp.id)){
-      merged.push({...dp});
+      let item = {...dp};
+      if(savedPriceAdjustments[item.id]){
+        const adj = savedPriceAdjustments[item.id];
+        if(adj.price !== undefined) item.price = Number(adj.price);
+        if(adj.maxPrice !== undefined) item.maxPrice = Number(adj.maxPrice);
+        if(adj.priceRaw !== undefined) item.priceRaw = adj.priceRaw;
+        if(adj.countryPrice) item.countryPrice = { ...adj.countryPrice };
+        if(adj.countryMaxPrice) item.countryMaxPrice = { ...adj.countryMaxPrice };
+        if(adj.countryMarkup) item.countryMarkup = { ...adj.countryMarkup };
+      }
+      merged.push(item);
       seenIds.add(dp.id);
     }
   });
@@ -5168,22 +5198,22 @@ function updatePriceAdjustPreview(){
         newStr = `S$ ${newVal.toFixed(2)}`;
         diffStr = `${diff >= 0 ? '+' : '-'}S$ ${Math.abs(diff).toFixed(2)}`;
       } else {
-        oldStr = `Rp ${Math.round(oldVal).toLocaleString('id-ID')}`;
-        newStr = `Rp ${Math.round(newVal).toLocaleString('id-ID')}`;
-        diffStr = `${diff >= 0 ? '+' : '-'}Rp ${Math.abs(Math.round(diff)).toLocaleString('id-ID')}`;
+        const oNum = Math.round(oldVal);
+        const nNum = Math.round(newVal);
+        const dNum = Math.abs(Math.round(diff));
+        oldStr = `Rp ${oNum.toLocaleString('id-ID')}`;
+        newStr = `Rp ${nNum.toLocaleString('id-ID')}`;
+        diffStr = `${diff >= 0 ? '+' : '-'}Rp ${dNum.toLocaleString('id-ID')}`;
       }
 
       const diffColor = diff > 0 ? '#16a34a' : (diff < 0 ? '#dc2626' : '#64748b');
       const signLabel = c.direction === 'up' ? '+' : '-';
 
       return `
-        <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px 8px;margin-top:4px;display:flex;align-items:center;justify-content:space-between;font-size:11px">
-          <div style="display:flex;align-items:center;gap:5px">
-            <span style="font-size:13px">${c.flag}</span>
-            <strong style="color:#1e293b">${c.code} (${signLabel}${c.percent}%):</strong>
-          </div>
-          <div style="display:flex;align-items:center;gap:6px;font-family:monospace">
-            <span style="text-decoration:line-through;color:#94a3b8;font-size:10px">${oldStr}</span>
+        <div style="display:flex;align-items:center;justify-content:space-between;background:#f8fafc;padding:4px 8px;border-radius:6px;margin-top:3px;font-size:11px">
+          <span style="font-weight:700;color:#334155">${c.flag} ${c.code} (${signLabel}${c.percent}%):</span>
+          <div style="display:flex;align-items:center;gap:6px">
+            <span style="color:#94a3b8;text-decoration:line-through;font-size:10px">${oldStr}</span>
             <span style="font-weight:800;color:#0f172a">${newStr}</span>
             <span style="font-weight:700;color:${diffColor};font-size:10px">(${diffStr})</span>
           </div>
@@ -5192,10 +5222,10 @@ function updatePriceAdjustPreview(){
     }).join('');
 
     return `
-      <div style="background:#fff;border:1px solid #ddd6fe;border-radius:10px;padding:8px 10px;margin-bottom:6px">
-        <div style="font-weight:700;font-size:12px;color:#1e1b4b;display:flex;align-items:center;gap:6px">
-          <span>${p.icon || '📦'}</span>
-          <span>${escapeHtml(p.name)}</span>
+      <div style="background:#fff;border:1px solid #e9d5ff;border-radius:10px;padding:8px 10px;margin-bottom:6px">
+        <div style="font-weight:700;font-size:11.5px;color:#1e1b4b;margin-bottom:3px;display:flex;align-items:center;justify-content:space-between">
+          <span>${p.icon || '📦'} ${escapeHtml(p.name)}</span>
+          <span style="font-size:9.5px;color:#7c3aed;background:#f3e8ff;padding:1px 6px;border-radius:6px;font-weight:700">${(p.cat||'').toUpperCase()}</span>
         </div>
         ${countryBadgesHtml}
       </div>
@@ -5204,8 +5234,8 @@ function updatePriceAdjustPreview(){
 
   if(targets.length > sampleCount){
     html += `
-      <div style="font-size:11px;color:#7c3aed;text-align:center;padding:6px;font-weight:700">
-        ✨ ... dan ${targets.length - sampleCount} produk lainnya akan otomatis diperbarui sesuai persentase masing-masing negara
+      <div style="font-size:10.5px;color:#7c3aed;text-align:center;padding:4px;font-weight:700">
+        ✨ ... dan ${targets.length - sampleCount} produk lainnya akan otomatis diperbarui sesuai persentase tiap negara
       </div>
     `;
   }
@@ -5234,11 +5264,6 @@ function applyPriceAdjustmentMultiCountry(){
   }
 
   const targetDesc = getPriceAdjustTargetSummaryText();
-  const summaryStr = activeCountries.map(c => `${c.flag} ${c.name} (${c.direction === 'up' ? '+' : '-'}${c.percent}%)`).join('\n• ');
-
-  const confirmMsg = `Konfirmasi Kenaikan Harga Per Negara:\n\nTarget: ${targets.length} produk (${targetDesc})\n\nPenyesuaian per negara:\n• ${summaryStr}\n\n💡 Masing-masing negara akan mendapatkan kenaikan sesuai persentase di atas secara terpisah dan independen.\n\nApakah Anda ingin menerapkan sekarang?`;
-
-  if(!confirm(confirmMsg)) return;
 
   // 1. Simpan Snapshot Undo
   const snapshot = {
@@ -5261,9 +5286,13 @@ function applyPriceAdjustmentMultiCountry(){
     const oldPrices = {};
     const oldMaxPrices = {};
     activeCountries.forEach(c => {
-      oldPrices[c.code] = getPriceForCountry(cloned, c.code, false);
+      let o = getPriceForCountry(cloned, c.code, false);
+      if(typeof o !== 'number' || isNaN(o)) o = parseFloat(String(o).replace(/[^0-9.]/g, '')) || 0;
+      oldPrices[c.code] = o;
       if(cloned.maxPrice && cloned.maxPrice > cloned.price){
-        oldMaxPrices[c.code] = getPriceForCountry(cloned, c.code, true);
+        let om = getPriceForCountry(cloned, c.code, true);
+        if(typeof om !== 'number' || isNaN(om)) om = parseFloat(String(om).replace(/[^0-9.]/g, '')) || 0;
+        oldMaxPrices[c.code] = om;
       }
     });
 
@@ -5284,6 +5313,8 @@ function applyPriceAdjustmentMultiCountry(){
         cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
         const curM = Number(cloned.countryMarkup['ID']) || 0;
         cloned.countryMarkup['ID'] = Math.round((curM + (c.percent * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+        cloned.countryPrice = cloned.countryPrice ? { ...cloned.countryPrice } : {};
+        cloned.countryPrice['ID'] = newVal;
       } else {
         // Malaysia / Singapura: simpan di countryPrice & countryMarkup khusus negara tersebut
         cloned.countryPrice = cloned.countryPrice ? { ...cloned.countryPrice } : {};
@@ -5303,8 +5334,32 @@ function applyPriceAdjustmentMultiCountry(){
     return cloned;
   });
 
-  // 3. Simpan dan sinkronkan ke Firebase & cache lokal
+  // 3. Simpan persistensi ke norxstore_price_adjustments agar tidak tertimpa cloud/sync
+  let adjMap = {};
+  try {
+    const rawAdj = safeGetItem('norxstore_price_adjustments', '');
+    if(rawAdj) adjMap = JSON.parse(rawAdj) || {};
+  } catch(e){}
+
+  products.forEach(p => {
+    if(p.countryPrice || p.countryMarkup || p.countryMaxPrice || targetIdSet.has(p.id)){
+      adjMap[p.id] = {
+        price: p.price,
+        maxPrice: p.maxPrice,
+        priceRaw: p.priceRaw,
+        countryPrice: p.countryPrice,
+        countryMaxPrice: p.countryMaxPrice,
+        countryMarkup: p.countryMarkup
+      };
+    }
+  });
+  safeSetItem('norxstore_price_adjustments', JSON.stringify(adjMap));
+
+  // 4. Simpan dan sinkronkan ke Firebase & cache lokal
   setProducts(products);
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/priceAdjustments').set(adjMap).catch(e=>{});
+  }
   renderProducts();
   if(isAdminOpen()) renderAdminProductList();
   if(cart.length > 0) renderCart();
@@ -5341,9 +5396,6 @@ function resetSelectedCountriesMarkup(){
   }
 
   const cNames = activeCountries.map(c => `${c.flag} ${c.name}`).join(', ');
-  if(!confirm(`Reset penyesuaian harga khusus ${cNames} pada ${targets.length} produk?\n\nHarga negara tersebut akan dikembalikan ke kurs konversi bawaan toko.`)){
-    return;
-  }
 
   // Backup undo sebelum reset
   priceAdjustUndoSnapshot = {
@@ -5356,6 +5408,12 @@ function resetSelectedCountriesMarkup(){
 
   const targetIdSet = new Set(targets.map(p => p.id));
   const cCodes = activeCountries.map(c => c.code);
+
+  let adjMap = {};
+  try {
+    const rawAdj = safeGetItem('norxstore_price_adjustments', '');
+    if(rawAdj) adjMap = JSON.parse(rawAdj) || {};
+  } catch(e){}
 
   products = products.map(p => {
     if(!targetIdSet.has(p.id)) return p;
@@ -5376,10 +5434,22 @@ function resetSelectedCountriesMarkup(){
       }
     });
 
+    if(adjMap[cloned.id]){
+      cCodes.forEach(code => {
+        if(adjMap[cloned.id].countryPrice) delete adjMap[cloned.id].countryPrice[code];
+        if(adjMap[cloned.id].countryMaxPrice) delete adjMap[cloned.id].countryMaxPrice[code];
+        if(adjMap[cloned.id].countryMarkup) delete adjMap[cloned.id].countryMarkup[code];
+      });
+    }
+
     return cloned;
   });
 
+  safeSetItem('norxstore_price_adjustments', JSON.stringify(adjMap));
   setProducts(products);
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/priceAdjustments').set(adjMap).catch(e=>{});
+  }
   renderProducts();
   if(isAdminOpen()) renderAdminProductList();
   if(cart.length > 0) renderCart();
@@ -5399,13 +5469,28 @@ function undoPriceAdjustment(){
     return;
   }
   const s = priceAdjustUndoSnapshot;
-  const label = s.summaryText || s.targetText || 'terakhir';
-  if(!confirm(`Batalkan penyesuaian harga (${label}) dan kembalikan seluruh harga ke semula?`)){
-    return;
-  }
 
   products = JSON.parse(JSON.stringify(s.products));
+
+  // Rebuild adjMap from restored products
+  const adjMap = {};
+  products.forEach(p => {
+    if(p.countryPrice || p.countryMarkup || p.countryMaxPrice){
+      adjMap[p.id] = {
+        price: p.price,
+        maxPrice: p.maxPrice,
+        priceRaw: p.priceRaw,
+        countryPrice: p.countryPrice,
+        countryMaxPrice: p.countryMaxPrice,
+        countryMarkup: p.countryMarkup
+      };
+    }
+  });
+  safeSetItem('norxstore_price_adjustments', JSON.stringify(adjMap));
   setProducts(products);
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/priceAdjustments').set(adjMap).catch(e=>{});
+  }
   renderProducts();
   if(isAdminOpen()) renderAdminProductList();
   if(cart.length > 0) renderCart();
@@ -5426,7 +5511,6 @@ function undoPriceAdjustment(){
   showToast('↺ Seluruh harga berhasil dikembalikan ke semula!');
 }
 
-
 function resetPricesToMasterDefault(){
   if(!confirm('⚠️ PERINGATAN:\n\nApakah Anda yakin ingin me-reset SELURUH harga produk ke pricelist master awal toko Norxstore?\n\n(Semua perubahan harga & kustomisasi negara sebelumnya akan diganti ke harga awal master)')) return;
 
@@ -5440,6 +5524,11 @@ function resetPricesToMasterDefault(){
     products: JSON.parse(JSON.stringify(products))
   };
   safeSetItem('norxstore_price_undo_snapshot', JSON.stringify(priceAdjustUndoSnapshot));
+
+  try {
+    localStorage.removeItem('norxstore_price_adjustments');
+    if(window.fbAvailable && fbDB && fbDB.ref) fbDB.ref('norxstore/priceAdjustments').remove().catch(e=>{});
+  } catch(e){}
 
   // Ambil harga dari DEFAULT_PRODUCTS
   const defaultPriceMap = {};
@@ -8023,15 +8112,55 @@ function getCountryConfig(code){
   return (cfg.countries && cfg.countries[cCode]) || DEFAULT_CURRENCY_CONFIG.countries.ID;
 }
 
-function convertPrice(idrPrice, targetCountryCode){
-  if(typeof idrPrice !== 'number') idrPrice = Number(idrPrice) || 0;
+function convertPrice(idrPrice, targetCountryCode, prod = null, isMax = false){
   const cCode = targetCountryCode || currentSelectedCountry || 'ID';
   const country = getCountryConfig(cCode);
+
+  // 1. Cek apakah ada custom override countryPrice untuk produk ini
+  if(prod && typeof prod === 'object'){
+    if(!isMax && prod.countryPrice && prod.countryPrice[cCode] !== undefined && prod.countryPrice[cCode] > 0){
+      const val = Number(prod.countryPrice[cCode]);
+      let formatted;
+      if(cCode === 'ID'){
+        formatted = 'Rp' + Math.round(val).toLocaleString('id-ID');
+      } else {
+        formatted = `${country.symbol} ${Number.isInteger(val) ? val.toLocaleString('en-US') : val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+      }
+      return {
+        amount: val,
+        formatted: formatted,
+        raw: val,
+        symbol: country.symbol,
+        currency: country.currency,
+        country: country
+      };
+    }
+    if(isMax && prod.countryMaxPrice && prod.countryMaxPrice[cCode] !== undefined && prod.countryMaxPrice[cCode] > 0){
+      const val = Number(prod.countryMaxPrice[cCode]);
+      let formatted;
+      if(cCode === 'ID'){
+        formatted = 'Rp' + Math.round(val).toLocaleString('id-ID');
+      } else {
+        formatted = `${country.symbol} ${Number.isInteger(val) ? val.toLocaleString('en-US') : val.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+      }
+      return {
+        amount: val,
+        formatted: formatted,
+        raw: val,
+        symbol: country.symbol,
+        currency: country.currency,
+        country: country
+      };
+    }
+  }
+
+  // Fallback ke konversi standar
+  if(typeof idrPrice !== 'number') idrPrice = Number(idrPrice) || 0;
 
   if(!country || cCode === 'ID' || !country.rate || country.rate <= 0){
     return {
       amount: idrPrice,
-      formatted: 'Rp' + idrPrice.toLocaleString('id-ID'),
+      formatted: 'Rp' + Math.round(idrPrice).toLocaleString('id-ID'),
       raw: idrPrice,
       symbol: 'Rp',
       currency: 'IDR',
@@ -8042,9 +8171,13 @@ function convertPrice(idrPrice, targetCountryCode){
   // Basic rate conversion:
   let converted = idrPrice / country.rate;
 
-  // Extra markup if any
-  if(country.markupPercent && Number(country.markupPercent) > 0){
-    converted = converted * (1 + (Number(country.markupPercent) / 100));
+  // Extra markup dari konfigurasi negara atau produk jika ada
+  let extraMarkup = country.markupPercent && Number(country.markupPercent) > 0 ? Number(country.markupPercent) : 0;
+  if(prod && typeof prod === 'object' && prod.countryMarkup && prod.countryMarkup[cCode] !== undefined){
+    extraMarkup += Number(prod.countryMarkup[cCode]) || 0;
+  }
+  if(extraMarkup > 0){
+    converted = converted * (1 + (extraMarkup / 100));
   }
 
   let finalAmount = converted;
