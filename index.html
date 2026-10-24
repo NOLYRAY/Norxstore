@@ -763,6 +763,9 @@ body.dark-mode .live-pill-mode{
 .price-dir-btn{padding:4px 8px;font-size:10.5px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease}
 .price-dir-btn.active{background:#7c3aed;color:#fff}
 
+.baseline-btn{padding:7px 10px;font-size:11px;font-weight:700;border:1.5px solid #cbd5e1;border-radius:8px;background:#fff;color:#475569;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:4px}
+.baseline-btn.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.25)}
+
 .price-pct-pills{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:8px}
 .price-pct-pill{padding:6px 2px;font-size:10.5px;font-weight:700;border:1.5px solid #ddd6fe;border-radius:8px;background:#fff;color:#6d28d9;cursor:pointer;transition:all .15s ease;text-align:center}
 .price-pct-pill.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.25)}
@@ -2829,6 +2832,25 @@ button{cursor:pointer;font-family:inherit}
     </button>
   </div>
 
+  <!-- BASIS PERHITUNGAN KENAIKAN (ANTI-NUMPUK) -->
+  <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:10px 12px;margin-bottom:12px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <span style="font-size:11px;font-weight:700;color:#334155">🎯 Basis Perhitungan Kenaikan:</span>
+      <span id="priceBaselineLabel" style="font-size:9.5px;color:#7c3aed;font-weight:800;background:#ede9fe;padding:2px 7px;border-radius:6px">Harga Asli Bawaan (Anti Numpuk)</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">
+      <button type="button" id="btnBaselineOriginal" class="baseline-btn active" onclick="setPriceAdjustBaseline('original')">
+        🎯 Dari Harga Asli Bawaan
+      </button>
+      <button type="button" id="btnBaselineCurrent" class="baseline-btn" onclick="setPriceAdjustBaseline('current')">
+        📈 Dari Harga Saat Ini
+      </button>
+    </div>
+    <div style="font-size:9.5px;color:#64748b;line-height:1.35" id="priceBaselineHint">
+      💡 <strong>Mode Anti-Numpuk Aktif:</strong> Setiap Anda mengganti nilai persen/nominal, harga baru selalu dihitung dari harga awal toko (harga tidak akan bertambah terus-menerus).
+    </div>
+  </div>
+
   <!-- DAFTAR KARTU PENGATURAN TIAP NEGARA -->
   <div id="countryAdjustListContainer" style="display:flex;flex-direction:column;gap:10px;margin-bottom:12px">
     
@@ -3006,20 +3028,23 @@ button{cursor:pointer;font-family:inherit}
     </div>
   </div>
 
-  <!-- 4. TOMBOL AKSI TERAPKAN & UNDO -->
+  <!-- 4. TOMBOL AKSI TERAPKAN & RESET & UNDO -->
   <div style="display:flex;flex-direction:column;gap:8px;margin-top:14px">
     <button type="button" class="admin-btn" id="btnApplyPriceAdjust" onclick="applyPriceAdjustmentMultiCountry()" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);color:#fff;font-weight:800;font-size:13px;padding:12px;border-radius:12px;margin:0;box-shadow:0 4px 15px rgba(124,58,237,0.3)">
       🚀 Terapkan Kenaikan Harga ke Negara Terpilih
     </button>
-    <div style="display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:6px">
+
+    <!-- Tombol Khusus Reset Harga Seperti Awal (Tanpa Kenaikan) Sesuai Permintaan User -->
+    <button type="button" class="admin-btn" id="btnResetPriceToOriginal" onclick="resetPricesToOriginalState()" style="background:#f0fdf4;border:1.5px solid #86efac;color:#166534;font-weight:800;font-size:12px;padding:10px;border-radius:10px;margin:0;box-shadow:0 2px 8px rgba(34,197,94,0.15);display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer">
+      🔄 Reset Harga ke Awal (0% / Tanpa Kenaikan)
+    </button>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
       <button type="button" class="admin-btn-secondary" id="btnUndoPriceAdjust" onclick="undoPriceAdjustment()" style="font-size:10.5px;font-weight:700;padding:8px 4px" disabled>
         ↺ Undo Terakhir
       </button>
-      <button type="button" class="admin-btn-secondary" onclick="resetSelectedCountriesMarkup()" style="font-size:10.5px;color:#0284c7;border-color:#bae6fd;background:#f0f9ff;padding:8px 4px;font-weight:700" title="Reset markup negara yang dipilih kembali ke kurs bawaan">
-        🔄 Reset Negara
-      </button>
-      <button type="button" class="admin-btn-secondary" onclick="resetPricesToMasterDefault()" style="font-size:10.5px;color:#b91c1c;border-color:#fecaca;background:#fef2f2;padding:8px 4px;font-weight:700" title="Kembalikan harga seluruh produk ke pricelist asli bawaan toko">
-        ⚠️ Reset Master
+      <button type="button" class="admin-btn-secondary" onclick="resetPricesToMasterDefault()" style="font-size:10.5px;color:#b91c1c;border-color:#fecaca;background:#fef2f2;padding:8px 4px;font-weight:700" title="Kembalikan semua harga produk ke pricelist asli bawaan toko">
+        ⚠️ Reset Master Bawaan
       </button>
     </div>
   </div>
@@ -5294,6 +5319,61 @@ function applyPriceRounding(val, mode, direction = 'up', numVal = 0, oldPrice = 
   return Math.max(1, num);
 }
 
+let priceAdjustBaseline = 'original'; // 'original' (default anti-numpuk) | 'current'
+
+function setPriceAdjustBaseline(mode){
+  priceAdjustBaseline = mode;
+  const btnOrig = document.getElementById('btnBaselineOriginal');
+  const btnCurr = document.getElementById('btnBaselineCurrent');
+  const labelEl = document.getElementById('priceBaselineLabel');
+  const hintEl = document.getElementById('priceBaselineHint');
+
+  if(btnOrig && btnCurr){
+    btnOrig.classList.toggle('active', mode === 'original');
+    btnCurr.classList.toggle('active', mode === 'current');
+  }
+  if(labelEl){
+    labelEl.textContent = mode === 'original' ? 'Harga Asli Bawaan (Anti Numpuk)' : 'Harga Saat Ini (Akumulatif)';
+    labelEl.style.color = mode === 'original' ? '#7c3aed' : '#b45309';
+    labelEl.style.background = mode === 'original' ? '#ede9fe' : '#fef3c7';
+  }
+  if(hintEl){
+    if(mode === 'original'){
+      hintEl.innerHTML = '💡 <strong>Mode Anti-Numpuk Aktif:</strong> Setiap Anda mengganti nilai persen/nominal, harga baru selalu dihitung dari harga awal toko (harga tidak akan bertambah terus-menerus).';
+    } else {
+      hintEl.innerHTML = '⚠️ <strong>Mode Akumulatif:</strong> Penyesuaian dihitung di atas harga yang sedang aktif sekarang (kenaikan bertumpuk).';
+    }
+  }
+  updatePriceAdjustPreview();
+}
+
+function getOriginalPriceForCountry(p, cCode, isMax = false){
+  if(!p) return 0;
+  let origIdr = 0;
+  const dp = (typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS))
+    ? DEFAULT_PRODUCTS.find(d => d.id === p.id)
+    : null;
+  if(dp){
+    origIdr = isMax ? (dp.maxPrice || 0) : dp.price;
+  } else {
+    origIdr = isMax ? (p.baseMaxPrice || p.maxPrice || 0) : (p.basePrice || p.price || 0);
+  }
+
+  if(cCode === 'ID' || cCode === 'ALL'){
+    return origIdr;
+  }
+  // Gunakan konversi kurs murni tanpa custom markup produk (prod = null)
+  const conv = convertPrice(origIdr, cCode, null, isMax);
+  return conv.amount;
+}
+
+function getProductBaselinePrice(p, cCode, isMax = false){
+  if(priceAdjustBaseline === 'current'){
+    return getPriceForCountry(p, cCode, isMax);
+  }
+  return getOriginalPriceForCountry(p, cCode, isMax);
+}
+
 function getPriceForCountry(p, cCode, isMax = false){
   if(!p) return 0;
   if(cCode === 'ALL' || cCode === 'ID'){
@@ -5411,28 +5491,34 @@ function updatePriceAdjustPreview(){
 
   let html = samples.map(p => {
     let countryBadgesHtml = activeCountries.map(c => {
-      const oldVal = getPriceForCountry(p, c.code, false);
-      const newVal = calculateNewPrice(oldVal, c.value, c.direction, c.rounding, c.code, c.adjustType);
-      const diff = newVal - oldVal;
+      const baseVal = getProductBaselinePrice(p, c.code, false);
+      const currentVal = getPriceForCountry(p, c.code, false);
+      const newVal = calculateNewPrice(baseVal, c.value, c.direction, c.rounding, c.code, c.adjustType);
+      const diff = newVal - baseVal;
 
       let oldStr = '';
       let newStr = '';
       let diffStr = '';
+      let currStr = '';
 
       if(c.code === 'MY'){
-        oldStr = `RM ${Number.isInteger(oldVal) ? oldVal : oldVal.toFixed(2)}`;
+        oldStr = `RM ${Number.isInteger(baseVal) ? baseVal : baseVal.toFixed(2)}`;
+        currStr = `RM ${Number.isInteger(currentVal) ? currentVal : currentVal.toFixed(2)}`;
         newStr = `RM ${Number.isInteger(newVal) ? newVal : newVal.toFixed(2)}`;
         const diffAbs = Math.abs(diff);
         diffStr = `${diff >= 0 ? '+' : '-'}RM ${Number.isInteger(diffAbs) ? diffAbs : diffAbs.toFixed(2)}`;
       } else if(c.code === 'SG'){
-        oldStr = `S$ ${oldVal.toFixed(2)}`;
+        oldStr = `S$ ${baseVal.toFixed(2)}`;
+        currStr = `S$ ${currentVal.toFixed(2)}`;
         newStr = `S$ ${newVal.toFixed(2)}`;
         diffStr = `${diff >= 0 ? '+' : '-'}S$ ${Math.abs(diff).toFixed(2)}`;
       } else {
-        const oNum = Math.round(oldVal);
+        const bNum = Math.round(baseVal);
+        const cNum = Math.round(currentVal);
         const nNum = Math.round(newVal);
         const dNum = Math.abs(Math.round(diff));
-        oldStr = `Rp ${oNum.toLocaleString('id-ID')}`;
+        oldStr = `Rp ${bNum.toLocaleString('id-ID')}`;
+        currStr = `Rp ${cNum.toLocaleString('id-ID')}`;
         newStr = `Rp ${nNum.toLocaleString('id-ID')}`;
         diffStr = `${diff >= 0 ? '+' : '-'}Rp ${dNum.toLocaleString('id-ID')}`;
       }
@@ -5449,16 +5535,22 @@ function updatePriceAdjustPreview(){
         discNoteHtml = `<div style="font-size:9.5px;color:#dc2626;font-weight:700;margin-top:2px;text-align:right">🔥 Harga Diskon (-${discPct}%): <strong>${formatCountryAmount(discVal, c.code)}</strong></div>`;
       }
 
+      let activePriceNote = '';
+      if(priceAdjustBaseline === 'original' && currentVal !== baseVal && currentVal !== newVal){
+        activePriceNote = `<div style="font-size:9px;color:#6b21a8;margin-top:2px;display:flex;align-items:center;justify-content:space-between"><span>Harga aktif sekarang: <strong>${currStr}</strong></span><span style="color:#16a34a;font-weight:700">➔ Diperbarui ke ${newStr}</span></div>`;
+      }
+
       return `
         <div style="background:#f8fafc;padding:5px 8px;border-radius:6px;margin-top:4px;border:1px solid #f1f5f9">
           <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px">
             <span style="font-weight:700;color:#334155">${c.flag} ${c.code} (${signLabel}${c.value}${unitLabel}):</span>
             <div style="display:flex;align-items:center;gap:6px">
-              <span style="color:#94a3b8;text-decoration:line-through;font-size:10px">${oldStr}</span>
+              <span style="color:#94a3b8;text-decoration:line-through;font-size:10px" title="Harga Asli Dasar">${oldStr}</span>
               <span style="font-weight:800;color:#0f172a">${newStr}</span>
               <span style="font-weight:700;color:${diffColor};font-size:10px">(${diffStr})</span>
             </div>
           </div>
+          ${activePriceNote}
           ${discNoteHtml}
         </div>
       `;
@@ -5531,15 +5623,15 @@ function applyPriceAdjustmentMultiCountry(){
     if(!targetIdSet.has(p.id)) return p;
     const cloned = { ...p };
 
-    // Simpan harga lama tiap negara terlebih dahulu sebelum modifikasi
+    // Simpan harga acuan tiap negara terlebih dahulu sebelum modifikasi
     const oldPrices = {};
     const oldMaxPrices = {};
     activeCountries.forEach(c => {
-      let o = getPriceForCountry(cloned, c.code, false);
+      let o = getProductBaselinePrice(cloned, c.code, false);
       if(typeof o !== 'number' || isNaN(o)) o = parseFloat(String(o).replace(/[^0-9.]/g, '')) || 0;
       oldPrices[c.code] = o;
       if(cloned.maxPrice && cloned.maxPrice > cloned.price){
-        let om = getPriceForCountry(cloned, c.code, true);
+        let om = getProductBaselinePrice(cloned, c.code, true);
         if(typeof om !== 'number' || isNaN(om)) om = parseFloat(String(om).replace(/[^0-9.]/g, '')) || 0;
         oldMaxPrices[c.code] = om;
       }
@@ -5551,6 +5643,18 @@ function applyPriceAdjustmentMultiCountry(){
       const newVal = calculateNewPrice(oldVal, c.value, c.direction, c.rounding, c.code, c.adjustType);
 
       if(c.code === 'ID'){
+        // Pastikan harga dasar asli tercatat
+        const dp = (typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS))
+          ? DEFAULT_PRODUCTS.find(d => d.id === cloned.id)
+          : null;
+        if(dp){
+          cloned.basePrice = dp.price;
+          if(dp.maxPrice) cloned.baseMaxPrice = dp.maxPrice;
+        } else {
+          cloned.basePrice = cloned.basePrice || cloned.price;
+          if(cloned.maxPrice) cloned.baseMaxPrice = cloned.baseMaxPrice || cloned.maxPrice;
+        }
+
         // Indonesia mengupdate harga master base IDR toko
         cloned.price = newVal;
         if(cloned.maxPrice && cloned.maxPrice > cloned.price && oldMaxPrices['ID']){
@@ -5561,8 +5665,7 @@ function applyPriceAdjustmentMultiCountry(){
         }
         cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
         if(c.adjustType === 'percent'){
-          const curM = Number(cloned.countryMarkup['ID']) || 0;
-          cloned.countryMarkup['ID'] = Math.round((curM + (c.value * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+          cloned.countryMarkup['ID'] = c.value * (c.direction === 'up' ? 1 : -1);
         } else {
           cloned.countryMarkup['ID'] = 0;
         }
@@ -5575,8 +5678,7 @@ function applyPriceAdjustmentMultiCountry(){
 
         cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
         if(c.adjustType === 'percent'){
-          const curM = Number(cloned.countryMarkup[c.code]) || 0;
-          cloned.countryMarkup[c.code] = Math.round((curM + (c.value * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+          cloned.countryMarkup[c.code] = c.value * (c.direction === 'up' ? 1 : -1);
         } else {
           cloned.countryMarkup[c.code] = 0;
         }
@@ -5643,31 +5745,29 @@ function applyPriceAdjustment(){
   applyPriceAdjustmentMultiCountry();
 }
 
-function resetSelectedCountriesMarkup(){
+function resetPricesToOriginalState(){
   const activeCountries = getActiveCountrySettings();
-  if(activeCountries.length === 0){
-    showToast('⚠️ Centang negara yang ingin direset markup-nya.');
-    return;
-  }
   const targets = getTargetProductsForPriceAdjust();
   if(targets.length === 0){
     showToast('⚠️ Tidak ada produk yang dipilih!');
     return;
   }
 
-  const cNames = activeCountries.map(c => `${c.flag} ${c.name}`).join(', ');
+  const cNames = activeCountries.length > 0 
+    ? activeCountries.map(c => `${c.flag} ${c.name}`).join(', ')
+    : 'Semua Negara';
 
-  // Backup undo sebelum reset
+  // Backup snapshot untuk undo
   priceAdjustUndoSnapshot = {
     timestamp: Date.now(),
-    targetText: `Reset Markup ${cNames}`,
-    summaryText: `Reset ${activeCountries.map(c => c.code).join(', ')}`,
+    targetText: `Reset Harga Awal (${targets.length} Produk - ${cNames})`,
+    summaryText: `Reset ke Awal (0% Kenaikan)`,
     products: JSON.parse(JSON.stringify(products))
   };
   safeSetItem('norxstore_price_undo_snapshot', JSON.stringify(priceAdjustUndoSnapshot));
 
   const targetIdSet = new Set(targets.map(p => p.id));
-  const cCodes = activeCountries.map(c => c.code);
+  const cCodes = activeCountries.length > 0 ? activeCountries.map(c => c.code) : ['ID', 'MY', 'SG'];
 
   let adjMap = {};
   try {
@@ -5675,31 +5775,77 @@ function resetSelectedCountriesMarkup(){
     if(rawAdj) adjMap = JSON.parse(rawAdj) || {};
   } catch(e){}
 
+  const defaultPriceMap = {};
+  if(typeof DEFAULT_PRODUCTS !== 'undefined' && Array.isArray(DEFAULT_PRODUCTS)){
+    DEFAULT_PRODUCTS.forEach(dp => {
+      defaultPriceMap[dp.id] = { price: dp.price, maxPrice: dp.maxPrice, priceRaw: dp.priceRaw };
+    });
+  }
+
   products = products.map(p => {
     if(!targetIdSet.has(p.id)) return p;
     const cloned = { ...p };
 
-    cCodes.forEach(code => {
+    // Reset Indonesia jika termasuk dalam cCodes
+    if(cCodes.includes('ID')){
+      if(defaultPriceMap[cloned.id]){
+        cloned.price = defaultPriceMap[cloned.id].price;
+        cloned.maxPrice = defaultPriceMap[cloned.id].maxPrice;
+        cloned.priceRaw = defaultPriceMap[cloned.id].priceRaw;
+      } else if(cloned.basePrice){
+        cloned.price = cloned.basePrice;
+        if(cloned.baseMaxPrice) cloned.maxPrice = cloned.baseMaxPrice;
+        cloned.priceRaw = `${cloned.price}`;
+      }
       if(cloned.countryPrice) {
         cloned.countryPrice = { ...cloned.countryPrice };
-        delete cloned.countryPrice[code];
-      }
-      if(cloned.countryMaxPrice) {
-        cloned.countryMaxPrice = { ...cloned.countryMaxPrice };
-        delete cloned.countryMaxPrice[code];
+        delete cloned.countryPrice['ID'];
       }
       if(cloned.countryMarkup) {
         cloned.countryMarkup = { ...cloned.countryMarkup };
-        delete cloned.countryMarkup[code];
+        delete cloned.countryMarkup['ID'];
+      }
+    }
+
+    // Reset MY dan SG
+    ['MY', 'SG'].forEach(code => {
+      if(cCodes.includes(code)){
+        if(cloned.countryPrice) {
+          cloned.countryPrice = { ...cloned.countryPrice };
+          delete cloned.countryPrice[code];
+        }
+        if(cloned.countryMaxPrice) {
+          cloned.countryMaxPrice = { ...cloned.countryMaxPrice };
+          delete cloned.countryMaxPrice[code];
+        }
+        if(cloned.countryMarkup) {
+          cloned.countryMarkup = { ...cloned.countryMarkup };
+          delete cloned.countryMarkup[code];
+        }
       }
     });
 
+    // Update / bersihkan adjMap untuk produk ini
     if(adjMap[cloned.id]){
-      cCodes.forEach(code => {
-        if(adjMap[cloned.id].countryPrice) delete adjMap[cloned.id].countryPrice[code];
-        if(adjMap[cloned.id].countryMaxPrice) delete adjMap[cloned.id].countryMaxPrice[code];
-        if(adjMap[cloned.id].countryMarkup) delete adjMap[cloned.id].countryMarkup[code];
+      if(cCodes.includes('ID')){
+        delete adjMap[cloned.id].price;
+        delete adjMap[cloned.id].maxPrice;
+        delete adjMap[cloned.id].priceRaw;
+        if(adjMap[cloned.id].countryPrice) delete adjMap[cloned.id].countryPrice['ID'];
+        if(adjMap[cloned.id].countryMarkup) delete adjMap[cloned.id].countryMarkup['ID'];
+      }
+      ['MY', 'SG'].forEach(code => {
+        if(cCodes.includes(code)){
+          if(adjMap[cloned.id].countryPrice) delete adjMap[cloned.id].countryPrice[code];
+          if(adjMap[cloned.id].countryMaxPrice) delete adjMap[cloned.id].countryMaxPrice[code];
+          if(adjMap[cloned.id].countryMarkup) delete adjMap[cloned.id].countryMarkup[code];
+        }
       });
+      const hasAny = Object.keys(adjMap[cloned.id]).some(k => {
+        const v = adjMap[cloned.id][k];
+        return v && (typeof v !== 'object' || Object.keys(v).length > 0);
+      });
+      if(!hasAny) delete adjMap[cloned.id];
     }
 
     return cloned;
@@ -5710,13 +5856,42 @@ function resetSelectedCountriesMarkup(){
   if(window.fbAvailable && fbDB && fbDB.ref){
     fbDB.ref('norxstore/priceAdjustments').set(adjMap).catch(e=>{});
   }
+
+  // Bersihkan nilai input form ke 0
+  ['ID', 'MY', 'SG'].forEach(code => {
+    if(cCodes.includes(code)){
+      const inp = document.getElementById(`inputPercent_${code}`);
+      if(inp) {
+        inp.value = '0';
+        inp.style.borderColor = '#ddd6fe';
+        inp.style.background = '#fff';
+      }
+      const pContainer = document.getElementById(`pctPills_${code}`);
+      if(pContainer){
+        pContainer.querySelectorAll('.price-pct-pill').forEach(btn => btn.classList.remove('active'));
+      }
+    }
+  });
+
   renderProducts();
   if(isAdminOpen()) renderAdminProductList();
   if(cart.length > 0) renderCart();
 
   updatePriceUndoButtonState();
   updatePriceAdjustPreview();
-  showToast(`🔄 Markup ${cNames} berhasil direset ke kurs bawaan!`);
+
+  const statusEl = document.getElementById('priceAdjustStatus');
+  if(statusEl){
+    statusEl.textContent = `✅ Berhasil mereset harga ${targets.length} produk (${cNames}) ke harga awal tanpa kenaikan!`;
+    statusEl.classList.add('show');
+    setTimeout(() => statusEl.classList.remove('show'), 3500);
+  }
+
+  showToast(`✅ Berhasil! Harga produk (${cNames}) telah direset ke harga awal toko.`);
+}
+
+function resetSelectedCountriesMarkup(){
+  resetPricesToOriginalState();
 }
 
 function resetCurrentCountryMarkup(){
@@ -5810,6 +5985,19 @@ function resetPricesToMasterDefault(){
       return updated;
     }
     return p;
+  });
+
+  ['ID', 'MY', 'SG'].forEach(code => {
+    const inp = document.getElementById(`inputPercent_${code}`);
+    if(inp) {
+      inp.value = '0';
+      inp.style.borderColor = '#ddd6fe';
+      inp.style.background = '#fff';
+    }
+    const pContainer = document.getElementById(`pctPills_${code}`);
+    if(pContainer){
+      pContainer.querySelectorAll('.price-pct-pill').forEach(btn => btn.classList.remove('active'));
+    }
   });
 
   setProducts(products);
