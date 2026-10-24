@@ -755,6 +755,10 @@ body.dark-mode .live-pill-mode{
 .country-adjust-head strong{font-size:12.5px;color:#1e1b4b}
 .country-adjust-head small{font-size:10px;color:#6d28d9;font-weight:700}
 
+.price-type-toggle{display:inline-flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px}
+.price-type-btn{padding:4px 8px;font-size:10px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease}
+.price-type-btn.active{background:#7c3aed;color:#fff;box-shadow:0 1px 3px rgba(124,58,237,0.3)}
+
 .price-dir-toggle{display:inline-flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px}
 .price-dir-btn{padding:4px 8px;font-size:10.5px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease}
 .price-dir-btn.active{background:#7c3aed;color:#fff}
@@ -2847,24 +2851,27 @@ button{cursor:pointer;font-family:inherit}
       </div>
       <div id="bodyCountry_ID">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <span style="font-size:11px;color:#64748b;font-weight:600">Arah & Persentase:</span>
+          <div class="price-type-toggle">
+            <button type="button" class="price-type-btn active" id="btnType_ID_percent" onclick="setCountryAdjustType('ID', 'percent')">% Persen</button>
+            <button type="button" class="price-type-btn" id="btnType_ID_nominal" onclick="setCountryAdjustType('ID', 'nominal')">Rp Nominal</button>
+          </div>
           <div class="price-dir-toggle">
             <button type="button" class="price-dir-btn active" id="btnDir_ID_up" onclick="setCountryDirection('ID', 'up')">📈 Naik (+)</button>
             <button type="button" class="price-dir-btn" id="btnDir_ID_down" onclick="setCountryDirection('ID', 'down')">📉 Turun (-)</button>
           </div>
         </div>
         <div class="price-pct-pills" id="pills_ID">
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 5)">+5%</button>
-          <button type="button" class="price-pct-pill active" onclick="setCountryPercent('ID', 10)">+10%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 15)">+15%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 20)">+20%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 25)">+25%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('ID', 50)">+50%</button>
+          <button type="button" class="price-pct-pill" data-val="5" onclick="setCountryPercent('ID', 5)">+5%</button>
+          <button type="button" class="price-pct-pill active" data-val="10" onclick="setCountryPercent('ID', 10)">+10%</button>
+          <button type="button" class="price-pct-pill" data-val="15" onclick="setCountryPercent('ID', 15)">+15%</button>
+          <button type="button" class="price-pct-pill" data-val="20" onclick="setCountryPercent('ID', 20)">+20%</button>
+          <button type="button" class="price-pct-pill" data-val="25" onclick="setCountryPercent('ID', 25)">+25%</button>
+          <button type="button" class="price-pct-pill" data-val="50" onclick="setCountryPercent('ID', 50)">+50%</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:8px">
           <div style="position:relative">
-            <input type="number" id="inputPercent_ID" class="admin-input" min="0" max="500" step="0.5" value="10" placeholder="10" style="margin-bottom:0;padding-right:28px;font-weight:800;font-size:13px" oninput="updatePriceAdjustPreview()">
-            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:13px">%</span>
+            <input type="number" id="inputPercent_ID" class="admin-input" min="0" max="5000000" step="any" value="10" placeholder="10" style="margin-bottom:0;padding-right:34px;font-weight:800;font-size:13px;transition:all .15s ease" oninput="onCountryValueInput('ID')" onchange="onCountryValueInput('ID')">
+            <span id="unitBadge_ID" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:12px">%</span>
           </div>
           <div>
             <select class="admin-select" id="rounding_ID" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11px;font-weight:700">
@@ -2897,24 +2904,27 @@ button{cursor:pointer;font-family:inherit}
       </div>
       <div id="bodyCountry_MY">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <span style="font-size:11px;color:#64748b;font-weight:600">Arah & Persentase:</span>
+          <div class="price-type-toggle">
+            <button type="button" class="price-type-btn active" id="btnType_MY_percent" onclick="setCountryAdjustType('MY', 'percent')">% Persen</button>
+            <button type="button" class="price-type-btn" id="btnType_MY_nominal" onclick="setCountryAdjustType('MY', 'nominal')">RM Nominal</button>
+          </div>
           <div class="price-dir-toggle">
             <button type="button" class="price-dir-btn active" id="btnDir_MY_up" onclick="setCountryDirection('MY', 'up')">📈 Naik (+)</button>
             <button type="button" class="price-dir-btn" id="btnDir_MY_down" onclick="setCountryDirection('MY', 'down')">📉 Turun (-)</button>
           </div>
         </div>
         <div class="price-pct-pills" id="pills_MY">
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 5)">+5%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 10)">+10%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 15)">+15%</button>
-          <button type="button" class="price-pct-pill active" onclick="setCountryPercent('MY', 20)">+20%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 25)">+25%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('MY', 50)">+50%</button>
+          <button type="button" class="price-pct-pill" data-val="5" onclick="setCountryPercent('MY', 5)">+5%</button>
+          <button type="button" class="price-pct-pill" data-val="10" onclick="setCountryPercent('MY', 10)">+10%</button>
+          <button type="button" class="price-pct-pill" data-val="15" onclick="setCountryPercent('MY', 15)">+15%</button>
+          <button type="button" class="price-pct-pill active" data-val="20" onclick="setCountryPercent('MY', 20)">+20%</button>
+          <button type="button" class="price-pct-pill" data-val="25" onclick="setCountryPercent('MY', 25)">+25%</button>
+          <button type="button" class="price-pct-pill" data-val="50" onclick="setCountryPercent('MY', 50)">+50%</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:8px">
           <div style="position:relative">
-            <input type="number" id="inputPercent_MY" class="admin-input" min="0" max="500" step="0.5" value="20" placeholder="20" style="margin-bottom:0;padding-right:28px;font-weight:800;font-size:13px" oninput="updatePriceAdjustPreview()">
-            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:13px">%</span>
+            <input type="number" id="inputPercent_MY" class="admin-input" min="0" max="5000000" step="any" value="20" placeholder="20" style="margin-bottom:0;padding-right:34px;font-weight:800;font-size:13px;transition:all .15s ease" oninput="onCountryValueInput('MY')" onchange="onCountryValueInput('MY')">
+            <span id="unitBadge_MY" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:12px">%</span>
           </div>
           <div>
             <select class="admin-select" id="rounding_MY" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11px;font-weight:700">
@@ -2947,24 +2957,27 @@ button{cursor:pointer;font-family:inherit}
       </div>
       <div id="bodyCountry_SG">
         <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-          <span style="font-size:11px;color:#64748b;font-weight:600">Arah & Persentase:</span>
+          <div class="price-type-toggle">
+            <button type="button" class="price-type-btn active" id="btnType_SG_percent" onclick="setCountryAdjustType('SG', 'percent')">% Persen</button>
+            <button type="button" class="price-type-btn" id="btnType_SG_nominal" onclick="setCountryAdjustType('SG', 'nominal')">S$ Nominal</button>
+          </div>
           <div class="price-dir-toggle">
             <button type="button" class="price-dir-btn active" id="btnDir_SG_up" onclick="setCountryDirection('SG', 'up')">📈 Naik (+)</button>
             <button type="button" class="price-dir-btn" id="btnDir_SG_down" onclick="setCountryDirection('SG', 'down')">📉 Turun (-)</button>
           </div>
         </div>
         <div class="price-pct-pills" id="pills_SG">
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 5)">+5%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 10)">+10%</button>
-          <button type="button" class="price-pct-pill active" onclick="setCountryPercent('SG', 15)">+15%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 20)">+20%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 25)">+25%</button>
-          <button type="button" class="price-pct-pill" onclick="setCountryPercent('SG', 50)">+50%</button>
+          <button type="button" class="price-pct-pill" data-val="5" onclick="setCountryPercent('SG', 5)">+5%</button>
+          <button type="button" class="price-pct-pill" data-val="10" onclick="setCountryPercent('SG', 10)">+10%</button>
+          <button type="button" class="price-pct-pill active" data-val="15" onclick="setCountryPercent('SG', 15)">+15%</button>
+          <button type="button" class="price-pct-pill" data-val="20" onclick="setCountryPercent('SG', 20)">+20%</button>
+          <button type="button" class="price-pct-pill" data-val="25" onclick="setCountryPercent('SG', 25)">+25%</button>
+          <button type="button" class="price-pct-pill" data-val="50" onclick="setCountryPercent('SG', 50)">+50%</button>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:8px">
           <div style="position:relative">
-            <input type="number" id="inputPercent_SG" class="admin-input" min="0" max="500" step="0.5" value="15" placeholder="15" style="margin-bottom:0;padding-right:28px;font-weight:800;font-size:13px" oninput="updatePriceAdjustPreview()">
-            <span style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:13px">%</span>
+            <input type="number" id="inputPercent_SG" class="admin-input" min="0" max="5000000" step="any" value="15" placeholder="15" style="margin-bottom:0;padding-right:34px;font-weight:800;font-size:13px;transition:all .15s ease" oninput="onCountryValueInput('SG')" onchange="onCountryValueInput('SG')">
+            <span id="unitBadge_SG" style="position:absolute;right:10px;top:50%;transform:translateY(-50%);font-weight:800;color:#7c3aed;font-size:12px">%</span>
           </div>
           <div>
             <select class="admin-select" id="rounding_SG" onchange="updatePriceAdjustPreview()" style="margin-bottom:0;font-size:11px;font-weight:700">
@@ -4856,6 +4869,7 @@ function saveDiscount(){
 let priceAdjustCountryMode = 'ALL'; // 'ALL', 'ID', 'MY', 'SG'
 let priceAdjustCurrentTarget = 'all'; // 'all', 'category', 'subgroup', 'custom'
 let countryDirections = { ID: 'up', MY: 'up', SG: 'up' };
+let countryAdjustTypes = { ID: 'percent', MY: 'percent', SG: 'percent' };
 let priceAdjustSelectedProdIds = new Set();
 let priceAdjustUndoSnapshot = null;
 
@@ -4868,7 +4882,153 @@ function initPriceAdjustUI(){
   }
   updatePriceUndoButtonState();
   switchPriceAdjustCountryMode(priceAdjustCountryMode || 'ALL');
+  renderCountryPills('ID');
+  renderCountryPills('MY');
+  renderCountryPills('SG');
   onPriceAdjustSubGameChange();
+  updatePriceAdjustPreview();
+}
+
+function setCountryAdjustType(cCode, type){
+  countryAdjustTypes[cCode] = type;
+  const btnPct = document.getElementById(`btnType_${cCode}_percent`);
+  const btnNom = document.getElementById(`btnType_${cCode}_nominal`);
+  if(btnPct) btnPct.classList.toggle('active', type === 'percent');
+  if(btnNom) btnNom.classList.toggle('active', type === 'nominal');
+
+  const unitBadge = document.getElementById(`unitBadge_${cCode}`);
+  const input = document.getElementById(`inputPercent_${cCode}`);
+  const curSym = cCode === 'ID' ? 'Rp' : (cCode === 'MY' ? 'RM' : 'S$');
+
+  if(type === 'nominal'){
+    if(unitBadge) unitBadge.textContent = curSym;
+    if(input){
+      if(cCode === 'ID'){
+        input.value = '5000';
+        input.placeholder = '5000';
+      } else if(cCode === 'MY'){
+        input.value = '2';
+        input.placeholder = '2';
+      } else {
+        input.value = '1';
+        input.placeholder = '1';
+      }
+    }
+  } else {
+    if(unitBadge) unitBadge.textContent = '%';
+    if(input){
+      input.value = '10';
+      input.placeholder = '10';
+    }
+  }
+
+  renderCountryPills(cCode);
+  onCountryValueInput(cCode);
+}
+
+function renderCountryPills(cCode){
+  const container = document.getElementById(`pills_${cCode}`);
+  if(!container) return;
+  const type = countryAdjustTypes[cCode] || 'percent';
+  const dir = countryDirections[cCode] || 'up';
+  const sign = dir === 'up' ? '+' : '-';
+  const input = document.getElementById(`inputPercent_${cCode}`);
+  const curVal = parseFloat(input ? input.value : 0) || 0;
+
+  let pillDefs = [];
+  if(type === 'nominal'){
+    if(cCode === 'ID'){
+      pillDefs = [
+        { label: `${sign}1rb`, val: 1000 },
+        { label: `${sign}2rb`, val: 2000 },
+        { label: `${sign}5rb`, val: 5000 },
+        { label: `${sign}10rb`, val: 10000 },
+        { label: `${sign}20rb`, val: 20000 },
+        { label: `${sign}50rb`, val: 50000 }
+      ];
+    } else if(cCode === 'MY'){
+      pillDefs = [
+        { label: `${sign}RM 1`, val: 1 },
+        { label: `${sign}RM 2`, val: 2 },
+        { label: `${sign}RM 3`, val: 3 },
+        { label: `${sign}RM 5`, val: 5 },
+        { label: `${sign}RM 10`, val: 10 },
+        { label: `${sign}RM 20`, val: 20 }
+      ];
+    } else {
+      pillDefs = [
+        { label: `${sign}S$ 0.5`, val: 0.5 },
+        { label: `${sign}S$ 1`, val: 1 },
+        { label: `${sign}S$ 2`, val: 2 },
+        { label: `${sign}S$ 3`, val: 3 },
+        { label: `${sign}S$ 5`, val: 5 },
+        { label: `${sign}S$ 10`, val: 10 }
+      ];
+    }
+  } else {
+    const vals = [5, 10, 15, 20, 25, 50];
+    pillDefs = vals.map(v => ({ label: `${sign}${v}%`, val: v }));
+  }
+
+  container.innerHTML = pillDefs.map(p => {
+    const isAct = p.val === curVal;
+    return `<button type="button" class="price-pct-pill ${isAct ? 'active' : ''}" data-val="${p.val}" onclick="setCountryPercent('${cCode}', ${p.val})">${p.label}</button>`;
+  }).join('');
+}
+
+function setCountryDirection(cCode, dir){
+  countryDirections[cCode] = dir;
+  const btnUp = document.getElementById(`btnDir_${cCode}_up`);
+  const btnDown = document.getElementById(`btnDir_${cCode}_down`);
+  if(btnUp) btnUp.classList.toggle('active', dir === 'up');
+  if(btnDown) btnDown.classList.toggle('active', dir === 'down');
+
+  renderCountryPills(cCode);
+  updatePriceAdjustPreview();
+}
+
+function setCountryPercent(cCode, val){
+  const input = document.getElementById(`inputPercent_${cCode}`);
+  if(input) {
+    input.value = val;
+    input.style.borderColor = '';
+    input.style.boxShadow = '';
+  }
+
+  const pills = document.querySelectorAll(`#pills_${cCode} .price-pct-pill`);
+  pills.forEach(p => {
+    const pVal = parseFloat(p.dataset.val || p.textContent.replace(/[^0-9.]/g, ''));
+    p.classList.toggle('active', pVal === val);
+  });
+
+  updatePriceAdjustPreview();
+}
+
+function onCountryValueInput(cCode){
+  const input = document.getElementById(`inputPercent_${cCode}`);
+  if(!input) return;
+  const val = parseFloat(input.value) || 0;
+
+  const pills = document.querySelectorAll(`#pills_${cCode} .price-pct-pill`);
+  let matched = false;
+  pills.forEach(p => {
+    const pVal = parseFloat(p.dataset.val || p.textContent.replace(/[^0-9.]/g, ''));
+    if(pVal === val && val > 0){
+      p.classList.add('active');
+      matched = true;
+    } else {
+      p.classList.remove('active');
+    }
+  });
+
+  if(!matched && val > 0){
+    input.style.borderColor = '#7c3aed';
+    input.style.boxShadow = '0 0 0 2px rgba(124, 58, 237, 0.2)';
+  } else {
+    input.style.borderColor = '';
+    input.style.boxShadow = '';
+  }
+
   updatePriceAdjustPreview();
 }
 
@@ -4888,7 +5048,7 @@ function switchPriceAdjustCountryMode(mode){
   const badgeEl = document.getElementById('priceCountryModeBadge');
   if(badgeEl){
     const names = {
-      ALL: 'Beda % Tiap Negara (Sekaligus)',
+      ALL: 'Beda % / Nominal Tiap Negara',
       ID: '🇮🇩 Khusus Indonesia (IDR)',
       MY: '🇲🇾 Khusus Malaysia (MYR)',
       SG: '🇸🇬 Khusus Singapura (SGD)'
@@ -4930,37 +5090,6 @@ function onCountryActiveToggle(cCode){
     body.style.opacity = isChecked ? '1' : '0.4';
     body.style.pointerEvents = isChecked ? 'auto' : 'none';
   }
-  updatePriceAdjustPreview();
-}
-
-function setCountryDirection(cCode, dir){
-  countryDirections[cCode] = dir;
-  const btnUp = document.getElementById(`btnDir_${cCode}_up`);
-  const btnDown = document.getElementById(`btnDir_${cCode}_down`);
-  if(btnUp) btnUp.classList.toggle('active', dir === 'up');
-  if(btnDown) btnDown.classList.toggle('active', dir === 'down');
-
-  // Update pills labels (+ vs -)
-  const pills = document.querySelectorAll(`#pills_${cCode} .price-pct-pill`);
-  const sign = dir === 'up' ? '+' : '-';
-  const vals = [5, 10, 15, 20, 25, 50];
-  pills.forEach((p, idx) => {
-    if(vals[idx] !== undefined) p.textContent = sign + vals[idx] + '%';
-  });
-
-  updatePriceAdjustPreview();
-}
-
-function setCountryPercent(cCode, pct){
-  const input = document.getElementById(`inputPercent_${cCode}`);
-  if(input) input.value = pct;
-
-  const pills = document.querySelectorAll(`#pills_${cCode} .price-pct-pill`);
-  pills.forEach(p => {
-    const val = parseFloat(p.textContent.replace(/[^0-9.]/g, ''));
-    p.classList.toggle('active', val === pct);
-  });
-
   updatePriceAdjustPreview();
 }
 
@@ -5034,39 +5163,135 @@ function getTargetProductsForPriceAdjust(){
   return [...products];
 }
 
-function calculateNewPrice(oldPrice, pct, direction, roundMode, countryCode = 'ALL'){
+function calculateNewPrice(oldPrice, val, direction, roundMode, countryCode = 'ALL', adjustType = 'percent'){
   if(typeof oldPrice !== 'number' || isNaN(oldPrice) || oldPrice <= 0) return 0;
   const sign = direction === 'up' ? 1 : -1;
-  const delta = oldPrice * (pct / 100) * sign;
+  const numVal = Math.max(0, Number(val) || 0);
+
+  let delta = 0;
+  if(adjustType === 'nominal'){
+    delta = numVal * sign;
+  } else {
+    delta = oldPrice * (numVal / 100) * sign;
+  }
   let rawNew = oldPrice + delta;
   if(rawNew < 0.1) rawNew = 0.1;
 
   if(countryCode === 'MY'){
-    if(roundMode === '1') return Math.max(1, Math.round(rawNew));
-    if(roundMode === '0.5') return Math.max(0.5, Math.round(rawNew * 2) / 2);
-    if(roundMode === '0.1') return Math.max(0.1, Math.round(rawNew * 10) / 10);
-    return Math.round(rawNew * 100) / 100;
-  }
-  if(countryCode === 'SG'){
-    if(roundMode === '0.5') return Math.max(0.5, Math.round(rawNew * 2) / 2);
-    if(roundMode === '0.1') return Math.max(0.1, Math.round(rawNew * 10) / 10);
-    return Math.round(rawNew * 100) / 100;
+    if(roundMode === '1'){
+      let res = Math.round(rawNew);
+      // PENTING: Jika pengguna memilih Naik (+) dengan nilai > 0, jangan sampai dibulatkan ke bawah menjadi harga lama (+RM 0)!
+      if(direction === 'up' && numVal > 0 && res <= oldPrice){
+        res = Math.ceil(rawNew);
+        if(res <= oldPrice) res = oldPrice + 1;
+      } else if(direction === 'down' && numVal > 0 && res >= oldPrice){
+        res = Math.floor(rawNew);
+        if(res >= oldPrice) res = Math.max(1, oldPrice - 1);
+      }
+      return Math.max(1, res);
+    }
+    if(roundMode === '0.5'){
+      let res = Math.round(rawNew * 2) / 2;
+      if(direction === 'up' && numVal > 0 && res <= oldPrice){
+        res = Math.ceil(rawNew * 2) / 2;
+        if(res <= oldPrice) res = oldPrice + 0.5;
+      } else if(direction === 'down' && numVal > 0 && res >= oldPrice){
+        res = Math.floor(rawNew * 2) / 2;
+        if(res >= oldPrice) res = Math.max(0.5, oldPrice - 0.5);
+      }
+      return Math.max(0.5, res);
+    }
+    if(roundMode === '0.1'){
+      let res = Math.round(rawNew * 10) / 10;
+      if(direction === 'up' && numVal > 0 && res <= oldPrice){
+        res = Math.ceil(rawNew * 10) / 10;
+        if(res <= oldPrice) res = oldPrice + 0.1;
+      } else if(direction === 'down' && numVal > 0 && res >= oldPrice){
+        res = Math.floor(rawNew * 10) / 10;
+        if(res >= oldPrice) res = Math.max(0.1, oldPrice - 0.1);
+      }
+      return Math.max(0.1, Math.round(res * 10) / 10);
+    }
+    // Tanpa bulatkan: 2 desimal
+    let res = Math.round(rawNew * 100) / 100;
+    if(direction === 'up' && numVal > 0 && res <= oldPrice){
+      res = Math.round((oldPrice + 0.01) * 100) / 100;
+    } else if(direction === 'down' && numVal > 0 && res >= oldPrice){
+      res = Math.max(0.01, Math.round((oldPrice - 0.01) * 100) / 100);
+    }
+    return Math.max(0.01, res);
   }
 
-  // IDR / ALL:
-  return applyPriceRounding(rawNew, roundMode);
+  if(countryCode === 'SG'){
+    if(roundMode === '0.5'){
+      let res = Math.round(rawNew * 2) / 2;
+      if(direction === 'up' && numVal > 0 && res <= oldPrice){
+        res = Math.ceil(rawNew * 2) / 2;
+        if(res <= oldPrice) res = oldPrice + 0.5;
+      } else if(direction === 'down' && numVal > 0 && res >= oldPrice){
+        res = Math.floor(rawNew * 2) / 2;
+        if(res >= oldPrice) res = Math.max(0.5, oldPrice - 0.5);
+      }
+      return Math.max(0.5, res);
+    }
+    if(roundMode === '0.1'){
+      let res = Math.round(rawNew * 10) / 10;
+      if(direction === 'up' && numVal > 0 && res <= oldPrice){
+        res = Math.ceil(rawNew * 10) / 10;
+        if(res <= oldPrice) res = oldPrice + 0.1;
+      } else if(direction === 'down' && numVal > 0 && res >= oldPrice){
+        res = Math.floor(rawNew * 10) / 10;
+        if(res >= oldPrice) res = Math.max(0.1, oldPrice - 0.1);
+      }
+      return Math.max(0.1, Math.round(res * 10) / 10);
+    }
+    let res = Math.round(rawNew * 100) / 100;
+    if(direction === 'up' && numVal > 0 && res <= oldPrice){
+      res = Math.round((oldPrice + 0.01) * 100) / 100;
+    } else if(direction === 'down' && numVal > 0 && res >= oldPrice){
+      res = Math.max(0.01, Math.round((oldPrice - 0.01) * 100) / 100);
+    }
+    return Math.max(0.01, res);
+  }
+
+  // IDR:
+  return applyPriceRounding(rawNew, roundMode, direction, numVal, oldPrice);
 }
 
-function applyPriceRounding(val, mode){
-  const num = Math.max(1, Math.round(val));
+function applyPriceRounding(val, mode, direction = 'up', numVal = 0, oldPrice = 0){
+  let num = Math.round(val);
   if(mode === '1000'){
-    return Math.max(1000, Math.round(num / 1000) * 1000);
+    let res = Math.round(num / 1000) * 1000;
+    if(direction === 'up' && numVal > 0 && oldPrice > 0 && res <= oldPrice){
+      res = Math.ceil(val / 1000) * 1000;
+      if(res <= oldPrice) res = oldPrice + 1000;
+    } else if(direction === 'down' && numVal > 0 && oldPrice > 0 && res >= oldPrice){
+      res = Math.floor(val / 1000) * 1000;
+      if(res >= oldPrice) res = Math.max(1000, oldPrice - 1000);
+    }
+    return Math.max(1000, res);
   } else if(mode === '500'){
-    return Math.max(500, Math.round(num / 500) * 500);
+    let res = Math.round(num / 500) * 500;
+    if(direction === 'up' && numVal > 0 && oldPrice > 0 && res <= oldPrice){
+      res = Math.ceil(val / 500) * 500;
+      if(res <= oldPrice) res = oldPrice + 500;
+    } else if(direction === 'down' && numVal > 0 && oldPrice > 0 && res >= oldPrice){
+      res = Math.floor(val / 500) * 500;
+      if(res >= oldPrice) res = Math.max(500, oldPrice - 500);
+    }
+    return Math.max(500, res);
   } else if(mode === '100'){
-    return Math.max(100, Math.round(num / 100) * 100);
+    let res = Math.round(num / 100) * 100;
+    if(direction === 'up' && numVal > 0 && oldPrice > 0 && res <= oldPrice){
+      res = Math.ceil(val / 100) * 100;
+      if(res <= oldPrice) res = oldPrice + 100;
+    } else if(direction === 'down' && numVal > 0 && oldPrice > 0 && res >= oldPrice){
+      res = Math.floor(val / 100) * 100;
+      if(res >= oldPrice) res = Math.max(100, oldPrice - 100);
+    }
+    return Math.max(100, res);
   }
-  return num;
+  return Math.max(1, num);
 }
 
 function getPriceForCountry(p, cCode, isMax = false){
@@ -5075,10 +5300,10 @@ function getPriceForCountry(p, cCode, isMax = false){
     return isMax ? (p.maxPrice || 0) : (p.price || 0);
   }
   if(!isMax && p.countryPrice && p.countryPrice[cCode] !== undefined && p.countryPrice[cCode] > 0){
-    return p.countryPrice[cCode];
+    return Number(p.countryPrice[cCode]);
   }
   if(isMax && p.countryMaxPrice && p.countryMaxPrice[cCode] !== undefined && p.countryMaxPrice[cCode] > 0){
-    return p.countryMaxPrice[cCode];
+    return Number(p.countryMaxPrice[cCode]);
   }
   const baseP = isMax ? (p.maxPrice || 0) : (p.price || 0);
   return convertPrice(baseP, cCode, p, isMax).amount;
@@ -5095,8 +5320,9 @@ function getActiveCountrySettings(){
     if(!isActive) return;
 
     const input = document.getElementById(`inputPercent_${c}`);
-    const pct = Math.max(0, Math.min(500, parseFloat(input ? input.value : 0) || 0));
+    const val = Math.max(0, Math.min(5000000, parseFloat(input ? input.value : 0) || 0));
     const dir = countryDirections[c] || 'up';
+    const aType = countryAdjustTypes[c] || 'percent';
     const roundEl = document.getElementById(`rounding_${c}`);
     const roundMode = roundEl ? roundEl.value : (c === 'ID' ? '1000' : (c === 'MY' ? '1' : '0.5'));
 
@@ -5110,7 +5336,9 @@ function getActiveCountrySettings(){
       flag: flags[c],
       currency: currs[c],
       symbol: syms[c],
-      percent: pct,
+      value: val,
+      percent: val, // alias for backwards compatibility
+      adjustType: aType,
       direction: dir,
       rounding: roundMode
     });
@@ -5144,16 +5372,19 @@ function updatePriceAdjustPreview(){
     badgeEl.textContent = `${tName} • ${cDesc}`;
   }
 
-  const hasAnyPct = activeCountries.some(c => c.percent > 0);
-  const canApply = targets.length > 0 && activeCountries.length > 0 && hasAnyPct;
+  const hasAnyVal = activeCountries.some(c => c.value > 0);
+  const canApply = targets.length > 0 && activeCountries.length > 0 && hasAnyVal;
 
   if(btnApply){
     if(activeCountries.length === 0){
       btnApply.textContent = '⚠️ Centang Minimal 1 Negara di Atas';
-    } else if(!hasAnyPct){
-      btnApply.textContent = '⚠️ Masukkan Persentase Kenaikan (> 0%)';
+    } else if(!hasAnyVal){
+      btnApply.textContent = '⚠️ Masukkan Nilai Kenaikan (> 0)';
     } else {
-      const summaryParts = activeCountries.map(c => `${c.flag} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(' | ');
+      const summaryParts = activeCountries.map(c => {
+        const unit = c.adjustType === 'percent' ? '%' : ' ' + c.symbol;
+        return `${c.flag} ${c.direction === 'up' ? '+' : '-'}${c.value}${unit}`;
+      }).join(' | ');
       btnApply.textContent = `🚀 Terapkan ke ${targets.length} Produk (${summaryParts})`;
     }
     btnApply.disabled = !canApply;
@@ -5181,7 +5412,7 @@ function updatePriceAdjustPreview(){
   let html = samples.map(p => {
     let countryBadgesHtml = activeCountries.map(c => {
       const oldVal = getPriceForCountry(p, c.code, false);
-      const newVal = calculateNewPrice(oldVal, c.percent, c.direction, c.rounding, c.code);
+      const newVal = calculateNewPrice(oldVal, c.value, c.direction, c.rounding, c.code, c.adjustType);
       const diff = newVal - oldVal;
 
       let oldStr = '';
@@ -5208,6 +5439,7 @@ function updatePriceAdjustPreview(){
 
       const diffColor = diff > 0 ? '#16a34a' : (diff < 0 ? '#dc2626' : '#64748b');
       const signLabel = c.direction === 'up' ? '+' : '-';
+      const unitLabel = c.adjustType === 'percent' ? '%' : ' ' + c.symbol;
       const discPct = getDiscount(p);
       let discNoteHtml = '';
       if(discPct > 0){
@@ -5220,7 +5452,7 @@ function updatePriceAdjustPreview(){
       return `
         <div style="background:#f8fafc;padding:5px 8px;border-radius:6px;margin-top:4px;border:1px solid #f1f5f9">
           <div style="display:flex;align-items:center;justify-content:space-between;font-size:11px">
-            <span style="font-weight:700;color:#334155">${c.flag} ${c.code} (${signLabel}${c.percent}%):</span>
+            <span style="font-weight:700;color:#334155">${c.flag} ${c.code} (${signLabel}${c.value}${unitLabel}):</span>
             <div style="display:flex;align-items:center;gap:6px">
               <span style="color:#94a3b8;text-decoration:line-through;font-size:10px">${oldStr}</span>
               <span style="font-weight:800;color:#0f172a">${newStr}</span>
@@ -5246,7 +5478,7 @@ function updatePriceAdjustPreview(){
   if(targets.length > sampleCount){
     html += `
       <div style="font-size:10.5px;color:#7c3aed;text-align:center;padding:4px;font-weight:700">
-        ✨ ... dan ${targets.length - sampleCount} produk lainnya akan otomatis diperbarui sesuai persentase tiap negara
+        ✨ ... dan ${targets.length - sampleCount} produk lainnya akan otomatis diperbarui sesuai persentase/nominal tiap negara
       </div>
     `;
   }
@@ -5254,7 +5486,10 @@ function updatePriceAdjustPreview(){
   listEl.innerHTML = html;
 
   if(footerEl){
-    const summaryList = activeCountries.map(c => `${c.flag} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(' • ');
+    const summaryList = activeCountries.map(c => {
+      const unit = c.adjustType === 'percent' ? '%' : ' ' + c.symbol;
+      return `${c.flag} ${c.direction === 'up' ? '+' : '-'}${c.value}${unit}`;
+    }).join(' • ');
     footerEl.innerHTML = `
       <span>Total Target: <strong>${targets.length} Produk</strong></span>
       <span>Kenaikan: <strong>${summaryList}</strong></span>
@@ -5280,8 +5515,11 @@ function applyPriceAdjustmentMultiCountry(){
   const snapshot = {
     timestamp: Date.now(),
     targetText: targetDesc,
-    countries: activeCountries.map(c => ({ code: c.code, percent: c.percent, direction: c.direction })),
-    summaryText: activeCountries.map(c => `${c.code} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(', '),
+    countries: activeCountries.map(c => ({ code: c.code, value: c.value, percent: c.value, direction: c.direction, adjustType: c.adjustType })),
+    summaryText: activeCountries.map(c => {
+      const u = c.adjustType === 'percent' ? '%' : ' ' + c.symbol;
+      return `${c.code} ${c.direction === 'up' ? '+' : '-'}${c.value}${u}`;
+    }).join(', '),
     products: JSON.parse(JSON.stringify(products))
   };
   priceAdjustUndoSnapshot = snapshot;
@@ -5310,20 +5548,24 @@ function applyPriceAdjustmentMultiCountry(){
     // Proses modifikasi tiap negara yang aktif
     activeCountries.forEach(c => {
       const oldVal = oldPrices[c.code];
-      const newVal = calculateNewPrice(oldVal, c.percent, c.direction, c.rounding, c.code);
+      const newVal = calculateNewPrice(oldVal, c.value, c.direction, c.rounding, c.code, c.adjustType);
 
       if(c.code === 'ID'){
         // Indonesia mengupdate harga master base IDR toko
         cloned.price = newVal;
         if(cloned.maxPrice && cloned.maxPrice > cloned.price && oldMaxPrices['ID']){
-          cloned.maxPrice = calculateNewPrice(oldMaxPrices['ID'], c.percent, c.direction, c.rounding, 'ID');
+          cloned.maxPrice = calculateNewPrice(oldMaxPrices['ID'], c.value, c.direction, c.rounding, 'ID', c.adjustType);
           cloned.priceRaw = `${cloned.price} - ${cloned.maxPrice}`;
         } else {
           cloned.priceRaw = `${cloned.price}`;
         }
         cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
-        const curM = Number(cloned.countryMarkup['ID']) || 0;
-        cloned.countryMarkup['ID'] = Math.round((curM + (c.percent * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+        if(c.adjustType === 'percent'){
+          const curM = Number(cloned.countryMarkup['ID']) || 0;
+          cloned.countryMarkup['ID'] = Math.round((curM + (c.value * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+        } else {
+          cloned.countryMarkup['ID'] = 0;
+        }
         cloned.countryPrice = cloned.countryPrice ? { ...cloned.countryPrice } : {};
         cloned.countryPrice['ID'] = newVal;
       } else {
@@ -5332,12 +5574,16 @@ function applyPriceAdjustmentMultiCountry(){
         cloned.countryPrice[c.code] = newVal;
 
         cloned.countryMarkup = cloned.countryMarkup ? { ...cloned.countryMarkup } : {};
-        const curM = Number(cloned.countryMarkup[c.code]) || 0;
-        cloned.countryMarkup[c.code] = Math.round((curM + (c.percent * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+        if(c.adjustType === 'percent'){
+          const curM = Number(cloned.countryMarkup[c.code]) || 0;
+          cloned.countryMarkup[c.code] = Math.round((curM + (c.value * (c.direction === 'up' ? 1 : -1))) * 10) / 10;
+        } else {
+          cloned.countryMarkup[c.code] = 0;
+        }
 
         if(cloned.maxPrice && cloned.maxPrice > cloned.price && oldMaxPrices[c.code]){
           cloned.countryMaxPrice = cloned.countryMaxPrice ? { ...cloned.countryMaxPrice } : {};
-          cloned.countryMaxPrice[c.code] = calculateNewPrice(oldMaxPrices[c.code], c.percent, c.direction, c.rounding, c.code);
+          cloned.countryMaxPrice[c.code] = calculateNewPrice(oldMaxPrices[c.code], c.value, c.direction, c.rounding, c.code, c.adjustType);
         }
       }
     });
@@ -5379,7 +5625,10 @@ function applyPriceAdjustmentMultiCountry(){
   updatePriceAdjustPreview();
 
   const statusEl = document.getElementById('priceAdjustStatus');
-  const summaryShort = activeCountries.map(c => `${c.flag} ${c.code} ${c.direction === 'up' ? '+' : '-'}${c.percent}%`).join(' | ');
+  const summaryShort = activeCountries.map(c => {
+    const unit = c.adjustType === 'percent' ? '%' : ' ' + c.symbol;
+    return `${c.flag} ${c.code} ${c.direction === 'up' ? '+' : '-'}${c.value}${unit}`;
+  }).join(' | ');
   if(statusEl){
     statusEl.textContent = `✅ Berhasil menerapkan penyesuaian harga ke ${targets.length} produk (${summaryShort})!`;
     statusEl.classList.add('show');
