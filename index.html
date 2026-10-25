@@ -2,6 +2,19 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
+<script>
+  window.addEventListener('error', function(e) {
+    if (e && (e.message === 'Script error.' || !e.message)) {
+      console.warn('Defensively caught unhandled cross-origin Script error:', e);
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      return true;
+    }
+  });
+  window.addEventListener('unhandledrejection', function(e) {
+    console.warn('Defensively caught unhandled Promise rejection:', e && e.reason);
+    if (e && typeof e.preventDefault === 'function') e.preventDefault();
+  });
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>NORXSTORE</title>
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
@@ -553,6 +566,145 @@ body.dark-mode #cartPayCrossBorderNote > div{
   border-radius: 12px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 15px rgba(168, 85, 247, 0.25);
 }
+
+/* ==================== STIKER ULASAN PELANGGAN ==================== */
+.review-sticker-picker-box {
+  margin: 10px 0 12px;
+  text-align: left;
+}
+.review-sticker-picker-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+.review-sticker-picker-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #c084fc;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.review-sticker-picker-hint {
+  font-size: 10px;
+  color: #94a3b8;
+}
+.stickers-picker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  max-height: 120px;
+  overflow-y: auto;
+  padding: 4px 2px;
+}
+.stickers-picker-grid::-webkit-scrollbar {
+  width: 4px;
+}
+.stickers-picker-grid::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+.sticker-chip-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: #cbd5e1;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .16s ease;
+  user-select: none;
+}
+.sticker-chip-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+.sticker-chip-btn.selected {
+  background: linear-gradient(135deg, rgba(124, 58, 237, 0.38), rgba(245, 158, 11, 0.28));
+  border: 1.5px solid #fbbf24;
+  color: #fef08a;
+  box-shadow: 0 0 12px rgba(245, 158, 11, 0.4);
+  transform: scale(1.03);
+}
+.sticker-chip-icon {
+  font-size: 13px;
+  line-height: 1;
+}
+.sticker-chip-label {
+  line-height: 1.2;
+}
+.sticker-chip-check {
+  font-size: 10px;
+  background: #fbbf24;
+  color: #1e1338;
+  border-radius: 50%;
+  width: 14px;
+  height: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 900;
+}
+
+/* Badge Stiker Pada Kartu Ulasan */
+.customer-review-sticker-row {
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.customer-review-sticker-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 3.5px 11px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  position: relative;
+  overflow: hidden;
+  border-width: 1px;
+  border-style: solid;
+  transition: transform .18s ease;
+}
+.customer-review-sticker-pill:hover {
+  transform: translateY(-1px) scale(1.02);
+}
+.sticker-pill-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+.sticker-pill-label {
+  line-height: 1.2;
+}
+.sticker-pill-shine {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.4), transparent);
+  transform: skewX(-20deg);
+  animation: stickerPillShine 4s infinite;
+  pointer-events: none;
+}
+@keyframes stickerPillShine {
+  0% { left: -60%; }
+  25% { left: 160%; }
+  100% { left: 160%; }
+}
+
 
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
 .carousel-track{display:flex;transition:transform .5s ease;width:100%}
@@ -2228,9 +2380,9 @@ button{cursor:pointer;font-family:inherit}
   color:#701a75;
 }
 </style>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js" crossorigin="anonymous"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-auth-compat.js" crossorigin="anonymous"></script>
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyAqXNB16IeOxbox9T9CI29Y5wocb-jyVU0",
@@ -2242,6 +2394,78 @@ button{cursor:pointer;font-family:inherit}
     appId: "1:596486638974:web:729b2a8f51231b2c13372f",
     measurementId: "G-1L22FJWN8T"
   };
+
+  function createSafeFirebaseFallback() {
+    const createMockRef = function(path) {
+      const snap = {
+        exists: function(){ return false; },
+        val: function(){ return null; },
+        key: String(path || '').split('/').pop() || null,
+        forEach: function(){ return false; }
+      };
+      const mockRef = {
+        key: String(path || '').split('/').pop() || null,
+        set: function(){ return Promise.resolve(); },
+        update: function(){ return Promise.resolve(); },
+        remove: function(){ return Promise.resolve(); },
+        once: function(evt, cb){
+          const p = Promise.resolve(snap);
+          if(typeof cb === 'function'){
+            try { cb(snap); } catch(e){}
+          }
+          return p;
+        },
+        on: function(evt, cb){
+          if(typeof cb === 'function'){
+            try { cb(snap); } catch(e){}
+          }
+        },
+        off: function(){},
+        push: function(val){
+          const childRef = createMockRef((path || '') + '/item_' + Math.random().toString(36).substr(2, 6));
+          if(val !== undefined) childRef.set(val);
+          return childRef;
+        },
+        onDisconnect: function(){
+          return {
+            set: function(){ return Promise.resolve(); },
+            update: function(){ return Promise.resolve(); },
+            remove: function(){ return Promise.resolve(); },
+            cancel: function(){ return Promise.resolve(); }
+          };
+        }
+      };
+      return mockRef;
+    };
+
+    const mockDb = {
+      ref: function(p){ return createMockRef(p); }
+    };
+
+    const mockAuth = {
+      currentUser: null,
+      onAuthStateChanged: function(cb){
+        try {
+          if(typeof cb === 'function') cb(null);
+        } catch(e){}
+        return function(){};
+      },
+      signInAnonymously: function(){
+        const mockUser = { uid: 'guest_' + Math.random().toString(36).substr(2, 8), isAnonymous: true };
+        mockAuth.currentUser = mockUser;
+        return Promise.resolve({ user: mockUser });
+      },
+      signInWithPopup: function(){ return Promise.reject(new Error('Firebase offline')); },
+      getRedirectResult: function(){ return Promise.resolve({ user: null }); },
+      signOut: function(){
+        mockAuth.currentUser = null;
+        return Promise.resolve();
+      }
+    };
+
+    return { db: mockDb, auth: mockAuth };
+  }
+
   let fbDB;
   let fbAuth;
   window.fbAvailable = true;
@@ -2253,12 +2477,9 @@ button{cursor:pointer;font-family:inherit}
   } catch(e) {
     window.fbAvailable = false;
     console.warn('Firebase tidak tersedia, situs berjalan mode offline (data tidak sinkron):', e);
-    const noopRef = {
-      set: function(){ return Promise.resolve(); },
-      on: function(){ /* no-op: nilai cache lokal default tetap dipakai */ }
-    };
-    fbDB = { ref: function(){ return noopRef; } };
-    fbAuth = { signInAnonymously: function(){ return Promise.resolve(); } };
+    const fallback = createSafeFirebaseFallback();
+    fbDB = fallback.db;
+    fbAuth = fallback.auth;
   }
 </script>
 </head>
@@ -2395,6 +2616,15 @@ button{cursor:pointer;font-family:inherit}
         <span class="interactive-star active" data-val="5" onclick="setHeroRatingStars(5)">★</span>
       </div>
       <div id="heroStarDesc" style="font-size:12.5px;font-weight:800;color:#fde047;margin-top:2px">⭐⭐⭐⭐⭐ Sangat Puas! (5 Bintang)</div>
+    </div>
+
+    <!-- Pilihan Stiker Ulasan (Pelanggan) -->
+    <div class="review-sticker-picker-box">
+      <div class="review-sticker-picker-header">
+        <label class="review-sticker-picker-title">🏷️ Tempel Stiker Ulasan (Opsional):</label>
+        <span class="review-sticker-picker-hint">Pilih stiker favorit</span>
+      </div>
+      <div class="stickers-picker-grid" id="heroStickersList"></div>
     </div>
 
     <div id="heroRatingOrderSelectWrap" style="margin-bottom:10px;text-align:left">
@@ -3910,6 +4140,13 @@ button{cursor:pointer;font-family:inherit}
         <span class="interactive-star active" data-val="5" onclick="setNotifRatingStars(5)">★</span>
       </div>
       <div id="notifStarDesc" style="font-size:11.5px;font-weight:700;color:#fef08a;margin-bottom:8px">⭐⭐⭐⭐⭐ Sangat Puas (5 Bintang)</div>
+      <!-- Pilihan Stiker Ulasan -->
+      <div class="review-sticker-picker-box" style="margin:4px 0 8px">
+        <div class="review-sticker-picker-header" style="justify-content:center;gap:6px">
+          <label class="review-sticker-picker-title" style="font-size:10.5px">🏷️ Pilih Stiker (Opsional):</label>
+        </div>
+        <div class="stickers-picker-grid" id="notifStickersList" style="justify-content:center"></div>
+      </div>
       <input type="text" id="notifReviewerName" class="rating-field-input" placeholder="Nama / Panggilan Anda (opsional)">
       <textarea id="notifReviewText" class="rating-field-input" rows="2" placeholder="Ulasan Anda (misal: 'Joki kilat, akun aman, penjual ramah!')"></textarea>
       <button type="button" class="order-notif-btn primary" id="btnSubmitNotifRating" onclick="submitNotifRating()">⭐ Kirim Bintang & Naikkan Rating</button>
@@ -3972,6 +4209,15 @@ button{cursor:pointer;font-family:inherit}
         <span class="interactive-star active" data-val="5" onclick="setModalRatingStars(5)">★</span>
       </div>
       <div id="modalStarDesc" style="font-size:12px;font-weight:800;color:#fde047;margin-top:2px">⭐⭐⭐⭐⭐ Sangat Puas (5 Bintang)</div>
+    </div>
+
+    <!-- Pilihan Stiker Ulasan (Pelanggan) -->
+    <div class="review-sticker-picker-box">
+      <div class="review-sticker-picker-header">
+        <label class="review-sticker-picker-title">🏷️ Tempel Stiker Ulasan (Opsional):</label>
+        <span class="review-sticker-picker-hint">Pilih stiker favorit</span>
+      </div>
+      <div class="stickers-picker-grid" id="modalStickersList"></div>
     </div>
 
     <div style="margin-bottom:8px">
@@ -4210,6 +4456,19 @@ button{cursor:pointer;font-family:inherit}
 <div class="toast" id="toast"></div>
 
 <script>
+// Akun admin terdaftar yang diizinkan untuk login manajemen & membalas ulasan pelanggan
+var ADMIN_EMAILS = ['irvanaafdillaputra@gmail.com', 'thezilpyoraa@gmail.com', 'whitemegido@gmail.com'];
+
+function isAuthorizedAdmin(){
+  try {
+    if(!currentUser || currentUser.isAnonymous || !currentUser.email) return false;
+    const email = String(currentUser.email).trim().toLowerCase();
+    const list = Array.isArray(ADMIN_EMAILS) ? ADMIN_EMAILS : ['irvanaafdillaputra@gmail.com', 'thezilpyoraa@gmail.com', 'whitemegido@gmail.com'];
+    return list.some(function(adm){ return adm.toLowerCase() === email; });
+  } catch(e) {
+    return false;
+  }
+}
 
 const DEFAULT_PRODUCT_IMAGES = {
   1: ['/prod_1.jpg'],
@@ -11897,6 +12156,8 @@ function triggerOrderFinishedNotification(order){
       `;
     } else {
       setNotifRatingStars(5);
+      selectedNotifSticker = null;
+      renderStickerPicker('notif');
       const nameInput = document.getElementById('notifReviewerName');
       const commentInput = document.getElementById('notifReviewText');
       if(nameInput){
@@ -11966,6 +12227,55 @@ function extractCustomerRatingsFromOrders(){
   return list;
 }
 
+// ==================== STIKER ULASAN & REVIEW STICKERS ====================
+const REVIEW_STICKERS = [
+  { id: 'kilat', icon: '⚡', label: 'Kilat Banget', color: '#fef08a', bg: 'rgba(234, 179, 8, 0.18)', border: 'rgba(250, 204, 21, 0.45)' },
+  { id: 'aman', icon: '🛡️', label: '100% Aman', color: '#93c5fd', bg: 'rgba(59, 130, 246, 0.18)', border: 'rgba(96, 165, 250, 0.45)' },
+  { id: 'sultan', icon: '👑', label: 'Sultan Gaming', color: '#fde047', bg: 'rgba(245, 158, 11, 0.2)', border: 'rgba(245, 158, 11, 0.5)' },
+  { id: 'pro', icon: '🎮', label: 'GGWP Pro', color: '#d8b4fe', bg: 'rgba(168, 85, 247, 0.18)', border: 'rgba(192, 132, 252, 0.45)' },
+  { id: 'puas', icon: '💖', label: 'Puas Banget', color: '#fbcfe8', bg: 'rgba(244, 63, 94, 0.18)', border: 'rgba(251, 113, 133, 0.45)' },
+  { id: 'fast', icon: '🚀', label: 'Super Cepat', color: '#7dd3fc', bg: 'rgba(14, 165, 233, 0.18)', border: 'rgba(56, 189, 248, 0.45)' },
+  { id: 'ramah', icon: '🤝', label: 'Ramah Pol', color: '#86efac', bg: 'rgba(34, 197, 94, 0.18)', border: 'rgba(74, 222, 128, 0.45)' },
+  { id: 'gacor', icon: '🔥', label: 'Gacor Parah', color: '#fed7aa', bg: 'rgba(249, 115, 22, 0.18)', border: 'rgba(251, 146, 60, 0.45)' },
+  { id: 'recom', icon: '💯', label: 'Recommended', color: '#a7f3d0', bg: 'rgba(16, 185, 129, 0.18)', border: 'rgba(52, 211, 153, 0.45)' },
+  { id: 'bintang5', icon: '🌟', label: 'Bintang 5 Plus', color: '#fef9c3', bg: 'rgba(250, 204, 21, 0.22)', border: 'rgba(253, 224, 71, 0.55)' }
+];
+
+let selectedModalSticker = null;
+let selectedHeroSticker = null;
+let selectedNotifSticker = null;
+
+function selectReviewSticker(scope, stickerId){
+  if(scope === 'modal'){
+    selectedModalSticker = (selectedModalSticker === stickerId) ? null : stickerId;
+    renderStickerPicker('modal');
+  } else if(scope === 'hero'){
+    selectedHeroSticker = (selectedHeroSticker === stickerId) ? null : stickerId;
+    renderStickerPicker('hero');
+  } else if(scope === 'notif'){
+    selectedNotifSticker = (selectedNotifSticker === stickerId) ? null : stickerId;
+    renderStickerPicker('notif');
+  }
+}
+
+function renderStickerPicker(scope){
+  const containerId = (scope === 'modal') ? 'modalStickersList' : ((scope === 'hero') ? 'heroStickersList' : 'notifStickersList');
+  const el = document.getElementById(containerId);
+  if(!el) return;
+  const current = (scope === 'modal') ? selectedModalSticker : ((scope === 'hero') ? selectedHeroSticker : selectedNotifSticker);
+  
+  el.innerHTML = REVIEW_STICKERS.map(s => {
+    const isSelected = (current === s.id);
+    return `
+      <button type="button" class="sticker-chip-btn ${isSelected ? 'selected' : ''}" onclick="selectReviewSticker('${scope}', '${s.id}')" title="${escapeHtml(s.label)}">
+        <span class="sticker-chip-icon">${s.icon}</span>
+        <span class="sticker-chip-label">${escapeHtml(s.label)}</span>
+        ${isSelected ? '<span class="sticker-chip-check">✓</span>' : ''}
+      </button>
+    `;
+  }).join('');
+}
+
 const SEED_CUSTOMER_RATINGS = [
   {
     id: "RAT-1792489620200-o7gp",
@@ -11975,6 +12285,7 @@ const SEED_CUSTOMER_RATINGS = [
     customerName: "Faizzz Ganteng",
     serviceName: "Layanan Joki Norxstore",
     comment: "Puas banget, udah mah murah, customer service nya juga bagus 😋",
+    sticker: "puas",
     createdAt: 1792489620200,
     country: "ID",
     lang: "ID",
@@ -11994,6 +12305,7 @@ const SEED_CUSTOMER_RATINGS = [
     customerName: "Pelanggan Norxstore",
     serviceName: "Layanan Joki Norxstore",
     comment: "",
+    sticker: "recom",
     createdAt: 1792489527895,
     country: "ID",
     lang: "ID"
@@ -12006,6 +12318,7 @@ const SEED_CUSTOMER_RATINGS = [
     customerName: "Yitno Tabrani",
     serviceName: "20 IF",
     comment: "",
+    sticker: "kilat",
     createdAt: 1791498992674,
     country: "ID",
     lang: "ID"
@@ -12018,6 +12331,7 @@ const SEED_CUSTOMER_RATINGS = [
     customerName: "Pelanggan Norxstore",
     serviceName: "LVL 1 - 40",
     comment: "",
+    sticker: "aman",
     createdAt: 1791194121307,
     country: "ID",
     lang: "ID"
@@ -12338,8 +12652,34 @@ function renderCustomerReviews(){
       `;
     }
 
+    // Render Stiker Ulasan Pelanggan
+    let stickerHtml = '';
+    if(r.sticker){
+      const stObj = (typeof r.sticker === 'object' && r.sticker !== null)
+        ? r.sticker
+        : REVIEW_STICKERS.find(s => s.id === r.sticker);
+      if(stObj){
+        const icon = escapeHtml(stObj.icon || '🏷️');
+        const label = escapeHtml(stObj.label || 'Stiker Ulasan');
+        const bg = stObj.bg || 'rgba(168, 85, 247, 0.16)';
+        const border = stObj.border || 'rgba(192, 132, 252, 0.45)';
+        const color = stObj.color || '#f3e8ff';
+        stickerHtml = `
+          <div class="customer-review-sticker-row">
+            <span class="customer-review-sticker-pill" style="background:${bg};border-color:${border};color:${color}">
+              <span class="sticker-pill-icon">${icon}</span>
+              <span class="sticker-pill-label">${label}</span>
+              <span class="sticker-pill-shine"></span>
+            </span>
+          </div>
+        `;
+      }
+    }
+
     let replyTriggerBtnHtml = '';
-    if(!r.adminReply || !r.adminReply.text){
+    // HANYA akun admin yang ditautkan lewat Google (isAuthorizedAdmin) yang dapat membalas ulasan.
+    // Di akun tamu (guest) maupun akun Google pelanggan lainnya, tombol balas ini DIHAPUS TOTAL (tidak tampil).
+    if(isAuthorizedAdmin() && (!r.adminReply || !r.adminReply.text)){
       replyTriggerBtnHtml = `
         <div style="margin-top:8px">
           <button type="button" class="review-admin-reply-btn" onclick="openAdminReviewReplyModal('${escapeHtml(r.id)}')">
@@ -12374,6 +12714,7 @@ function renderCustomerReviews(){
           </div>
           <span class="customer-review-service">🎮 ${serviceNameText}</span>
         </div>
+        ${stickerHtml}
         ${commentDisplay}
         ${translateControls}
         ${adminReplyHtml}
@@ -12388,13 +12729,7 @@ function renderCustomerReviews(){
 // ==================== BALAS ULASAN PELANGGAN (KHUSUS ADMIN TERTAUT GOOGLE) ====================
 function openAdminReviewReplyModal(ratingId){
   if(!isAuthorizedAdmin()){
-    if(!currentUser || currentUser.isAnonymous){
-      if(confirm('👑 Khusus Admin Toko:\n\nHanya akun admin yang ditautkan lewat Google (' + ADMIN_EMAILS.join(', ') + ') yang dapat membalas ulasan pelanggan.\n\nLogin dengan akun Google Admin sekarang?')){
-        loginWithGoogle();
-      }
-    } else {
-      showToast('❌ Akun Google (' + (currentUser.email || '') + ') bukan email admin terdaftar. Hanya akun admin yang bisa membalas.');
-    }
+    showToast('❌ Akses khusus admin: Akun Anda tidak memiliki izin untuk membalas ulasan pelanggan.');
     return;
   }
 
@@ -12621,7 +12956,8 @@ function submitNotifRating(){
     customerName: customerName,
     stars: notifSelectedStars,
     serviceName: serviceName,
-    comment: comment
+    comment: comment,
+    sticker: selectedNotifSticker
   });
   
   const ratingBox = document.getElementById('orderNotifRatingBox');
@@ -12697,6 +13033,8 @@ function toggleHeroRatingForm(forceState, orderId){
     }
     
     setHeroRatingStars(5);
+    selectedHeroSticker = null;
+    renderStickerPicker('hero');
     card.style.display = 'block';
     
     const toggleBtn = document.getElementById('btnToggleRatingForm');
@@ -12766,7 +13104,8 @@ function submitHeroRating(){
     customerName: customerName,
     stars: heroSelectedStars,
     serviceName: serviceName,
-    comment: comment
+    comment: comment,
+    sticker: selectedHeroSticker
   });
   
   toggleHeroRatingForm(false);
@@ -12838,6 +13177,8 @@ function openGiveRatingModal(orderId){
   if(commentEl) commentEl.value = '';
 
   setModalRatingStars(5);
+  selectedModalSticker = null;
+  renderStickerPicker('modal');
   modal.classList.add('open');
 }
 
@@ -12889,6 +13230,7 @@ function submitCustomerRating(ratingData){
     stars: Math.max(1, Math.min(5, parseInt(ratingData.stars, 10) || 5)),
     serviceName: (ratingData.serviceName || '').trim() || defServiceFallback,
     comment: (ratingData.comment || '').trim(),
+    sticker: ratingData.sticker || null,
     createdAt: Date.now(),
     country: currentSelectedCountry || 'ID',
     lang: currentSelectedCountry || 'ID'
@@ -12956,7 +13298,8 @@ function submitModalRating(){
     customerName: customerName,
     stars: modalSelectedStars,
     serviceName: serviceName,
-    comment: comment
+    comment: comment,
+    sticker: selectedModalSticker
   });
   
   closeGiveRatingModal();
@@ -13167,17 +13510,23 @@ if(window.fbAvailable && fbAuth.onAuthStateChanged){
     renderCustomerReviews();
     if(isAdminOpen()) renderAdminRatingsList();
   });
-  fbAuth.getRedirectResult().then(result=>{
-    if(result && result.user){
-      closeLoginModal();
-      showToast('Berhasil login sebagai ' + (result.user.displayName || 'pengguna'));
+  if(fbAuth && typeof fbAuth.getRedirectResult === 'function'){
+    try {
+      const redirectPromise = fbAuth.getRedirectResult();
+      if(redirectPromise && typeof redirectPromise.then === 'function'){
+        redirectPromise.then(result=>{
+          if(result && result.user){
+            closeLoginModal();
+            showToast('Berhasil login sebagai ' + (result.user.displayName || 'pengguna'));
+          }
+        }).catch(e=>{
+          console.warn('Login redirect info/status:', e);
+        });
+      }
+    } catch(err) {
+      console.warn('getRedirectResult catch:', err);
     }
-  }).catch(e=>{
-    console.error('Login redirect gagal:', e);
-    if(e && e.code && e.code !== 'auth/no-current-user'){
-      showToast('Login gagal: ' + e.code);
-    }
-  });
+  }
 }
 
 function updateLoginIcon(){
@@ -13243,7 +13592,7 @@ function loginWithGoogle(){
       showToast('Login dibatalkan');
     } else if(e && e.code === 'auth/unauthorized-domain'){
       const currentHost = window.location.hostname;
-      alert('⚠️ Domain Belum Diizinkan di Firebase!\n\nDomain: ' + currentHost + ' belum didaftarkan di Firebase Console.\n\nCara mengatasi:\n1. Buka console.firebase.google.com\n2. Pilih proyek norxstore-id\n3. Masuk ke Authentication > Settings > Authorized domains\n4. Klik "Add domain" lalu masukkan: ' + currentHost);
+      showToast('⚠️ Domain ' + currentHost + ' belum diizinkan di Firebase Authentication');
     } else {
       showToast('Login gagal: ' + (e.message || e.code));
     }
@@ -14252,10 +14601,7 @@ document.getElementById('logo').addEventListener('click', function(){
   }
 });
 
-const ADMIN_EMAILS = ['irvanaafdillaputra@gmail.com', 'thezilpyoraa@gmail.com', 'whitemegido@gmail.com'];
-function isAuthorizedAdmin(){
-  return currentUser && !currentUser.isAnonymous && currentUser.email && ADMIN_EMAILS.includes(currentUser.email.toLowerCase());
-}
+// ADMIN_EMAILS dan isAuthorizedAdmin didefinisikan secara global di awal skrip
 function openPwModal(){
   if(!isAuthorizedAdmin()){
     return; // diam saja, tidak ada tanda apapun kalau bukan admin
@@ -15077,7 +15423,11 @@ function localizeSubgroupName(sub, lang = null){
 }
 
 function enableHorizontalDragScroll(el){
-  if(!el || el.dataset.dragInit === 'v2') return;
+  if(!el) return;
+  if(!el.dataset) {
+    el.dataset = {};
+  }
+  if(el.dataset.dragInit === 'v2') return;
   el.dataset.dragInit = 'v2';
 
   let isDown = false;
@@ -17413,6 +17763,11 @@ renderProducts();
 if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
 renderReviews();
 renderCustomerReviews();
+if(typeof renderStickerPicker === 'function'){
+  renderStickerPicker('modal');
+  renderStickerPicker('hero');
+  renderStickerPicker('notif');
+}
 updateRatingStatsUI();
 applyPaymentIcons();
 initPresenceSystem();
