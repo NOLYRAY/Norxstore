@@ -371,6 +371,189 @@ body.dark-mode #cartPayCrossBorderNote > div{
 .review-delete-action-btn:hover{background:rgba(239,68,68,0.25);color:#fff;border-color:#ef4444}
 .review-delete-action-btn:active{transform:scale(0.96)}
 
+/* ==================== BALASAN ADMIN & TITLE EMAS UNGU MENGKILAT GLOW ==================== */
+@keyframes adminGoldPurpleShimmer {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes adminBadgePulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.45), 0 0 18px rgba(168, 85, 247, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.65);
+  }
+  50% {
+    box-shadow: 0 0 16px rgba(251, 191, 36, 0.75), 0 0 26px rgba(217, 70, 239, 0.65), inset 0 1px 2px rgba(255, 255, 255, 0.9);
+  }
+}
+
+@keyframes adminGlossSweep {
+  0% { left: -70%; }
+  30% { left: 140%; }
+  100% { left: 140%; }
+}
+
+/* Badge Title Emas Ungu Mengkilat Glow Gradasi */
+.admin-reply-gold-purple-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: linear-gradient(115deg, #f59e0b, #fbbf24, #ec4899, #8b5cf6, #7c3aed, #f59e0b);
+  background-size: 300% 300%;
+  animation: adminGoldPurpleShimmer 4s ease infinite, adminBadgePulseGlow 3s ease-in-out infinite;
+  border: 1px solid rgba(254, 240, 138, 0.85);
+  color: #ffffff !important;
+  font-size: 9.5px;
+  font-weight: 900;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75), 0 0 8px rgba(251, 191, 36, 0.6);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+.admin-reply-gold-purple-title::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -70%;
+  width: 45%;
+  height: 200%;
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.75), transparent);
+  transform: rotate(30deg);
+  animation: adminGlossSweep 3.5s infinite;
+  pointer-events: none;
+}
+
+/* Kotak Balasan Admin di Ulasan */
+.admin-review-reply-card {
+  margin-top: 10px;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: linear-gradient(145deg, rgba(30, 20, 56, 0.95), rgba(18, 12, 36, 0.98));
+  border: 1px solid rgba(168, 85, 247, 0.4);
+  border-left: 3.5px solid #fbbf24;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4), 0 0 16px rgba(124, 58, 237, 0.15);
+  position: relative;
+}
+
+.admin-review-reply-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 7px;
+  flex-wrap: wrap;
+}
+
+.admin-reply-author-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.admin-reply-avatar-ring {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #fbbf24, #a855f7);
+  padding: 1.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(251, 191, 36, 0.5);
+  flex-shrink: 0;
+}
+
+.admin-reply-avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.admin-reply-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #1e1538;
+  color: #fef08a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.admin-reply-name-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.admin-reply-author-name {
+  font-size: 12px;
+  font-weight: 800;
+  color: #f8fafc;
+}
+
+.admin-reply-date {
+  font-size: 10px;
+  color: #94a3b8;
+}
+
+.admin-reply-text {
+  font-size: 12px;
+  line-height: 1.55;
+  color: #f1f5f9;
+  margin: 0;
+  word-break: break-word;
+  white-space: pre-wrap;
+  background: rgba(255, 255, 255, 0.035);
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.review-admin-reply-btn {
+  background: rgba(124, 58, 237, 0.15);
+  border: 1px solid rgba(168, 85, 247, 0.45);
+  color: #d8b4fe;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 8px;
+  transition: all .18s ease;
+}
+.review-admin-reply-btn:hover {
+  background: rgba(124, 58, 237, 0.3);
+  color: #fff;
+  border-color: #a855f7;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.35);
+}
+
+.review-reply-form-box {
+  margin-top: 10px;
+  padding: 12px;
+  background: rgba(19, 13, 38, 0.95);
+  border: 1.5px solid #a855f7;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 15px rgba(168, 85, 247, 0.25);
+}
+
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
 .carousel-track{display:flex;transition:transform .5s ease;width:100%}
 .carousel-slide{flex:0 0 100%;position:relative;height:260px}
@@ -3804,6 +3987,56 @@ button{cursor:pointer;font-family:inherit}
     <button type="button" class="order-notif-btn primary" id="btnSubmitModalRating" onclick="submitModalRating()">
       ⭐ Kirim Bintang & Naikkan Rating
     </button>
+  </div>
+</div>
+
+<!-- Modal Balas Ulasan Pelanggan (Khusus Admin Tertaut Google) -->
+<div class="modal-overlay" id="adminReviewReplyModal" style="z-index:600" onclick="closeAdminReviewReplyModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()" style="background:#130f24;border:1.5px solid rgba(168,85,247,0.5);color:#fff;max-width:440px;width:calc(100% - 28px);margin:auto;padding:20px;border-radius:20px;box-shadow:0 25px 60px rgba(0,0,0,0.6),0 0 25px rgba(124,58,237,0.25);position:relative">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.08);padding-bottom:10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span class="admin-reply-gold-purple-title">👑 OWNER / ADMIN</span>
+        <span style="font-size:14px;font-weight:800;color:#fff">Balas Ulasan Pelanggan</span>
+      </div>
+      <button type="button" class="modal-close" onclick="closeAdminReviewReplyModal()" style="font-size:18px;background:rgba(255,255,255,0.08);border:none;border-radius:8px;width:28px;height:28px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#cbd5e1">✕</button>
+    </div>
+
+    <!-- Ringkasan Ulasan Pelanggan yang Dibalas -->
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:10px 12px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+        <span style="font-size:11.5px;font-weight:700;color:#e2e8f0" id="replyModalCustomerName">Pelanggan</span>
+        <span style="font-size:11px;color:#f59e0b;font-weight:800" id="replyModalCustomerStars">★★★★★</span>
+      </div>
+      <div style="font-size:12px;color:#cbd5e1;font-style:italic;line-height:1.4" id="replyModalCustomerComment">"..."</div>
+    </div>
+
+    <!-- Status Verifikasi Akun Google Admin -->
+    <div style="display:flex;align-items:center;justify-content:space-between;background:rgba(124,58,237,0.14);border:1px solid rgba(168,85,247,0.3);border-radius:10px;padding:7px 10px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:13px">🔐</span>
+        <span style="font-size:11px;color:#d8b4fe">Akun Google Admin:</span>
+      </div>
+      <span id="replyModalAdminEmail" style="font-size:11px;font-weight:800;color:#fef08a">whitemegido@gmail.com</span>
+    </div>
+
+    <!-- Input Pesan Balasan -->
+    <div style="margin-bottom:14px">
+      <label style="font-size:11px;font-weight:700;color:#c084fc;display:block;margin-bottom:4px">
+        💬 Pesan Balasan Resmi Admin:
+      </label>
+      <textarea id="replyModalTextarea" rows="4" class="rating-field-input" style="background:#1d1736;color:#fff;border-color:rgba(168,85,247,0.4);resize:vertical;font-size:12.5px" placeholder="Tuliskan ucapan terima kasih atau tanggapan resmi dari Owner/Admin Norxstore..."></textarea>
+    </div>
+
+    <input type="hidden" id="replyModalTargetRatingId" value="">
+
+    <div style="display:flex;gap:8px">
+      <button type="button" class="admin-btn-secondary" onclick="closeAdminReviewReplyModal()" style="flex:1;padding:10px;font-size:12px;font-weight:700;background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.15);color:#cbd5e1">
+        ✕ Batal
+      </button>
+      <button type="button" class="admin-btn" onclick="submitAdminReviewReplyModal()" style="flex:2;padding:10px;font-size:12px;font-weight:800;background:linear-gradient(135deg,#f59e0b,#8b5cf6);color:#fff;border-radius:10px;box-shadow:0 4px 15px rgba(245,158,11,0.3);cursor:pointer">
+        🚀 Kirim Balasan Admin
+      </button>
+    </div>
   </div>
 </div>
 
@@ -11744,7 +11977,14 @@ const SEED_CUSTOMER_RATINGS = [
     comment: "Puas banget, udah mah murah, customer service nya juga bagus 😋",
     createdAt: 1792489620200,
     country: "ID",
-    lang: "ID"
+    lang: "ID",
+    adminReply: {
+      text: "Terima kasih banyak atas bintang dan ulasannya kak! Kepuasan pelanggan adalah prioritas utama kami di Norxstore. Ditunggu orderan joki berikutnya ya kak! ✨",
+      authorName: "White Megido",
+      authorEmail: "whitemegido@gmail.com",
+      title: "OWNER / ADMIN NORXSTORE",
+      repliedAt: 1792490000000
+    }
   },
   {
     id: "RAT-1792489527895-kf5c",
@@ -11801,15 +12041,21 @@ function getCustomerRatings(){
   const map = new Map();
   // 1. Seed ratings agar ulasan dan bintang langsung muncul 0ms tanpa delay
   for(const r of SEED_CUSTOMER_RATINGS){
-    if(r && r.id) map.set(r.id, r);
+    if(r && r.id) map.set(r.id, {...r});
   }
   // 2. Cache lokal
   for(const r of localRatings){
-    if(r && r.id) map.set(r.id, r);
+    if(r && r.id){
+      const cur = map.get(r.id);
+      map.set(r.id, cur ? {...cur, ...r} : {...r});
+    }
   }
   // 3. Realtime Cloud ratings dari Firebase
   for(const r of cloudRatings){
-    if(r && r.id) map.set(r.id, r);
+    if(r && r.id){
+      const cur = map.get(r.id);
+      map.set(r.id, cur ? {...cur, ...r} : {...r});
+    }
   }
   
   const merged = Array.from(map.values());
@@ -12055,6 +12301,54 @@ function renderCustomerReviews(){
       </button>
     ` : '';
     
+    // Balasan Admin dengan Title Emas Ungu Mengkilat Glow Gradasi
+    let adminReplyHtml = '';
+    if(r.adminReply && r.adminReply.text){
+      const rep = r.adminReply;
+      const repDateStr = rep.repliedAt ? new Date(rep.repliedAt).toLocaleDateString(locale, {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
+      const repAuthorName = escapeHtml(rep.authorName || 'Owner Norxstore');
+      const repAvatarHtml = rep.authorPhoto
+        ? `<img src="${escapeHtml(rep.authorPhoto)}" class="admin-reply-avatar-img" alt="Admin" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="admin-reply-avatar-fallback" style="display:none">👑</span>`
+        : `<span class="admin-reply-avatar-fallback">👑</span>`;
+
+      const repActionsHtml = isAuthorizedAdmin() ? `
+        <div style="display:flex;align-items:center;gap:6px">
+          <button type="button" onclick="openAdminReviewReplyModal('${escapeHtml(r.id)}')" title="Edit Balasan" style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.2);color:#cbd5e1;padding:3px 8px;border-radius:6px;font-size:10px;cursor:pointer;font-weight:700">✏️ Edit</button>
+          <button type="button" onclick="deleteAdminReviewReply('${escapeHtml(r.id)}')" title="Hapus Balasan" style="background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.3);color:#fca5a5;padding:3px 8px;border-radius:6px;font-size:10px;cursor:pointer;font-weight:700">🗑️ Hapus</button>
+        </div>
+      ` : '';
+
+      adminReplyHtml = `
+        <div class="admin-review-reply-card">
+          <div class="admin-review-reply-header">
+            <div class="admin-reply-author-wrap">
+              <div class="admin-reply-avatar-ring">
+                ${repAvatarHtml}
+              </div>
+              <div class="admin-reply-name-row">
+                <span class="admin-reply-author-name">${repAuthorName}</span>
+                <span class="admin-reply-gold-purple-title">👑 OWNER / ADMIN</span>
+                <span class="admin-reply-date">• ${repDateStr}</span>
+              </div>
+            </div>
+            ${repActionsHtml}
+          </div>
+          <div class="admin-reply-text">${escapeHtml(rep.text)}</div>
+        </div>
+      `;
+    }
+
+    let replyTriggerBtnHtml = '';
+    if(!r.adminReply || !r.adminReply.text){
+      replyTriggerBtnHtml = `
+        <div style="margin-top:8px">
+          <button type="button" class="review-admin-reply-btn" onclick="openAdminReviewReplyModal('${escapeHtml(r.id)}')">
+            <span>💬 Balas Ulasan Pelanggan</span>
+          </button>
+        </div>
+      `;
+    }
+
     const defaultCustName = (currentLang === 'SG') ? 'Norxstore Customer' : 'Pelanggan Norxstore';
     return `
       <div class="customer-review-card">
@@ -12082,11 +12376,190 @@ function renderCustomerReviews(){
         </div>
         ${commentDisplay}
         ${translateControls}
+        ${adminReplyHtml}
+        ${replyTriggerBtnHtml}
       </div>
     `;
   }).join('');
   
   container.innerHTML = headerHtml + cardsHtml;
+}
+
+// ==================== BALAS ULASAN PELANGGAN (KHUSUS ADMIN TERTAUT GOOGLE) ====================
+function openAdminReviewReplyModal(ratingId){
+  if(!isAuthorizedAdmin()){
+    if(!currentUser || currentUser.isAnonymous){
+      if(confirm('👑 Khusus Admin Toko:\n\nHanya akun admin yang ditautkan lewat Google (' + ADMIN_EMAILS.join(', ') + ') yang dapat membalas ulasan pelanggan.\n\nLogin dengan akun Google Admin sekarang?')){
+        loginWithGoogle();
+      }
+    } else {
+      showToast('❌ Akun Google (' + (currentUser.email || '') + ') bukan email admin terdaftar. Hanya akun admin yang bisa membalas.');
+    }
+    return;
+  }
+
+  const cleanId = String(ratingId || '').replace(/^rat_/, '');
+  const ratings = getCustomerRatings();
+  const r = ratings.find(item => String(item.id).replace(/^rat_/, '') === cleanId || item.id === ratingId);
+  if(!r){
+    showToast('⚠️ Ulasan tidak ditemukan.');
+    return;
+  }
+
+  const modal = document.getElementById('adminReviewReplyModal');
+  if(!modal) return;
+
+  const starCount = Math.max(1, Math.min(5, Number(r.stars) || 5));
+  const starsStr = '★'.repeat(starCount) + '☆'.repeat(5 - starCount);
+
+  const nameEl = document.getElementById('replyModalCustomerName');
+  if(nameEl) nameEl.textContent = r.customerName || 'Pelanggan Norxstore';
+
+  const starsEl = document.getElementById('replyModalCustomerStars');
+  if(starsEl) starsEl.textContent = starsStr;
+
+  const commentEl = document.getElementById('replyModalCustomerComment');
+  if(commentEl) commentEl.textContent = r.comment ? `"${r.comment}"` : '(Tanpa komentar teks)';
+
+  const emailEl = document.getElementById('replyModalAdminEmail');
+  if(emailEl) emailEl.textContent = currentUser.email || 'whitemegido@gmail.com';
+
+  const targetInput = document.getElementById('replyModalTargetRatingId');
+  if(targetInput) targetInput.value = ratingId;
+
+  const ta = document.getElementById('replyModalTextarea');
+  if(ta){
+    ta.value = (r.adminReply && r.adminReply.text) ? r.adminReply.text : '';
+  }
+
+  modal.classList.add('open');
+  setTimeout(() => {
+    if(ta) {
+      ta.focus();
+      ta.selectionStart = ta.selectionEnd = ta.value.length;
+    }
+  }, 100);
+}
+
+function closeAdminReviewReplyModal(event){
+  if(event && event.target && event.target !== document.getElementById('adminReviewReplyModal') && !event.target.classList.contains('modal-close')) return;
+  const modal = document.getElementById('adminReviewReplyModal');
+  if(modal) modal.classList.remove('open');
+}
+
+function submitAdminReviewReplyModal(){
+  if(!isAuthorizedAdmin()){
+    showToast('❌ Hanya admin tertaut Google yang dapat mengirim balasan.');
+    return;
+  }
+
+  const targetInput = document.getElementById('replyModalTargetRatingId');
+  const ratingId = targetInput ? targetInput.value : '';
+  if(!ratingId){
+    showToast('⚠️ ID ulasan tidak valid.');
+    return;
+  }
+
+  const ta = document.getElementById('replyModalTextarea');
+  const text = ta ? ta.value.trim() : '';
+  if(!text){
+    showToast('⚠️ Tuliskan pesan balasan terlebih dahulu!');
+    if(ta) ta.focus();
+    return;
+  }
+
+  const cleanId = String(ratingId || '').replace(/^rat_/, '');
+  const replyObj = {
+    text: text,
+    authorName: currentUser.displayName || 'Owner Norxstore',
+    authorEmail: currentUser.email || 'whitemegido@gmail.com',
+    authorPhoto: currentUser.photoURL || null,
+    title: 'OWNER / ADMIN NORXSTORE',
+    repliedAt: Date.now()
+  };
+
+  // 1. Simpan di memori allOrders & Firebase RTDB
+  let matched = false;
+  for(const k in allOrders){
+    const it = allOrders[k];
+    if(!it) continue;
+    const itClean = String(it.id || '').replace(/^rat_/, '');
+    if(itClean === cleanId || k === ratingId || k === ('rat_' + cleanId) || it.id === ratingId){
+      it.adminReply = replyObj;
+      matched = true;
+      if(window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k + '/adminReply').set(replyObj).catch(e => console.error(e));
+      }
+    }
+  }
+
+  // Jika item seed yang belum punya node tersendiri di allOrders
+  if(!matched){
+    const seed = SEED_CUSTOMER_RATINGS.find(s => s.id === ratingId || String(s.id).replace(/^rat_/, '') === cleanId);
+    const baseEntry = seed ? { ...seed } : { id: ratingId, isRating: true, type: 'rating' };
+    baseEntry.adminReply = replyObj;
+    allOrders['rat_' + cleanId] = baseEntry;
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/orders/rat_' + cleanId).set(baseEntry).catch(e => console.error(e));
+    }
+  }
+
+  // 2. Simpan di customerRatingsCache & localStorage
+  const currentRatings = getCustomerRatings().map(r => {
+    const rClean = String(r.id || '').replace(/^rat_/, '');
+    if(rClean === cleanId || r.id === ratingId){
+      return { ...r, adminReply: replyObj };
+    }
+    return r;
+  });
+  saveCustomerRatings(currentRatings);
+
+  // 3. Tutup modal dan refresh tampilan
+  closeAdminReviewReplyModal();
+  renderCustomerReviews();
+  if(isAdminOpen()) renderAdminRatingsList();
+  showToast('👑 Balasan resmi admin berhasil dipublikasikan!');
+}
+
+function deleteAdminReviewReply(ratingId){
+  if(!isAuthorizedAdmin()){
+    showToast('❌ Hanya admin tertaut Google yang dapat menghapus balasan.');
+    return;
+  }
+  if(!confirm('Hapus balasan admin untuk ulasan ini?')) return;
+
+  const cleanId = String(ratingId || '').replace(/^rat_/, '');
+
+  for(const k in allOrders){
+    const it = allOrders[k];
+    if(!it) continue;
+    const itClean = String(it.id || '').replace(/^rat_/, '');
+    if(itClean === cleanId || k === ratingId || k === ('rat_' + cleanId) || it.id === ratingId){
+      delete it.adminReply;
+      if(window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k + '/adminReply').remove().catch(e => console.error(e));
+      }
+    }
+  }
+
+  const currentRatings = getCustomerRatings().map(r => {
+    const rClean = String(r.id || '').replace(/^rat_/, '');
+    if(rClean === cleanId || r.id === ratingId){
+      const cloned = { ...r };
+      delete cloned.adminReply;
+      return cloned;
+    }
+    return r;
+  });
+  saveCustomerRatings(currentRatings);
+
+  renderCustomerReviews();
+  if(isAdminOpen()) renderAdminRatingsList();
+  showToast('🗑️ Balasan admin berhasil dihapus.');
+}
+
+function handleReplyReviewAuth(ratingId){
+  openAdminReviewReplyModal(ratingId);
 }
 
 let currentTestiTab = 'reviews';
@@ -12506,6 +12979,19 @@ function renderAdminRatingsList(){
     const starCount = r.stars || 5;
     const starStr = '★'.repeat(starCount);
     const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '-';
+    let adminReplyPreview = '';
+    if(r.adminReply && r.adminReply.text){
+      adminReplyPreview = `
+        <div style="margin-top:6px;padding:6px 8px;background:linear-gradient(145deg,rgba(30,20,56,0.92),rgba(18,12,36,0.96));border:1px solid rgba(168,85,247,0.3);border-left:3px solid #f59e0b;border-radius:6px">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px">
+            <span class="admin-reply-gold-purple-title" style="font-size:8.5px;padding:1px 6px">👑 OWNER / ADMIN</span>
+            <span style="font-size:10px;font-weight:800;color:#fef08a">${escapeHtml(r.adminReply.authorName || 'Admin')}</span>
+          </div>
+          <div style="font-size:11px;color:#e2e8f0;white-space:pre-wrap">"${escapeHtml(r.adminReply.text)}"</div>
+        </div>
+      `;
+    }
+    const hasReply = !!(r.adminReply && r.adminReply.text);
     return `
       <div style="background:#fff;border:1px solid #fed7aa;border-radius:8px;padding:8px 10px;font-size:12px;display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
         <div style="flex:1;min-width:0">
@@ -12516,8 +13002,12 @@ function renderAdminRatingsList(){
           <div style="font-size:11px;color:#7c3aed;margin-bottom:2px">${escapeHtml(r.serviceName || 'Layanan')}</div>
           ${r.comment ? `<div style="font-size:11.5px;color:#475569">"${escapeHtml(r.comment)}"</div>` : ''}
           <div style="font-size:10px;color:#94a3b8;margin-top:2px">${dateStr}</div>
+          ${adminReplyPreview}
         </div>
-        <button type="button" class="admin-btn-sm" style="background:#ef4444;color:#fff;font-size:10px;padding:3px 6px;cursor:pointer" onclick="deleteCustomerRatingAdmin('${r.id}')" title="Hapus Ulasan">🗑</button>
+        <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+          <button type="button" class="admin-btn-sm" style="background:linear-gradient(135deg,#7c3aed,#f59e0b);color:#fff;font-size:10px;padding:3px 8px;cursor:pointer;white-space:nowrap;font-weight:700;border:none;border-radius:6px" onclick="openAdminReviewReplyModal('${r.id}')" title="Balas Ulasan">${hasReply ? '✏️ Edit Balasan' : '💬 Balas'}</button>
+          <button type="button" class="admin-btn-sm" style="background:#ef4444;color:#fff;font-size:10px;padding:3px 6px;cursor:pointer" onclick="deleteCustomerRatingAdmin('${r.id}')" title="Hapus Ulasan">🗑</button>
+        </div>
       </div>
     `;
   }).join('');
@@ -12674,6 +13164,8 @@ if(window.fbAvailable && fbAuth.onAuthStateChanged){
     }
     renderMyOrders();
     renderProducts();
+    renderCustomerReviews();
+    if(isAdminOpen()) renderAdminRatingsList();
   });
   fbAuth.getRedirectResult().then(result=>{
     if(result && result.user){
@@ -12740,6 +13232,8 @@ function loginWithGoogle(){
         userDataLoaded = true;
         loadUserDataFromCloud(result.user.uid);
       }
+      renderCustomerReviews();
+      if(isAdminOpen()) renderAdminRatingsList();
     }
   }).catch(e=>{
     console.error('Login popup error:', e);
