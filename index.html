@@ -4749,6 +4749,10 @@ function safeGetItem(key, fallback){
   try { return localStorage.getItem(key) || fallback; }
   catch(e) { return fallback; }
 }
+function safeRemoveItem(key){
+  try { localStorage.removeItem(key); return true; }
+  catch(e) { return false; }
+}
 
 // ============ SISTEM CACHE PERSISTEN GAMBAR & TESTIMONI (IndexedDB + LocalStorage) ============
 // Memastikan gambar produk & testimoni langsung muncul seketika tanpa menunggu koneksi Firebase
@@ -12810,11 +12814,15 @@ function renderCustomerReviews(){
     }
 
     const defaultCustName = (currentLang === 'SG') ? 'Norxstore Customer' : 'Pelanggan Norxstore';
+    const authorPhoto = r.customerPhoto || r.authorPhoto || null;
+    const authorAvatarHtml = authorPhoto
+      ? `<div class="customer-review-avatar" style="overflow:hidden;padding:0"><img src="${escapeHtml(authorPhoto)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="Avatar" onerror="this.parentElement.textContent='${authorInitial}'"></div>`
+      : `<div class="customer-review-avatar">${authorInitial}</div>`;
     return `
       <div class="customer-review-card">
         <div class="customer-review-header">
           <div class="customer-review-author">
-            <div class="customer-review-avatar">${authorInitial}</div>
+            ${authorAvatarHtml}
             <div class="customer-review-info">
               <div class="customer-review-name-row">
                 <span class="customer-review-name">${escapeHtml(r.customerName || defaultCustName)}</span>
@@ -12968,7 +12976,7 @@ function submitAdminReviewReplyModal(){
   const replyObj = {
     text: text,
     authorName: chosenAlias, // Nama samaran bebas sesuka hati, bukan email!
-    authorPhoto: (currentUser && currentUser.photoURL) || null,
+    authorPhoto: (typeof getUserAvatarPhoto === 'function' ? getUserAvatarPhoto(currentUser) : (currentUser && currentUser.photoURL)) || null,
     title: 'OWNER / ADMIN NORXSTORE',
     repliedAt: Date.now()
   };
@@ -13441,12 +13449,14 @@ function submitCustomerRating(ratingData){
   const defCustName = (currentSelectedCountry === 'SG') ? 'Norxstore Customer' : ((currentSelectedCountry === 'MY') ? 'Pelanggan Norxstore' : 'Pelanggan Norxstore');
   const defServiceFallback = (currentSelectedCountry === 'SG') ? 'Game Boosting Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki Game' : 'Layanan Joki Game');
 
+  const userPhoto = (typeof getUserAvatarPhoto === 'function') ? getUserAvatarPhoto(currentUser) : (currentUser ? currentUser.photoURL : null);
   const newRating = {
     id: id,
     type: 'rating',
     isRating: true,
     orderId: ratingData.orderId || null,
     customerName: (ratingData.customerName || '').trim() || defCustName,
+    customerPhoto: ratingData.customerPhoto || userPhoto || null,
     stars: Math.max(1, Math.min(5, parseInt(ratingData.stars, 10) || 5)),
     serviceName: (ratingData.serviceName || '').trim() || defServiceFallback,
     comment: (ratingData.comment || '').trim(),
@@ -13720,6 +13730,12 @@ if(window.fbAvailable && fbAuth.onAuthStateChanged){
       return;
     }
     currentUser = user;
+    if(!user.isAnonymous){
+      const savedPhoto = safeGetItem('norxstore_user_custom_avatar_' + user.uid) || safeGetItem('norxstore_user_custom_avatar');
+      if(savedPhoto){
+        currentUser.customPhotoURL = savedPhoto;
+      }
+    }
     updateLoginIcon();
     if(typeof attachUserPresence === 'function'){
       attachUserPresence(user.uid);
@@ -13752,13 +13768,46 @@ if(window.fbAvailable && fbAuth.onAuthStateChanged){
   }
 }
 
+// ==================== FITUR FOTO PROFIL KUSTOM AKUN GOOGLE ====================
+const PRESET_USER_AVATARS = [
+  { id: 'sultan', name: 'Sultan', icon: '👑', grad: ['#f59e0b', '#fbbf24'] },
+  { id: 'pro', name: 'Pro Gamer', icon: '🎮', grad: ['#8b5cf6', '#ec4899'] },
+  { id: 'cyber', name: 'Cyber God', icon: '⚡', grad: ['#06b6d4', '#3b82f6'] },
+  { id: 'diamond', name: 'Diamond', icon: '💎', grad: ['#38bdf8', '#818cf8'] },
+  { id: 'fire', name: 'Flame Master', icon: '🔥', grad: ['#ef4444', '#f97316'] },
+  { id: 'neko', name: 'Cyber Neko', icon: '🐱', grad: ['#ec4899', '#f43f5e'] },
+  { id: 'guardian', name: 'Aegis Shield', icon: '🛡️', grad: ['#10b981', '#059669'] },
+  { id: 'star', name: 'Super Star', icon: '⭐', grad: ['#eab308', '#ca8a04'] },
+  { id: 'sniper', name: 'Ace Sniper', icon: '🎯', grad: ['#6366f1', '#4f46e5'] },
+  { id: 'ninja', name: 'Shadow Ninja', icon: '🥷', grad: ['#1e1b4b', '#312e81'] }
+];
+
+function makeAvatarSvgDataUrl(icon, gradColors){
+  const c1 = (gradColors && gradColors[0]) || '#7c3aed';
+  const c2 = (gradColors && gradColors[1]) || '#ec4899';
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200"><defs><linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="${c1}"/><stop offset="100%" stop-color="${c2}"/></linearGradient></defs><rect width="200" height="200" rx="100" fill="url(#g)"/><circle cx="100" cy="100" r="92" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="4"/><text x="100" y="125" font-size="80" text-anchor="middle" dominant-baseline="middle">${icon}</text></svg>`;
+  return 'data:image/svg+xml;utf8,' + encodeURIComponent(svg);
+}
+
+function getUserAvatarPhoto(user){
+  if(!user || user.isAnonymous) return null;
+  if(user.customPhotoURL) return user.customPhotoURL;
+  const localUid = safeGetItem('norxstore_user_custom_avatar_' + user.uid);
+  if(localUid) return localUid;
+  const localGen = safeGetItem('norxstore_user_custom_avatar');
+  if(localGen) return localGen;
+  if(user.photoURL) return user.photoURL;
+  return null;
+}
+
 function updateLoginIcon(){
   const icon = document.getElementById('loginIcon');
   if(!icon) return;
   if(currentUser && !currentUser.isAnonymous){
     const initial = (currentUser.displayName || currentUser.email || 'U').charAt(0).toUpperCase();
-    if(currentUser.photoURL){
-      icon.innerHTML = `<img src="${currentUser.photoURL}" referrerpolicy="no-referrer" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" onerror="this.outerHTML='<span style=\\'font-weight:700;color:#7c3aed;font-size:14px\\'>${initial}</span>'">`;
+    const photo = getUserAvatarPhoto(currentUser);
+    if(photo){
+      icon.innerHTML = `<img src="${photo}" referrerpolicy="no-referrer" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:inherit" onerror="this.outerHTML='<span style=\\'font-weight:700;color:#7c3aed;font-size:14px\\'>${initial}</span>'">`;
     } else {
       icon.innerHTML = `<span style="font-weight:700;color:#7c3aed;font-size:14px">${initial}</span>`;
     }
@@ -13771,6 +13820,186 @@ function updateLoginIcon(){
   }
 }
 
+function updateAccountModalProfileUI(){
+  const loggedIn = currentUser && !currentUser.isAnonymous;
+  if(!loggedIn) return;
+  
+  const photo = getUserAvatarPhoto(currentUser);
+  const initial = (currentUser.displayName || currentUser.email || 'U').charAt(0).toUpperCase();
+  
+  // 1. In loginOverlay
+  const imgEl = document.getElementById('loginUserAvatarImg');
+  const fallbackEl = document.getElementById('loginUserAvatarFallback');
+  if(imgEl && fallbackEl){
+    if(photo){
+      imgEl.src = photo;
+      imgEl.style.display = 'block';
+      fallbackEl.style.display = 'none';
+    } else {
+      imgEl.style.display = 'none';
+      fallbackEl.textContent = initial;
+      fallbackEl.style.display = 'flex';
+    }
+  }
+
+  // 2. In changeAvatarModal
+  const modalImg = document.getElementById('avatarModalPreviewImg');
+  const modalFallback = document.getElementById('avatarModalPreviewFallback');
+  if(modalImg && modalFallback){
+    if(photo){
+      modalImg.src = photo;
+      modalImg.style.display = 'block';
+      modalFallback.style.display = 'none';
+    } else {
+      modalImg.style.display = 'none';
+      modalFallback.textContent = initial;
+      modalFallback.style.display = 'flex';
+    }
+  }
+  const modalName = document.getElementById('avatarModalUserName');
+  if(modalName){
+    modalName.textContent = currentUser.displayName || currentUser.email || 'Pengguna Norxstore';
+  }
+
+  // 3. Highlight selected preset in grid if matches
+  const grid = document.getElementById('presetAvatarsGrid');
+  if(grid){
+    const buttons = grid.querySelectorAll('.preset-avatar-chip');
+    buttons.forEach(b => {
+      const url = b.getAttribute('data-url');
+      if(url && url === photo){
+        b.classList.add('selected');
+      } else {
+        b.classList.remove('selected');
+      }
+    });
+  }
+}
+
+function renderPresetAvatarsGrid(){
+  const grid = document.getElementById('presetAvatarsGrid');
+  if(!grid) return;
+  const currentPhoto = getUserAvatarPhoto(currentUser);
+
+  grid.innerHTML = PRESET_USER_AVATARS.map(p => {
+    const dataUrl = makeAvatarSvgDataUrl(p.icon, p.grad);
+    const isSelected = (currentPhoto === dataUrl);
+    return `
+      <button type="button" class="preset-avatar-chip ${isSelected ? 'selected' : ''}" data-url="${escapeHtml(dataUrl)}" onclick="selectPresetAvatar('${escapeHtml(dataUrl)}')" title="${escapeHtml(p.name)}">
+        <img src="${dataUrl}" class="preset-avatar-chip-img" alt="${escapeHtml(p.name)}">
+        <span class="preset-avatar-chip-name">${escapeHtml(p.name)}</span>
+      </button>
+    `;
+  }).join('');
+}
+
+function selectPresetAvatar(dataUrl){
+  setUserCustomAvatar(dataUrl);
+}
+
+function setUserCustomAvatar(photoUrl){
+  if(!currentUser || currentUser.isAnonymous){
+    showToast('⚠️ Anda harus login dengan akun Google terlebih dahulu');
+    return;
+  }
+  currentUser.customPhotoURL = photoUrl;
+  if(photoUrl){
+    safeSetItem('norxstore_user_custom_avatar_' + currentUser.uid, photoUrl);
+    safeSetItem('norxstore_user_custom_avatar', photoUrl);
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/users/' + currentUser.uid + '/customPhotoURL').set(photoUrl).catch(()=>{});
+    }
+    showToast('✅ Foto profil berhasil diubah!');
+  } else {
+    // Reset ke foto asli Google
+    safeRemoveItem('norxstore_user_custom_avatar_' + currentUser.uid);
+    safeRemoveItem('norxstore_user_custom_avatar');
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/users/' + currentUser.uid + '/customPhotoURL').remove().catch(()=>{});
+    }
+    showToast('🔄 Foto profil dikembalikan ke bawaan Google');
+  }
+  updateLoginIcon();
+  updateAccountModalProfileUI();
+  renderCustomerReviews();
+  if(isAdminOpen()) renderAdminRatingsList();
+}
+
+function handleUserAvatarUpload(event){
+  const file = event.target.files && event.target.files[0];
+  if(!file) return;
+  if(file.size > 8 * 1024 * 1024){
+    showToast('⚠️ File terlalu besar! Maksimal 8MB');
+    event.target.value = '';
+    return;
+  }
+  showToast('⏳ Memproses dan memotong foto profil...');
+  const reader = new FileReader();
+  reader.onload = function(e){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      const size = 256; // Ukuran optimal untuk foto profil bulat
+      canvas.width = size;
+      canvas.height = size;
+      
+      // Hitung cropping tengah persegi (center-crop square)
+      const minDim = Math.min(img.width, img.height);
+      const sx = (img.width - minDim) / 2;
+      const sy = (img.height - minDim) / 2;
+      
+      ctx.fillStyle = '#1e1538';
+      ctx.fillRect(0, 0, size, size);
+      ctx.drawImage(img, sx, sy, minDim, minDim, 0, 0, size, size);
+      
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+      setUserCustomAvatar(dataUrl);
+      event.target.value = '';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function openChangeAvatarModal(){
+  if(!currentUser || currentUser.isAnonymous){
+    showToast('⚠️ Silakan login dengan akun Google terlebih dahulu');
+    return;
+  }
+  renderPresetAvatarsGrid();
+  updateAccountModalProfileUI();
+  const modal = document.getElementById('changeAvatarModal');
+  if(modal) modal.classList.add('open');
+}
+
+function closeChangeAvatarModal(event){
+  if(event && event.target && event.target !== document.getElementById('changeAvatarModal') && !event.target.classList.contains('modal-close')) return;
+  const modal = document.getElementById('changeAvatarModal');
+  if(modal) modal.classList.remove('open');
+}
+
+function resetUserAvatarToGoogle(){
+  setUserCustomAvatar(null);
+  closeChangeAvatarModal();
+}
+
+function applyAvatarFromUrl(){
+  const input = document.getElementById('customAvatarUrlInput');
+  const url = input ? input.value.trim() : '';
+  if(!url){
+    showToast('⚠️ Masukkan link gambar terlebih dahulu');
+    return;
+  }
+  if(!url.startsWith('http://') && !url.startsWith('https://') && !url.startsWith('data:image/')){
+    showToast('⚠️ Link harus diawali http:// atau https://');
+    return;
+  }
+  setUserCustomAvatar(url);
+  if(input) input.value = '';
+  closeChangeAvatarModal();
+}
+
 function handleLoginIconClick(){
   const overlay = document.getElementById('loginOverlay');
   const loggedIn = currentUser && !currentUser.isAnonymous;
@@ -13779,8 +14008,13 @@ function handleLoginIconClick(){
   document.getElementById('loginHeaderLoggedIn').style.display = loggedIn ? 'block' : 'none';
   document.getElementById('loginBodyLoggedIn').style.display = loggedIn ? 'block' : 'none';
   if(loggedIn){
-    document.getElementById('loginUserName').textContent = '👤 ' + (currentUser.displayName || 'Pengguna');
+    document.getElementById('loginUserName').textContent = (currentUser.displayName || 'Pengguna');
     document.getElementById('loginUserEmail').textContent = currentUser.email || '';
+    const roleBadge = document.getElementById('loginUserRoleBadge');
+    if(roleBadge){
+      roleBadge.style.display = isAuthorizedAdmin() ? 'block' : 'none';
+    }
+    updateAccountModalProfileUI();
   }
   overlay.classList.add('open');
 }
@@ -13797,6 +14031,10 @@ function loginWithGoogle(){
   fbAuth.signInWithPopup(provider).then(result=>{
     if(result && result.user){
       currentUser = result.user;
+      const savedPhoto = safeGetItem('norxstore_user_custom_avatar_' + result.user.uid) || safeGetItem('norxstore_user_custom_avatar');
+      if(savedPhoto){
+        currentUser.customPhotoURL = savedPhoto;
+      }
       updateLoginIcon();
       closeLoginModal();
       showToast('Berhasil login sebagai ' + (result.user.displayName || 'pengguna'));
@@ -13824,12 +14062,28 @@ function loginWithGoogle(){
 function logoutUser(){
   fbAuth.signOut().then(()=>{
     userDataLoaded = false;
+    currentUser = null;
     closeLoginModal();
+    updateLoginIcon();
     showToast('Berhasil keluar akun');
   }).catch(e=>console.error(e));
 }
 
 function loadUserDataFromCloud(uid){
+  fbDB.ref('norxstore/users/' + uid + '/customPhotoURL').once('value').then(snap=>{
+    const cloudPhoto = snap.val();
+    if(cloudPhoto && typeof cloudPhoto === 'string'){
+      safeSetItem('norxstore_user_custom_avatar_' + uid, cloudPhoto);
+      safeSetItem('norxstore_user_custom_avatar', cloudPhoto);
+      if(currentUser && currentUser.uid === uid){
+        currentUser.customPhotoURL = cloudPhoto;
+      }
+      if(typeof updateLoginIcon === 'function') updateLoginIcon();
+      if(typeof updateAccountModalProfileUI === 'function') updateAccountModalProfileUI();
+      if(typeof renderCustomerReviews === 'function') renderCustomerReviews();
+    }
+  }).catch(e=>console.error(e));
+
   fbDB.ref('norxstore/users/' + uid + '/cart').once('value').then(snap=>{
     const cloudCart = snap.val();
     if(Array.isArray(cloudCart) && cloudCart.length > 0){
