@@ -621,6 +621,286 @@ body.dark-mode #cartPayCrossBorderNote > div{
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 15px rgba(168, 85, 247, 0.25);
 }
 
+/* ==================== USER PROFILE & AVATAR MODAL ==================== */
+.user-account-modal-box {
+  max-width: 360px !important;
+  background: #ffffff !important;
+  border-radius: 20px !important;
+  box-shadow: 0 20px 48px rgba(0,0,0,0.28) !important;
+  overflow: hidden;
+  position: relative;
+}
+.modal-close-icon-btn {
+  background: #f1f5f9;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .15s ease;
+}
+.modal-close-icon-btn:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+.user-account-header {
+  padding: 6px 16px 10px !important;
+  text-align: center;
+}
+.user-avatar-profile-wrap {
+  display: inline-block;
+  cursor: pointer;
+  position: relative;
+  transition: transform .18s ease;
+}
+.user-avatar-profile-wrap:hover {
+  transform: scale(1.05);
+}
+.user-avatar-circle-outer {
+  width: 82px;
+  height: 82px;
+  border-radius: 50%;
+  padding: 3.5px;
+  background: linear-gradient(135deg, #7c3aed, #ec4899, #f59e0b);
+  box-shadow: 0 6px 18px rgba(124, 58, 237, 0.32);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.user-avatar-circle-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #1e1538;
+}
+.user-avatar-circle-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ede9fe, #ddd6fe);
+  color: #6d28d9;
+  font-size: 34px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-camera-pill {
+  position: absolute;
+  bottom: -2px;
+  right: -2px;
+  background: linear-gradient(135deg, #7c3aed, #9333ea);
+  color: #ffffff;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+}
+.btn-change-avatar-action {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px solid #c084fc;
+  background: linear-gradient(135deg, #fdf4ff, #fae8ff);
+  color: #7e22ce;
+  font-size: 13.5px;
+  font-weight: 800;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.14);
+  transition: all .18s ease;
+  margin-bottom: 10px;
+}
+.btn-change-avatar-action:hover {
+  background: linear-gradient(135deg, #fae8ff, #f3e8ff);
+  border-color: #a855f7;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(124, 58, 237, 0.22);
+}
+.btn-change-avatar-action:active {
+  transform: scale(0.98);
+}
+
+/* AVATAR PICKER MODAL */
+.avatar-picker-modal-box {
+  max-width: 440px !important;
+  max-height: 90vh !important;
+  overflow-y: auto !important;
+  border-radius: 20px !important;
+  background: #ffffff !important;
+  box-shadow: 0 24px 50px rgba(0,0,0,0.32) !important;
+  color: #1e293b;
+}
+.avatar-modal-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+.avatar-modal-body {
+  padding: 16px 18px 20px;
+}
+.avatar-current-preview-box {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  background: linear-gradient(135deg, #faf5ff, #f3e8ff);
+  border: 1.5px solid #e9d5ff;
+  border-radius: 14px;
+  padding: 12px 14px;
+  margin-bottom: 16px;
+}
+.avatar-preview-circle {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 2.5px;
+  background: linear-gradient(135deg, #7c3aed, #d946ef);
+  flex-shrink: 0;
+  box-shadow: 0 3px 10px rgba(124, 58, 237, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-preview-circle img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+}
+.avatar-preview-fallback {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: #ede9fe;
+  color: #6d28d9;
+  font-size: 26px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.avatar-modal-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 700;
+  color: #1e1b4b;
+  margin-bottom: 6px;
+}
+.avatar-upload-trigger-btn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1.5px dashed #7c3aed;
+  background: #faf5ff;
+  color: #6d28d9;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all .18s ease;
+}
+.avatar-upload-trigger-btn:hover {
+  background: #f3e8ff;
+  border-color: #6d28d9;
+}
+.preset-avatars-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 6px;
+}
+@media (max-width: 480px) {
+  .preset-avatars-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+.preset-avatar-chip {
+  padding: 8px 4px 6px;
+  border-radius: 12px;
+  border: 1.5px solid #e2e8f0;
+  background: #f8fafc;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  transition: all .18s ease;
+}
+.preset-avatar-chip:hover {
+  border-color: #c084fc;
+  background: #faf5ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(124, 58, 237, 0.15);
+}
+.preset-avatar-chip.selected {
+  border-color: #7c3aed;
+  background: #ede9fe;
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.35);
+}
+.preset-avatar-chip-img {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+}
+.preset-avatar-chip-name {
+  font-size: 10px;
+  font-weight: 700;
+  color: #334155;
+  text-align: center;
+  line-height: 1.2;
+}
+.preset-avatar-chip.selected .preset-avatar-chip-name {
+  color: #6d28d9;
+}
+.btn-reset-avatar {
+  background: none;
+  border: none;
+  color: #64748b;
+  font-size: 11.5px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: all .15s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+.btn-reset-avatar:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
 /* ==================== STIKER ULASAN PELANGGAN ==================== */
 .review-sticker-picker-box {
   margin: 10px 0 12px;
@@ -2998,25 +3278,135 @@ button{cursor:pointer;font-family:inherit}
 </div>
 
 <div class="pw-overlay" id="loginOverlay" onclick="closeLoginModal(event)">
-<div class="pw-box" onclick="event.stopPropagation()">
-<div class="pw-header" id="loginHeaderLoggedOut">
-<h4>👤 Masuk ke Akun</h4>
-<p>Login supaya keranjang & pesananmu tidak hilang walau ganti HP</p>
+<div class="pw-box user-account-modal-box" onclick="event.stopPropagation()">
+  <!-- Tombol Tutup X -->
+  <div style="display:flex;justify-content:flex-end;padding:12px 14px 0">
+    <button type="button" class="modal-close-icon-btn" onclick="closeLoginModal()" title="Tutup">✕</button>
+  </div>
+
+  <!-- LOGGED OUT STATE -->
+  <div class="pw-header" id="loginHeaderLoggedOut">
+    <div style="font-size:36px;margin-bottom:6px">👤</div>
+    <h4 style="color:#0f172a;font-weight:800;font-size:17px">Masuk ke Akun Google</h4>
+    <p style="color:#64748b;font-size:12px">Login supaya keranjang, pesanan, dan foto profil tersinkron antar perangkat</p>
+  </div>
+  <div class="pw-body" id="loginBodyLoggedOut">
+    <button type="button" class="admin-btn" style="background:#fff;color:#1e293b;border:1.5px solid #cbd5e1;display:flex;align-items:center;justify-content:center;gap:10px;font-weight:700;box-shadow:0 2px 6px rgba(0,0,0,0.06)" onclick="loginWithGoogle()">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/></svg>
+      <span>Login dengan Akun Google</span>
+    </button>
+    <p style="font-size:11px;color:#94a3b8;text-align:center;margin-top:12px;line-height:1.4">💡 Tanpa login tetap bisa belanja normal, cuma progres tidak tersinkron otomatis antar HP.</p>
+  </div>
+
+  <!-- LOGGED IN STATE -->
+  <div class="pw-header user-account-header" id="loginHeaderLoggedIn" style="display:none">
+    <!-- AVATAR CONTAINER DENGAN BADGE KAMERA -->
+    <div class="user-avatar-profile-wrap" onclick="openChangeAvatarModal()" title="Klik untuk ganti foto profil">
+      <div class="user-avatar-circle-outer">
+        <img id="loginUserAvatarImg" src="" alt="Avatar" class="user-avatar-circle-img" style="display:none" referrerpolicy="no-referrer">
+        <div id="loginUserAvatarFallback" class="user-avatar-circle-fallback">U</div>
+        <div class="avatar-camera-pill" title="Ganti Foto">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+          <span>Ubah</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:10px">
+      <h4 id="loginUserName" style="font-size:17px;font-weight:800;color:#0f172a;margin:0 0 3px">Pengguna Norxstore</h4>
+      <p id="loginUserEmail" style="font-size:12px;color:#64748b;margin:0 0 6px">email@gmail.com</p>
+      <div id="loginUserRoleBadge" style="display:none;margin-top:4px">
+        <span style="display:inline-flex;align-items:center;gap:4px;padding:3px 10px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-radius:20px;font-size:10.5px;font-weight:800;letter-spacing:.3px">👑 OWNER / ADMIN</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="pw-body" id="loginBodyLoggedIn" style="display:none;padding-top:4px">
+    <!-- Tombol Utama: Ganti Foto Profil -->
+    <button type="button" class="btn-change-avatar-action" onclick="openChangeAvatarModal()">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+      <span>Ganti Foto Profil</span>
+    </button>
+
+    <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:9px 12px;margin:0 0 12px;text-align:center">
+      <p style="font-size:11.5px;color:#475569;margin:0;line-height:1.4">✨ Keranjang & pesananmu otomatis tersinkron ke akun ini.</p>
+    </div>
+
+    <button type="button" class="pw-btn" style="background:#ef4444;border-radius:10px;padding:11px;font-weight:700" onclick="logoutUser()">Keluar Akun</button>
+  </div>
 </div>
-<div class="pw-body" id="loginBodyLoggedOut">
-<button class="admin-btn" style="background:#fff;color:#1a1a1a;border:1.5px solid #e5e5e5;display:flex;align-items:center;justify-content:center;gap:8px" onclick="loginWithGoogle()">
-<span style="font-size:16px">🔵</span> Login dengan Google
-</button>
-<p style="font-size:11px;color:#aaa;text-align:center;margin-top:10px">Tanpa Google pun tetap bisa belanja normal, cuma progres tidak sinkron antar HP.</p>
 </div>
-<div class="pw-header" id="loginHeaderLoggedIn" style="display:none">
-<h4 id="loginUserName">👤 Pengguna</h4>
-<p id="loginUserEmail"></p>
-</div>
-<div class="pw-body" id="loginBodyLoggedIn" style="display:none">
-<p style="font-size:12px;color:#666;text-align:center;margin-bottom:12px">Keranjang & pesananmu otomatis tersinkron ke akun ini.</p>
-<button class="pw-btn" style="background:#ef4444" onclick="logoutUser()">Keluar Akun</button>
-</div>
+
+<!-- ==================== MODAL GANTI FOTO PROFIL ==================== -->
+<div class="pw-overlay" id="changeAvatarModal" onclick="closeChangeAvatarModal(event)" style="z-index:350">
+<div class="pw-box avatar-picker-modal-box" onclick="event.stopPropagation()">
+  <!-- Header Modal -->
+  <div class="avatar-modal-header">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="font-size:18px">📸</span>
+      <div>
+        <h4 style="margin:0;font-size:15px;font-weight:800;color:#0f172a">Ganti Foto Profil</h4>
+        <p style="margin:2px 0 0;font-size:11px;color:#64748b">Pilih dari galeri HP, avatar preset, atau link</p>
+      </div>
+    </div>
+    <button type="button" class="modal-close-icon-btn modal-close" onclick="closeChangeAvatarModal()" title="Tutup">✕</button>
+  </div>
+
+  <div class="avatar-modal-body">
+    <!-- Preview Avatar Saat Ini -->
+    <div class="avatar-current-preview-box">
+      <div class="avatar-preview-circle">
+        <img id="avatarModalPreviewImg" src="" alt="Avatar" style="display:none" referrerpolicy="no-referrer">
+        <div id="avatarModalPreviewFallback" class="avatar-preview-fallback">U</div>
+      </div>
+      <div>
+        <div id="avatarModalUserName" style="font-weight:800;font-size:14px;color:#0f172a">Pengguna Norxstore</div>
+        <div style="font-size:11.5px;color:#7c3aed;font-weight:600;margin-top:2px">Preview Tampilan Profil Saat Ini</div>
+      </div>
+    </div>
+
+    <!-- OPSI 1: UNGGAH DARI GALERI / KAMERA -->
+    <div style="margin-bottom:14px">
+      <div class="avatar-modal-section-title">
+        <span>📁 Unggah dari Galeri / Kamera</span>
+        <span style="font-size:10px;color:#94a3b8;font-weight:500">Maks. 8MB (Otomatis Di-crop)</span>
+      </div>
+      <input type="file" id="userAvatarFileInput" accept="image/*" style="display:none" onchange="handleUserAvatarUpload(event)">
+      <button type="button" class="avatar-upload-trigger-btn" onclick="document.getElementById('userAvatarFileInput').click()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+        <span>Pilih Foto dari Galeri / Ambil Kamera</span>
+      </button>
+    </div>
+
+    <!-- OPSI 2: PILIH AVATAR PRESET GAMING -->
+    <div style="margin-bottom:14px">
+      <div class="avatar-modal-section-title">
+        <span>🎮 Pilih Avatar Preset Norxstore</span>
+        <span style="font-size:10.5px;color:#7c3aed;font-weight:700">10 Koleksi Keren</span>
+      </div>
+      <div class="preset-avatars-grid" id="presetAvatarsGrid">
+        <!-- Di-render oleh renderPresetAvatarsGrid() -->
+      </div>
+    </div>
+
+    <!-- OPSI 3: LINK GAMBAR KUSTOM -->
+    <div style="margin-bottom:14px">
+      <div class="avatar-modal-section-title">
+        <span>🔗 Atau Masukkan Link Gambar (URL)</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <input type="url" id="customAvatarUrlInput" class="admin-input" style="font-size:12px;margin-bottom:0;flex:1;height:42px" placeholder="https://.../foto.png">
+        <button type="button" class="admin-btn" style="width:auto;padding:0 14px;height:42px;font-size:12px;background:#7c3aed;font-weight:700" onclick="applyAvatarFromUrl()">Terapkan</button>
+      </div>
+    </div>
+
+    <!-- OPSI 4: RESET KE DEFAULT GOOGLE -->
+    <div style="border-top:1px dashed #e2e8f0;padding-top:12px;margin-top:10px;text-align:center">
+      <button type="button" class="btn-reset-avatar" onclick="resetUserAvatarToGoogle()">
+        <span>🔄 Kembalikan ke Foto Asli Akun Google</span>
+      </button>
+    </div>
+  </div>
 </div>
 </div>
 
