@@ -12681,13 +12681,34 @@ function escapeHtml(str){
 function extractCustomerRatingsFromOrders(){
   if(!allOrders || typeof allOrders !== 'object') return [];
   const list = [];
+  const seenIds = new Set();
   for(const key in allOrders){
     const item = allOrders[key];
     if(!item) continue;
     if(item.type === 'rating' || item.isRating === true || (item.id && String(item.id).startsWith('RAT-')) || key.startsWith('rat_')){
-      list.push(item);
+      const itemId = item.id || key.replace(/^rat_/, '');
+      if(!seenIds.has(itemId)){
+        seenIds.add(itemId);
+        list.push(item);
+      }
+    }
+    // Jika ada ratings array di dalam pesanan (multi-review per order)
+    if(Array.isArray(item.ratings)){
+      for(const subR of item.ratings){
+        if(subR && (subR.stars || subR.comment)){
+          const sId = subR.id || ('rat_ord_' + item.id + '_' + Math.random().toString(36).substr(2, 4));
+          if(!seenIds.has(sId)){
+            seenIds.add(sId);
+            list.push(subR);
+          }
+        }
+      }
     } else if(item.rating && typeof item.rating === 'object' && item.rating.stars){
-      list.push(item.rating);
+      const rId = item.rating.id || ('rat_ord_' + item.id);
+      if(!seenIds.has(rId)){
+        seenIds.add(rId);
+        list.push(item.rating);
+      }
     }
   }
   return list;
@@ -13126,8 +13147,10 @@ function renderCustomerReviews(){
         rawAuthor = rawAuthor.split('@')[0];
       }
       const repAuthorName = escapeHtml(rawAuthor);
-      const repAvatarHtml = rep.authorPhoto
-        ? `<img src="${escapeHtml(rep.authorPhoto)}" class="admin-reply-avatar-img" alt="Admin" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="admin-reply-avatar-fallback" style="display:none">👑</span>`
+      const currentAdminPhoto = (typeof getAdminAvatarPhoto === 'function' ? getAdminAvatarPhoto() : null);
+      const effectiveAdminPhoto = currentAdminPhoto || rep.authorPhoto;
+      const repAvatarHtml = effectiveAdminPhoto
+        ? `<img src="${escapeHtml(effectiveAdminPhoto)}" class="admin-reply-avatar-img" alt="Admin" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"><span class="admin-reply-avatar-fallback" style="display:none">👑</span>`
         : `<span class="admin-reply-avatar-fallback">👑</span>`;
 
       const canManageReply = isAuthorizedAdmin() || isReviewAdminUnlocked();
@@ -13204,7 +13227,13 @@ function renderCustomerReviews(){
     }
 
     const defaultCustName = (currentLang === 'SG') ? 'Norxstore Customer' : 'Pelanggan Norxstore';
-    const authorPhoto = r.customerPhoto || r.authorPhoto || null;
+    let authorPhoto = r.customerPhoto || r.authorPhoto || null;
+    if(currentUser && !currentUser.isAnonymous){
+      if(r.customerUid === currentUser.uid || (r.customerName && currentUser.displayName && r.customerName === currentUser.displayName)){
+        const p = getUserAvatarPhoto(currentUser);
+        if(p) authorPhoto = p;
+      }
+    }
     const authorAvatarHtml = authorPhoto
       ? `<div class="customer-review-avatar" style="overflow:hidden;padding:0"><img src="${escapeHtml(authorPhoto)}" style="width:100%;height:100%;object-fit:cover;border-radius:50%" alt="Avatar" onerror="this.parentElement.textContent='${authorInitial}'"></div>`
       : `<div class="customer-review-avatar">${authorInitial}</div>`;
@@ -13634,7 +13663,11 @@ function toggleHeroRatingForm(forceState, orderId){
           select.value = orderId;
         } else {
           const unrated = finishedOrders.find(o => !isOrderRated(o.id));
-          if(unrated) select.value = unrated.id;
+          if(unrated){
+            select.value = unrated.id;
+          } else {
+            select.value = '__custom__';
+          }
         }
         handleHeroOrderSelectChange();
       } else {
@@ -13771,7 +13804,11 @@ function openGiveRatingModal(orderId){
         select.value = orderId;
       } else {
         const unrated = finishedOrders.find(o => !isOrderRated(o.id));
-        if(unrated) select.value = unrated.id;
+        if(unrated){
+          select.value = unrated.id;
+        } else {
+          select.value = '__custom__';
+        }
       }
       handleModalOrderSelectChange();
     } else {
@@ -13845,6 +13882,7 @@ function submitCustomerRating(ratingData){
     type: 'rating',
     isRating: true,
     orderId: ratingData.orderId || null,
+    customerUid: (currentUser && !currentUser.isAnonymous) ? currentUser.uid : null,
     customerName: (ratingData.customerName || '').trim() || defCustName,
     customerPhoto: ratingData.customerPhoto || userPhoto || null,
     stars: Math.max(1, Math.min(5, parseInt(ratingData.stars, 10) || 5)),
@@ -13856,7 +13894,7 @@ function submitCustomerRating(ratingData){
     lang: currentSelectedCountry || 'ID'
   };
 
-  // Simpan seketika di memori lokal allOrders
+  // Simpan seketika di memori lokal allOrders dengan ID unik mandiri
   allOrders['rat_' + id] = newRating;
 
   // Simpan ke cache lokal
@@ -13867,16 +13905,22 @@ function submitCustomerRating(ratingData){
   if(ratingData.orderId){
     markOrderAsRated(ratingData.orderId);
     if(allOrders[ratingData.orderId]){
+      if(!Array.isArray(allOrders[ratingData.orderId].ratings)){
+        allOrders[ratingData.orderId].ratings = allOrders[ratingData.orderId].rating ? [allOrders[ratingData.orderId].rating] : [];
+      }
+      allOrders[ratingData.orderId].ratings.push(newRating);
       allOrders[ratingData.orderId].rating = newRating;
       if(window.fbAvailable && fbDB && fbDB.ref){
         fbDB.ref('norxstore/orders/' + ratingData.orderId + '/rating').set(newRating).catch(e=>console.error(e));
+        fbDB.ref('norxstore/orders/' + ratingData.orderId + '/ratings').set(allOrders[ratingData.orderId].ratings).catch(e=>console.error(e));
       }
     }
   }
 
-  // Simpan ke Firebase Realtime Database di bawah norxstore/orders/rat_... yang diizinkan oleh Rules
+  // Simpan ke Firebase Realtime Database di bawah norxstore/orders/rat_... dan norxstore/ratings/...
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/orders/rat_' + id).set(newRating).catch(e => console.error('Rating save error:', e));
+    fbDB.ref('norxstore/orders/rat_' + id).set(newRating).catch(e => console.error('Rating save error in orders:', e));
+    fbDB.ref('norxstore/ratings/' + id).set(newRating).catch(e => console.error('Rating save error in ratings:', e));
   }
 
   updateRatingStatsUI();
@@ -14028,6 +14072,7 @@ function deleteCustomerRatingAdmin(ratingId){
   if(window.fbAvailable && fbDB && fbDB.ref){
     fbDB.ref('norxstore/orders/rat_' + cleanId).remove().catch(e => console.error(e));
     fbDB.ref('norxstore/orders/' + cleanId).remove().catch(e => console.error(e));
+    fbDB.ref('norxstore/ratings/' + cleanId).remove().catch(e => console.error(e));
     if(ratingId.startsWith('rat_')){
       fbDB.ref('norxstore/orders/' + ratingId).remove().catch(e => console.error(e));
     }
@@ -14077,7 +14122,14 @@ window.addEventListener('DOMContentLoaded', () => {
 });
 
 fbDB.ref('norxstore/orders').on('value', snap=>{
-  allOrders = snap.val() || {};
+  const incoming = snap.val() || {};
+  // Pastikan ulasan rat_* lokal yang ada di memori tidak terhapus saat snapshot orders diperbarui
+  for(const k in allOrders){
+    if(k.startsWith('rat_') && !incoming[k]){
+      incoming[k] = allOrders[k];
+    }
+  }
+  allOrders = incoming;
   customerRatingsCache = null;
   checkOrderNotifications(allOrders);
   renderMyOrders();
@@ -14094,6 +14146,38 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
 });
 
 if(window.fbAvailable && fbDB && fbDB.ref){
+  // Sinkronisasi realtime ulasan pelanggan mandiri di norxstore/ratings
+  fbDB.ref('norxstore/ratings').on('value', snap => {
+    const val = snap.val();
+    if(val && typeof val === 'object'){
+      let changed = false;
+      for(const id in val){
+        const r = val[id];
+        if(r && r.id){
+          allOrders['rat_' + r.id] = r;
+          changed = true;
+        }
+      }
+      if(changed){
+        customerRatingsCache = null;
+        updateRatingStatsUI();
+        renderCustomerReviews();
+        if(isAdminOpen()) renderAdminRatingsList();
+      }
+    }
+  });
+
+  // Sinkronisasi realtime foto profil kustom admin di norxstore/config/adminAvatar
+  fbDB.ref('norxstore/config/adminAvatar').on('value', snap => {
+    const av = snap.val();
+    if(av && typeof av === 'string'){
+      window.norxstore_live_admin_avatar = av;
+      safeSetItem('norxstore_admin_avatar', av);
+      renderCustomerReviews();
+      if(isAdminOpen()) renderAdminRatingsList();
+    }
+  });
+
   fbDB.ref('norxstore/stats/completedOrders').on('value', snap => {
     const val = snap.val();
     if(val !== null && val !== undefined){
@@ -14187,6 +14271,19 @@ function getUserAvatarPhoto(user){
   const localGen = safeGetItem('norxstore_user_custom_avatar');
   if(localGen) return localGen;
   if(user.photoURL) return user.photoURL;
+  return null;
+}
+
+function getAdminAvatarPhoto(){
+  if(window.norxstore_live_admin_avatar) return window.norxstore_live_admin_avatar;
+  const savedAdmin = safeGetItem('norxstore_admin_avatar');
+  if(savedAdmin) return savedAdmin;
+  if(currentUser && isAuthorizedAdmin()){
+    const p = getUserAvatarPhoto(currentUser);
+    if(p) return p;
+  }
+  const savedUser = safeGetItem('norxstore_user_custom_avatar');
+  if(savedUser) return savedUser;
   return null;
 }
 
@@ -14296,16 +14393,69 @@ function setUserCustomAvatar(photoUrl){
   if(photoUrl){
     safeSetItem('norxstore_user_custom_avatar_' + currentUser.uid, photoUrl);
     safeSetItem('norxstore_user_custom_avatar', photoUrl);
+    if(isAuthorizedAdmin()){
+      safeSetItem('norxstore_admin_avatar', photoUrl);
+    }
     if(window.fbAvailable && fbDB && fbDB.ref){
       fbDB.ref('norxstore/users/' + currentUser.uid + '/customPhotoURL').set(photoUrl).catch(()=>{});
+      if(isAuthorizedAdmin()){
+        fbDB.ref('norxstore/config/adminAvatar').set(photoUrl).catch(()=>{});
+      }
     }
+
+    // Sinkronkan foto profil ke semua balasan resmi admin yang ada di allOrders & cloud
+    if(isAuthorizedAdmin()){
+      for(const k in allOrders){
+        const it = allOrders[k];
+        if(it && it.adminReply){
+          it.adminReply.authorPhoto = photoUrl;
+          if(window.fbAvailable && fbDB && fbDB.ref){
+            fbDB.ref('norxstore/orders/' + k + '/adminReply/authorPhoto').set(photoUrl).catch(()=>{});
+            const cleanK = String(k).replace(/^rat_/, '');
+            fbDB.ref('norxstore/ratings/' + cleanK + '/adminReply/authorPhoto').set(photoUrl).catch(()=>{});
+          }
+        }
+      }
+    }
+
+    // Sinkronkan ulasan pelanggan milik akun ini
+    for(const k in allOrders){
+      const it = allOrders[k];
+      if(it && (it.customerUid === currentUser.uid || (it.customerName && it.customerName === currentUser.displayName))){
+        it.customerPhoto = photoUrl;
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/orders/' + k + '/customerPhoto').set(photoUrl).catch(()=>{});
+          const cleanK = String(k).replace(/^rat_/, '');
+          fbDB.ref('norxstore/ratings/' + cleanK + '/customerPhoto').set(photoUrl).catch(()=>{});
+        }
+      }
+    }
+
+    // Perbarui cache ulasan
+    const currentRatings = getCustomerRatings().map(r => {
+      let updated = { ...r };
+      if(isAuthorizedAdmin() && updated.adminReply){
+        updated.adminReply = { ...updated.adminReply, authorPhoto: photoUrl };
+      }
+      if(updated.customerUid === currentUser.uid || (updated.customerName && currentUser.displayName && updated.customerName === currentUser.displayName)){
+        updated.customerPhoto = photoUrl;
+      }
+      return updated;
+    });
+    saveCustomerRatings(currentRatings);
     showToast('✅ Foto profil berhasil diubah!');
   } else {
     // Reset ke foto asli Google
     safeRemoveItem('norxstore_user_custom_avatar_' + currentUser.uid);
     safeRemoveItem('norxstore_user_custom_avatar');
+    if(isAuthorizedAdmin()){
+      safeRemoveItem('norxstore_admin_avatar');
+    }
     if(window.fbAvailable && fbDB && fbDB.ref){
       fbDB.ref('norxstore/users/' + currentUser.uid + '/customPhotoURL').remove().catch(()=>{});
+      if(isAuthorizedAdmin()){
+        fbDB.ref('norxstore/config/adminAvatar').remove().catch(()=>{});
+      }
     }
     showToast('🔄 Foto profil dikembalikan ke bawaan Google');
   }
@@ -14467,6 +14617,13 @@ function loadUserDataFromCloud(uid){
       safeSetItem('norxstore_user_custom_avatar', cloudPhoto);
       if(currentUser && currentUser.uid === uid){
         currentUser.customPhotoURL = cloudPhoto;
+      }
+      if(isAuthorizedAdmin()){
+        safeSetItem('norxstore_admin_avatar', cloudPhoto);
+        window.norxstore_live_admin_avatar = cloudPhoto;
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/config/adminAvatar').set(cloudPhoto).catch(()=>{});
+        }
       }
       if(typeof updateLoginIcon === 'function') updateLoginIcon();
       if(typeof updateAccountModalProfileUI === 'function') updateAccountModalProfileUI();
