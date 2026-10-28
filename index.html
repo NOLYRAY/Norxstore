@@ -12825,6 +12825,54 @@ const SEED_CUSTOMER_RATINGS = [
   }
 ];
 
+function normalizeRatingId(id){
+  return String(id || '').trim().toLowerCase().replace(/^(rat[_-])+/g, '').replace(/^(rat[_-])+/g, '');
+}
+
+// Store helper untuk balasan resmi admin yang persisten lintas reload & Firebase
+function getAdminRepliesStore(){
+  try {
+    const raw = safeGetItem('norxstore_admin_replies', '{}');
+    const parsed = JSON.parse(raw);
+    return (parsed && typeof parsed === 'object') ? parsed : {};
+  } catch(e){
+    return {};
+  }
+}
+
+function saveAdminReplyToStore(ratingId, replyObj){
+  if(!ratingId || !replyObj) return;
+  const rawId = String(ratingId).trim();
+  const normId = normalizeRatingId(rawId);
+  
+  const store = getAdminRepliesStore();
+  store[rawId] = replyObj;
+  store[normId] = replyObj;
+  store['rat_' + normId] = replyObj;
+  store['rat_RAT-' + normId] = replyObj;
+  store['RAT-' + normId] = replyObj;
+  safeSetItem('norxstore_admin_replies', JSON.stringify(store));
+  
+  // Hapus dari daftar balasan yang dihapus
+  let deletedList = [];
+  try {
+    deletedList = JSON.parse(safeGetItem('norxstore_deleted_admin_replies', '[]')) || [];
+  } catch(e){}
+  deletedList = deletedList.filter(x => normalizeRatingId(x) !== normId);
+  safeSetItem('norxstore_deleted_admin_replies', JSON.stringify(deletedList));
+  
+  // Realtime Cloud Firebase
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/admin_replies/' + normId).set(replyObj).catch(()=>{});
+    fbDB.ref('norxstore/orders/rat_' + rawId + '/adminReply').set(replyObj).catch(()=>{});
+    fbDB.ref('norxstore/orders/rat_RAT-' + normId + '/adminReply').set(replyObj).catch(()=>{});
+    fbDB.ref('norxstore/orders/rat_' + normId + '/adminReply').set(replyObj).catch(()=>{});
+    fbDB.ref('norxstore/orders/' + rawId + '/adminReply').set(replyObj).catch(()=>{});
+    fbDB.ref('norxstore/ratings/' + normId + '/adminReply').set(replyObj).catch(()=>{});
+    fbDB.ref('norxstore/ratings/' + rawId + '/adminReply').set(replyObj).catch(()=>{});
+  }
+}
+
 let customerRatingsCache = null;
 function getCustomerRatings(){
   if(customerRatingsCache && customerRatingsCache.length > 0) return customerRatingsCache;
@@ -12850,9 +12898,9 @@ function getCustomerRatings(){
       const cur = map.get(r.id);
       if(cur){
         const merged = {...cur, ...r};
-        if(r.adminReply === null || r.adminReply === undefined){
-          delete merged.adminReply;
-          merged.adminReply = null;
+        // PERBAIKAN: Jangan timpa adminReply yang sudah ada jika r tidak memiliki adminReply
+        if(!merged.adminReply && cur.adminReply){
+          merged.adminReply = cur.adminReply;
         }
         map.set(r.id, merged);
       } else {
@@ -12866,9 +12914,9 @@ function getCustomerRatings(){
       const cur = map.get(r.id);
       if(cur){
         const merged = {...cur, ...r};
-        if(r.adminReply === null || r.adminReply === undefined){
-          delete merged.adminReply;
-          merged.adminReply = null;
+        // PERBAIKAN: Jangan timpa adminReply yang sudah ada jika cloud r tidak memiliki adminReply
+        if(!merged.adminReply && cur.adminReply){
+          merged.adminReply = cur.adminReply;
         }
         map.set(r.id, merged);
       } else {
@@ -12876,24 +12924,39 @@ function getCustomerRatings(){
       }
     }
   }
-  
-  // 4. Pastikan semua balasan ulasan yang dihapus admin tidak pernah muncul kembali
+
+  // 4. Injeksi balasan resmi admin dari persistent store norxstore_admin_replies
+  const adminReplies = getAdminRepliesStore();
   let deletedReplyIds = [];
   try {
     deletedReplyIds = JSON.parse(safeGetItem('norxstore_deleted_admin_replies', '[]')) || [];
   } catch(e){}
-  if(Array.isArray(deletedReplyIds) && deletedReplyIds.length > 0){
-    const delSet = new Set(deletedReplyIds.map(s => String(s).toLowerCase().replace(/^(rat_|rat-)/i, '')));
-    for(const [k, v] of map.entries()){
-      const cleanK = String(k).toLowerCase().replace(/^(rat_|rat-)/i, '');
-      const cleanVid = String(v.id || '').toLowerCase().replace(/^(rat_|rat-)/i, '');
-      if(delSet.has(cleanK) || delSet.has(cleanVid) || deletedReplyIds.includes(k) || deletedReplyIds.includes(v.id)){
-        delete v.adminReply;
-        v.adminReply = null;
+  const delNormSet = new Set(deletedReplyIds.filter(Boolean).map(s => normalizeRatingId(s)));
+
+  for(const [k, v] of map.entries()){
+    const normK = normalizeRatingId(k);
+    const normVid = normalizeRatingId(v.id);
+
+    // Jika admin telah menghapus balasan ini secara permanen, bersihkan
+    if(delNormSet.has(normK) || delNormSet.has(normVid)){
+      delete v.adminReply;
+      v.adminReply = null;
+      continue;
+    }
+
+    // Pasang balasan admin jika ada di store
+    let savedRep = null;
+    for(const repKey in adminReplies){
+      if(normalizeRatingId(repKey) === normK || normalizeRatingId(repKey) === normVid){
+        savedRep = adminReplies[repKey];
+        break;
       }
     }
+    if(savedRep && savedRep.text){
+      v.adminReply = { ...savedRep };
+    }
   }
-  
+
   const merged = Array.from(map.values());
   merged.sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
   customerRatingsCache = merged;
@@ -13368,7 +13431,6 @@ function submitAdminReviewReplyModal(){
     showToast('⚠️ ID ulasan tidak valid.');
     return;
   }
-
   const ta = document.getElementById('replyModalTextarea');
   const text = ta ? ta.value.trim() : '';
   if(!text){
@@ -13376,7 +13438,6 @@ function submitAdminReviewReplyModal(){
     if(ta) ta.focus();
     return;
   }
-
   const aliasInput = document.getElementById('replyModalAdminAlias');
   let chosenAlias = aliasInput ? aliasInput.value.trim() : '';
   if(!chosenAlias){
@@ -13387,66 +13448,85 @@ function submitAdminReviewReplyModal(){
   if(chosenAlias.includes('@')){
     chosenAlias = chosenAlias.split('@')[0];
   }
-
   // Simpan nama samaran ke localStorage agar otomatis diingat untuk balasan berikutnya
   safeSetItem('norxstore_admin_alias', chosenAlias);
 
-  const cleanId = String(ratingId || '').replace(/^rat_/, '');
+  const rawTargetId = String(ratingId || '').trim();
+  const normId = normalizeRatingId(rawTargetId);
+
   const replyObj = {
     text: text,
     authorName: chosenAlias, // Nama samaran bebas sesuka hati, bukan email!
-    authorPhoto: (typeof getUserAvatarPhoto === 'function' ? getUserAvatarPhoto(currentUser) : (currentUser && currentUser.photoURL)) || null,
+    authorPhoto: (typeof getAdminAvatarPhoto === 'function' ? getAdminAvatarPhoto() : null) || (typeof getUserAvatarPhoto === 'function' ? getUserAvatarPhoto(currentUser) : (currentUser && currentUser.photoURL)) || null,
     title: 'OWNER / ADMIN NORXSTORE',
     repliedAt: Date.now()
   };
 
-  // Hapus ID dari daftar hitam norxstore_deleted_admin_replies jika sebelumnya pernah dihapus
-  let deletedList = [];
-  try {
-    deletedList = JSON.parse(safeGetItem('norxstore_deleted_admin_replies', '[]')) || [];
-  } catch(e){}
-  const rawTargetId = String(ratingId || '').trim();
-  const lowerCleanId = cleanId.toLowerCase();
-  deletedList = deletedList.filter(x => x !== rawTargetId && x !== cleanId && x !== lowerCleanId && x !== ('rat_' + cleanId));
-  safeSetItem('norxstore_deleted_admin_replies', JSON.stringify(deletedList));
+  // 1. Simpan ke dedicated persistent store lokal & Firebase RTDB (100% tahan refresh!)
+  saveAdminReplyToStore(ratingId, replyObj);
 
-  // 1. Simpan di memori allOrders & Firebase RTDB
+  // 2. Simpan di memori allOrders & Firebase RTDB norxstore/orders
   let matched = false;
   for(const k in allOrders){
     const it = allOrders[k];
     if(!it) continue;
-    const itClean = String(it.id || '').replace(/^(rat_|rat-)/i, '');
-    if(itClean === cleanId || k === ratingId || k === ('rat_' + cleanId) || it.id === ratingId){
+    const itNorm = normalizeRatingId(it.id);
+    const kNorm = normalizeRatingId(k);
+    
+    if(itNorm === normId || kNorm === normId || String(it.id || '').trim() === rawTargetId || String(k || '').trim() === rawTargetId){
       it.adminReply = replyObj;
       matched = true;
       if(window.fbAvailable && fbDB && fbDB.ref){
         fbDB.ref('norxstore/orders/' + k + '/adminReply').set(replyObj).catch(e => console.error(e));
       }
     }
-  }
-
-  // Jika item seed yang belum punya node tersendiri di allOrders
-  if(!matched){
-    const seed = SEED_CUSTOMER_RATINGS.find(s => s.id === ratingId || String(s.id).replace(/^(rat_|rat-)/i, '') === cleanId);
-    const baseEntry = seed ? { ...seed } : { id: ratingId, isRating: true, type: 'rating' };
-    baseEntry.adminReply = replyObj;
-    allOrders['rat_' + cleanId] = baseEntry;
-    if(window.fbAvailable && fbDB && fbDB.ref){
-      fbDB.ref('norxstore/orders/rat_' + cleanId).set(baseEntry).catch(e => console.error(e));
+    
+    // Periksa jika rating tersimpan di dalam objek order (it.rating atau it.ratings)
+    if(it.rating && typeof it.rating === 'object'){
+      if(normalizeRatingId(it.rating.id) === normId || String(it.rating.id || '').trim() === rawTargetId){
+        it.rating.adminReply = replyObj;
+        matched = true;
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/orders/' + k + '/rating/adminReply').set(replyObj).catch(e => console.error(e));
+        }
+      }
+    }
+    if(Array.isArray(it.ratings)){
+      let subHit = false;
+      for(const subR of it.ratings){
+        if(subR && typeof subR === 'object'){
+          if(normalizeRatingId(subR.id) === normId || String(subR.id || '').trim() === rawTargetId){
+            subR.adminReply = replyObj;
+            matched = true;
+            subHit = true;
+          }
+        }
+      }
+      if(subHit && window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k + '/ratings').set(it.ratings).catch(e => console.error(e));
+      }
     }
   }
 
-  // 2. Simpan di customerRatingsCache & localStorage
-  const currentRatings = getCustomerRatings().map(r => {
-    const rClean = String(r.id || '').replace(/^(rat_|rat-)/i, '');
-    if(rClean === cleanId || r.id === ratingId){
-      return { ...r, adminReply: replyObj };
-    }
-    return r;
-  });
-  saveCustomerRatings(currentRatings);
+  // Jika item seed atau standalone rating yang belum ada node tersendiri di allOrders
+  const seed = SEED_CUSTOMER_RATINGS.find(s => normalizeRatingId(s.id) === normId);
+  const baseEntry = seed ? { ...seed } : { id: ratingId, isRating: true, type: 'rating' };
+  baseEntry.adminReply = replyObj;
+  allOrders['rat_' + normId] = baseEntry;
+  allOrders['rat_RAT-' + normId] = baseEntry;
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/rat_RAT-' + normId).set(baseEntry).catch(e => console.error(e));
+    fbDB.ref('norxstore/orders/rat_' + normId).set(baseEntry).catch(e => console.error(e));
+    fbDB.ref('norxstore/ratings/' + normId).set(baseEntry).catch(e => console.error(e));
+    fbDB.ref('norxstore/ratings/' + rawTargetId).set(baseEntry).catch(e => console.error(e));
+  }
 
-  // 3. Tutup modal dan refresh tampilan
+  // 3. Simpan di customerRatingsCache & localStorage
+  customerRatingsCache = null;
+  const updatedRatings = getCustomerRatings();
+  saveCustomerRatings(updatedRatings);
+
+  // 4. Tutup modal dan refresh tampilan
   closeAdminReviewReplyModal();
   renderCustomerReviews();
   if(isAdminOpen()) renderAdminRatingsList();
@@ -13463,78 +13543,87 @@ function deleteAdminReviewReply(ratingId){
   } catch(e){}
 
   const rawId = String(ratingId || '').trim();
-  const cleanId = rawId.replace(/^(rat_|rat-)/i, '');
-  const lowerClean = cleanId.toLowerCase();
+  const normId = normalizeRatingId(rawId);
 
-  // 1. Bersihkan langsung dari SEED_CUSTOMER_RATINGS jika ulasan bawaan toko (misal: Faizzz Ganteng)
+  // 1. Hapus dari norxstore_admin_replies store di localStorage
+  let savedReplies = getAdminRepliesStore();
+  for(const k in savedReplies){
+    if(normalizeRatingId(k) === normId){
+      delete savedReplies[k];
+    }
+  }
+  safeSetItem('norxstore_admin_replies', JSON.stringify(savedReplies));
+
+  // 2. Simpan ke daftar hitam penghapusan permanen lokal
+  let deletedList = [];
+  try {
+    deletedList = JSON.parse(safeGetItem('norxstore_deleted_admin_replies', '[]')) || [];
+  } catch(e){}
+  if(!deletedList.some(x => normalizeRatingId(x) === normId)){
+    deletedList.push(normId);
+  }
+  safeSetItem('norxstore_deleted_admin_replies', JSON.stringify(deletedList));
+
+  // 3. Hapus dari Firebase RTDB
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/admin_replies/' + normId).remove().catch(()=>{});
+    fbDB.ref('norxstore/orders/rat_' + rawId + '/adminReply').remove().catch(()=>{});
+    fbDB.ref('norxstore/orders/rat_RAT-' + normId + '/adminReply').remove().catch(()=>{});
+    fbDB.ref('norxstore/orders/rat_' + normId + '/adminReply').remove().catch(()=>{});
+    fbDB.ref('norxstore/orders/' + rawId + '/adminReply').remove().catch(()=>{});
+    fbDB.ref('norxstore/ratings/' + normId + '/adminReply').remove().catch(()=>{});
+    fbDB.ref('norxstore/ratings/' + rawId + '/adminReply').remove().catch(()=>{});
+  }
+
+  // 4. Bersihkan langsung dari SEED_CUSTOMER_RATINGS jika ulasan bawaan toko
   SEED_CUSTOMER_RATINGS.forEach(s => {
-    const sId = String(s.id || '').trim();
-    const sClean = sId.replace(/^(rat_|rat-)/i, '').toLowerCase();
-    if(sId === rawId || sClean === lowerClean || sId.toLowerCase() === rawId.toLowerCase()){
+    if(normalizeRatingId(s.id) === normId){
       delete s.adminReply;
       s.adminReply = null;
     }
   });
 
-  // 2. Bersihkan dari memori allOrders & Firebase RTDB
-  const targetKeys = [
-    rawId,
-    cleanId,
-    'rat_' + cleanId,
-    'RAT-' + cleanId,
-    rawId.toLowerCase(),
-    'rat_' + lowerClean
-  ];
-
+  // 5. Bersihkan dari memori allOrders & Firebase RTDB
   for(const k in allOrders){
     const it = allOrders[k];
     if(!it) continue;
-    const itId = String(it.id || '').trim();
-    const itClean = itId.replace(/^(rat_|rat-)/i, '').toLowerCase();
-    if(targetKeys.includes(k) || targetKeys.includes(itId) || itClean === lowerClean){
+    if(normalizeRatingId(it.id) === normId || normalizeRatingId(k) === normId){
       delete it.adminReply;
       it.adminReply = null;
       if(window.fbAvailable && fbDB && fbDB.ref){
-        fbDB.ref('norxstore/orders/' + k + '/adminReply').set(null).catch(()=>{});
         fbDB.ref('norxstore/orders/' + k + '/adminReply').remove().catch(()=>{});
+      }
+    }
+    if(it.rating && typeof it.rating === 'object'){
+      if(normalizeRatingId(it.rating.id) === normId){
+        delete it.rating.adminReply;
+        it.rating.adminReply = null;
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/orders/' + k + '/rating/adminReply').remove().catch(()=>{});
+        }
+      }
+    }
+    if(Array.isArray(it.ratings)){
+      let subDel = false;
+      for(const subR of it.ratings){
+        if(subR && typeof subR === 'object' && normalizeRatingId(subR.id) === normId){
+          delete subR.adminReply;
+          subR.adminReply = null;
+          subDel = true;
+        }
+      }
+      if(subDel && window.fbAvailable && fbDB && fbDB.ref){
+        fbDB.ref('norxstore/orders/' + k + '/ratings').set(it.ratings).catch(()=>{});
       }
     }
   }
 
-  if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/orders/' + rawId + '/adminReply').set(null).catch(()=>{});
-    fbDB.ref('norxstore/orders/' + rawId + '/adminReply').remove().catch(()=>{});
-    fbDB.ref('norxstore/orders/rat_' + cleanId + '/adminReply').set(null).catch(()=>{});
-    fbDB.ref('norxstore/orders/rat_' + cleanId + '/adminReply').remove().catch(()=>{});
-    fbDB.ref('norxstore/orders/rat_' + lowerClean + '/adminReply').set(null).catch(()=>{});
-    fbDB.ref('norxstore/orders/rat_' + lowerClean + '/adminReply').remove().catch(()=>{});
-  }
-
-  // 3. Simpan ke daftar hitam penghapusan permanen lokal agar tidak pernah kembali
-  let deletedList = [];
-  try {
-    deletedList = JSON.parse(safeGetItem('norxstore_deleted_admin_replies', '[]')) || [];
-  } catch(e){}
-  if(!deletedList.includes(rawId)) deletedList.push(rawId);
-  if(!deletedList.includes(cleanId)) deletedList.push(cleanId);
-  if(!deletedList.includes(lowerClean)) deletedList.push(lowerClean);
-  safeSetItem('norxstore_deleted_admin_replies', JSON.stringify(deletedList));
-
-  // 4. Update customerRatingsCache & localStorage
-  const currentRatings = getCustomerRatings().map(r => {
-    const rId = String(r.id || '').trim();
-    const rClean = rId.replace(/^(rat_|rat-)/i, '').toLowerCase();
-    if(rClean === lowerClean || rId === rawId || rId.toLowerCase() === rawId.toLowerCase()){
-      const cloned = { ...r };
-      delete cloned.adminReply;
-      cloned.adminReply = null;
-      return cloned;
-    }
-    return r;
-  });
+  // 6. Update customerRatingsCache & localStorage
+  customerRatingsCache = null;
+  const currentRatings = getCustomerRatings();
   saveCustomerRatings(currentRatings);
 
-  // 5. Render ulang tampilan seketika
+  // 7. Render ulang tampilan seketika
   renderCustomerReviews();
   if(isAdminOpen()) renderAdminRatingsList();
   showToast('🗑️ Balasan admin berhasil dihapus secara permanen.');
