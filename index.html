@@ -14127,6 +14127,8 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
   for(const k in allOrders){
     if(k.startsWith('rat_') && !incoming[k]){
       incoming[k] = allOrders[k];
+    } else if(incoming[k] && allOrders[k] && allOrders[k].adminReply && !incoming[k].adminReply){
+      incoming[k].adminReply = allOrders[k].adminReply;
     }
   }
   allOrders = incoming;
@@ -14154,6 +14156,10 @@ if(window.fbAvailable && fbDB && fbDB.ref){
       for(const id in val){
         const r = val[id];
         if(r && r.id){
+          const exist = allOrders['rat_' + r.id];
+          if(exist && exist.adminReply && !r.adminReply){
+            r.adminReply = exist.adminReply;
+          }
           allOrders['rat_' + r.id] = r;
           changed = true;
         }
@@ -14161,6 +14167,30 @@ if(window.fbAvailable && fbDB && fbDB.ref){
       if(changed){
         customerRatingsCache = null;
         updateRatingStatsUI();
+        renderCustomerReviews();
+        if(isAdminOpen()) renderAdminRatingsList();
+      }
+    }
+  });
+
+  // Sinkronisasi realtime balasan resmi admin di norxstore/admin_replies
+  fbDB.ref('norxstore/admin_replies').on('value', snap => {
+    const val = snap.val();
+    if(val && typeof val === 'object'){
+      let store = getAdminRepliesStore();
+      let changed = false;
+      for(const k in val){
+        const rep = val[k];
+        if(rep && rep.text){
+          const cleanK = String(k).replace(/^(rat_|rat-)/i, '').toLowerCase();
+          store[k] = rep;
+          store[cleanK] = rep;
+          changed = true;
+        }
+      }
+      if(changed){
+        safeSetItem('norxstore_admin_replies', JSON.stringify(store));
+        customerRatingsCache = null;
         renderCustomerReviews();
         if(isAdminOpen()) renderAdminRatingsList();
       }
@@ -14416,6 +14446,16 @@ function setUserCustomAvatar(photoUrl){
           }
         }
       }
+      let repStore = getAdminRepliesStore();
+      for(const rId in repStore){
+        if(repStore[rId]){
+          repStore[rId].authorPhoto = photoUrl;
+          if(window.fbAvailable && fbDB && fbDB.ref){
+            fbDB.ref('norxstore/admin_replies/' + rId + '/authorPhoto').set(photoUrl).catch(()=>{});
+          }
+        }
+      }
+      safeSetItem('norxstore_admin_replies', JSON.stringify(repStore));
     }
 
     // Sinkronkan ulasan pelanggan milik akun ini
