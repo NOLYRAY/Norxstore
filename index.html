@@ -3371,10 +3371,6 @@ button{cursor:pointer;font-family:inherit}
           <span>Gabung Saluran WhatsApp</span>
           <span style="font-size:14px">➔</span>
         </a>
-        <button type="button" class="wa-channel-btn-copy" id="waChannelCopyBtn" onclick="copyWaChannelLink(this)">
-          <span>📋</span>
-          <span>Salin Link</span>
-        </button>
       </div>
     </div>
 
@@ -4565,11 +4561,8 @@ button{cursor:pointer;font-family:inherit}
         </div>
         <div style="font-size:11.5px;color:#e2e8f0;line-height:1.4" id="adminWaChannelPreviewDesc">Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala...</div>
         <div style="display:flex;gap:6px;margin-top:8px">
-          <div style="background:linear-gradient(135deg, #25D366, #128C7E);color:#fff;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:4px">
+          <div style="background:linear-gradient(135deg, #25D366, #128C7E);color:#fff;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:4px">
             <span>Gabung Saluran WhatsApp ➔</span>
-          </div>
-          <div style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px">
-            <span>📋 Salin Link</span>
           </div>
         </div>
       </div>
@@ -12309,6 +12302,23 @@ function getImagesForProduct(id){
     }
   }
   return [];
+}
+
+function preloadVisibleProductImages(){
+  try {
+    const list = (Array.isArray(products) ? products : []).slice(0, 4);
+    list.forEach(p => {
+      const imgs = getImagesForProduct(p.id);
+      if(imgs && imgs[0]){
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = imgs[0];
+      }
+    });
+  } catch(e){}
+}
+function preloadProductImages(){
+  preloadVisibleProductImages();
 }
 
 function addImageToProduct(id, url){
