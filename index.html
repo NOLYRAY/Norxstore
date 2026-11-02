@@ -3349,7 +3349,7 @@ button{cursor:pointer;font-family:inherit}
 
     <!-- VIP WhatsApp Channel Card Resmi -->
     <div class="whatsapp-channel-vip-card" id="waChannelVipCard">
-      <div class="wa-channel-vip-left">
+      <div class="wa-channel-vip-left" onclick="openWaChannelDirect(event)" style="cursor:pointer" title="Klik untuk membuka Saluran WhatsApp Resmi">
         <div class="wa-channel-vip-badge-row">
           <span class="wa-channel-vip-badge">📢 SALURAN WHATSAPP RESMI</span>
           <span class="wa-channel-vip-followers" id="waChannelFollowersBadge">1.5k+ Pengikut • Info Update Kilat</span>
@@ -3358,12 +3358,16 @@ button{cursor:pointer;font-family:inherit}
           <span id="waChannelTitleText">Saluran WhatsApp Resmi NORXSTORE</span>
           <span class="wa-verified-check" title="Saluran Resmi Terverifikasi">✓</span>
         </h4>
+        <div class="wa-channel-vip-handle" id="waChannelHandleText" style="font-size:11.5px;color:#a7f3d0;font-weight:700;margin:0 0 6px;display:inline-flex;align-items:center;gap:4px">
+          <span style="opacity:0.8">ID / Handle:</span>
+          <span id="waChannelHandleVal">norx</span>
+        </div>
         <p class="wa-channel-vip-desc" id="waChannelDescText">
           Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!
         </p>
       </div>
       <div class="wa-channel-vip-actions">
-        <a href="https://whatsapp.com/channel/0029VaNorxstore" id="waChannelJoinBtn" target="_blank" rel="noopener noreferrer" class="wa-channel-btn-join">
+        <a href="https://whatsapp.com/channel/0029VaNorxstore" id="waChannelJoinBtn" target="_blank" rel="noopener noreferrer" class="wa-channel-btn-join" onclick="openWaChannelDirect(event)">
           <span>Gabung Saluran WhatsApp</span>
           <span style="font-size:14px">➔</span>
         </a>
@@ -4494,7 +4498,7 @@ button{cursor:pointer;font-family:inherit}
       </label>
     </div>
     <p style="font-size:11px;color:#047857;margin:0 0 10px;line-height:1.4">
-      💡 <strong>Fitur Saluran WhatsApp:</strong> Tampilkan link broadcast channel resmi Anda di halaman web (banner VIP di atas media sosial & tombol cepat katalog) untuk mengumpulkan ribuan pelanggan setia.
+      💡 <strong>Fitur Saluran WhatsApp:</strong> Banner VIP hijau di atas media sosial terhubung langsung ke link saluran Anda. Masukkan link saluran Anda di bawah, dan gunakan tombol sinkronisasi atau tombol cepat pengikut untuk mencocokkan jumlah pengikut yang ada di saluran.
     </p>
 
     <div style="margin-bottom:10px">
@@ -4503,14 +4507,39 @@ button{cursor:pointer;font-family:inherit}
     </div>
 
     <div style="margin-bottom:10px">
-      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Tautan / Link Saluran WhatsApp:</label>
-      <input type="url" id="adminWaChannel_url" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="https://whatsapp.com/channel/..." oninput="updateAdminWaChannelPreview()">
-      <span style="font-size:10px;color:#64748b">Contoh link resmi: https://whatsapp.com/channel/0029Va... atau link undangan grup</span>
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">ID / Handle Saluran (Opsional):</label>
+      <input type="text" id="adminWaChannel_handle" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="norx atau @norxstore" oninput="updateAdminWaChannelPreview()">
     </div>
 
     <div style="margin-bottom:10px">
-      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Badge / Jumlah Pengikut:</label>
-      <input type="text" id="adminWaChannel_badge" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="1.5k+ Pengikut • Info Update Kilat" oninput="updateAdminWaChannelPreview()">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Tautan / Link Saluran WhatsApp:</label>
+      <div style="display:flex;gap:6px;align-items:center">
+        <input type="url" id="adminWaChannel_url" class="admin-input" style="font-size:12px;margin-bottom:0;flex:1" placeholder="https://whatsapp.com/channel/..." oninput="updateAdminWaChannelPreview()">
+        <button type="button" id="btnFetchWaChannelLive" onclick="autoFetchWaChannelInfoFromUrl()" style="background:#059669;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:4px">
+          <span>🔄 Ambil Data Saluran</span>
+        </button>
+      </div>
+      <span style="font-size:10px;color:#64748b;display:block;margin-top:2px">Contoh link resmi: https://whatsapp.com/channel/0029Va... atau link undangan grup</span>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+        <label class="admin-label" style="font-size:11px;margin-bottom:0">Badge / Jumlah Pengikut:</label>
+        <span style="font-size:10px;color:#059669;font-weight:600">Klik tombol cepat untuk menyesuaikan:</span>
+      </div>
+      <input type="text" id="adminWaChannel_badge" class="admin-input" style="font-size:12px;margin-bottom:4px" placeholder="1.5k+ Pengikut • Info Update Kilat" oninput="updateAdminWaChannelPreview()">
+      
+      <!-- Quick Follower Presets Chips -->
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button type="button" onclick="setAdminWaFollowersPreset('500+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">500+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('1.2k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">1.2k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('1.5k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">1.5k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('2.5k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">2.5k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('5k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">5k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('10k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">10k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('25k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">25k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('50k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">50k+</button>
+      </div>
     </div>
 
     <div style="margin-bottom:12px">
@@ -4520,17 +4549,29 @@ button{cursor:pointer;font-family:inherit}
 
     <!-- Live Preview Simulator -->
     <div style="background:#f0fdf4;border:1px dashed #86efac;border-radius:10px;padding:10px;margin-bottom:12px">
-      <div style="font-size:10.5px;font-weight:700;color:#15803d;margin-bottom:6px">👁️ Preview Tampilan Banner Saluran WhatsApp:</div>
-      <div style="background:#064e3b;border-radius:10px;padding:10px 12px;color:#fff">
-        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
-          <span style="font-size:9px;background:#25D366;color:#064e3b;font-weight:800;padding:2px 6px;border-radius:10px">SALURAN RESMI</span>
-          <span style="font-size:9.5px;color:#a7f3d0" id="adminWaChannelPreviewBadge">1.5k+ Pengikut</span>
+      <div style="font-size:10.5px;font-weight:700;color:#15803d;margin-bottom:6px">👁️ Preview Tampilan Banner Hijau Saluran WhatsApp:</div>
+      <div style="background:linear-gradient(135deg, rgba(6, 78, 59, 0.95), rgba(16, 185, 129, 0.4));border:1.5px solid rgba(52, 211, 153, 0.5);border-radius:12px;padding:12px 14px;color:#fff">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+          <span style="font-size:9px;background:#25D366;color:#064e3b;font-weight:800;padding:2px 7px;border-radius:10px">📢 SALURAN RESMI</span>
+          <span style="font-size:9.5px;color:#a7f3d0;background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px" id="adminWaChannelPreviewBadge">1.5k+ Pengikut • Info Update Kilat</span>
         </div>
-        <div style="font-size:13px;font-weight:800;display:flex;align-items:center;gap:4px">
+        <div style="font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px">
           <span id="adminWaChannelPreviewName">Saluran WhatsApp Resmi NORXSTORE</span>
-          <span style="background:#25D366;color:#064e3b;border-radius:50%;width:14px;height:14px;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:900">✓</span>
+          <span style="background:#25D366;color:#064e3b;border-radius:50%;width:16px;height:16px;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-weight:900">✓</span>
         </div>
-        <div style="font-size:11px;color:#e2e8f0;margin-top:2px" id="adminWaChannelPreviewDesc">Dapatkan bocoran diskon joki kilat & giveaway akun...</div>
+        <div style="font-size:11px;color:#a7f3d0;font-weight:700;margin:1px 0 4px">
+          <span style="opacity:0.8">ID Saluran:</span>
+          <span id="adminWaChannelPreviewHandle">norx</span>
+        </div>
+        <div style="font-size:11.5px;color:#e2e8f0;line-height:1.4" id="adminWaChannelPreviewDesc">Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala...</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <div style="background:linear-gradient(135deg, #25D366, #128C7E);color:#fff;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:4px">
+            <span>Gabung Saluran WhatsApp ➔</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.25);color:#fff;padding:6px 10px;border-radius:8px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;gap:4px">
+            <span>📋 Salin Link</span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -10618,16 +10659,6 @@ const DEFAULT_SOCIAL_CONFIG = {
     icon: '💬',
     brandColor: '#25D366'
   },
-  whatsapp_channel: {
-    enabled: true,
-    name: 'Saluran WhatsApp Resmi',
-    handle: 'whatsapp.com/channel/norxstore',
-    url: 'https://whatsapp.com/channel/0029VaNorxstore',
-    badge: '1.5k+ Pengikut',
-    desc: 'Saluran siaran info diskon joki kilat, giveaway akun mingguan, & slot joki.',
-    icon: '📢',
-    brandColor: '#128C7E'
-  },
   instagram: {
     enabled: true,
     name: 'Instagram Resmi',
@@ -10685,7 +10716,7 @@ const DEFAULT_WA_CHANNEL_CONFIG = {
   enabled: true,
   name: 'Saluran WhatsApp Resmi NORXSTORE',
   url: 'https://whatsapp.com/channel/0029VaNorxstore',
-  handle: 'whatsapp.com/channel/norxstore',
+  handle: 'norx',
   badge: '1.5k+ Pengikut • Info Update Kilat',
   desc: 'Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!'
 };
@@ -10727,10 +10758,18 @@ function renderWaChannelUI(){
   }
   const titleEl = document.getElementById('waChannelTitleText');
   if(titleEl) titleEl.textContent = cfg.name || DEFAULT_WA_CHANNEL_CONFIG.name;
+  
+  const handleValEl = document.getElementById('waChannelHandleVal');
+  if(handleValEl) handleValEl.textContent = cfg.handle || 'norx';
+  const handleCont = document.getElementById('waChannelHandleText');
+  if(handleCont) handleCont.style.display = cfg.handle ? 'inline-flex' : 'none';
+
   const followersEl = document.getElementById('waChannelFollowersBadge');
   if(followersEl) followersEl.textContent = cfg.badge || DEFAULT_WA_CHANNEL_CONFIG.badge;
+
   const descEl = document.getElementById('waChannelDescText');
   if(descEl) descEl.textContent = cfg.desc || DEFAULT_WA_CHANNEL_CONFIG.desc;
+
   const joinBtn = document.getElementById('waChannelJoinBtn');
   if(joinBtn){
     joinBtn.href = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
@@ -10741,10 +10780,17 @@ function renderWaChannelUI(){
   }
 }
 
-function openWaChannelDirect(){
+function openWaChannelDirect(e){
+  if(e && e.stopPropagation) e.stopPropagation();
   const cfg = getWaChannelConfig();
   const url = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
-  window.open(url, '_blank');
+  if(!url) return;
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile){
+    window.location.href = url;
+  } else {
+    window.open(url, '_blank');
+  }
 }
 
 function copyWaChannelLink(btnEl){
@@ -10769,28 +10815,36 @@ function copyWaChannelLink(btnEl){
 
 function updateAdminWaChannelPreview(){
   const nameInput = document.getElementById('adminWaChannel_name');
+  const handleInput = document.getElementById('adminWaChannel_handle');
   const badgeInput = document.getElementById('adminWaChannel_badge');
   const descInput = document.getElementById('adminWaChannel_desc');
+  const subLabelInput = document.getElementById('adminWaChannel_subLabel');
   
   const pName = document.getElementById('adminWaChannelPreviewName');
+  const pHandle = document.getElementById('adminWaChannelPreviewHandle');
   const pBadge = document.getElementById('adminWaChannelPreviewBadge');
   const pDesc = document.getElementById('adminWaChannelPreviewDesc');
+  const pSubLabel = document.getElementById('adminWaChannelPreviewSubLabel');
   
   if(pName && nameInput) pName.textContent = nameInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.name;
+  if(pHandle && handleInput) pHandle.textContent = handleInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.handle;
   if(pBadge && badgeInput) pBadge.textContent = badgeInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.badge;
   if(pDesc && descInput) pDesc.textContent = descInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.desc;
+  if(pSubLabel && subLabelInput) pSubLabel.textContent = subLabelInput.value.trim() || '📢 SALURAN RESMI';
 }
 
 function populateAdminWaChannelForm(){
   const cfg = getWaChannelConfig();
   const enableEl = document.getElementById('adminWaChannel_enabled');
   const nameEl = document.getElementById('adminWaChannel_name');
+  const handleEl = document.getElementById('adminWaChannel_handle');
   const urlEl = document.getElementById('adminWaChannel_url');
   const badgeEl = document.getElementById('adminWaChannel_badge');
   const descEl = document.getElementById('adminWaChannel_desc');
   
   if(enableEl) enableEl.checked = (cfg.enabled !== false);
   if(nameEl) nameEl.value = cfg.name || '';
+  if(handleEl) handleEl.value = cfg.handle || '';
   if(urlEl) urlEl.value = cfg.url || '';
   if(badgeEl) badgeEl.value = cfg.badge || '';
   if(descEl) descEl.value = cfg.desc || '';
@@ -10802,15 +10856,92 @@ function populateAdminWaChannelForm(){
   }
 }
 
+function setAdminWaFollowersPreset(val){
+  const badgeInput = document.getElementById('adminWaChannel_badge');
+  if(badgeInput){
+    badgeInput.value = `${val} • Info Update Kilat`;
+    updateAdminWaChannelPreview();
+    showToast(`⚡ Pengikut diatur: ${val}`);
+  }
+}
+
+function autoFetchWaChannelInfoFromUrl(){
+  const urlInput = document.getElementById('adminWaChannel_url');
+  const url = urlInput ? urlInput.value.trim() : '';
+  if(!url || !url.includes('whatsapp.com/channel/')){
+    showToast('⚠️ Masukkan link saluran whatsapp.com/channel/... terlebih dahulu!');
+    if(urlInput) urlInput.focus();
+    return;
+  }
+  const btn = document.getElementById('btnFetchWaChannelLive');
+  const origHtml = btn ? btn.innerHTML : '';
+  if(btn){
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Memeriksa data saluran...</span>';
+  }
+  fetch('/api/whatsapp-channel-info?url=' + encodeURIComponent(url))
+    .then(r => r.json())
+    .then(data => {
+      if(btn){
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+      if(data && data.success){
+        if(data.followers){
+          const badgeInput = document.getElementById('adminWaChannel_badge');
+          if(badgeInput){
+            badgeInput.value = `${data.followers} • Info Update Kilat`;
+          }
+        }
+        if(data.title && (!document.getElementById('adminWaChannel_name').value || document.getElementById('adminWaChannel_name').value.includes('NORXSTORE'))){
+          document.getElementById('adminWaChannel_name').value = data.title;
+        }
+        if(data.desc){
+          const descInput = document.getElementById('adminWaChannel_desc');
+          if(descInput && !descInput.value){
+            descInput.value = data.desc;
+          }
+        }
+        try {
+          const parts = url.split('/channel/')[1];
+          if(parts){
+            const code = parts.split(/[?#/]/)[0];
+            const handleInput = document.getElementById('adminWaChannel_handle');
+            if(handleInput && !handleInput.value){
+              handleInput.value = code;
+            }
+          }
+        } catch(e){}
+        updateAdminWaChannelPreview();
+        if(data.followers){
+          showToast(`✅ Berhasil mencocokkan pengikut: ${data.followers}`);
+        } else {
+          showToast('✅ Link saluran terverifikasi! Gunakan tombol cepat di bawah untuk menyesuaikan pengikut.');
+        }
+      } else {
+        showToast(data.message || '⚠️ Silakan gunakan tombol pilihan pengikut di bawah untuk mengatur jumlah pengikut.');
+      }
+    })
+    .catch(() => {
+      if(btn){
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+      showToast('ℹ️ Link siap digunakan. Gunakan tombol cepat pengikut di bawah.');
+    });
+}
+
 function saveAdminWaChannelConfig(){
   const enableEl = document.getElementById('adminWaChannel_enabled');
   const nameEl = document.getElementById('adminWaChannel_name');
+  const handleEl = document.getElementById('adminWaChannel_handle');
   const urlEl = document.getElementById('adminWaChannel_url');
   const badgeEl = document.getElementById('adminWaChannel_badge');
   const descEl = document.getElementById('adminWaChannel_desc');
 
   const url = (urlEl && urlEl.value.trim()) ? urlEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.url;
   const name = (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.name;
+  const handle = (handleEl && handleEl.value.trim()) ? handleEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.handle;
   const badge = (badgeEl && badgeEl.value.trim()) ? badgeEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.badge;
   const desc = (descEl && descEl.value.trim()) ? descEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
   const enabled = enableEl ? enableEl.checked : true;
@@ -10818,6 +10949,7 @@ function saveAdminWaChannelConfig(){
   const cfg = {
     enabled: enabled,
     name: name,
+    handle: handle,
     url: url,
     badge: badge,
     desc: desc
@@ -10825,14 +10957,10 @@ function saveAdminWaChannelConfig(){
 
   saveWaChannelConfig(cfg);
 
-  // Perbarui juga di DEFAULT_SOCIAL_CONFIG jika ada
+  // Bersihkan whatsapp_channel dari socialConfig agar tidak ada kartu ganda di grid media sosial
   const socCfg = getSocialConfig();
   if(socCfg.whatsapp_channel){
-    socCfg.whatsapp_channel.name = name;
-    socCfg.whatsapp_channel.url = url;
-    socCfg.whatsapp_channel.badge = badge;
-    socCfg.whatsapp_channel.desc = desc;
-    socCfg.whatsapp_channel.enabled = enabled;
+    delete socCfg.whatsapp_channel;
     saveSocialConfig(socCfg);
   }
 
@@ -10862,22 +10990,26 @@ function getSocialConfig(){
     if(raw){
       const parsed = JSON.parse(raw);
       if(parsed && typeof parsed === 'object'){
+        delete parsed.whatsapp_channel;
         const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
         for(const k in parsed){
-          if(parsed[k]){
+          if(parsed[k] && DEFAULT_SOCIAL_CONFIG[k]){
             merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...parsed[k] };
           }
         }
+        delete merged.whatsapp_channel;
         socialConfigCache = merged;
         return socialConfigCache;
       }
     }
   } catch(e){}
   socialConfigCache = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
+  delete socialConfigCache.whatsapp_channel;
   return socialConfigCache;
 }
 
 function saveSocialConfig(cfg){
+  if(cfg && cfg.whatsapp_channel) delete cfg.whatsapp_channel;
   socialConfigCache = cfg;
   safeSetItem('norxstore_social_config', JSON.stringify(cfg));
   if(window.fbAvailable && fbDB && fbDB.ref){
@@ -10981,7 +11113,7 @@ function renderSocialCards(){
   let html = '';
   keys.forEach(key => {
     const rawItem = cfg[key];
-    if(!rawItem || rawItem.enabled === false) return;
+    if(!rawItem || rawItem.enabled === false || key === 'whatsapp_channel') return;
     const item = getLocalizedSocialItem(key, rawItem);
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:20px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? (t('socialBtnChat') || 'Chat WhatsApp ➔') : (t('socialBtnOpen') || 'Kunjungi ➔');
@@ -11036,7 +11168,7 @@ function renderSocialModalList(){
   let html = '';
   keys.forEach(key => {
     const rawItem = cfg[key];
-    if(!rawItem || rawItem.enabled === false) return;
+    if(!rawItem || rawItem.enabled === false || key === 'whatsapp_channel') return;
     const item = getLocalizedSocialItem(key, rawItem);
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:18px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? 'Chat' : (t('socialBtnOpen') || 'Buka');
@@ -11078,7 +11210,7 @@ function renderFooterQuickSocialLinks(){
   let html = '';
   keys.forEach(key => {
     const item = cfg[key];
-    if(!item || item.enabled === false) return;
+    if(!item || item.enabled === false || key === 'whatsapp_channel') return;
     const cleanName = item.name.replace(/(Official|Resmi|Channel|Community|Admin)/gi, '').trim() || item.name;
     html += `
       <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="footer-social-item" title="${escapeHtml(item.name)}">
@@ -11885,6 +12017,7 @@ function renderAdminSocialInputs(){
   
   let html = '';
   keys.forEach(key => {
+    if(key === 'whatsapp_channel') return;
     const item = cfg[key];
     const isChecked = item.enabled !== false;
     const isDefaultKey = !!DEFAULT_SOCIAL_CONFIG[key];
@@ -12765,12 +12898,14 @@ fbDB.ref('norxstore/pwEnabled').on('value', snap=>{
 fbDB.ref('norxstore/socialConfig').on('value', snap=>{
   const val = snap.val();
   if(val && typeof val === 'object'){
+    delete val.whatsapp_channel;
     const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
     for(const k in val){
-      if(val[k]){
+      if(val[k] && DEFAULT_SOCIAL_CONFIG[k]){
         merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...val[k] };
       }
     }
+    delete merged.whatsapp_channel;
     socialConfigCache = merged;
     safeSetItem('norxstore_social_config', JSON.stringify(socialConfigCache));
     renderSocialCards();
