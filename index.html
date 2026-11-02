@@ -2713,6 +2713,302 @@ button{cursor:pointer;font-family:inherit}
   font-weight:700;
   color:#701a75;
 }
+
+/* ==================== QUICK BADGES BAR (PERATURAN JOKI & SALURAN WA) ==================== */
+.catalog-quick-badges-bar{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin:10px auto 14px;
+  padding:0 12px;
+  max-width:800px;
+}
+.catalog-badge-btn{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  padding:8px 14px;
+  border-radius:24px;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .18s cubic-bezier(.16,1,.3,1);
+  text-decoration:none;
+  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  white-space:nowrap;
+}
+.catalog-badge-btn.rules-btn{
+  background:linear-gradient(135deg, #fef3c7, #fef9c3);
+  border:1.5px solid #f59e0b;
+  color:#92400e;
+}
+.catalog-badge-btn.rules-btn:hover{
+  background:linear-gradient(135deg, #fde68a, #fef08a);
+  transform:translateY(-1.5px);
+  box-shadow:0 6px 16px rgba(245,158,11,0.25);
+  border-color:#d97706;
+}
+.catalog-badge-btn.wa-channel-btn{
+  background:linear-gradient(135deg, #ecfdf5, #d1fae5);
+  border:1.5px solid #10b981;
+  color:#065f46;
+}
+.catalog-badge-btn.wa-channel-btn:hover{
+  background:linear-gradient(135deg, #d1fae5, #a7f3d0);
+  transform:translateY(-1.5px);
+  box-shadow:0 6px 16px rgba(16,185,129,0.25);
+  border-color:#059669;
+}
+.catalog-badge-pill{
+  font-size:10px;
+  padding:2px 7px;
+  border-radius:12px;
+  background:rgba(0,0,0,0.08);
+  font-weight:800;
+}
+
+/* ==================== VIP WHATSAPP CHANNEL CARD ==================== */
+.whatsapp-channel-vip-card{
+  background:linear-gradient(135deg, rgba(6, 78, 59, 0.85), rgba(16, 185, 129, 0.25));
+  border:1.5px solid rgba(52, 211, 153, 0.5);
+  border-radius:18px;
+  padding:16px 18px;
+  margin-bottom:18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  box-shadow:0 8px 30px rgba(6,78,59,0.3);
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+}
+@media (min-width:680px){
+  .whatsapp-channel-vip-card{
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 22px;
+  }
+}
+.whatsapp-channel-vip-card::before{
+  content:'';
+  position:absolute;
+  top:-40px;
+  right:-40px;
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle, rgba(37,211,102,0.35) 0%, transparent 70%);
+  pointer-events:none;
+}
+.wa-channel-vip-left{
+  flex:1;
+  min-width:0;
+}
+.wa-channel-vip-badge-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:6px;
+}
+.wa-channel-vip-badge{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.6px;
+  background:#25D366;
+  color:#064e3b;
+  padding:3px 9px;
+  border-radius:20px;
+  text-transform:uppercase;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.wa-channel-vip-followers{
+  font-size:10.5px;
+  font-weight:700;
+  color:#a7f3d0;
+  background:rgba(255,255,255,0.1);
+  padding:2px 8px;
+  border-radius:12px;
+}
+.wa-channel-vip-title{
+  font-size:16px;
+  font-weight:800;
+  color:#fff;
+  margin:0 0 4px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  letter-spacing:-0.2px;
+}
+.wa-verified-check{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#25D366;
+  color:#064e3b;
+  font-size:11px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.wa-channel-vip-desc{
+  font-size:12px;
+  color:#e2e8f0;
+  margin:0;
+  line-height:1.45;
+  max-width:620px;
+}
+.wa-channel-vip-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+.wa-channel-btn-join{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:10px 16px;
+  border-radius:12px;
+  background:linear-gradient(135deg, #25D366, #128C7E);
+  color:#fff;
+  font-size:12.5px;
+  font-weight:800;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 4px 15px rgba(37,211,102,0.35);
+  transition:all .18s ease;
+  white-space:nowrap;
+}
+.wa-channel-btn-join:hover{
+  background:linear-gradient(135deg, #22c55e, #0f766e);
+  transform:translateY(-1.5px);
+  box-shadow:0 6px 20px rgba(37,211,102,0.45);
+}
+.wa-channel-btn-copy{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:9.5px 13px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.12);
+  border:1.5px solid rgba(255,255,255,0.22);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s ease;
+  white-space:nowrap;
+}
+.wa-channel-btn-copy:hover{
+  background:rgba(255,255,255,0.22);
+}
+
+/* ==================== CHECKOUT JOKI RULES SAFETY BOX ==================== */
+.checkout-joki-rules-box{
+  background:#fffbeb;
+  border:1.5px solid #fde68a;
+  border-radius:12px;
+  padding:10px 12px;
+  margin-top:10px;
+  margin-bottom:6px;
+  text-align:left;
+}
+.checkout-joki-rules-head{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  font-weight:800;
+  color:#92400e;
+  margin-bottom:6px;
+}
+.checkout-joki-rules-list{
+  margin:0;
+  padding-left:18px;
+  font-size:11px;
+  color:#78350f;
+  line-height:1.45;
+}
+.checkout-joki-rules-list li{
+  margin-bottom:3px;
+}
+.checkout-joki-rules-agreement{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:8px;
+  padding-top:7px;
+  border-top:1px dashed #fcd34d;
+  cursor:pointer;
+}
+
+/* ==================== JOKI RULES MODAL POLICY BOX ==================== */
+.joki-rules-hero-card{
+  background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(124,58,237,0.12));
+  border:1.5px solid rgba(245,158,11,0.35);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:14px;
+  text-align:center;
+}
+.joki-rules-card-item{
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:10px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  transition:all .15s ease;
+}
+.joki-rules-card-item:hover{
+  border-color:rgba(245,158,11,0.4);
+  background:rgba(255,255,255,0.08);
+}
+.joki-rules-num-badge{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:linear-gradient(135deg, #f59e0b, #d97706);
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 3px 8px rgba(245,158,11,0.35);
+}
+.joki-rules-item-body{
+  flex:1;
+  min-width:0;
+}
+.joki-rules-item-title{
+  font-size:12.5px;
+  font-weight:800;
+  color:#fef08a;
+  margin-bottom:3px;
+  line-height:1.3;
+}
+.joki-rules-item-desc{
+  font-size:11.5px;
+  color:#e2e8f0;
+  line-height:1.45;
+  margin:0;
+}
+.joki-rules-item-desc strong{
+  color:#fff;
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js" crossorigin="anonymous"></script>
@@ -2878,6 +3174,18 @@ button{cursor:pointer;font-family:inherit}
   <button class="cat-chip" id="chip_nte" data-cat="nte" onclick="filterCat('nte',this)">🔮 NEVERNESS TO EVER</button>
   <button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 AKUN STORE</button>
 </div>
+<div class="catalog-quick-badges-bar">
+  <button type="button" class="catalog-badge-btn rules-btn" onclick="openInfoModal('jokiRules')" title="Klik untuk membaca syarat & ketentuan joki Norxstore">
+    <span>📋</span>
+    <span><strong>Peraturan Joki</strong> (Wajib Dibaca)</span>
+    <span class="catalog-badge-pill">Buka ➔</span>
+  </button>
+  <button type="button" class="catalog-badge-btn wa-channel-btn" onclick="openWaChannelDirect()" title="Gabung ke Saluran WhatsApp Resmi Norxstore">
+    <span>📢</span>
+    <span id="catalogQuickWaText"><strong>Saluran WhatsApp</strong> Resmi</span>
+    <span class="catalog-badge-pill" style="background:rgba(16,185,129,0.2);color:#065f46">Gabung ➔</span>
+  </button>
+</div>
 <div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
 <div class="product-grid" id="productGrid">
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
@@ -3039,6 +3347,33 @@ button{cursor:pointer;font-family:inherit}
       </div>
     </div>
 
+    <!-- VIP WhatsApp Channel Card Resmi -->
+    <div class="whatsapp-channel-vip-card" id="waChannelVipCard">
+      <div class="wa-channel-vip-left">
+        <div class="wa-channel-vip-badge-row">
+          <span class="wa-channel-vip-badge">📢 SALURAN WHATSAPP RESMI</span>
+          <span class="wa-channel-vip-followers" id="waChannelFollowersBadge">1.5k+ Pengikut • Info Update Kilat</span>
+        </div>
+        <h4 class="wa-channel-vip-title">
+          <span id="waChannelTitleText">Saluran WhatsApp Resmi NORXSTORE</span>
+          <span class="wa-verified-check" title="Saluran Resmi Terverifikasi">✓</span>
+        </h4>
+        <p class="wa-channel-vip-desc" id="waChannelDescText">
+          Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!
+        </p>
+      </div>
+      <div class="wa-channel-vip-actions">
+        <a href="https://whatsapp.com/channel/0029VaNorxstore" id="waChannelJoinBtn" target="_blank" rel="noopener noreferrer" class="wa-channel-btn-join">
+          <span>Gabung Saluran WhatsApp</span>
+          <span style="font-size:14px">➔</span>
+        </a>
+        <button type="button" class="wa-channel-btn-copy" id="waChannelCopyBtn" onclick="copyWaChannelLink(this)">
+          <span>📋</span>
+          <span>Salin Link</span>
+        </button>
+      </div>
+    </div>
+
     <!-- Grid Kartu Media Sosial -->
     <div class="social-hub-grid" id="socialHubGrid"></div>
   </div>
@@ -3120,6 +3455,8 @@ button{cursor:pointer;font-family:inherit}
         <h4 class="footer-col-title" id="footerColHelpTitle">PUSAT BANTUAN & KEBIJAKAN</h4>
         <ul class="footer-nav-list">
           <li><a href="javascript:void(0)" onclick="openCart('orders')" class="footer-nav-link" id="footerLinkTrack">📦 Lacak Status Pesanan</a></li>
+          <li><a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" class="footer-nav-link" id="footerLinkJokiRules">📋 Peraturan Joki (Wajib Dibaca)</a></li>
+          <li><a href="javascript:void(0)" onclick="openWaChannelDirect()" class="footer-nav-link" id="footerLinkWaChannel">📢 Saluran WhatsApp Resmi</a></li>
           <li><a href="javascript:void(0)" onclick="openInfoModal('orderGuide')" class="footer-nav-link" id="footerLinkGuide">📖 Panduan Cara Pemesanan</a></li>
           <li><a href="javascript:void(0)" onclick="openInfoModal('terms')" class="footer-nav-link" id="footerLinkTerms">⚖️ Syarat & Ketentuan Layanan</a></li>
           <li><a href="javascript:void(0)" onclick="openInfoModal('privacy')" class="footer-nav-link" id="footerLinkPrivacy">🔒 Kebijakan Privasi & Garansi</a></li>
@@ -3185,9 +3522,29 @@ button{cursor:pointer;font-family:inherit}
 <div class="modal-label" id="modalChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridModal"></div>
 <div class="wa-preview" id="waPreview" style="display:none">
-<div class="wa-preview-label" id="waPreviewLabel">Pesan WhatsApp</div>
-<p class="wa-preview-text" id="waText"></p>
-<button class="wa-btn" id="waBtn" onclick="sendWA()">💬 Kirim ke WhatsApp</button>
+  <!-- PERATURAN JOKI SAFETY BOX & AGREEMENT -->
+  <div class="checkout-joki-rules-box">
+    <div class="checkout-joki-rules-head">
+      <span style="font-size:14px">⚠️</span>
+      <strong>PENTING: Peraturan Joki Norxstore</strong>
+    </div>
+    <ul class="checkout-joki-rules-list">
+      <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat joki sedang dikerjakan.</li>
+      <li>📲 <strong>Standby kode OTP</strong> atau matikan 2FA sementara agar lancar.</li>
+      <li>🔐 <strong>Ganti password</strong> akun game Anda setelah joki selesai 100%.</li>
+    </ul>
+    <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+      <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
+    </div>
+    <label class="checkout-joki-rules-agreement">
+      <input type="checkbox" id="modalJokiAgreement" checked style="width:16px;height:16px;accent-color:#7c3aed;cursor:pointer">
+      <span style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
+    </label>
+  </div>
+
+  <div class="wa-preview-label" id="waPreviewLabel">Pesan WhatsApp</div>
+  <p class="wa-preview-text" id="waText"></p>
+  <button class="wa-btn" id="waBtn" onclick="sendWA()">💬 Kirim ke WhatsApp</button>
 </div>
 </div>
 </div>
@@ -3254,6 +3611,27 @@ button{cursor:pointer;font-family:inherit}
 </div>
 <div class="modal-label" id="cartStepChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridCart"></div>
+
+<!-- PERATURAN JOKI SAFETY BOX & AGREEMENT DI KERANJANG -->
+<div class="checkout-joki-rules-box" style="margin-top:12px">
+  <div class="checkout-joki-rules-head">
+    <span style="font-size:14px">⚠️</span>
+    <strong>PENTING: Peraturan Joki Norxstore</strong>
+  </div>
+  <ul class="checkout-joki-rules-list">
+    <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat proses pengerjaan joki berlangsung.</li>
+    <li>📲 <strong>Standby respons cepat OTP</strong> atau nonaktifkan 2FA sementara.</li>
+    <li>🔐 <strong>Ganti kata sandi</strong> akun game Anda segera setelah pengerjaan selesai 100%.</li>
+  </ul>
+  <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+    <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
+  </div>
+  <label class="checkout-joki-rules-agreement">
+    <input type="checkbox" id="cartJokiAgreement" checked style="width:16px;height:16px;accent-color:#7c3aed;cursor:pointer">
+    <span style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
+  </label>
+</div>
+
 <button class="cart-checkout" id="cartConfirmCheckoutBtn" style="margin-top:12px" onclick="checkoutCart()">✅ Konfirmasi & Kirim</button>
 <p class="cart-clear" id="cartBackToCartBtn" onclick="closeCartCheckoutStep()">← Kembali ke Keranjang</p>
 </div>
@@ -4087,6 +4465,8 @@ button{cursor:pointer;font-family:inherit}
   <!-- Sub Navigation Tabs di Panel Admin -->
   <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch" id="adminSocialSubNav">
     <button type="button" class="admin-tab-chip active" id="tabAdminSocialBtn" onclick="switchAdminSocialSubTab('social')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #d946ef;background:#fae8ff;color:#86198f;cursor:pointer;white-space:nowrap">📱 Akun Medsos</button>
+    <button type="button" class="admin-tab-chip" id="tabAdminWachannelBtn" onclick="switchAdminSocialSubTab('wachannel')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">📢 Saluran WhatsApp</button>
+    <button type="button" class="admin-tab-chip" id="tabAdminJokirulesBtn" onclick="switchAdminSocialSubTab('jokirules')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">📋 Peraturan Joki</button>
     <button type="button" class="admin-tab-chip" id="tabAdminScamBtn" onclick="switchAdminSocialSubTab('scam')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">🛡️ Header & Anti-Scam</button>
     <button type="button" class="admin-tab-chip" id="tabAdminPillarsBtn" onclick="switchAdminSocialSubTab('pillars')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">⚡ 4 Pilar Keunggulan</button>
     <button type="button" class="admin-tab-chip" id="tabAdminFooterBtn" onclick="switchAdminSocialSubTab('footer')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">🏬 Info Toko & Footer</button>
@@ -4099,6 +4479,111 @@ button{cursor:pointer;font-family:inherit}
       <button type="button" onclick="addNewSocialPlatformPrompt()" style="background:#f3e8ff;color:#7c3aed;border:1px solid #d8b4fe;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:4px">➕ Tambah Medsos Baru</button>
     </div>
     <div id="adminSocialInputsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px"></div>
+  </div>
+
+  <!-- TAB WA CHANNEL: SALURAN WHATSAPP -->
+  <div id="adminPanelWachannelTab" style="display:none;background:#fff;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:12.5px;font-weight:800;color:#065f46;display:flex;align-items:center;gap:6px">
+        <span>📢 Pengaturan Saluran WhatsApp Resmi</span>
+        <span style="font-size:9.5px;background:#dcfce7;color:#15803d;padding:2px 7px;border-radius:10px;font-weight:800">VIP Channel</span>
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;cursor:pointer">
+        <span style="color:#64748b">Tampilkan di Web:</span>
+        <input type="checkbox" id="adminWaChannel_enabled" checked style="width:16px;height:16px;accent-color:#10b981;cursor:pointer" onchange="updateAdminWaChannelPreview()">
+      </label>
+    </div>
+    <p style="font-size:11px;color:#047857;margin:0 0 10px;line-height:1.4">
+      💡 <strong>Fitur Saluran WhatsApp:</strong> Tampilkan link broadcast channel resmi Anda di halaman web (banner VIP di atas media sosial & tombol cepat katalog) untuk mengumpulkan ribuan pelanggan setia.
+    </p>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Nama Saluran WhatsApp:</label>
+      <input type="text" id="adminWaChannel_name" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Saluran WhatsApp Resmi NORXSTORE" oninput="updateAdminWaChannelPreview()">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Tautan / Link Saluran WhatsApp:</label>
+      <input type="url" id="adminWaChannel_url" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="https://whatsapp.com/channel/..." oninput="updateAdminWaChannelPreview()">
+      <span style="font-size:10px;color:#64748b">Contoh link resmi: https://whatsapp.com/channel/0029Va... atau link undangan grup</span>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Badge / Jumlah Pengikut:</label>
+      <input type="text" id="adminWaChannel_badge" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="1.5k+ Pengikut • Info Update Kilat" oninput="updateAdminWaChannelPreview()">
+    </div>
+
+    <div style="margin-bottom:12px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Deskripsi Singkat Saluran:</label>
+      <textarea id="adminWaChannel_desc" class="admin-input" rows="2" style="font-size:12px;margin-bottom:0;resize:vertical" placeholder="Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala..." oninput="updateAdminWaChannelPreview()"></textarea>
+    </div>
+
+    <!-- Live Preview Simulator -->
+    <div style="background:#f0fdf4;border:1px dashed #86efac;border-radius:10px;padding:10px;margin-bottom:12px">
+      <div style="font-size:10.5px;font-weight:700;color:#15803d;margin-bottom:6px">👁️ Preview Tampilan Banner Saluran WhatsApp:</div>
+      <div style="background:#064e3b;border-radius:10px;padding:10px 12px;color:#fff">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span style="font-size:9px;background:#25D366;color:#064e3b;font-weight:800;padding:2px 6px;border-radius:10px">SALURAN RESMI</span>
+          <span style="font-size:9.5px;color:#a7f3d0" id="adminWaChannelPreviewBadge">1.5k+ Pengikut</span>
+        </div>
+        <div style="font-size:13px;font-weight:800;display:flex;align-items:center;gap:4px">
+          <span id="adminWaChannelPreviewName">Saluran WhatsApp Resmi NORXSTORE</span>
+          <span style="background:#25D366;color:#064e3b;border-radius:50%;width:14px;height:14px;font-size:9px;display:inline-flex;align-items:center;justify-content:center;font-weight:900">✓</span>
+        </div>
+        <div style="font-size:11px;color:#e2e8f0;margin-top:2px" id="adminWaChannelPreviewDesc">Dapatkan bocoran diskon joki kilat & giveaway akun...</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button type="button" class="admin-btn" style="background:#16a34a;color:#fff;font-weight:700;font-size:12px" onclick="saveAdminWaChannelConfig()">💾 Simpan Saluran WhatsApp</button>
+      <button type="button" class="admin-btn-sm" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;font-weight:700" onclick="resetAdminWaChannelConfig()">🔄 Reset Default</button>
+    </div>
+  </div>
+
+  <!-- TAB JOKI RULES: PERATURAN JOKI -->
+  <div id="adminPanelJokirulesTab" style="display:none;background:#fff;border:1px solid #fde68a;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:12.5px;font-weight:800;color:#92400e;display:flex;align-items:center;gap:6px">
+        <span>📋 Peraturan & Ketentuan Joki NORXSTORE</span>
+        <span style="font-size:9.5px;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:10px;font-weight:800">7 Poin Wajib</span>
+      </div>
+      <button type="button" onclick="openInfoModal('jokiRules')" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer">👁️ Lihat Modal Pelanggan</button>
+    </div>
+    <p style="font-size:11.5px;color:#78350f;margin:0 0 10px;line-height:1.4">
+      Aturan ini otomatis muncul di <strong>Popup Modal Peraturan</strong>, tombol banner atas katalog, tautan footer, serta di <strong>kotak peringatan saat checkout</strong> (single product & keranjang belanja).
+    </p>
+
+    <!-- 7 Rangkuman Poin Peraturan -->
+    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
+        <strong>1. 🚫 Dilarang Tabrak / Login Akun:</strong> Pelanggan dilarang keras membuka game saat pengerjaan berlangsung demi mencegah diskoneksi & gagal misi.
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
+        <strong>2. 📲 Standby Kode OTP / Nonaktifkan 2FA:</strong> Pelanggan harus standby memberikan kode OTP verifikasi pertama kali atau matikan sementara 2FA.
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
+        <strong>3. 🔐 Ganti Password Pasca Pengerjaan:</strong> Gunakan password sementara saat joki dan wajib segera ganti kata sandi setelah status dinyatakan selesai.
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
+        <strong>4. 💎 Integritas & Keamanan Aset:</strong> Primogem, Stellar Jade, Astrite, tiket gacha, dan material pelanggan dijamin aman & tidak diutak-atik.
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
+        <strong>5. 🛡️ 100% Pengerjaan Manual:</strong> Pengerjaan murni keahlian tangan manusia tanpa bot, script, cheat, atau injektor ilegal. Bergaransi anti-banned.
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
+        <strong>6. ⏱️ Antrean & Estimasi Transparan:</strong> Pelanggan dapat memantau estimasi durasi dan status live di menu "Pesanan Saya".
+      </div>
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
+        <strong>7. 💰 Jaminan Garansi & Refund 100%:</strong> Jika terjadi kelalaian dari tim joki, pelanggan berhak atas kompensasi atau pengembalian dana penuh.
+      </div>
+    </div>
+
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px;margin-bottom:10px">
+      <div style="font-size:11px;font-weight:700;color:#6b21a8;margin-bottom:4px">Catatan Pengingat Tambahan di Checkout (Opsional):</div>
+      <input type="text" id="adminJokiRules_extraNote" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Contoh: Tim pilot bertugas mulai pk 09:00 - 24:00 WIB" oninput="saveAdminJokiRulesNote()">
+    </div>
+
+    <button type="button" class="admin-btn" style="background:#9333ea;color:#fff;font-weight:700;font-size:12px;width:100%" onclick="openInfoModal('jokiRules')">👁️ Buka Preview Modal Lengkap Peraturan Joki</button>
   </div>
 
   <!-- TAB 2: HEADER MEDSOS & ANTI-SCAM -->
@@ -7322,7 +7807,9 @@ const I18N = {
     zoomProductPhoto: 'Perbesar foto produk',
     notifRatingSentTitle: 'Bintang & Penilaian Terkirim!',
     notifRatingSentSub: 'Terima kasih atas penilaian ⭐{stars} bintang Anda. Rating toko berhasil naik!',
-    ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang Anda berhasil menaikkan rating toko.'
+    ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang Anda berhasil menaikkan rating toko.',
+    jokiAgreementRequired: '⚠️ Harap centang dan setujui Peraturan Joki Norxstore untuk melanjutkan pesanan',
+    jokiRulesTitle: '📋 Peraturan & Ketentuan Joki Norxstore'
   },
   MY: {
     langName: 'Bahasa Melayu',
@@ -7538,7 +8025,9 @@ const I18N = {
     notifRatingSentTitle: 'Penilaian & Ulasan Dihantar!',
     notifRatingSentSub: 'Terima kasih atas penilaian ⭐{stars} bintang anda. Penilaian kedai berjaya dinaikkan!',
     ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang anda berjaya menaikkan rating kedai.',
-    orderStatusRefunded: '↩️ Dikembalikan (Refund)'
+    orderStatusRefunded: '↩️ Dikembalikan (Refund)',
+    jokiAgreementRequired: '⚠️ Sila tandakan dan setujui Peraturan Joki Norxstore untuk meneruskan pesanan',
+    jokiRulesTitle: '📋 Peraturan & Terma Joki Norxstore'
   },
   SG: {
     langName: 'English (Singapore)',
@@ -7754,7 +8243,9 @@ const I18N = {
     notifRatingSentTitle: 'Rating & Review Submitted!',
     notifRatingSentSub: 'Thank you for your ⭐{stars} star review! Store rating updated successfully.',
     ratingThankYouToast: '🎉 Thank you! Your ⭐{stars} star review has been submitted.',
-    orderStatusRefunded: '↩️ Refunded'
+    orderStatusRefunded: '↩️ Refunded',
+    jokiAgreementRequired: '⚠️ Please accept and agree to the Norxstore Boosting Rules to proceed with your order',
+    jokiRulesTitle: '📋 Norxstore Boosting Rules & Terms'
   }
 };
 
@@ -9283,6 +9774,7 @@ function updateLanguageUI(){
   const socialModalScam = document.getElementById('socialModalScamText');
   if(socialModalScam) socialModalScam.innerHTML = t('socialModalScam');
 
+  if(typeof renderWaChannelUI === 'function') renderWaChannelUI();
   if(typeof renderSocialCards === 'function') renderSocialCards();
   if(typeof renderSocialModalList === 'function') renderSocialModalList();
   if(typeof renderFooterQuickSocialLinks === 'function') renderFooterQuickSocialLinks();
@@ -10111,7 +10603,8 @@ const SOCIAL_ICONS = {
   tiktok: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>`,
   discord: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>`,
   telegram: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>`,
-  youtube: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
+  youtube: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
+  whatsapp_channel: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.16-1.31C8.61 21.52 10.26 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>`
 };
 
 const DEFAULT_SOCIAL_CONFIG = {
@@ -10124,6 +10617,16 @@ const DEFAULT_SOCIAL_CONFIG = {
     desc: 'Layanan konsultasi joki, order instan & bantuan pembayaran resmi.',
     icon: '💬',
     brandColor: '#25D366'
+  },
+  whatsapp_channel: {
+    enabled: true,
+    name: 'Saluran WhatsApp Resmi',
+    handle: 'whatsapp.com/channel/norxstore',
+    url: 'https://whatsapp.com/channel/0029VaNorxstore',
+    badge: '1.5k+ Pengikut',
+    desc: 'Saluran siaran info diskon joki kilat, giveaway akun mingguan, & slot joki.',
+    icon: '📢',
+    brandColor: '#128C7E'
   },
   instagram: {
     enabled: true,
@@ -10176,6 +10679,179 @@ const DEFAULT_SOCIAL_CONFIG = {
     brandColor: '#dc2626'
   }
 };
+
+/* ==================== SISTEM SALURAN WHATSAPP RESMI ==================== */
+const DEFAULT_WA_CHANNEL_CONFIG = {
+  enabled: true,
+  name: 'Saluran WhatsApp Resmi NORXSTORE',
+  url: 'https://whatsapp.com/channel/0029VaNorxstore',
+  handle: 'whatsapp.com/channel/norxstore',
+  badge: '1.5k+ Pengikut • Info Update Kilat',
+  desc: 'Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!'
+};
+
+let waChannelConfigCache = null;
+
+function getWaChannelConfig(){
+  if(waChannelConfigCache) return waChannelConfigCache;
+  try {
+    const raw = safeGetItem('norxstore_wa_channel_config', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        waChannelConfigCache = { ...DEFAULT_WA_CHANNEL_CONFIG, ...parsed };
+        return waChannelConfigCache;
+      }
+    }
+  } catch(e){}
+  waChannelConfigCache = JSON.parse(JSON.stringify(DEFAULT_WA_CHANNEL_CONFIG));
+  return waChannelConfigCache;
+}
+
+function saveWaChannelConfig(cfg){
+  waChannelConfigCache = cfg;
+  safeSetItem('norxstore_wa_channel_config', JSON.stringify(cfg));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/config/whatsappChannel').set(cfg).catch(e => {
+      console.warn('Sync notice: whatsappChannel disimpan di penyimpanan lokal');
+    });
+  }
+  renderWaChannelUI();
+}
+
+function renderWaChannelUI(){
+  const cfg = getWaChannelConfig();
+  const card = document.getElementById('waChannelVipCard');
+  if(card){
+    card.style.display = (cfg.enabled !== false) ? 'flex' : 'none';
+  }
+  const titleEl = document.getElementById('waChannelTitleText');
+  if(titleEl) titleEl.textContent = cfg.name || DEFAULT_WA_CHANNEL_CONFIG.name;
+  const followersEl = document.getElementById('waChannelFollowersBadge');
+  if(followersEl) followersEl.textContent = cfg.badge || DEFAULT_WA_CHANNEL_CONFIG.badge;
+  const descEl = document.getElementById('waChannelDescText');
+  if(descEl) descEl.textContent = cfg.desc || DEFAULT_WA_CHANNEL_CONFIG.desc;
+  const joinBtn = document.getElementById('waChannelJoinBtn');
+  if(joinBtn){
+    joinBtn.href = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
+  }
+  const quickWaText = document.getElementById('catalogQuickWaText');
+  if(quickWaText){
+    quickWaText.innerHTML = `<strong>${escapeHtml(cfg.name || 'Saluran WhatsApp')}</strong>`;
+  }
+}
+
+function openWaChannelDirect(){
+  const cfg = getWaChannelConfig();
+  const url = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
+  window.open(url, '_blank');
+}
+
+function copyWaChannelLink(btnEl){
+  const cfg = getWaChannelConfig();
+  const url = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
+  const doFeedback = () => {
+    showToast('✅ Link Saluran WhatsApp berhasil disalin!');
+    if(btnEl){
+      const orig = btnEl.innerHTML;
+      btnEl.innerHTML = `<span>✓</span><span>Disalin!</span>`;
+      setTimeout(() => btnEl.innerHTML = orig, 1800);
+    }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(doFeedback).catch(() => {
+      legacyCopyText(url, 'Saluran WhatsApp');
+    });
+  } else {
+    legacyCopyText(url, 'Saluran WhatsApp');
+  }
+}
+
+function updateAdminWaChannelPreview(){
+  const nameInput = document.getElementById('adminWaChannel_name');
+  const badgeInput = document.getElementById('adminWaChannel_badge');
+  const descInput = document.getElementById('adminWaChannel_desc');
+  
+  const pName = document.getElementById('adminWaChannelPreviewName');
+  const pBadge = document.getElementById('adminWaChannelPreviewBadge');
+  const pDesc = document.getElementById('adminWaChannelPreviewDesc');
+  
+  if(pName && nameInput) pName.textContent = nameInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.name;
+  if(pBadge && badgeInput) pBadge.textContent = badgeInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.badge;
+  if(pDesc && descInput) pDesc.textContent = descInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.desc;
+}
+
+function populateAdminWaChannelForm(){
+  const cfg = getWaChannelConfig();
+  const enableEl = document.getElementById('adminWaChannel_enabled');
+  const nameEl = document.getElementById('adminWaChannel_name');
+  const urlEl = document.getElementById('adminWaChannel_url');
+  const badgeEl = document.getElementById('adminWaChannel_badge');
+  const descEl = document.getElementById('adminWaChannel_desc');
+  
+  if(enableEl) enableEl.checked = (cfg.enabled !== false);
+  if(nameEl) nameEl.value = cfg.name || '';
+  if(urlEl) urlEl.value = cfg.url || '';
+  if(badgeEl) badgeEl.value = cfg.badge || '';
+  if(descEl) descEl.value = cfg.desc || '';
+  updateAdminWaChannelPreview();
+
+  const noteInput = document.getElementById('adminJokiRules_extraNote');
+  if(noteInput){
+    noteInput.value = safeGetItem('norxstore_joki_rules_extra_note', '');
+  }
+}
+
+function saveAdminWaChannelConfig(){
+  const enableEl = document.getElementById('adminWaChannel_enabled');
+  const nameEl = document.getElementById('adminWaChannel_name');
+  const urlEl = document.getElementById('adminWaChannel_url');
+  const badgeEl = document.getElementById('adminWaChannel_badge');
+  const descEl = document.getElementById('adminWaChannel_desc');
+
+  const url = (urlEl && urlEl.value.trim()) ? urlEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.url;
+  const name = (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.name;
+  const badge = (badgeEl && badgeEl.value.trim()) ? badgeEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.badge;
+  const desc = (descEl && descEl.value.trim()) ? descEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+  const enabled = enableEl ? enableEl.checked : true;
+
+  const cfg = {
+    enabled: enabled,
+    name: name,
+    url: url,
+    badge: badge,
+    desc: desc
+  };
+
+  saveWaChannelConfig(cfg);
+
+  // Perbarui juga di DEFAULT_SOCIAL_CONFIG jika ada
+  const socCfg = getSocialConfig();
+  if(socCfg.whatsapp_channel){
+    socCfg.whatsapp_channel.name = name;
+    socCfg.whatsapp_channel.url = url;
+    socCfg.whatsapp_channel.badge = badge;
+    socCfg.whatsapp_channel.desc = desc;
+    socCfg.whatsapp_channel.enabled = enabled;
+    saveSocialConfig(socCfg);
+  }
+
+  showToast('✅ Pengaturan Saluran WhatsApp berhasil disimpan dan disinkronkan!');
+}
+
+function resetAdminWaChannelConfig(){
+  if(!confirm('Reset pengaturan Saluran WhatsApp ke default bawaan?')) return;
+  saveWaChannelConfig(JSON.parse(JSON.stringify(DEFAULT_WA_CHANNEL_CONFIG)));
+  populateAdminWaChannelForm();
+  showToast('🔄 Saluran WhatsApp direset ke default.');
+}
+
+function saveAdminJokiRulesNote(){
+  const noteInput = document.getElementById('adminJokiRules_extraNote');
+  if(noteInput){
+    safeSetItem('norxstore_joki_rules_extra_note', noteInput.value.trim());
+  }
+}
 
 let socialConfigCache = null;
 
@@ -10880,6 +11556,211 @@ function openInfoModal(type){
         </div>
       `;
     }
+  } else if(type === 'jokiRules'){
+    title = (lang === 'SG') ? '📋 NORXSTORE Boosting Terms & Rules (Mandatory)' : ((lang === 'MY') ? '📋 Terma & Peraturan Joki NORXSTORE (Wajib Dipatuhi)' : '📋 Peraturan Joki NORXSTORE (Wajib Dibaca)');
+    const extraNote = safeGetItem('norxstore_joki_rules_extra_note', '');
+    const extraNoteHtml = extraNote ? `
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:11.5px;color:#1e40af;display:flex;align-items:center;gap:6px">
+        <span>📢</span> <span><strong>Catatan Admin:</strong> ${escapeHtml(extraNote)}</span>
+      </div>
+    ` : '';
+
+    if(lang === 'SG'){
+      html = `
+        <div class="joki-rules-hero-card">
+          <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ OFFICIAL BOOSTING PROTOCOL</div>
+          <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:4px">Guidelines & Account Security Measures</div>
+          <div style="font-size:11px;color:#cbd5e1">To guarantee 100% account safety and zero progress interruptions, all customers must adhere to these policies:</div>
+        </div>
+        ${extraNoteHtml}
+        <div class="joki-rules-cards-list">
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">1</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🚫 Do NOT Log In While Boosting Is In Progress</div>
+              <div class="joki-rules-item-desc">Never open or access your game account when order status is <strong>"In Progress"</strong>. Concurrent login kicks the pilot out, causes domain/abyss run failures, or triggers safety lockouts. If urgent, notify our WhatsApp support first.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">2</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">📲 Standby For 2FA / OTP Verification</div>
+              <div class="joki-rules-item-desc">When our pilot first logs in, game security may send a 2FA code to your phone or email. Please respond promptly within 1-3 minutes or temporarily disable 2FA so boosting begins immediately.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">3</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🔐 Use Temporary Password & Change Afterwards</div>
+              <div class="joki-rules-item-desc">Change your password to a temporary string before sharing details with admin. Once your order status is marked <strong>"Completed"</strong>, immediately update your password for permanent peace of mind.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">4</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">💎 Zero Resource Waste Guarantee</div>
+              <div class="joki-rules-item-desc">Our pilots are strictly forbidden from spending your Primogems, Stellar Jades, Astrite, Gacha pulls, or rare inventory materials without your explicit authorization. Your resources remain 100% untouched.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">5</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🛡️ 100% Pure Manual Play (Anti-Cheat / Anti-Banned)</div>
+              <div class="joki-rules-item-desc">All gameplay is executed purely by vetted veteran human players. We never use bots, injectors, scripts, macros, or cheats. Your account is protected by our anti-banned guarantee.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">6</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">⏱️ Transparent Queue & Live Progress Tracker</div>
+              <div class="joki-rules-item-desc">Orders are executed on a first-come, first-served schedule. You can track real-time progress, pilot notes, and completion countdowns directly in your <strong>"My Orders"</strong> tab.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">7</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">💰 100% Money-Back & Completion Assurance</div>
+              <div class="joki-rules-item-desc">If our team fails to deliver the promised goals due to an internal pilot delay or error, you receive a free retry priority or an immediate 100% full refund with zero deductions.</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;text-align:center">
+          <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
+            ✓ I Understand & Agree to Boosting Rules
+          </button>
+        </div>
+      `;
+    } else if(lang === 'MY'){
+      html = `
+        <div class="joki-rules-hero-card">
+          <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ PROTOKOL RASMI SERVIS JOKI</div>
+          <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:4px">Peraturan Keselamatan Akaun & Jaminan Amanah</div>
+          <div style="font-size:11px;color:#cbd5e1">Demi kelancaran dan keselamatan akaun game anda, setiap pelanggan wajib mematuhi 7 peraturan rasmi ini:</div>
+        </div>
+        ${extraNoteHtml}
+        <div class="joki-rules-cards-list">
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">1</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🚫 DILARANG Masuk / Bertembung Akaun Semasa Joki Berjalan</div>
+              <div class="joki-rules-item-desc">Jangan log masuk ke dalam game apabila status pesanan adalah <strong>"Sedang Diproses"</strong>. Percubaan masuk akan menyingkirkan pilot, membatalkan domain/abyss, atau mengakibatkan pinalti. Sila maklumkan kepada admin WhatsApp sekiranya perlu masuk segera.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">2</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">📲 Bersedia dengan Kod Pengesahan (OTP) / Matikan 2FA</div>
+              <div class="joki-rules-item-desc">Semasa pilot log masuk buat pertama kali, sistem game akan menghantar kod OTP. Sila bersedia membalas mesej admin dengan segera (1-3 minit) atau matikan sementara verifikasi 2-langkah (2FA) agar giliran joki tidak tergendala.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">3</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🔐 Gunakan Kata Laluan Sementara & Tukar Semula Selepas Siap</div>
+              <div class="joki-rules-item-desc">Gunakan kata laluan sementara sebelum berkongsi data log masuk kepada admin. Sebaik sahaja status pesanan disahkan <strong>"Selesai"</strong>, sila tukar semula kata laluan anda untuk keselamatan mutlak.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">4</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">💎 Jaminan Integriti Aset Dalam Game</div>
+              <div class="joki-rules-item-desc">Pilot kami dilarang sama sekali menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, atau bahan terhad tanpa persetujuan anda. Semua aset dijamin kekal selamat.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">5</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🛡️ 100% Pengerjaan Manual Tanpa Bot / Cheat / Script</div>
+              <div class="joki-rules-item-desc">Semua perkhidmatan dijalankan secara manual oleh pemain berpengalaman tanpa menggunakan bot, injector, script makro atau cheat. Keselamatan akaun bergaransi anti-banned rasmi.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">6</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">⏱️ Sistem Giliran Telus & Pantauan Langsung</div>
+              <div class="joki-rules-item-desc">Pesanan diproses mengikut giliran invois masuk. Anda boleh memantau anggaran masa dan perkembangan pesanan terus dari tab <strong>"Pesanan Saya"</strong> di troli.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">7</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">💰 Jaminan Wang Dikembalikan 100%</div>
+              <div class="joki-rules-item-desc">Sekiranya pesanan tidak dapat diselesaikan disebabkan kelemahan pihak kami, anda berhak mendapat pelaksanaan semula atau pemulangan wang penuh (100% Refund).</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;text-align:center">
+          <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
+            ✓ Saya Faham & Bersetuju dengan Peraturan Joki
+          </button>
+        </div>
+      `;
+    } else {
+      html = `
+        <div class="joki-rules-hero-card">
+          <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ PROTOKOL RESMI JOKI NORXSTORE</div>
+          <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px">Peraturan Keamanan Akun & Pengerjaan Amanah</div>
+          <div style="font-size:11.5px;color:#cbd5e1">Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:</div>
+        </div>
+        ${extraNoteHtml}
+        <div class="joki-rules-cards-list">
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">1</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🚫 DILARANG LOGIN / TABRAK AKUN SAAT JOKI BERJALAN</div>
+              <div class="joki-rules-item-desc">Jangan pernah membuka atau login ke game saat status pesanan adalah <strong>"🔵 Sedang Diproses"</strong>. Tabrakan login dapat menyebabkan diskoneksi mendadak pada pilot, kegagalan rotasi Abyss/Boss, roll-back data quest, atau penalti rank. Bila ada keperluan mendesak ingin login, <strong>wajib konfirmasi dan tunggu balasan dari admin WhatsApp</strong> terlebih dahulu.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">2</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">📲 STANDBY KODE OTP / NONAKTIFKAN 2FA SEMENTARA</div>
+              <div class="joki-rules-item-desc">Saat pilot hendak login pertama kali, sistem game biasanya mengirimkan kode OTP ke email atau SMS Anda. Harap standby merespons dalam 1-3 menit, atau <strong>matikan sementara verifikasi 2 langkah (2FA)</strong> sebelum checkout agar pilot bisa langsung mengeksekusi joki tanpa terhenti di antrean.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">3</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🔐 GUNAKAN PASSWORD SEMENTARA & GANTI SELESAI JOKI</div>
+              <div class="joki-rules-item-desc">Sebelum memberikan data login ke admin, ubah password akun game Anda menjadi kata sandi sementara. Setelah status pesanan dinyatakan selesai (<strong>🟢 Selesai</strong>) oleh admin, <strong>SEGERA ubah kembali password akun Anda</strong> untuk menjamin privasi dan keamanan akun 100%.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">4</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">💎 INTEGRITAS ASET & ANTI-UTAK ATIK INVENTORI</div>
+              <div class="joki-rules-item-desc">Pilot kami dilarang keras menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, Mora, kredit, atau material langka milik Anda di luar paket layanan yang Anda beli. Seluruh aset tabungan akun Anda dijamin 100% aman dan utuh.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">5</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">🛡️ 100% PENGERJAAN MANUAL (ANTI-CHEAT & ANTI-BANNED)</div>
+              <div class="joki-rules-item-desc">Seluruh proses joki dijalankan murni secara manual oleh tim joki profesional dengan skill tinggi. Kami tidak pernah menggunakan cheat, bot, script makro, atau injector pihak ketiga ilegal. Keamanan akun game Anda bergaransi resmi Norxstore!</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">6</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">⏱️ ESTIMASI DURASI & SISTEM ANTREAN TRANSPARAN</div>
+              <div class="joki-rules-item-desc">Pesanan dikerjakan berurutan sesuai antrean invoice yang masuk. Anda bisa memantau estimasi durasi dan progres real-time melalui tab <strong>"📦 Pesanan Saya"</strong> di menu keranjang. Ponsel Anda juga akan bergetar dan berbunyi notifikasi saat pesanan rampung.</div>
+            </div>
+          </div>
+          <div class="joki-rules-card-item">
+            <div class="joki-rules-num-badge">7</div>
+            <div class="joki-rules-item-body">
+              <div class="joki-rules-item-title">💰 JAMINAN GARANSI & KOMPENSASI REFUND 100%</div>
+              <div class="joki-rules-item-desc">Jika pesanan gagal diselesaikan akibat kelalaian dari pihak pilot Norxstore, Anda berhak mendapatkan pengerjaan ulang prioritas secara cuma-cuma atau pengembalian dana penuh (100% Refund tanpa potongan ribet).</div>
+            </div>
+          </div>
+        </div>
+        <div style="margin-top:14px;text-align:center">
+          <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
+            ✓ Saya Mengerti & Siap Mengikuti Peraturan Joki
+          </button>
+        </div>
+      `;
+    }
   }
 
   titleEl.innerHTML = title;
@@ -10970,7 +11851,7 @@ function legacyCopyText(text, name){
 }
 
 function switchAdminSocialSubTab(tab){
-  const tabs = ['social', 'scam', 'pillars', 'footer'];
+  const tabs = ['social', 'wachannel', 'jokirules', 'scam', 'pillars', 'footer'];
   tabs.forEach(t => {
     const btn = document.getElementById('tabAdmin' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
     const panel = document.getElementById('adminPanel' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab');
@@ -10991,6 +11872,9 @@ function switchAdminSocialSubTab(tab){
       panel.style.display = (t === tab) ? 'block' : 'none';
     }
   });
+  if(tab === 'wachannel'){
+    populateAdminWaChannelForm();
+  }
 }
 
 function renderAdminSocialInputs(){
@@ -11908,6 +12792,15 @@ fbDB.ref('norxstore/footerConfig').on('value', snap=>{
     safeSetItem('norxstore_footer_config', JSON.stringify(footerConfigCache));
     renderFooterContent();
     if(isAdminOpen()) renderAdminFooterInputs();
+  }
+});
+fbDB.ref('norxstore/config/whatsappChannel').on('value', snap => {
+  const val = snap.val();
+  if(val && typeof val === 'object'){
+    waChannelConfigCache = { ...DEFAULT_WA_CHANNEL_CONFIG, ...val };
+    safeSetItem('norxstore_wa_channel_config', JSON.stringify(waChannelConfigCache));
+    renderWaChannelUI();
+    if(isAdminOpen()) populateAdminWaChannelForm();
   }
 });
 let cart = JSON.parse(safeGetItem('norxstore_cart', '[]'));
@@ -15637,6 +16530,8 @@ function openCartCheckoutStep(){
   }
   document.getElementById('cartTotalStep').textContent = document.getElementById('cartTotal').textContent;
   renderCartPaymentMethods();
+  const ca = document.getElementById('cartJokiAgreement');
+  if(ca) ca.checked = true;
   document.getElementById('cartBody').style.display = 'none';
   document.getElementById('cartFooter').style.display = 'none';
   document.getElementById('cartCheckoutStep').style.display = 'block';
@@ -15675,6 +16570,12 @@ function checkoutCart(){
   }
   if(!selectedCartPayment){ showToast(t('selectPaymentFirst')); return; }
   if(!selectedCartAdmin){ showToast(t('selectAdminFirst')); return; }
+  const agree = document.getElementById('cartJokiAgreement');
+  if(agree && !agree.checked){
+    showToast(t('jokiAgreementRequired') || '⚠️ Harap centang dan setujui Peraturan Joki Norxstore untuk melanjutkan pesanan');
+    if(agree.scrollIntoView){ agree.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return;
+  }
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
   let totalDiscountAmount = 0;
   let countrySubtotal = 0;
@@ -17805,6 +18706,8 @@ function openModal(id){
   selectedModalAdmin=null;
   renderAdminGrid('adminGridModal','selectAdminModal');
   document.getElementById('waPreview').style.display='none';
+  const agreeEl = document.getElementById('modalJokiAgreement');
+  if(agreeEl) agreeEl.checked = true;
   document.getElementById('modalOverlay').classList.add('open');
 }
 function closeModal(e){
@@ -17843,6 +18746,12 @@ function updateWA(){
   document.getElementById('waBtn').dataset.text=text;
 }
 function sendWA(){
+  const agree = document.getElementById('modalJokiAgreement');
+  if(agree && !agree.checked){
+    showToast(t('jokiAgreementRequired') || '⚠️ Harap centang dan setujui Peraturan Joki Norxstore untuk melanjutkan pesanan');
+    if(agree.scrollIntoView){ agree.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return;
+  }
   const text=document.getElementById('waBtn').dataset.text;
   const url=getWaLink(text, selectedModalAdmin);
   if(selectedProduct){
