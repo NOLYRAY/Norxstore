@@ -2716,57 +2716,110 @@ button{cursor:pointer;font-family:inherit}
 
 /* ==================== QUICK BADGES BAR (PERATURAN JOKI & SALURAN WA) ==================== */
 .catalog-quick-badges-bar{
-  display:flex;
-  align-items:center;
-  justify-content:center;
+  display:grid;
+  grid-template-columns:1fr 1fr;
   gap:8px;
-  flex-wrap:wrap;
   margin:10px auto 14px;
   padding:0 12px;
-  max-width:800px;
+  max-width:680px;
+  width:100%;
+  box-sizing:border-box;
 }
-.catalog-badge-btn{
-  display:inline-flex;
+.catalog-quick-card{
+  display:flex;
   align-items:center;
-  gap:7px;
-  padding:8px 14px;
-  border-radius:24px;
-  font-size:12px;
-  font-weight:700;
+  gap:8px;
+  padding:7px 10px;
+  border-radius:12px;
   cursor:pointer;
   transition:all .18s cubic-bezier(.16,1,.3,1);
   text-decoration:none;
-  box-shadow:0 2px 8px rgba(0,0,0,0.06);
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 1.5px 6px rgba(0,0,0,0.04);
+  border:1px solid transparent;
+  min-width:0;
+  background:#fff;
+}
+.catalog-quick-card:active{
+  transform:scale(0.98);
+}
+.catalog-quick-icon{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  flex-shrink:0;
+}
+.catalog-quick-info{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  text-align:left;
+}
+.catalog-quick-title{
+  font-size:11.5px;
+  font-weight:800;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  letter-spacing:-0.1px;
+}
+.catalog-quick-sub{
+  font-size:10px;
+  font-weight:600;
+  line-height:1.2;
+  margin-top:2px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:4px;
   white-space:nowrap;
 }
-.catalog-badge-btn.rules-btn{
-  background:linear-gradient(135deg, #fef3c7, #fef9c3);
-  border:1.5px solid #f59e0b;
+.catalog-quick-card.rules-card{
+  background:linear-gradient(135deg, rgba(254,243,199,0.7), rgba(254,249,195,0.45));
+  border-color:rgba(245,158,11,0.3);
+}
+.catalog-quick-card.rules-card:hover{
+  background:linear-gradient(135deg, #fef3c7, #fef08a);
+  border-color:#f59e0b;
+  transform:translateY(-1.5px);
+  box-shadow:0 4px 12px rgba(245,158,11,0.18);
+}
+.catalog-quick-card.rules-card .catalog-quick-icon{
+  background:rgba(245,158,11,0.18);
+  border:1px solid rgba(245,158,11,0.25);
+}
+.catalog-quick-card.rules-card .catalog-quick-title{
   color:#92400e;
 }
-.catalog-badge-btn.rules-btn:hover{
-  background:linear-gradient(135deg, #fde68a, #fef08a);
-  transform:translateY(-1.5px);
-  box-shadow:0 6px 16px rgba(245,158,11,0.25);
-  border-color:#d97706;
+.catalog-quick-card.rules-card .catalog-quick-sub{
+  color:#b45309;
 }
-.catalog-badge-btn.wa-channel-btn{
-  background:linear-gradient(135deg, #ecfdf5, #d1fae5);
-  border:1.5px solid #10b981;
+.catalog-quick-card.wa-channel-card{
+  background:linear-gradient(135deg, rgba(236,253,245,0.75), rgba(209,250,229,0.45));
+  border-color:rgba(16,185,129,0.3);
+}
+.catalog-quick-card.wa-channel-card:hover{
+  background:linear-gradient(135deg, #dcfce7, #bbf7d0);
+  border-color:#10b981;
+  transform:translateY(-1.5px);
+  box-shadow:0 4px 12px rgba(16,185,129,0.18);
+}
+.catalog-quick-card.wa-channel-card .catalog-quick-icon{
+  background:rgba(16,185,129,0.18);
+  border:1px solid rgba(16,185,129,0.25);
+}
+.catalog-quick-card.wa-channel-card .catalog-quick-title{
   color:#065f46;
 }
-.catalog-badge-btn.wa-channel-btn:hover{
-  background:linear-gradient(135deg, #d1fae5, #a7f3d0);
-  transform:translateY(-1.5px);
-  box-shadow:0 6px 16px rgba(16,185,129,0.25);
-  border-color:#059669;
-}
-.catalog-badge-pill{
-  font-size:10px;
-  padding:2px 7px;
-  border-radius:12px;
-  background:rgba(0,0,0,0.08);
-  font-weight:800;
+.catalog-quick-card.wa-channel-card .catalog-quick-sub{
+  color:#047857;
 }
 
 /* ==================== VIP WHATSAPP CHANNEL CARD ==================== */
@@ -3175,15 +3228,25 @@ button{cursor:pointer;font-family:inherit}
   <button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 AKUN STORE</button>
 </div>
 <div class="catalog-quick-badges-bar">
-  <button type="button" class="catalog-badge-btn rules-btn" onclick="openInfoModal('jokiRules')" title="Klik untuk membaca syarat & ketentuan joki Norxstore">
-    <span>📋</span>
-    <span><strong>Peraturan Joki</strong> (Wajib Dibaca)</span>
-    <span class="catalog-badge-pill">Buka ➔</span>
+  <button type="button" class="catalog-quick-card rules-card" onclick="openInfoModal('jokiRules')" title="Klik untuk membaca syarat & ketentuan joki Norxstore">
+    <div class="catalog-quick-icon">📋</div>
+    <div class="catalog-quick-info">
+      <span class="catalog-quick-title" id="quickBarRulesTitle">Peraturan Joki</span>
+      <span class="catalog-quick-sub">
+        <span>Wajib Dibaca</span>
+        <span style="font-size:9.5px;font-weight:800;opacity:0.75">➔</span>
+      </span>
+    </div>
   </button>
-  <button type="button" class="catalog-badge-btn wa-channel-btn" onclick="openWaChannelDirect()" title="Gabung ke Saluran WhatsApp Resmi Norxstore">
-    <span>📢</span>
-    <span id="catalogQuickWaText"><strong>Saluran WhatsApp</strong> Resmi</span>
-    <span class="catalog-badge-pill" style="background:rgba(16,185,129,0.2);color:#065f46">Gabung ➔</span>
+  <button type="button" class="catalog-quick-card wa-channel-card" onclick="openWaChannelDirect(event)" title="Gabung ke Saluran WhatsApp Resmi Norxstore">
+    <div class="catalog-quick-icon">📢</div>
+    <div class="catalog-quick-info">
+      <span class="catalog-quick-title" id="catalogQuickWaText">Saluran WhatsApp</span>
+      <span class="catalog-quick-sub">
+        <span id="quickBarWaSub">Gabung Resmi</span>
+        <span style="font-size:9.5px;font-weight:800;opacity:0.75">➔</span>
+      </span>
+    </div>
   </button>
 </div>
 <div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
@@ -10767,9 +10830,19 @@ function renderWaChannelUI(){
   if(joinBtn){
     joinBtn.href = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
   }
+  const qbRules = document.getElementById('quickBarRulesTitle');
+  if(qbRules){
+    qbRules.textContent = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry === 'SG') ? 'Boosting Rules' : 'Peraturan Joki';
+  }
   const quickWaText = document.getElementById('catalogQuickWaText');
   if(quickWaText){
-    quickWaText.innerHTML = `<strong>${escapeHtml(cfg.name || 'Saluran WhatsApp')}</strong>`;
+    quickWaText.textContent = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry === 'SG') ? 'WhatsApp Channel' : 'Saluran WhatsApp';
+  }
+  const quickWaSub = document.getElementById('quickBarWaSub');
+  if(quickWaSub){
+    const followers = (cfg.badge || '').split('•')[0].trim();
+    const fallbackText = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry === 'SG') ? 'Official Join' : 'Gabung Resmi';
+    quickWaSub.textContent = followers || fallbackText;
   }
 }
 
