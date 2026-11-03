@@ -3591,7 +3591,7 @@ button{cursor:pointer;font-family:inherit}
       <span style="font-size:14px">⚠️</span>
       <strong>PENTING: Peraturan Joki Norxstore</strong>
     </div>
-    <ul class="checkout-joki-rules-list">
+    <ul class="checkout-joki-rules-list" id="modalCheckoutRulesList">
       <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat joki sedang dikerjakan.</li>
       <li>📲 <strong>Standby kode OTP</strong> atau matikan 2FA sementara agar lancar.</li>
       <li>🔐 <strong>Ganti password</strong> akun game Anda setelah joki selesai 100%.</li>
@@ -3681,7 +3681,7 @@ button{cursor:pointer;font-family:inherit}
     <span style="font-size:14px">⚠️</span>
     <strong>PENTING: Peraturan Joki Norxstore</strong>
   </div>
-  <ul class="checkout-joki-rules-list">
+  <ul class="checkout-joki-rules-list" id="cartCheckoutRulesList">
     <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat proses pengerjaan joki berlangsung.</li>
     <li>📲 <strong>Standby respons cepat OTP</strong> atau nonaktifkan 2FA sementara.</li>
     <li>🔐 <strong>Ganti kata sandi</strong> akun game Anda segera setelah pengerjaan selesai 100%.</li>
@@ -4638,49 +4638,56 @@ button{cursor:pointer;font-family:inherit}
   </div>
 
   <!-- TAB JOKI RULES: PERATURAN JOKI -->
+  <!-- TAB JOKI RULES: PERATURAN JOKI -->
   <div id="adminPanelJokirulesTab" style="display:none;background:#fff;border:1px solid #fde68a;border-radius:10px;padding:12px;margin-bottom:14px">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
       <div style="font-size:12.5px;font-weight:800;color:#92400e;display:flex;align-items:center;gap:6px">
-        <span>📋 Peraturan & Ketentuan Joki NORXSTORE</span>
-        <span style="font-size:9.5px;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:10px;font-weight:800">7 Poin Wajib</span>
+        <span>📋 Edit Peraturan Joki NORXSTORE</span>
+        <span style="font-size:9.5px;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:10px;font-weight:800" id="adminJokiRulesCountBadge">7 Poin Aturan</span>
       </div>
-      <button type="button" onclick="openInfoModal('jokiRules')" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer">👁️ Lihat Modal Pelanggan</button>
+      <button type="button" onclick="openInfoModal('jokiRules')" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer">👁️ Preview Modal</button>
     </div>
-    <p style="font-size:11.5px;color:#78350f;margin:0 0 10px;line-height:1.4">
-      Aturan ini otomatis muncul di <strong>Popup Modal Peraturan</strong>, tombol banner atas katalog, tautan footer, serta di <strong>kotak peringatan saat checkout</strong> (single product & keranjang belanja).
+    <p style="font-size:11px;color:#78350f;margin:0 0 10px;line-height:1.4">
+      💡 <strong>Kelola Peraturan Joki:</strong> Ubah judul, isi teks, atau tambah/kurang aturan joki di bawah ini. Semua perubahan akan langsung tersinkronisasi ke <strong>Modal Popup Peraturan</strong> dan <strong>Kotak Peringatan Checkout</strong>.
     </p>
 
-    <!-- 7 Rangkuman Poin Peraturan -->
-    <div style="display:flex;flex-direction:column;gap:6px;margin-bottom:12px">
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
-        <strong>1. 🚫 Dilarang Tabrak / Login Akun:</strong> Pelanggan dilarang keras membuka game saat pengerjaan berlangsung demi mencegah diskoneksi & gagal misi.
+    <!-- Header & Hero Settings -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label class="admin-label" style="font-size:11px;margin-bottom:2px">Judul Header Modal:</label>
+        <input type="text" id="adminJokiRules_headerTitle" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="PROTOKOL RESMI JOKI NORXSTORE">
       </div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
-        <strong>2. 📲 Standby Kode OTP / Nonaktifkan 2FA:</strong> Pelanggan harus standby memberikan kode OTP verifikasi pertama kali atau matikan sementara 2FA.
-      </div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
-        <strong>3. 🔐 Ganti Password Pasca Pengerjaan:</strong> Gunakan password sementara saat joki dan wajib segera ganti kata sandi setelah status dinyatakan selesai.
-      </div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
-        <strong>4. 💎 Integritas & Keamanan Aset:</strong> Primogem, Stellar Jade, Astrite, tiket gacha, dan material pelanggan dijamin aman & tidak diutak-atik.
-      </div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
-        <strong>5. 🛡️ 100% Pengerjaan Manual:</strong> Pengerjaan murni keahlian tangan manusia tanpa bot, script, cheat, atau injektor ilegal. Bergaransi anti-banned.
-      </div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
-        <strong>6. ⏱️ Antrean & Estimasi Transparan:</strong> Pelanggan dapat memantau estimasi durasi dan status live di menu "Pesanan Saya".
-      </div>
-      <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:8px 10px;font-size:11.5px;color:#78350f">
-        <strong>7. 💰 Jaminan Garansi & Refund 100%:</strong> Jika terjadi kelalaian dari tim joki, pelanggan berhak atas kompensasi atau pengembalian dana penuh.
+      <div>
+        <label class="admin-label" style="font-size:11px;margin-bottom:2px">Subjudul Header:</label>
+        <input type="text" id="adminJokiRules_headerSub" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Peraturan Keamanan Akun & Pengerjaan Amanah">
       </div>
     </div>
 
-    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:10px;margin-bottom:10px">
-      <div style="font-size:11px;font-weight:700;color:#6b21a8;margin-bottom:4px">Catatan Pengingat Tambahan di Checkout (Opsional):</div>
-      <input type="text" id="adminJokiRules_extraNote" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Contoh: Tim pilot bertugas mulai pk 09:00 - 24:00 WIB" oninput="saveAdminJokiRulesNote()">
+    <div style="margin-bottom:8px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Keterangan Pengantar Singkat:</label>
+      <input type="text" id="adminJokiRules_heroDesc" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda...">
     </div>
 
-    <button type="button" class="admin-btn" style="background:#9333ea;color:#fff;font-weight:700;font-size:12px;width:100%" onclick="openInfoModal('jokiRules')">👁️ Buka Preview Modal Lengkap Peraturan Joki</button>
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:8px 10px;margin-bottom:12px">
+      <label class="admin-label" style="font-size:11px;color:#6b21a8;margin-bottom:2px">Catatan Tambahan di Checkout (Opsional):</label>
+      <input type="text" id="adminJokiRules_extraNote" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Contoh: Tim pilot bertugas mulai pk 09:00 - 24:00 WIB">
+    </div>
+
+    <!-- Dynamic Rules List -->
+    <div style="font-size:11.5px;font-weight:800;color:#92400e;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+      <span>Daftar Poin Peraturan Joki:</span>
+      <button type="button" onclick="addAdminJokiRule()" style="background:#16a34a;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">➕ Tambah Poin Baru</button>
+    </div>
+
+    <div id="adminJokiRulesList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      <!-- Generated dynamically by renderAdminJokiRulesInputs() -->
+    </div>
+
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button type="button" class="admin-btn" style="background:#16a34a;color:#fff;font-weight:700;font-size:12px;flex:1" onclick="saveAdminJokiRules()">💾 Simpan Semua Peraturan Joki</button>
+      <button type="button" class="admin-btn-sm" style="background:#059669;color:#fff;font-weight:700" onclick="addAdminJokiRule()">➕ Tambah Poin</button>
+      <button type="button" class="admin-btn-sm" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-weight:700" onclick="resetAdminJokiRules()">🔄 Reset Default</button>
+    </div>
   </div>
 
   <!-- TAB 2: HEADER MEDSOS & ANTI-SCAM -->
@@ -11040,12 +11047,273 @@ function resetAdminWaChannelConfig(){
   showToast('🔄 Saluran WhatsApp direset ke default.');
 }
 
-function saveAdminJokiRulesNote(){
-  const noteInput = document.getElementById('adminJokiRules_extraNote');
-  if(noteInput){
-    safeSetItem('norxstore_joki_rules_extra_note', noteInput.value.trim());
-  }
+// ==================== JOKI RULES DYNAMIC CONFIG & ADMIN ====================
+const DEFAULT_JOKI_RULES_CONFIG = {
+  headerTitle: 'PROTOKOL RESMI JOKI NORXSTORE',
+  headerSub: 'Peraturan Keamanan Akun & Pengerjaan Amanah',
+  heroDesc: 'Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:',
+  extraNote: '',
+  rules: [
+    {
+      id: 'rule_1',
+      icon: '🚫',
+      title: 'DILARANG LOGIN / TABRAK AKUN SAAT JOKI BERJALAN',
+      desc: 'Jangan pernah membuka atau login ke game saat status pesanan adalah "🔵 Sedang Diproses". Tabrakan login dapat menyebabkan diskoneksi mendadak pada pilot, kegagalan rotasi Abyss/Boss, roll-back data quest, atau penalti rank. Bila ada keperluan mendesak ingin login, wajib konfirmasi dan tunggu balasan dari admin WhatsApp terlebih dahulu.'
+    },
+    {
+      id: 'rule_2',
+      icon: '📲',
+      title: 'STANDBY KODE OTP / NONAKTIFKAN 2FA SEMENTARA',
+      desc: 'Saat pilot hendak login pertama kali, sistem game biasanya mengirimkan kode OTP ke email atau SMS Anda. Harap standby merespons dalam 1-3 menit, atau matikan sementara verifikasi 2 langkah (2FA) sebelum checkout agar pilot bisa langsung mengeksekusi joki tanpa terhenti di antrean.'
+    },
+    {
+      id: 'rule_3',
+      icon: '🔐',
+      title: 'GUNAKAN PASSWORD SEMENTARA & GANTI SELESAI JOKI',
+      desc: 'Sebelum memberikan data login ke admin, ubah password akun game Anda menjadi kata sandi sementara. Setelah status pesanan dinyatakan selesai (🟢 Selesai) oleh admin, SEGERA ubah kembali password akun Anda untuk menjamin privasi dan keamanan akun 100%.'
+    },
+    {
+      id: 'rule_4',
+      icon: '💎',
+      title: 'INTEGRITAS ASET & ANTI-UTAK ATIK INVENTORI',
+      desc: 'Pilot kami dilarang keras menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, Mora, kredit, atau material langka milik Anda di luar paket layanan yang Anda beli. Seluruh aset tabungan akun Anda dijamin 100% aman dan utuh.'
+    },
+    {
+      id: 'rule_5',
+      icon: '🛡️',
+      title: '100% PENGERJAAN MANUAL (ANTI-CHEAT & ANTI-BANNED)',
+      desc: 'Seluruh proses joki dijalankan murni secara manual oleh tim joki profesional dengan skill tinggi. Kami tidak pernah menggunakan cheat, bot, script makro, atau injector pihak ketiga ilegal. Keamanan akun game Anda bergaransi resmi Norxstore!'
+    },
+    {
+      id: 'rule_6',
+      icon: '⏱️',
+      title: 'ESTIMASI DURASI & SISTEM ANTREAN TRANSPARAN',
+      desc: 'Pesanan dikerjakan berurutan sesuai antrean invoice yang masuk. Anda bisa memantau estimasi durasi dan progres real-time melalui tab "📦 Pesanan Saya" di menu keranjang. Ponsel Anda juga akan bergetar dan berbunyi notifikasi saat pesanan rampung.'
+    },
+    {
+      id: 'rule_7',
+      icon: '💰',
+      title: 'JAMINAN GARANSI & KOMPENSASI REFUND 100%',
+      desc: 'Jika pesanan gagal diselesaikan akibat kelalaian dari pihak pilot Norxstore, Anda berhak mendapatkan pengerjaan ulang prioritas secara cuma-cuma atau pengembalian dana penuh (100% Refund tanpa potongan ribet).'
+    }
+  ]
+};
+
+let jokiRulesConfigCache = null;
+
+function getJokiRulesConfig(){
+  if(jokiRulesConfigCache) return jokiRulesConfigCache;
+  try {
+    const raw = safeGetItem('norxstore_joki_rules_config', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        const merged = { ...DEFAULT_JOKI_RULES_CONFIG, ...parsed };
+        if(Array.isArray(parsed.rules) && parsed.rules.length > 0){
+          merged.rules = parsed.rules;
+        } else {
+          merged.rules = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG.rules));
+        }
+        jokiRulesConfigCache = merged;
+        return jokiRulesConfigCache;
+      }
+    }
+  } catch(e){}
+  
+  const fallback = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG));
+  const oldExtra = safeGetItem('norxstore_joki_rules_extra_note', '');
+  if(oldExtra) fallback.extraNote = oldExtra;
+  jokiRulesConfigCache = fallback;
+  return jokiRulesConfigCache;
 }
+
+function saveJokiRulesConfig(cfg){
+  jokiRulesConfigCache = cfg;
+  safeSetItem('norxstore_joki_rules_config', JSON.stringify(cfg));
+  if(cfg && cfg.extraNote !== undefined){
+    safeSetItem('norxstore_joki_rules_extra_note', cfg.extraNote || '');
+  }
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/config/jokiRules').set(cfg).catch(e => {
+      console.warn('Sync notice: jokiRules disimpan di lokal');
+    });
+  }
+  renderCheckoutJokiRulesBoxes();
+}
+
+function renderCheckoutJokiRulesBoxes(){
+  const jcfg = getJokiRulesConfig();
+  const rules = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
+  const modalList = document.getElementById('modalCheckoutRulesList');
+  const cartList = document.getElementById('cartCheckoutRulesList');
+  
+  // Pick top 3 rules for quick highlight in checkout boxes
+  const topRules = rules.slice(0, 3);
+  const itemsHtml = topRules.map(r => {
+    const rawTitle = (r.title || '').replace(/^🚫|📲|🔐|💎|🛡️|⏱️|💰/g, '').trim();
+    return `<li>${r.icon || '📌'} <strong>${rawTitle}</strong></li>`;
+  }).join('');
+
+  if(modalList) modalList.innerHTML = itemsHtml;
+  if(cartList) cartList.innerHTML = itemsHtml;
+}
+
+function renderAdminJokiRulesInputs(){
+  const cfg = getJokiRulesConfig();
+  const titleInput = document.getElementById('adminJokiRules_headerTitle');
+  const subInput = document.getElementById('adminJokiRules_headerSub');
+  const descInput = document.getElementById('adminJokiRules_heroDesc');
+  const noteInput = document.getElementById('adminJokiRules_extraNote');
+  const badgeEl = document.getElementById('adminJokiRulesCountBadge');
+  const listContainer = document.getElementById('adminJokiRulesList');
+
+  if(titleInput) titleInput.value = cfg.headerTitle || '';
+  if(subInput) subInput.value = cfg.headerSub || '';
+  if(descInput) descInput.value = cfg.heroDesc || '';
+  if(noteInput) noteInput.value = cfg.extraNote || safeGetItem('norxstore_joki_rules_extra_note', '') || '';
+
+  const rules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? cfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
+  if(badgeEl) badgeEl.textContent = `${rules.length} Poin Aturan`;
+
+  if(!listContainer) return;
+
+  const esc = (s) => (s ? String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) : '');
+
+  listContainer.innerHTML = rules.map((r, idx) => `
+    <div class="admin-joki-rule-row" data-rule-id="${esc(r.id || ('rule_' + idx))}" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #cbd5e1;padding-bottom:6px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="background:#f59e0b;color:#fff;font-size:11px;font-weight:800;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center">${idx + 1}</span>
+          <strong style="font-size:12px;color:#1e293b">Poin Aturan #${idx + 1}</strong>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button type="button" onclick="moveAdminJokiRule('${esc(r.id)}', -1)" style="background:#fff;border:1px solid #cbd5e1;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer" title="Geser ke Atas" ${idx === 0 ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>⬆️</button>
+          <button type="button" onclick="moveAdminJokiRule('${esc(r.id)}', 1)" style="background:#fff;border:1px solid #cbd5e1;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer" title="Geser ke Bawah" ${idx === rules.length - 1 ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>⬇️</button>
+          <button type="button" onclick="deleteAdminJokiRule('${esc(r.id)}')" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer" title="Hapus aturan ini">🗑️</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:70px 1fr;gap:6px">
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Icon:</label>
+          <input type="text" class="admin-input rule-input-icon" value="${esc(r.icon || '📌')}" style="font-size:12px;text-align:center;padding:4px" placeholder="🚫">
+        </div>
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Judul Aturan:</label>
+          <input type="text" class="admin-input rule-input-title" value="${esc(r.title || '')}" style="font-size:12px;padding:4px 8px" placeholder="Contoh: DILARANG LOGIN SAAT PROSES...">
+        </div>
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:10px;margin-bottom:2px">Penjelasan Detail:</label>
+        <textarea class="admin-input rule-input-desc" style="font-size:11.5px;padding:6px;height:55px;resize:vertical;line-height:1.35" placeholder="Penjelasan lengkap mengapa aturan ini wajib dipatuhi...">${esc(r.desc || '')}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function saveAdminJokiRules(){
+  const titleInput = document.getElementById('adminJokiRules_headerTitle');
+  const subInput = document.getElementById('adminJokiRules_headerSub');
+  const descInput = document.getElementById('adminJokiRules_heroDesc');
+  const noteInput = document.getElementById('adminJokiRules_extraNote');
+
+  const ruleRows = document.querySelectorAll('#adminJokiRulesList .admin-joki-rule-row');
+  const rules = [];
+
+  ruleRows.forEach((row, idx) => {
+    const id = row.getAttribute('data-rule-id') || ('rule_' + (idx + 1));
+    const iconEl = row.querySelector('.rule-input-icon');
+    const titleEl = row.querySelector('.rule-input-title');
+    const descEl = row.querySelector('.rule-input-desc');
+
+    const icon = iconEl ? iconEl.value.trim() : '📌';
+    const title = titleEl ? titleEl.value.trim() : `Aturan #${idx + 1}`;
+    const desc = descEl ? descEl.value.trim() : '';
+
+    if(title || desc){
+      rules.push({ id, icon: icon || '📌', title: title || `Aturan #${idx + 1}`, desc });
+    }
+  });
+
+  if(rules.length === 0){
+    alert('Minimal harus ada 1 poin aturan joki!');
+    return;
+  }
+
+  const newCfg = {
+    headerTitle: titleInput ? titleInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.headerTitle,
+    headerSub: subInput ? subInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.headerSub,
+    heroDesc: descInput ? descInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.heroDesc,
+    extraNote: noteInput ? noteInput.value.trim() : '',
+    rules: rules
+  };
+
+  saveJokiRulesConfig(newCfg);
+  renderAdminJokiRulesInputs();
+  showToast('✅ Peraturan Joki berhasil disimpan dan disinkronkan!');
+}
+
+function addAdminJokiRule(){
+  const cfg = getJokiRulesConfig();
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  const newId = 'rule_' + Date.now();
+  currentRules.push({
+    id: newId,
+    icon: '📌',
+    title: 'ATURAN TAMBAHAN #' + (currentRules.length + 1),
+    desc: 'Tuliskan rincian penjelasan dan ketentuan untuk aturan baru ini.'
+  });
+  cfg.rules = currentRules;
+  saveJokiRulesConfig(cfg);
+  renderAdminJokiRulesInputs();
+  showToast('➕ Poin aturan baru ditambahkan! Silakan edit lalu klik simpan.');
+  setTimeout(() => {
+    const lastRow = document.querySelector('#adminJokiRulesList .admin-joki-rule-row:last-child .rule-input-title');
+    if(lastRow){
+      lastRow.focus();
+      lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+}
+
+function deleteAdminJokiRule(ruleId){
+  const cfg = getJokiRulesConfig();
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  if(currentRules.length <= 1){
+    alert('Minimal harus ada 1 poin aturan joki! Tidak bisa dihapus semua.');
+    return;
+  }
+  if(!confirm('Hapus poin aturan joki ini?')) return;
+  cfg.rules = currentRules.filter(r => r.id !== ruleId);
+  saveJokiRulesConfig(cfg);
+  renderAdminJokiRulesInputs();
+  showToast('🗑️ Poin aturan berhasil dihapus.');
+}
+
+function moveAdminJokiRule(ruleId, direction){
+  const cfg = getJokiRulesConfig();
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  const idx = currentRules.findIndex(r => r.id === ruleId);
+  if(idx === -1) return;
+  const targetIdx = idx + direction;
+  if(targetIdx < 0 || targetIdx >= currentRules.length) return;
+  
+  const temp = currentRules[idx];
+  currentRules[idx] = currentRules[targetIdx];
+  currentRules[targetIdx] = temp;
+  
+  cfg.rules = currentRules;
+  saveJokiRulesConfig(cfg);
+  renderAdminJokiRulesInputs();
+}
+
+function resetAdminJokiRules(){
+  if(!confirm('Reset seluruh peraturan joki kembali ke bawaan standar (7 poin resmi)?')) return;
+  const def = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG));
+  saveJokiRulesConfig(def);
+  renderAdminJokiRulesInputs();
+  showToast('🔄 Peraturan Joki berhasil direset ke standar bawaan.');
+}
+
 
 let socialConfigCache = null;
 
@@ -11755,210 +12023,48 @@ function openInfoModal(type){
       `;
     }
   } else if(type === 'jokiRules'){
+    const jcfg = getJokiRulesConfig();
+    const rulesList = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
+    const headerTitle = jcfg.headerTitle || (lang === 'SG' ? 'OFFICIAL BOOSTING PROTOCOL' : (lang === 'MY' ? 'PROTOKOL RASMI SERVIS JOKI' : 'PROTOKOL RESMI JOKI NORXSTORE'));
+    const headerSub = jcfg.headerSub || (lang === 'SG' ? 'Guidelines & Account Security Measures' : (lang === 'MY' ? 'Peraturan Keselamatan Akaun & Jaminan Amanah' : 'Peraturan Keamanan Akun & Pengerjaan Amanah'));
+    const heroDesc = jcfg.heroDesc || (lang === 'SG' ? 'To guarantee 100% account safety and zero progress interruptions, all customers must adhere to these policies:' : (lang === 'MY' ? 'Demi kelancaran dan keselamatan akaun game anda, setiap pelanggan wajib mematuhi peraturan rasmi ini:' : 'Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:'));
+    const extraNote = jcfg.extraNote || safeGetItem('norxstore_joki_rules_extra_note', '');
+
     title = (lang === 'SG') ? '📋 NORXSTORE Boosting Terms & Rules (Mandatory)' : ((lang === 'MY') ? '📋 Terma & Peraturan Joki NORXSTORE (Wajib Dipatuhi)' : '📋 Peraturan Joki NORXSTORE (Wajib Dibaca)');
-    const extraNote = safeGetItem('norxstore_joki_rules_extra_note', '');
     const extraNoteHtml = extraNote ? `
       <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:11.5px;color:#1e40af;display:flex;align-items:center;gap:6px">
-        <span>📢</span> <span><strong>Catatan Admin:</strong> ${escapeHtml(extraNote)}</span>
+        <span>📢</span> <span><strong>${lang === 'SG' ? 'Admin Note:' : (lang === 'MY' ? 'Nota Admin:' : 'Catatan Admin:')}</strong> ${escapeHtml(extraNote)}</span>
       </div>
     ` : '';
 
-    if(lang === 'SG'){
-      html = `
-        <div class="joki-rules-hero-card">
-          <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ OFFICIAL BOOSTING PROTOCOL</div>
-          <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:4px">Guidelines & Account Security Measures</div>
-          <div style="font-size:11px;color:#cbd5e1">To guarantee 100% account safety and zero progress interruptions, all customers must adhere to these policies:</div>
+    const btnText = (lang === 'SG') ? '✓ I Understand & Agree to Boosting Rules' : ((lang === 'MY') ? '✓ Saya Faham & Bersetuju dengan Peraturan Joki' : '✓ Saya Mengerti & Siap Mengikuti Peraturan Joki');
+
+    const rulesCardsHtml = rulesList.map((r, idx) => `
+      <div class="joki-rules-card-item">
+        <div class="joki-rules-num-badge">${idx + 1}</div>
+        <div class="joki-rules-item-body">
+          <div class="joki-rules-item-title">${escapeHtml(r.icon || '📌')} ${escapeHtml(r.title || '')}</div>
+          <div class="joki-rules-item-desc">${escapeHtml(r.desc || '')}</div>
         </div>
-        ${extraNoteHtml}
-        <div class="joki-rules-cards-list">
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">1</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🚫 Do NOT Log In While Boosting Is In Progress</div>
-              <div class="joki-rules-item-desc">Never open or access your game account when order status is <strong>"In Progress"</strong>. Concurrent login kicks the pilot out, causes domain/abyss run failures, or triggers safety lockouts. If urgent, notify our WhatsApp support first.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">2</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">📲 Standby For 2FA / OTP Verification</div>
-              <div class="joki-rules-item-desc">When our pilot first logs in, game security may send a 2FA code to your phone or email. Please respond promptly within 1-3 minutes or temporarily disable 2FA so boosting begins immediately.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">3</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🔐 Use Temporary Password & Change Afterwards</div>
-              <div class="joki-rules-item-desc">Change your password to a temporary string before sharing details with admin. Once your order status is marked <strong>"Completed"</strong>, immediately update your password for permanent peace of mind.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">4</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">💎 Zero Resource Waste Guarantee</div>
-              <div class="joki-rules-item-desc">Our pilots are strictly forbidden from spending your Primogems, Stellar Jades, Astrite, Gacha pulls, or rare inventory materials without your explicit authorization. Your resources remain 100% untouched.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">5</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🛡️ 100% Pure Manual Play (Anti-Cheat / Anti-Banned)</div>
-              <div class="joki-rules-item-desc">All gameplay is executed purely by vetted veteran human players. We never use bots, injectors, scripts, macros, or cheats. Your account is protected by our anti-banned guarantee.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">6</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">⏱️ Transparent Queue & Live Progress Tracker</div>
-              <div class="joki-rules-item-desc">Orders are executed on a first-come, first-served schedule. You can track real-time progress, pilot notes, and completion countdowns directly in your <strong>"My Orders"</strong> tab.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">7</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">💰 100% Money-Back & Completion Assurance</div>
-              <div class="joki-rules-item-desc">If our team fails to deliver the promised goals due to an internal pilot delay or error, you receive a free retry priority or an immediate 100% full refund with zero deductions.</div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top:14px;text-align:center">
-          <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
-            ✓ I Understand & Agree to Boosting Rules
-          </button>
-        </div>
-      `;
-    } else if(lang === 'MY'){
-      html = `
-        <div class="joki-rules-hero-card">
-          <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ PROTOKOL RASMI SERVIS JOKI</div>
-          <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:4px">Peraturan Keselamatan Akaun & Jaminan Amanah</div>
-          <div style="font-size:11px;color:#cbd5e1">Demi kelancaran dan keselamatan akaun game anda, setiap pelanggan wajib mematuhi 7 peraturan rasmi ini:</div>
-        </div>
-        ${extraNoteHtml}
-        <div class="joki-rules-cards-list">
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">1</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🚫 DILARANG Masuk / Bertembung Akaun Semasa Joki Berjalan</div>
-              <div class="joki-rules-item-desc">Jangan log masuk ke dalam game apabila status pesanan adalah <strong>"Sedang Diproses"</strong>. Percubaan masuk akan menyingkirkan pilot, membatalkan domain/abyss, atau mengakibatkan pinalti. Sila maklumkan kepada admin WhatsApp sekiranya perlu masuk segera.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">2</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">📲 Bersedia dengan Kod Pengesahan (OTP) / Matikan 2FA</div>
-              <div class="joki-rules-item-desc">Semasa pilot log masuk buat pertama kali, sistem game akan menghantar kod OTP. Sila bersedia membalas mesej admin dengan segera (1-3 minit) atau matikan sementara verifikasi 2-langkah (2FA) agar giliran joki tidak tergendala.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">3</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🔐 Gunakan Kata Laluan Sementara & Tukar Semula Selepas Siap</div>
-              <div class="joki-rules-item-desc">Gunakan kata laluan sementara sebelum berkongsi data log masuk kepada admin. Sebaik sahaja status pesanan disahkan <strong>"Selesai"</strong>, sila tukar semula kata laluan anda untuk keselamatan mutlak.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">4</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">💎 Jaminan Integriti Aset Dalam Game</div>
-              <div class="joki-rules-item-desc">Pilot kami dilarang sama sekali menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, atau bahan terhad tanpa persetujuan anda. Semua aset dijamin kekal selamat.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">5</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🛡️ 100% Pengerjaan Manual Tanpa Bot / Cheat / Script</div>
-              <div class="joki-rules-item-desc">Semua perkhidmatan dijalankan secara manual oleh pemain berpengalaman tanpa menggunakan bot, injector, script makro atau cheat. Keselamatan akaun bergaransi anti-banned rasmi.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">6</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">⏱️ Sistem Giliran Telus & Pantauan Langsung</div>
-              <div class="joki-rules-item-desc">Pesanan diproses mengikut giliran invois masuk. Anda boleh memantau anggaran masa dan perkembangan pesanan terus dari tab <strong>"Pesanan Saya"</strong> di troli.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">7</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">💰 Jaminan Wang Dikembalikan 100%</div>
-              <div class="joki-rules-item-desc">Sekiranya pesanan tidak dapat diselesaikan disebabkan kelemahan pihak kami, anda berhak mendapat pelaksanaan semula atau pemulangan wang penuh (100% Refund).</div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top:14px;text-align:center">
-          <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
-            ✓ Saya Faham & Bersetuju dengan Peraturan Joki
-          </button>
-        </div>
-      `;
-    } else {
-      html = `
-        <div class="joki-rules-hero-card">
-          <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ PROTOKOL RESMI JOKI NORXSTORE</div>
-          <div style="font-size:14px;font-weight:800;color:#fff;margin-bottom:4px">Peraturan Keamanan Akun & Pengerjaan Amanah</div>
-          <div style="font-size:11.5px;color:#cbd5e1">Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:</div>
-        </div>
-        ${extraNoteHtml}
-        <div class="joki-rules-cards-list">
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">1</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🚫 DILARANG LOGIN / TABRAK AKUN SAAT JOKI BERJALAN</div>
-              <div class="joki-rules-item-desc">Jangan pernah membuka atau login ke game saat status pesanan adalah <strong>"🔵 Sedang Diproses"</strong>. Tabrakan login dapat menyebabkan diskoneksi mendadak pada pilot, kegagalan rotasi Abyss/Boss, roll-back data quest, atau penalti rank. Bila ada keperluan mendesak ingin login, <strong>wajib konfirmasi dan tunggu balasan dari admin WhatsApp</strong> terlebih dahulu.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">2</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">📲 STANDBY KODE OTP / NONAKTIFKAN 2FA SEMENTARA</div>
-              <div class="joki-rules-item-desc">Saat pilot hendak login pertama kali, sistem game biasanya mengirimkan kode OTP ke email atau SMS Anda. Harap standby merespons dalam 1-3 menit, atau <strong>matikan sementara verifikasi 2 langkah (2FA)</strong> sebelum checkout agar pilot bisa langsung mengeksekusi joki tanpa terhenti di antrean.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">3</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🔐 GUNAKAN PASSWORD SEMENTARA & GANTI SELESAI JOKI</div>
-              <div class="joki-rules-item-desc">Sebelum memberikan data login ke admin, ubah password akun game Anda menjadi kata sandi sementara. Setelah status pesanan dinyatakan selesai (<strong>🟢 Selesai</strong>) oleh admin, <strong>SEGERA ubah kembali password akun Anda</strong> untuk menjamin privasi dan keamanan akun 100%.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">4</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">💎 INTEGRITAS ASET & ANTI-UTAK ATIK INVENTORI</div>
-              <div class="joki-rules-item-desc">Pilot kami dilarang keras menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, Mora, kredit, atau material langka milik Anda di luar paket layanan yang Anda beli. Seluruh aset tabungan akun Anda dijamin 100% aman dan utuh.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">5</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">🛡️ 100% PENGERJAAN MANUAL (ANTI-CHEAT & ANTI-BANNED)</div>
-              <div class="joki-rules-item-desc">Seluruh proses joki dijalankan murni secara manual oleh tim joki profesional dengan skill tinggi. Kami tidak pernah menggunakan cheat, bot, script makro, atau injector pihak ketiga ilegal. Keamanan akun game Anda bergaransi resmi Norxstore!</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">6</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">⏱️ ESTIMASI DURASI & SISTEM ANTREAN TRANSPARAN</div>
-              <div class="joki-rules-item-desc">Pesanan dikerjakan berurutan sesuai antrean invoice yang masuk. Anda bisa memantau estimasi durasi dan progres real-time melalui tab <strong>"📦 Pesanan Saya"</strong> di menu keranjang. Ponsel Anda juga akan bergetar dan berbunyi notifikasi saat pesanan rampung.</div>
-            </div>
-          </div>
-          <div class="joki-rules-card-item">
-            <div class="joki-rules-num-badge">7</div>
-            <div class="joki-rules-item-body">
-              <div class="joki-rules-item-title">💰 JAMINAN GARANSI & KOMPENSASI REFUND 100%</div>
-              <div class="joki-rules-item-desc">Jika pesanan gagal diselesaikan akibat kelalaian dari pihak pilot Norxstore, Anda berhak mendapatkan pengerjaan ulang prioritas secara cuma-cuma atau pengembalian dana penuh (100% Refund tanpa potongan ribet).</div>
-            </div>
-          </div>
-        </div>
-        <div style="margin-top:14px;text-align:center">
-          <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
-            ✓ Saya Mengerti & Siap Mengikuti Peraturan Joki
-          </button>
-        </div>
-      `;
-    }
+      </div>
+    `).join('');
+
+    html = `
+      <div class="joki-rules-hero-card">
+        <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ ${escapeHtml(headerTitle)}</div>
+        <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:4px">${escapeHtml(headerSub)}</div>
+        <div style="font-size:11.5px;color:#cbd5e1">${escapeHtml(heroDesc)}</div>
+      </div>
+      ${extraNoteHtml}
+      <div class="joki-rules-cards-list">
+        ${rulesCardsHtml}
+      </div>
+      <div style="margin-top:14px;text-align:center">
+        <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
+          ${btnText}
+        </button>
+      </div>
+    `;
   }
 
   titleEl.innerHTML = title;
@@ -12072,6 +12178,8 @@ function switchAdminSocialSubTab(tab){
   });
   if(tab === 'wachannel'){
     populateAdminWaChannelForm();
+  } else if(tab === 'jokirules'){
+    renderAdminJokiRulesInputs();
   }
 }
 
@@ -13021,6 +13129,20 @@ fbDB.ref('norxstore/config/whatsappChannel').on('value', snap => {
     if(isAdminOpen()) populateAdminWaChannelForm();
   }
 });
+fbDB.ref('norxstore/config/jokiRules').on('value', snap => {
+  const val = snap.val();
+  if(val && typeof val === 'object'){
+    const merged = { ...DEFAULT_JOKI_RULES_CONFIG, ...val };
+    if(Array.isArray(val.rules) && val.rules.length > 0){
+      merged.rules = val.rules;
+    }
+    jokiRulesConfigCache = merged;
+    safeSetItem('norxstore_joki_rules_config', JSON.stringify(jokiRulesConfigCache));
+    renderCheckoutJokiRulesBoxes();
+    if(typeof isAdminOpen === 'function' && isAdminOpen()) renderAdminJokiRulesInputs();
+  }
+});
+renderCheckoutJokiRulesBoxes();
 let cart = JSON.parse(safeGetItem('norxstore_cart', '[]'));
 
 function normalizeCartItems(){
@@ -16964,6 +17086,7 @@ function openAdmin(){
   renderFormProductImagesUI();
   renderAdminSocialInputs();
   renderAdminFooterInputs();
+  renderAdminJokiRulesInputs();
   switchAdminSocialSubTab('social');
 
   const sel = document.getElementById('imgProductSelect');
