@@ -3414,7 +3414,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="whatsapp-channel-vip-card" id="waChannelVipCard">
       <div class="wa-channel-vip-left" onclick="openWaChannelDirect(event)" style="cursor:pointer" title="Klik untuk membuka Saluran WhatsApp Resmi">
         <div class="wa-channel-vip-badge-row">
-          <span class="wa-channel-vip-badge">📢 SALURAN WHATSAPP RESMI</span>
+          <span class="wa-channel-vip-badge" id="waChannelSubLabelBadge">📢 SALURAN WHATSAPP RESMI</span>
           <span class="wa-channel-vip-followers" id="waChannelFollowersBadge">1.5k+ Pengikut • Info Update Kilat</span>
         </div>
         <h4 class="wa-channel-vip-title">
@@ -3422,7 +3422,7 @@ button{cursor:pointer;font-family:inherit}
           <span class="wa-verified-check" title="Saluran Resmi Terverifikasi">✓</span>
         </h4>
         <div class="wa-channel-vip-handle" id="waChannelHandleText" style="font-size:11.5px;color:#a7f3d0;font-weight:700;margin:0 0 6px;display:inline-flex;align-items:center;gap:4px">
-          <span style="opacity:0.8">ID / Handle:</span>
+          <span style="opacity:0.8" id="waChannelHandleLabel">ID / Handle:</span>
           <span id="waChannelHandleVal">norx</span>
         </div>
         <p class="wa-channel-vip-desc" id="waChannelDescText">
@@ -3431,7 +3431,7 @@ button{cursor:pointer;font-family:inherit}
       </div>
       <div class="wa-channel-vip-actions">
         <a href="https://whatsapp.com/channel/0029VaNorxstore" id="waChannelJoinBtn" target="_blank" rel="noopener noreferrer" class="wa-channel-btn-join" onclick="openWaChannelDirect(event)">
-          <span>Gabung Saluran WhatsApp</span>
+          <span id="waChannelJoinBtnText">Gabung Saluran WhatsApp</span>
           <span style="font-size:14px">➔</span>
         </a>
       </div>
@@ -4601,17 +4601,50 @@ button{cursor:pointer;font-family:inherit}
       </div>
     </div>
 
-    <div style="margin-bottom:12px">
-      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Deskripsi Singkat Saluran:</label>
-      <textarea id="adminWaChannel_desc" class="admin-input" rows="2" style="font-size:12px;margin-bottom:0;resize:vertical" placeholder="Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala..." oninput="updateAdminWaChannelPreview()"></textarea>
+    <!-- Multi-Country Descriptions -->
+    <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:10px;margin-bottom:12px">
+      <div style="font-size:11.5px;font-weight:800;color:#0f766e;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+        <span>🌐 Deskripsi Saluran Sesuai Bahasa Negara:</span>
+      </div>
+      <p style="font-size:10.5px;color:#64748b;margin:0 0 8px;line-height:1.35">
+        💡 Teks deskripsi otomatis menyesuaikan bahasa negara pengunjung (Indonesia, Malaysia, Singapore). Anda bisa mengisi teks khusus per negara di bawah atau gunakan tombol <strong>Auto-Translate</strong>.
+      </p>
+
+      <div style="margin-bottom:8px">
+        <label class="admin-label" style="font-size:11px;margin-bottom:2px">🇮🇩 Deskripsi Indonesia (Default):</label>
+        <textarea id="adminWaChannel_desc" class="admin-input" rows="2" style="font-size:11.5px;margin-bottom:0;resize:vertical" placeholder="Bukti testimoni terdapat di saluran dan informasi diskon akan ada di saluran" oninput="updateAdminWaChannelPreview()"></textarea>
+      </div>
+
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <label class="admin-label" style="font-size:11px;margin-bottom:0">🇲🇾 Deskripsi Malaysia (Bahasa Melayu):</label>
+          <button type="button" onclick="autoTranslateWaDesc('MY')" style="background:#ecfdf5;border:1px solid #86efac;color:#065f46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;cursor:pointer">⚡ Auto Translate dari Indo</button>
+        </div>
+        <textarea id="adminWaChannel_desc_MY" class="admin-input" rows="2" style="font-size:11.5px;margin-bottom:0;resize:vertical" placeholder="Kosongkan untuk auto-translate otomatis (Contoh: Bukti testimoni terdapat di saluran dan maklumat diskaun akan dikongsikan di saluran)" oninput="updateAdminWaChannelPreview()"></textarea>
+      </div>
+
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <label class="admin-label" style="font-size:11px;margin-bottom:0">🇸🇬 Deskripsi Singapore (English):</label>
+          <button type="button" onclick="autoTranslateWaDesc('SG')" style="background:#ecfdf5;border:1px solid #86efac;color:#065f46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;cursor:pointer">⚡ Auto Translate dari Indo</button>
+        </div>
+        <textarea id="adminWaChannel_desc_SG" class="admin-input" rows="2" style="font-size:11.5px;margin-bottom:0;resize:vertical" placeholder="Leave empty for auto-translate (e.g. Proof of reviews and discount updates will be shared directly in the channel)" oninput="updateAdminWaChannelPreview()"></textarea>
+      </div>
     </div>
 
-    <!-- Live Preview Simulator -->
+    <!-- Live Preview Simulator with Country Toggle -->
     <div style="background:#f0fdf4;border:1px dashed #86efac;border-radius:10px;padding:10px;margin-bottom:12px">
-      <div style="font-size:10.5px;font-weight:700;color:#15803d;margin-bottom:6px">👁️ Preview Tampilan Banner Hijau Saluran WhatsApp:</div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-size:10.5px;font-weight:700;color:#15803d">👁️ Preview Tampilan Banner Saluran WhatsApp:</div>
+        <div style="display:flex;gap:4px">
+          <button type="button" id="btnPreviewWaLang_ID" onclick="setAdminWaPreviewLang('ID')" style="background:#22c55e;color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer">🇮🇩 ID</button>
+          <button type="button" id="btnPreviewWaLang_MY" onclick="setAdminWaPreviewLang('MY')" style="background:#e2e8f0;color:#475569;border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer">🇲🇾 MY</button>
+          <button type="button" id="btnPreviewWaLang_SG" onclick="setAdminWaPreviewLang('SG')" style="background:#e2e8f0;color:#475569;border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer">🇸🇬 SG</button>
+        </div>
+      </div>
       <div style="background:linear-gradient(135deg, rgba(6, 78, 59, 0.95), rgba(16, 185, 129, 0.4));border:1.5px solid rgba(52, 211, 153, 0.5);border-radius:12px;padding:12px 14px;color:#fff">
         <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
-          <span style="font-size:9px;background:#25D366;color:#064e3b;font-weight:800;padding:2px 7px;border-radius:10px">📢 SALURAN RESMI</span>
+          <span style="font-size:9px;background:#25D366;color:#064e3b;font-weight:800;padding:2px 7px;border-radius:10px" id="adminWaChannelPreviewSubLabel">📢 SALURAN RESMI</span>
           <span style="font-size:9.5px;color:#a7f3d0;background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px" id="adminWaChannelPreviewBadge">1.5k+ Pengikut • Info Update Kilat</span>
         </div>
         <div style="font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px">
@@ -4619,13 +4652,13 @@ button{cursor:pointer;font-family:inherit}
           <span style="background:#25D366;color:#064e3b;border-radius:50%;width:16px;height:16px;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-weight:900">✓</span>
         </div>
         <div style="font-size:11px;color:#a7f3d0;font-weight:700;margin:1px 0 4px">
-          <span style="opacity:0.8">ID Saluran:</span>
+          <span style="opacity:0.8" id="adminWaChannelPreviewHandleLabel">ID Saluran:</span>
           <span id="adminWaChannelPreviewHandle">norx</span>
         </div>
         <div style="font-size:11.5px;color:#e2e8f0;line-height:1.4" id="adminWaChannelPreviewDesc">Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala...</div>
         <div style="display:flex;gap:6px;margin-top:8px">
           <div style="background:linear-gradient(135deg, #25D366, #128C7E);color:#fff;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:4px">
-            <span>Gabung Saluran WhatsApp ➔</span>
+            <span id="adminWaChannelPreviewBtn">Gabung Saluran WhatsApp ➔</span>
           </div>
         </div>
       </div>
@@ -10781,8 +10814,114 @@ const DEFAULT_WA_CHANNEL_CONFIG = {
   url: 'https://whatsapp.com/channel/0029VaNorxstore',
   handle: 'norx',
   badge: '1.5k+ Pengikut • Info Update Kilat',
-  desc: 'Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!'
+  desc: 'Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!',
+  desc_MY: '',
+  desc_SG: ''
 };
+
+const WA_CHANNEL_I18N = {
+  ID: {
+    subLabel: '📢 SALURAN WHATSAPP RESMI',
+    name: 'Saluran WhatsApp Resmi NORXSTORE',
+    badgeSuffix: 'Info Update Kilat',
+    desc: 'Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!',
+    joinBtn: 'Gabung Saluran WhatsApp',
+    quickSub: 'Gabung Resmi',
+    handleLabel: 'ID / Handle:'
+  },
+  MY: {
+    subLabel: '📢 SALURAN WHATSAPP RASMI',
+    name: 'Saluran WhatsApp Rasmi NORXSTORE',
+    badgeSuffix: 'Maklumat Pantas & Diskaun',
+    desc: 'Dapatkan maklumat senarai harga diskaun joki kilat, giliran harian, giveaway akaun berkala, dan tip meta game terpantas terus di WhatsApp anda!',
+    joinBtn: 'Sertai Saluran WhatsApp',
+    quickSub: 'Sertai Rasmi',
+    handleLabel: 'ID / Pautan:'
+  },
+  SG: {
+    subLabel: '📢 OFFICIAL WHATSAPP CHANNEL',
+    name: 'Official WhatsApp Channel NORXSTORE',
+    badgeSuffix: 'Fast Updates & Discounts',
+    desc: 'Get flash boosting discount price lists, daily queue updates, periodic account giveaways, and fastest meta tips directly on WhatsApp!',
+    joinBtn: 'Join WhatsApp Channel',
+    quickSub: 'Official Join',
+    handleLabel: 'ID / Handle:'
+  }
+};
+
+function translateWaDescToMalay(text){
+  if(!text) return '';
+  let res = text;
+  const replacements = [
+    [/\bbukti testimoni terdapat di saluran dan informasi diskon akan ada di saluran\b/gi, 'Bukti testimoni terdapat di saluran dan maklumat diskaun akan dikongsikan di saluran'],
+    [/\binformasi diskon\b/gi, 'maklumat diskaun'],
+    [/\binformasi\b/gi, 'maklumat'],
+    [/\bInformasi\b/g, 'Maklumat'],
+    [/\bdiskon\b/gi, 'diskaun'],
+    [/\bDiskon\b/g, 'Diskaun'],
+    [/\bDISKON\b/g, 'DISKAUN'],
+    [/\bresmi\b/gi, 'rasmi'],
+    [/\bResmi\b/g, 'Rasmi'],
+    [/\bRESMI\b/g, 'RASMI'],
+    [/\bakan ada di saluran\b/gi, 'akan dikongsikan di saluran'],
+    [/\bakan ada di\b/gi, 'akan dikongsikan di'],
+    [/\bakan ada\b/gi, 'akan disediakan'],
+    [/\bbocoran\b/gi, 'maklumat awal'],
+    [/\bpricelist\b/gi, 'senarai harga'],
+    [/\bantrean\b/gi, 'giliran'],
+    [/\bakun\b/gi, 'akaun'],
+    [/\bAkun\b/g, 'Akaun'],
+    [/\bAKUN\b/g, 'AKAUN'],
+    [/\btips\b/gi, 'tip'],
+    [/\btercepat\b/gi, 'terpantas'],
+    [/\blangsung di WhatsApp Anda\b/gi, 'terus di WhatsApp anda'],
+    [/\blangsung di WhatsApp kamu\b/gi, 'terus di WhatsApp anda'],
+    [/\blangsung di\b/gi, 'terus di'],
+    [/\bAnda\b/g, 'anda'],
+    [/\bkamu\b/gi, 'anda'],
+    [/\bgratis\b/gi, 'percuma'],
+    [/\bkualitas\b/gi, 'kualiti'],
+    [/\bGabung Saluran\b/gi, 'Sertai Saluran'],
+    [/\bGabung\b/gi, 'Sertai'],
+    [/\bgabung\b/gi, 'sertai'],
+    [/\blayanan\b/gi, 'perkhidmatan'],
+    [/\bpelayanan\b/gi, 'perkhidmatan']
+  ];
+  replacements.forEach(([pattern, rep]) => {
+    res = res.replace(pattern, rep);
+  });
+  return res;
+}
+
+function translateWaDescToEnglish(text){
+  if(!text) return '';
+  if(/bukti testimoni terdapat di saluran dan informasi diskon akan ada di saluran/i.test(text)){
+    return 'Customer reviews and discount updates are shared directly in the channel.';
+  }
+  if(/dapatkan bocoran pricelist/i.test(text)){
+    return 'Get flash boosting discount price lists, daily queue updates, periodic account giveaways, and fastest meta tips directly on WhatsApp!';
+  }
+  let res = text;
+  const replacements = [
+    [/\bbukti testimoni\b/gi, 'reviews and proof'],
+    [/\binformasi diskon\b/gi, 'discount updates'],
+    [/\binformasi\b/gi, 'information'],
+    [/\bdiskon\b/gi, 'discount'],
+    [/\bresmi\b/gi, 'official'],
+    [/\bResmi\b/g, 'Official'],
+    [/\bRESMI\b/g, 'OFFICIAL'],
+    [/\bsaluran\b/gi, 'channel'],
+    [/\bSaluran\b/g, 'Channel'],
+    [/\bpengikut\b/gi, 'followers'],
+    [/\bterdapat di saluran\b/gi, 'available in the channel'],
+    [/\bakan ada di saluran\b/gi, 'will be announced in the channel'],
+    [/\bakan ada\b/gi, 'will be available']
+  ];
+  replacements.forEach(([pattern, rep]) => {
+    res = res.replace(pattern, rep);
+  });
+  return res;
+}
 
 let waChannelConfigCache = null;
 
@@ -10815,41 +10954,111 @@ function saveWaChannelConfig(cfg){
 
 function renderWaChannelUI(){
   const cfg = getWaChannelConfig();
+  const lang = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID';
+  const i18n = WA_CHANNEL_I18N[lang] || WA_CHANNEL_I18N.ID;
+
   const card = document.getElementById('waChannelVipCard');
   if(card){
     card.style.display = (cfg.enabled !== false) ? 'flex' : 'none';
   }
+
+  // Sublabel badge pill (e.g. 📢 SALURAN WHATSAPP RESMI / RASMI / OFFICIAL)
+  const subLabelEl = document.getElementById('waChannelSubLabelBadge');
+  if(subLabelEl){
+    subLabelEl.textContent = i18n.subLabel;
+  }
+
+  // Title: adapt 'Resmi' -> 'Rasmi' in MY, or 'Official' in SG
   const titleEl = document.getElementById('waChannelTitleText');
-  if(titleEl) titleEl.textContent = cfg.name || DEFAULT_WA_CHANNEL_CONFIG.name;
+  if(titleEl){
+    let rawTitle = cfg.name || DEFAULT_WA_CHANNEL_CONFIG.name;
+    if(lang === 'MY'){
+      rawTitle = rawTitle.replace(/\bresmi\b/gi, 'Rasmi');
+    } else if(lang === 'SG'){
+      rawTitle = rawTitle.replace(/\bSaluran WhatsApp Resmi\b/gi, 'Official WhatsApp Channel')
+                         .replace(/\bSaluran WhatsApp\b/gi, 'WhatsApp Channel');
+    }
+    titleEl.textContent = rawTitle;
+  }
   
+  // Handle
   const handleValEl = document.getElementById('waChannelHandleVal');
   if(handleValEl) handleValEl.textContent = cfg.handle || 'norx';
   const handleCont = document.getElementById('waChannelHandleText');
   if(handleCont) handleCont.style.display = cfg.handle ? 'inline-flex' : 'none';
+  const handleLabelEl = document.getElementById('waChannelHandleLabel');
+  if(handleLabelEl) handleLabelEl.textContent = i18n.handleLabel;
 
+  // Followers badge
   const followersEl = document.getElementById('waChannelFollowersBadge');
-  if(followersEl) followersEl.textContent = cfg.badge || DEFAULT_WA_CHANNEL_CONFIG.badge;
+  if(followersEl){
+    let rawBadge = cfg.badge || DEFAULT_WA_CHANNEL_CONFIG.badge;
+    if(lang === 'MY'){
+      rawBadge = rawBadge.replace(/\bInfo Update Kilat\b/gi, 'Maklumat Pantas & Diskaun')
+                         .replace(/\binfo update kilat\b/gi, 'maklumat pantas & diskaun');
+    } else if(lang === 'SG'){
+      rawBadge = rawBadge.replace(/\bpengikut\b/gi, 'Followers')
+                         .replace(/\bPengikut\b/g, 'Followers')
+                         .replace(/\bInfo Update Kilat\b/gi, 'Fast Updates & Discounts');
+    }
+    followersEl.textContent = rawBadge;
+  }
 
+  // Description!
   const descEl = document.getElementById('waChannelDescText');
-  if(descEl) descEl.textContent = cfg.desc || DEFAULT_WA_CHANNEL_CONFIG.desc;
+  if(descEl){
+    let desc = '';
+    if(lang === 'MY'){
+      if(cfg.desc_MY && cfg.desc_MY.trim()){
+        desc = cfg.desc_MY.trim();
+      } else {
+        const base = (cfg.desc && cfg.desc.trim()) ? cfg.desc.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+        desc = translateWaDescToMalay(base);
+      }
+    } else if(lang === 'SG'){
+      if(cfg.desc_SG && cfg.desc_SG.trim()){
+        desc = cfg.desc_SG.trim();
+      } else {
+        const base = (cfg.desc && cfg.desc.trim()) ? cfg.desc.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+        desc = translateWaDescToEnglish(base);
+      }
+    } else {
+      desc = (cfg.desc && cfg.desc.trim()) ? cfg.desc.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+    }
+    descEl.textContent = desc;
+  }
 
+  // Join button & Link
   const joinBtn = document.getElementById('waChannelJoinBtn');
   if(joinBtn){
     joinBtn.href = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
   }
+  const joinBtnText = document.getElementById('waChannelJoinBtnText');
+  if(joinBtnText){
+    joinBtnText.textContent = i18n.joinBtn;
+  }
+
+  // Catalog quick card
   const qbRules = document.getElementById('quickBarRulesTitle');
   if(qbRules){
-    qbRules.textContent = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry === 'SG') ? 'Boosting Rules' : 'Peraturan Joki';
+    qbRules.textContent = (lang === 'SG') ? 'Boosting Rules' : 'Peraturan Joki';
   }
   const quickWaText = document.getElementById('catalogQuickWaText');
   if(quickWaText){
-    quickWaText.textContent = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry === 'SG') ? 'WhatsApp Channel' : 'Saluran WhatsApp';
+    quickWaText.textContent = (lang === 'SG') ? 'WhatsApp Channel' : 'Saluran WhatsApp';
   }
   const quickWaSub = document.getElementById('quickBarWaSub');
   if(quickWaSub){
     const followers = (cfg.badge || '').split('•')[0].trim();
-    const fallbackText = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry === 'SG') ? 'Official Join' : 'Gabung Resmi';
-    quickWaSub.textContent = followers || fallbackText;
+    if(followers){
+      if(lang === 'SG'){
+        quickWaSub.textContent = followers.replace(/\bpengikut\b/gi, 'Followers').replace(/\bPengikut\b/g, 'Followers');
+      } else {
+        quickWaSub.textContent = followers;
+      }
+    } else {
+      quickWaSub.textContent = i18n.quickSub;
+    }
   }
 }
 
@@ -10886,24 +11095,106 @@ function copyWaChannelLink(btnEl){
   }
 }
 
+let adminWaPreviewLang = 'ID';
+
+function setAdminWaPreviewLang(lang){
+  adminWaPreviewLang = lang;
+  ['ID', 'MY', 'SG'].forEach(l => {
+    const btn = document.getElementById('btnPreviewWaLang_' + l);
+    if(btn){
+      if(l === lang){
+        btn.style.background = '#22c55e';
+        btn.style.color = '#fff';
+      } else {
+        btn.style.background = '#e2e8f0';
+        btn.style.color = '#475569';
+      }
+    }
+  });
+  updateAdminWaChannelPreview();
+}
+
 function updateAdminWaChannelPreview(){
+  const lang = adminWaPreviewLang || 'ID';
+  const i18n = WA_CHANNEL_I18N[lang] || WA_CHANNEL_I18N.ID;
+  
   const nameInput = document.getElementById('adminWaChannel_name');
   const handleInput = document.getElementById('adminWaChannel_handle');
   const badgeInput = document.getElementById('adminWaChannel_badge');
   const descInput = document.getElementById('adminWaChannel_desc');
-  const subLabelInput = document.getElementById('adminWaChannel_subLabel');
+  const descMyInput = document.getElementById('adminWaChannel_desc_MY');
+  const descSgInput = document.getElementById('adminWaChannel_desc_SG');
   
   const pName = document.getElementById('adminWaChannelPreviewName');
   const pHandle = document.getElementById('adminWaChannelPreviewHandle');
   const pBadge = document.getElementById('adminWaChannelPreviewBadge');
   const pDesc = document.getElementById('adminWaChannelPreviewDesc');
   const pSubLabel = document.getElementById('adminWaChannelPreviewSubLabel');
+  const pHandleLabel = document.getElementById('adminWaChannelPreviewHandleLabel');
+  const pBtn = document.getElementById('adminWaChannelPreviewBtn');
   
-  if(pName && nameInput) pName.textContent = nameInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.name;
+  if(pSubLabel) pSubLabel.textContent = i18n.subLabel;
+  if(pHandleLabel) pHandleLabel.textContent = i18n.handleLabel;
+  if(pBtn) pBtn.innerHTML = `${i18n.joinBtn} ➔`;
+
+  if(pName){
+    let raw = nameInput ? nameInput.value.trim() : '';
+    if(!raw) raw = DEFAULT_WA_CHANNEL_CONFIG.name;
+    if(lang === 'MY') raw = raw.replace(/\bresmi\b/gi, 'Rasmi');
+    else if(lang === 'SG') raw = raw.replace(/\bSaluran WhatsApp Resmi\b/gi, 'Official WhatsApp Channel');
+    pName.textContent = raw;
+  }
+
   if(pHandle && handleInput) pHandle.textContent = handleInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.handle;
-  if(pBadge && badgeInput) pBadge.textContent = badgeInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.badge;
-  if(pDesc && descInput) pDesc.textContent = descInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.desc;
-  if(pSubLabel && subLabelInput) pSubLabel.textContent = subLabelInput.value.trim() || '📢 SALURAN RESMI';
+
+  if(pBadge){
+    let rawBadge = badgeInput ? badgeInput.value.trim() : '';
+    if(!rawBadge) rawBadge = DEFAULT_WA_CHANNEL_CONFIG.badge;
+    if(lang === 'MY'){
+      rawBadge = rawBadge.replace(/\bInfo Update Kilat\b/gi, 'Maklumat Pantas & Diskaun');
+    } else if(lang === 'SG'){
+      rawBadge = rawBadge.replace(/\bpengikut\b/gi, 'Followers')
+                         .replace(/\bPengikut\b/g, 'Followers')
+                         .replace(/\bInfo Update Kilat\b/gi, 'Fast Updates & Discounts');
+    }
+    pBadge.textContent = rawBadge;
+  }
+
+  if(pDesc){
+    let desc = '';
+    const baseDesc = (descInput && descInput.value.trim()) ? descInput.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+    if(lang === 'MY'){
+      const myCustom = descMyInput ? descMyInput.value.trim() : '';
+      desc = myCustom || translateWaDescToMalay(baseDesc);
+    } else if(lang === 'SG'){
+      const sgCustom = descSgInput ? descSgInput.value.trim() : '';
+      desc = sgCustom || translateWaDescToEnglish(baseDesc);
+    } else {
+      desc = baseDesc;
+    }
+    pDesc.textContent = desc;
+  }
+}
+
+function autoTranslateWaDesc(targetLang){
+  const baseDesc = (document.getElementById('adminWaChannel_desc')?.value || '').trim() || DEFAULT_WA_CHANNEL_CONFIG.desc;
+  if(targetLang === 'MY'){
+    const translated = translateWaDescToMalay(baseDesc);
+    const targetEl = document.getElementById('adminWaChannel_desc_MY');
+    if(targetEl){
+      targetEl.value = translated;
+      setAdminWaPreviewLang('MY');
+      showToast('🇲🇾 Berhasil diterjemahkan ke Bahasa Melayu!');
+    }
+  } else if(targetLang === 'SG'){
+    const translated = translateWaDescToEnglish(baseDesc);
+    const targetEl = document.getElementById('adminWaChannel_desc_SG');
+    if(targetEl){
+      targetEl.value = translated;
+      setAdminWaPreviewLang('SG');
+      showToast('🇸🇬 Berhasil diterjemahkan ke Bahasa Inggris!');
+    }
+  }
 }
 
 function populateAdminWaChannelForm(){
@@ -10914,6 +11205,8 @@ function populateAdminWaChannelForm(){
   const urlEl = document.getElementById('adminWaChannel_url');
   const badgeEl = document.getElementById('adminWaChannel_badge');
   const descEl = document.getElementById('adminWaChannel_desc');
+  const descMyEl = document.getElementById('adminWaChannel_desc_MY');
+  const descSgEl = document.getElementById('adminWaChannel_desc_SG');
   
   if(enableEl) enableEl.checked = (cfg.enabled !== false);
   if(nameEl) nameEl.value = cfg.name || '';
@@ -10921,6 +11214,8 @@ function populateAdminWaChannelForm(){
   if(urlEl) urlEl.value = cfg.url || '';
   if(badgeEl) badgeEl.value = cfg.badge || '';
   if(descEl) descEl.value = cfg.desc || '';
+  if(descMyEl) descMyEl.value = cfg.desc_MY || '';
+  if(descSgEl) descSgEl.value = cfg.desc_SG || '';
   updateAdminWaChannelPreview();
 
   const noteInput = document.getElementById('adminJokiRules_extraNote');
@@ -11011,12 +11306,16 @@ function saveAdminWaChannelConfig(){
   const urlEl = document.getElementById('adminWaChannel_url');
   const badgeEl = document.getElementById('adminWaChannel_badge');
   const descEl = document.getElementById('adminWaChannel_desc');
+  const descMyEl = document.getElementById('adminWaChannel_desc_MY');
+  const descSgEl = document.getElementById('adminWaChannel_desc_SG');
 
   const url = (urlEl && urlEl.value.trim()) ? urlEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.url;
   const name = (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.name;
   const handle = (handleEl && handleEl.value.trim()) ? handleEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.handle;
   const badge = (badgeEl && badgeEl.value.trim()) ? badgeEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.badge;
   const desc = (descEl && descEl.value.trim()) ? descEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+  const desc_MY = (descMyEl && descMyEl.value.trim()) ? descMyEl.value.trim() : '';
+  const desc_SG = (descSgEl && descSgEl.value.trim()) ? descSgEl.value.trim() : '';
   const enabled = enableEl ? enableEl.checked : true;
 
   const cfg = {
@@ -11025,7 +11324,9 @@ function saveAdminWaChannelConfig(){
     handle: handle,
     url: url,
     badge: badge,
-    desc: desc
+    desc: desc,
+    desc_MY: desc_MY,
+    desc_SG: desc_SG
   };
 
   saveWaChannelConfig(cfg);
