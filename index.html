@@ -1245,8 +1245,7 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .skel-card .skel-body{padding:10px;display:flex;flex-direction:column;gap:8px}
 .skel-line{height:10px;border-radius:6px}
 .skel-review{aspect-ratio:3/4;border-radius:14px}
-.search-empty{grid-column:1/-1;text-align:center;padding:40px 16px;color:#aaa}
-.subgroup-heading{grid-column:1/-1;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.6px;padding:6px 2px;margin-top:4px;border-bottom:2px solid #ece5fb;animation:fadeIn .3s ease;display:flex;align-items:center;justify-content:space-between}
+.subgroup-heading{grid-column:1/-1;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.6px;padding:6px 2px;margin-top:4px;border-bottom:2px solid #ece5fb;display:flex;align-items:center;justify-content:space-between}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .subgroup-heading:first-child{margin-top:0}
 .subgroup-disc-badge{display:inline-flex;align-items:center;gap:3px;background:#fee2e2;color:#dc2626;font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;border:1px solid #fecaca;text-transform:none;letter-spacing:0}
@@ -2064,7 +2063,7 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .sg-pop-item.active .sg-pop-check{border-color:#7c3aed;background:linear-gradient(135deg,#7c3aed,#9333ea);box-shadow:0 2px 6px rgba(124,58,237,0.35)}
 
 /* ============ ACTIVE SUB-FILTER BAR (COMPACT & MODERN HORIZONTAL SWIPE) ============ */
-.catalog-subfilter-bar{display:none;align-items:center;padding:6px 16px 12px;margin-bottom:10px;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;animation:fadeIn .2s ease;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
+.catalog-subfilter-bar{display:none;align-items:center;padding:6px 16px 12px;margin-bottom:10px;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:smooth;overscroll-behavior-x:contain;will-change:scroll-position}
 .catalog-subfilter-bar.is-dragging{cursor:grabbing;user-select:none}
 .catalog-subfilter-bar::-webkit-scrollbar{display:none;width:0;height:0}
 
@@ -18182,92 +18181,44 @@ function localizeSubgroupName(sub, lang = null){
 
 function enableHorizontalDragScroll(el){
   if(!el) return;
-  if(!el.dataset) {
-    el.dataset = {};
-  }
-  if(el.dataset.dragInit === 'v2') return;
-  el.dataset.dragInit = 'v2';
+  if(!el.dataset) el.dataset = {};
+  if(el.dataset.dragInit === 'v3') return;
+  el.dataset.dragInit = 'v3';
 
   let isDown = false;
   let startX = 0;
-  let startY = 0;
   let scrollStart = 0;
   let hasMoved = false;
   let justDragged = false;
   let dragTimer = null;
-  let isTouch = false;
-  let isHorizontalIntent = false;
 
-  // Velocity tracking for flick momentum
-  let lastX = 0;
-  let lastTime = 0;
-  let velocity = 0;
-  let animId = null;
-
-  function stopMomentum(){
-    if(animId){
-      cancelAnimationFrame(animId);
-      animId = null;
-    }
-  }
-
-  function startMomentum(){
-    stopMomentum();
-    if(Math.abs(velocity) < 0.2) return;
-    let v = velocity * 13;
-    function step(){
-      if(Math.abs(v) < 0.35){
-        v = 0;
-        return;
-      }
-      el.scrollLeft -= v;
-      v *= 0.92;
-      animId = requestAnimationFrame(step);
-    }
-    animId = requestAnimationFrame(step);
-  }
-
-  // Mouse Dragging
+  // Hanya drag mouse di Desktop (touchscreen HP menggunakan scroll bawaan GPU tanpa lag)
   el.addEventListener('mousedown', (e) => {
     if(e.button !== 0) return;
-    stopMomentum();
     isDown = true;
     hasMoved = false;
-    isTouch = false;
     startX = e.pageX;
     scrollStart = el.scrollLeft;
-    lastX = e.pageX;
-    lastTime = Date.now();
-    velocity = 0;
     el.classList.add('is-dragging');
   });
 
   window.addEventListener('mousemove', (e) => {
-    if(!isDown || isTouch) return;
-    const now = Date.now();
-    const dt = Math.max(1, now - lastTime);
-    const dx = e.pageX - lastX;
-    velocity = dx / dt;
-    lastX = e.pageX;
-    lastTime = now;
-
+    if(!isDown) return;
     const diff = e.pageX - startX;
     if(Math.abs(diff) > 4){
       hasMoved = true;
       justDragged = true;
-      e.preventDefault();
       el.scrollLeft = scrollStart - diff;
     }
-  }, { passive: false });
+  });
 
   function endMouseDrag(){
-    if(isDown && !isTouch){
+    if(isDown){
       isDown = false;
       el.classList.remove('is-dragging');
       if(hasMoved){
-        startMomentum();
         clearTimeout(dragTimer);
-        dragTimer = setTimeout(() => { justDragged = false; }, 260);
+        dragTimer = setTimeout(() => { justDragged = false; hasMoved = false; }, 200);
       }
     }
   }
@@ -18275,78 +18226,9 @@ function enableHorizontalDragScroll(el){
   window.addEventListener('mouseup', endMouseDrag);
   window.addEventListener('mouseleave', endMouseDrag);
 
-  // Touch Dragging (Mobile Android / iOS)
-  el.addEventListener('touchstart', (e) => {
-    if(!e.touches || e.touches.length !== 1) return;
-    stopMomentum();
-    isTouch = true;
-    isDown = true;
-    hasMoved = false;
-    isHorizontalIntent = false;
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    scrollStart = el.scrollLeft;
-    lastX = startX;
-    lastTime = Date.now();
-    velocity = 0;
-  }, { passive: true });
-
-  el.addEventListener('touchmove', (e) => {
-    if(!isDown || !isTouch || !e.touches || e.touches.length !== 1) return;
-    const currentX = e.touches[0].clientX;
-    const currentY = e.touches[0].clientY;
-    const diffX = currentX - startX;
-    const diffY = currentY - startY;
-
-    if(!isHorizontalIntent && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)){
-      if(Math.abs(diffX) >= Math.abs(diffY)){
-        isHorizontalIntent = true;
-      } else {
-        isDown = false;
-        return;
-      }
-    }
-
-    if(isHorizontalIntent){
-      const now = Date.now();
-      const dt = Math.max(1, now - lastTime);
-      const dx = currentX - lastX;
-      velocity = dx / dt;
-      lastX = currentX;
-      lastTime = now;
-
-      hasMoved = true;
-      justDragged = true;
-      el.scrollLeft = scrollStart - diffX;
-      el.classList.add('is-dragging');
-
-      if(e.cancelable){
-        e.preventDefault();
-      }
-    }
-  }, { passive: false });
-
-  function endTouchDrag(){
-    if(isDown && isTouch){
-      isDown = false;
-      el.classList.remove('is-dragging');
-      if(hasMoved){
-        startMomentum();
-        clearTimeout(dragTimer);
-        dragTimer = setTimeout(() => {
-          justDragged = false;
-          hasMoved = false;
-        }, 320);
-      }
-    }
-  }
-
-  el.addEventListener('touchend', endTouchDrag, { passive: true });
-  el.addEventListener('touchcancel', endTouchDrag, { passive: true });
-
-  // Suppress button clicks on child chips when dragging has occurred
+  // Mencegah klik tombol jika pengguna baru selesai menggeser mouse
   el.addEventListener('click', (e) => {
-    if(hasMoved || justDragged){
+    if(justDragged || hasMoved){
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
@@ -18355,7 +18237,7 @@ function enableHorizontalDragScroll(el){
     }
   }, true);
 
-  // Wheel handling for trackpad/mouse
+  // Dukungan scroll horizontal wheel mouse
   el.addEventListener('wheel', (e) => {
     if(e.deltaY !== 0 && Math.abs(e.deltaX) < Math.abs(e.deltaY)){
       el.scrollLeft += e.deltaY;
@@ -18524,11 +18406,6 @@ function selectSubgroupFilter(sub, chipBtn){
     label = localizeSubgroupName(currentSubgroupFilter);
   }
   showToast(t('sgToastShowing', { label: label }));
-  
-  const grid = document.getElementById('productGrid');
-  if(grid){
-    grid.scrollIntoView({behavior:'smooth', block:'start'});
-  }
 }
 
 function updateCategoryChipsUI(){
@@ -18556,9 +18433,12 @@ function updateCategoryChipsUI(){
     const catDisc = (cat === 'all') ? 0 : getCategoryMaxDiscount(cat);
     const discTitle = (currentSelectedCountry === 'SG') ? `Up to ${catDisc}% Off` : ((currentSelectedCountry === 'MY') ? `Diskaun sehingga ${catDisc}%` : `Diskon hingga ${catDisc}%`);
     const discBadge = catDisc > 0 ? `<span class="cat-chip-disc" title="${discTitle}">🔥 -${catDisc}%</span>` : '';
+    const nextHtml = `${catShortName}${discBadge ? ' ' + discBadge : ''}`;
     
+    if(chip.innerHTML !== nextHtml){
+      chip.innerHTML = nextHtml;
+    }
     chip.classList.toggle('active', cat === currentCatFilter);
-    chip.innerHTML = `${catShortName}${discBadge ? ' ' + discBadge : ''}`;
   });
 
   const catChipsEl = document.getElementById('catChips');
@@ -18569,43 +18449,63 @@ function updateCategoryChipsUI(){
   const subBar = document.getElementById('catalogSubFilterBar');
   const subWrap = document.getElementById('subfilterWrapper');
   if(subBar){
-    // JANGAN tampilkan sub-filter jika katalog "SEMUA" ('all')!
-    // Sub-filter HANYA ditampilkan untuk game seperti genshin, wuwa, hsr, nte, lainnya
     if(!currentCatFilter || currentCatFilter === 'all'){
       if(subWrap) subWrap.style.display = 'none';
       subBar.style.display = 'none';
       subBar.innerHTML = '';
+      subBar.dataset.subBarKey = '';
     } else {
       const subs = getExistingSubgroups(currentCatFilter);
       if(subs.length > 0){
         const isAllActive = (!currentSubgroupFilter || currentSubgroupFilter === 'all');
         const allLabel = (currentSelectedCountry === 'SG') ? 'All' : 'Semua';
-        let chipsHtml = `
-          <button type="button" class="sub-chip ${isAllActive ? 'active' : ''}" onclick="selectSubgroupFilter('all', this)">
-            🌟 ${allLabel}
-          </button>
-        `;
-        subs.forEach(s => {
-          const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
-          const sDisc = getDiscount(currentCatFilter, s);
-          const locName = localizeSubgroupName(s);
-          const discBadge = sDisc > 0 ? `<span class="sub-chip-disc">🔥 -${sDisc}%</span>` : '';
-          const icon = getSubgroupIcon(s);
-          chipsHtml += `
-            <button type="button" class="sub-chip ${isActive ? 'active' : ''} ${sDisc > 0 ? 'has-discount' : ''}" onclick="selectSubgroupFilter('${s.replace(/'/g, "\\'")}', this)">
-              ${icon} ${escapeHtml(locName)} ${discBadge}
+        
+        // Cek apakah struktur chip sub-kategori perlu dibangun ulang
+        const subBarKey = currentCatFilter + '_' + subs.join('|') + '_' + (currentSelectedCountry || 'ID');
+        if(subBar.dataset.subBarKey !== subBarKey){
+          subBar.dataset.subBarKey = subBarKey;
+          let chipsHtml = `
+            <button type="button" class="sub-chip ${isAllActive ? 'active' : ''}" data-sub="all" onclick="selectSubgroupFilter('all', this)">
+              🌟 ${allLabel}
             </button>
           `;
-        });
+          subs.forEach(s => {
+            const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
+            const sDisc = getDiscount(currentCatFilter, s);
+            const locName = localizeSubgroupName(s);
+            const discBadge = sDisc > 0 ? `<span class="sub-chip-disc">🔥 -${sDisc}%</span>` : '';
+            const icon = getSubgroupIcon(s);
+            chipsHtml += `
+              <button type="button" class="sub-chip ${isActive ? 'active' : ''} ${sDisc > 0 ? 'has-discount' : ''}" data-sub="${escapeHtml(s)}" onclick="selectSubgroupFilter('${s.replace(/'/g, "\\'")}', this)">
+                ${icon} ${escapeHtml(locName)} ${discBadge}
+              </button>
+            `;
+          });
 
-        if(subWrap) subWrap.style.display = 'block';
-        subBar.style.display = 'flex';
-        subBar.innerHTML = chipsHtml;
-        enableHorizontalDragScroll(subBar);
+          if(subWrap) subWrap.style.display = 'block';
+          subBar.style.display = 'flex';
+          subBar.innerHTML = chipsHtml;
+          enableHorizontalDragScroll(subBar);
+        } else {
+          // Subgroup tidak berubah, JANGAN buat ulang DOM agar scroll tidak putus atau lag!
+          if(subWrap) subWrap.style.display = 'block';
+          subBar.style.display = 'flex';
+          const buttons = subBar.querySelectorAll('.sub-chip');
+          buttons.forEach((btn, idx) => {
+            if(idx === 0){
+              btn.classList.toggle('active', isAllActive);
+            } else {
+              const s = subs[idx - 1];
+              const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
+              btn.classList.toggle('active', isActive);
+            }
+          });
+        }
       } else {
         if(subWrap) subWrap.style.display = 'none';
         subBar.style.display = 'none';
         subBar.innerHTML = '';
+        subBar.dataset.subBarKey = '';
       }
     }
   }
@@ -18757,50 +18657,12 @@ function recordOrderToSalesBank(order){
 }
 
 // Menghitung dan menyerap riwayat pesanan dari snapshot database norxstore/orders
+// Menandai riwayat pesanan yang sudah ada agar tidak dihitung ulang secara retroaktif
 function ingestExistingOrdersIntoSalesBank(ordersObj){
   if(!ordersObj || typeof ordersObj !== 'object') return;
-  let hasNew = false;
-  const cloudUpdates = {};
-
   for(const oid in ordersObj){
-    if(oid.startsWith('rat_')) continue;
-    if(salesBankState.ingestedOrders[oid]) continue; // Sudah pernah dihitung
-
-    const ord = ordersObj[oid];
-    if(!ord || typeof ord !== 'object') continue;
-
-    salesBankState.ingestedOrders[oid] = ord.createdAt || Date.now();
-    cloudUpdates['ingested_orders/' + oid] = ord.createdAt || Date.now();
-    hasNew = true;
-
-    let items = ord.items;
-    if(!Array.isArray(items) && ord.productTitle){
-      items = [{ id: ord.productId || ord.id, name: ord.productTitle, qty: ord.qty || 1 }];
-    }
-
-    if(Array.isArray(items)){
-      items.forEach(it => {
-        if(!it) return;
-        const pid = (it.id !== undefined && it.id !== null) ? String(it.id) : '';
-        const qty = Math.max(1, Number(it.qty) || 1);
-        if(pid){
-          const current = (salesBankState.counts[pid] !== undefined)
-            ? Math.max(0, Number(salesBankState.counts[pid]) || 0)
-            : 0;
-          const updated = current + qty;
-          salesBankState.counts[pid] = updated;
-          cloudUpdates['counts/' + pid] = updated;
-        }
-      });
-    }
-  }
-
-  if(hasNew){
-    saveSalesBankLocal();
-    renderProducts();
-    if(isAdminOpen()) renderAdminProductList();
-    if(window.fbAvailable && fbDB && fbDB.ref && Object.keys(cloudUpdates).length > 0){
-      fbDB.ref('norxstore/sales_bank').update(cloudUpdates).catch(()=>{});
+    if(oid && !salesBankState.ingestedOrders[oid]){
+      salesBankState.ingestedOrders[oid] = (ordersObj[oid] && ordersObj[oid].createdAt) ? ordersObj[oid].createdAt : Date.now();
     }
   }
 }
