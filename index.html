@@ -1046,7 +1046,7 @@ body.dark-mode #cartPayCrossBorderNote > div{
 .slide-bg{width:100%;height:100%;position:relative;background-size:cover;background-position:center}
 .slide-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.2) 50%,transparent 100%)}
 .slide-content{position:absolute;bottom:24px;left:16px;right:70px;color:#fff;z-index:2}
-.slide-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:20px;margin-bottom:8px;backdrop-filter:blur(6px)}
+.slide-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:20px;margin-bottom:8px}
 .slide-title{font-size:20px;font-weight:800;margin:0 0 3px;line-height:1.15;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .slide-desc{font-size:12px;margin:0;opacity:.9;line-height:1.4}
 .s1 .slide-tag{background:rgba(212,168,67,.3);color:#f5d78e;border:1px solid rgba(212,168,67,.5)}
@@ -1140,9 +1140,11 @@ body.dark-mode .live-pill-mode{
 .cat-chips{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:8px 16px 12px;margin-bottom:8px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
 .cat-chips.is-dragging{cursor:grabbing;user-select:none}
 .cat-chips::-webkit-scrollbar{display:none;width:0;height:0}
-.cat-chip{padding:9px 18px;border-radius:12px;background:#ffffff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:#475569;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 1px 3px rgba(0,0,0,0.04);display:inline-flex;align-items:center;gap:6px}
-.cat-chip:hover{border-color:#c4b5fd;color:#7c3aed;background:#faf5ff;transform:translateY(-1px)}
-.cat-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.32);transform:translateY(-1px)}
+.cat-chip{padding:9px 18px;border-radius:12px;background:#ffffff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:#475569;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 1px 3px rgba(0,0,0,0.04);display:inline-flex;align-items:center;gap:6px;touch-action:manipulation}
+@media (hover: hover) and (pointer: fine){
+  .cat-chip:hover{border-color:#c4b5fd;color:#7c3aed;background:#faf5ff;transform:translateY(-1px)}
+}
+.cat-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.32)}
 .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;width:100%}
 .product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;touch-action:pan-y}
 .product-card:hover{transform:translateY(-4px)}
@@ -1159,7 +1161,7 @@ body.dark-mode .live-pill-mode{
 .img-nav-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:3}
 .img-nav-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);border:none;padding:0;transition:all 0.2s}
 .img-nav-dot.active{background:#fff;width:12px;border-radius:3px}
-.img-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;z-index:3;backdrop-filter:blur(2px)}
+.img-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;z-index:3}
 
 .product-info{padding:10px 8px 10px;flex:1;display:flex;flex-direction:column}
 .product-name{font-size:12px;font-weight:600;margin:0 0 3px;line-height:1.3;transition:color 0.4s ease}
@@ -1390,6 +1392,16 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .admin-btn-sm{padding:8px 14px;border-radius:8px;border:none;background:#ef4444;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
 .admin-btn-sm:active{background:#dc2626}
 .admin-btn-secondary{padding:8px 14px;border-radius:8px;border:1px solid #e5e5e5;background:#f5f5f5;color:#555;font-size:12px;font-weight:600;cursor:pointer}
+.admin-orders-nav{display:flex;gap:6px;background:#f1f5f9;padding:4px;border-radius:12px;margin-bottom:12px;box-sizing:border-box;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.admin-orders-nav::-webkit-scrollbar{display:none}
+.admin-orders-tab{flex:1;min-width:max-content;padding:8px 10px;font-size:11.5px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#64748b;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;white-space:nowrap}
+.admin-orders-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(124,58,237,.14)}
+.admin-tab-count{display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#e2e8f0;color:#475569;line-height:1.2}
+.admin-orders-tab.active .admin-tab-count{background:#ede9fe;color:#7c3aed}
+.admin-tab-count.highlight-active{background:#fef3c7;color:#b45309}
+.admin-orders-tab.active .admin-tab-count.highlight-active{background:#fde68a;color:#92400e}
+.admin-tab-count.highlight-done{background:#dcfce7;color:#166534}
+.admin-orders-tab.active .admin-tab-count.highlight-done{background:#bbf7d0;color:#14532d}
 .admin-status{margin-top:12px;padding:10px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;font-size:12px;font-weight:600;text-align:center;display:none}
 .admin-status.show{display:block}
 .admin-current{font-size:13px;color:#555;text-align:center;margin-bottom:16px}
@@ -2063,13 +2075,15 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .sg-pop-item.active .sg-pop-check{border-color:#7c3aed;background:linear-gradient(135deg,#7c3aed,#9333ea);box-shadow:0 2px 6px rgba(124,58,237,0.35)}
 
 /* ============ ACTIVE SUB-FILTER BAR (COMPACT & MODERN HORIZONTAL SWIPE) ============ */
-.catalog-subfilter-bar{display:none;align-items:center;padding:6px 16px 12px;margin-bottom:10px;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:smooth;overscroll-behavior-x:contain;will-change:scroll-position}
+.catalog-subfilter-bar{display:none;align-items:center;padding:6px 16px 12px;margin-bottom:10px;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
 .catalog-subfilter-bar.is-dragging{cursor:grabbing;user-select:none}
 .catalog-subfilter-bar::-webkit-scrollbar{display:none;width:0;height:0}
 
-.sub-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:10px;font-size:11.5px;font-weight:700;background:#ffffff;color:#475569;border:1.5px solid #e2e8f0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s ease;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
-.sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd;transform:translateY(-1px)}
-.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,58,237,0.32);transform:translateY(-1px)}
+.sub-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:10px;font-size:11.5px;font-weight:700;background:#ffffff;color:#475569;border:1.5px solid #e2e8f0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,0.03);touch-action:manipulation}
+@media (hover: hover) and (pointer: fine){
+  .sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd;transform:translateY(-1px)}
+}
+.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,58,237,0.32)}
 .sub-chip.has-discount{border-color:#fcd34d;background:#fffbeb}
 .sub-chip.active.has-discount{background:linear-gradient(135deg,#7c3aed,#9333ea);border-color:transparent}
 .sub-chip-disc{font-size:9.5px;font-weight:800;background:#ef4444;color:#fff;padding:2px 6px;border-radius:8px;line-height:1.2;margin-left:3px}
@@ -6034,9 +6048,26 @@ function refundSingleProductAccount(productId){
     renderAdminOrders();
   }
 }
+function orderHasAccountItem(o){
+  if(!o || !Array.isArray(o.items) || o.items.length === 0) return false;
+  return o.items.some(it => {
+    if(it.isAccount === true) return true;
+    const prod = (products || []).find(p => 
+      (it.id !== undefined && it.id !== null && Number(p.id) === Number(it.id)) || 
+      (p.name && it.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase())
+    );
+    if(prod && (prod.isAccount || prod.cat === 'lainnya' || prod.stock === 1)) return true;
+    return false;
+  });
+}
+
 function refundOrderAccount(orderId){
   const o = allOrders[orderId];
   if(!o) return;
+  if(!orderHasAccountItem(o)){
+    showToast('⚠️ Fitur refund akun hanya berlaku khusus untuk produk Jual Beli Akun!');
+    return;
+  }
   const itemsText = o.items ? o.items.map(it => it.name).join(', ') : 'Pesanan Akun';
   if(!confirm(`Pelanggan mengembalikan akun dari pesanan ini (${itemsText})?\n\nUbah status akun agar TERSEDIA kembali di katalog untuk pelanggan lain?`)) return;
 
@@ -16423,17 +16454,111 @@ function syncOrderIdsToCloud(){
   }
 }
 
+let currentAdminOrderTab = 'active';
+
+function setAdminOrderTab(tab){
+  currentAdminOrderTab = tab;
+  renderAdminOrders();
+}
+
 function renderAdminOrders(){
   const list = document.getElementById('adminOrdersList');
   if(!list) return;
   const orders = Object.values(allOrders).filter(o => o && Array.isArray(o.items) && !o.isRating && o.type !== 'rating').sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
   if(orders.length === 0){
-    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada pesanan masuk.</p>';
+    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:16px">Belum ada pesanan masuk.</p>';
     return;
   }
-  list.innerHTML = orders.map(o => {
+
+  // Pisahkan kelompok: Aktif (perlu dikerjakan), Selesai (sudah beres), Lainnya (batal & refund)
+  const activeOrders = orders.filter(o => o.status === 'pending' || o.status === 'processing');
+  const doneOrders = orders.filter(o => o.status === 'done' || o.status === 'selesai');
+  const otherOrders = orders.filter(o => o.status === 'cancelled' || o.status === 'refunded');
+
+  // Fallback tab jika tab yang aktif tidak lagi memiliki item
+  if(currentAdminOrderTab === 'other' && otherOrders.length === 0){
+    currentAdminOrderTab = 'active';
+  }
+
+  // Bar Navigasi Tab Terpisah
+  const navHtml = `
+    <div class="admin-orders-nav">
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'active' ? 'active' : ''}" onclick="setAdminOrderTab('active')">
+        <span>⏳ Perlu Dikerjakan</span>
+        <span class="admin-tab-count ${activeOrders.length > 0 ? 'highlight-active' : ''}">${activeOrders.length}</span>
+      </button>
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'done' ? 'active' : ''}" onclick="setAdminOrderTab('done')">
+        <span>✅ Selesai</span>
+        <span class="admin-tab-count ${doneOrders.length > 0 ? 'highlight-done' : ''}">${doneOrders.length}</span>
+      </button>
+      ${otherOrders.length > 0 ? `
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'other' ? 'active' : ''}" onclick="setAdminOrderTab('other')">
+        <span>📁 Batal/Refund</span>
+        <span class="admin-tab-count">${otherOrders.length}</span>
+      </button>
+      ` : ''}
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'all' ? 'active' : ''}" onclick="setAdminOrderTab('all')">
+        <span>🌐 Semua</span>
+        <span class="admin-tab-count">${orders.length}</span>
+      </button>
+    </div>
+  `;
+
+  let displayedOrders = [];
+  let headerNotice = '';
+
+  if(currentAdminOrderTab === 'active'){
+    displayedOrders = activeOrders;
+    if(activeOrders.length === 0){
+      headerNotice = `
+        <div style="text-align:center;padding:24px 16px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;margin:8px 0">
+          <div style="font-size:32px;margin-bottom:6px">🎉</div>
+          <div style="font-weight:800;color:#1e293b;font-size:13px">Semua Pesanan Sudah Selesai!</div>
+          <div style="font-size:11.5px;color:#64748b;margin-top:3px;margin-bottom:12px">Tidak ada antrian pesanan yang perlu dikerjakan saat ini.</div>
+          ${doneOrders.length > 0 ? `
+          <button type="button" onclick="setAdminOrderTab('done')" style="padding:7px 16px;font-size:11.5px;font-weight:700;border-radius:8px;background:#f0fdf4;border:1.5px solid #86efac;color:#166534;cursor:pointer">
+            👉 Buka Pesanan Selesai (${doneOrders.length})
+          </button>
+          ` : ''}
+        </div>
+      `;
+    } else {
+      headerNotice = `<div style="font-size:11px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>⚡</span><span>Antrian pesanan aktif yang perlu diproses & diselesaikan (${activeOrders.length})</span></div>`;
+    }
+  } else if(currentAdminOrderTab === 'done'){
+    displayedOrders = doneOrders;
+    if(doneOrders.length === 0){
+      headerNotice = `
+        <div style="text-align:center;padding:24px 16px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;margin:8px 0">
+          <div style="font-size:30px;margin-bottom:6px">📦</div>
+          <div style="font-weight:700;color:#64748b;font-size:12px">Belum ada pesanan yang selesai dikerjakan.</div>
+        </div>
+      `;
+    } else {
+      headerNotice = `<div style="font-size:11px;color:#166534;background:#f0fdf4;border:1px solid #bbf7d0;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>✅</span><span>Riwayat pesanan yang sudah tuntas dikerjakan (${doneOrders.length})</span></div>`;
+    }
+  } else if(currentAdminOrderTab === 'other'){
+    displayedOrders = otherOrders;
+    if(otherOrders.length === 0){
+      headerNotice = `
+        <div style="text-align:center;padding:24px 16px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;margin:8px 0">
+          <div style="font-size:30px;margin-bottom:6px">✨</div>
+          <div style="font-weight:700;color:#64748b;font-size:12px">Tidak ada pesanan yang dibatalkan atau di-refund.</div>
+        </div>
+      `;
+    } else {
+      headerNotice = `<div style="font-size:11px;color:#991b1b;background:#fef2f2;border:1px solid #fecaca;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>📁</span><span>Riwayat pesanan batal & refund (${otherOrders.length})</span></div>`;
+    }
+  } else {
+    displayedOrders = orders;
+    headerNotice = `<div style="font-size:11px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>🌐</span><span>Menampilkan seluruh riwayat pesanan (${orders.length})</span></div>`;
+  }
+
+  const cardsHtml = displayedOrders.map(o => {
+    const isAccountOrder = orderHasAccountItem(o);
     const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
     const dateStr = new Date(o.createdAt).toLocaleString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    const completedStr = o.completedAt ? new Date(o.completedAt).toLocaleString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
     const customerLine = o.customerName
       ? `👤 ${o.customerName}${o.customerEmail ? ' (' + o.customerEmail + ')' : ''}`
       : '👤 Tamu (belum login Google)';
@@ -16443,26 +16568,37 @@ function renderAdminOrders(){
       actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="openOrderDurationModal('${o.id}')" title="Atur durasi proses & mulai">⏱️ Atur Durasi / Mulai</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'processing'){
       statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af;cursor:pointer" onclick="openOrderDurationModal('${o.id}')" title="Klik untuk ubah durasi proses">🔵 Diproses${o.estimate ? ' · '+o.estimate : ''} ✏️</span>`;
-      actions = `<button class="admin-btn-sm" style="background:#0284c7" onclick="openOrderDurationModal('${o.id}')" title="Ubah estimasi durasi proses pesanan ini">⏱️ Atur Durasi</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Pelanggan kembalikan akun? Kembalikan stok jadi tersedia lagi">↩️ Refund Akun</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+      const refundBtn = isAccountOrder
+        ? `<button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Pelanggan kembalikan akun? Kembalikan stok jadi tersedia lagi">↩️ Refund Akun</button>`
+        : '';
+      actions = `<button class="admin-btn-sm" style="background:#0284c7" onclick="openOrderDurationModal('${o.id}')" title="Ubah estimasi durasi proses pesanan ini">⏱️ Atur Durasi</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button>${refundBtn}<button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'cancelled'){
       statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
-      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     } else if(o.status === 'refunded'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">↩️ Di-Refund</span>';
-      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     } else {
-      statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
-      actions = `<button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Kembalikan akun ke toko agar stok tersedia kembali di katalog">↩️ Refund Akun</button><button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      statusBadge = `<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai${completedStr ? ' · '+completedStr : ''}</span>`;
+      const refundBtn = isAccountOrder
+        ? `<button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Kembalikan akun ke toko agar stok tersedia kembali di katalog">↩️ Refund Akun</button>`
+        : '';
+      actions = `<button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button>${refundBtn}<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     }
     return `
-    <div class="my-order-card">
-      <p style="font-size:11px;color:#7c3aed;font-weight:700;margin:0 0 4px">${customerLine}</p>
+    <div class="my-order-card" style="${o.status === 'done' || o.status === 'selesai' ? 'border-color:#bbf7d0;background:#fafdfb' : ''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+        <p style="font-size:11px;color:#7c3aed;font-weight:700;margin:0">${customerLine}</p>
+        ${isAccountOrder ? '<span style="font-size:9.5px;font-weight:800;color:#c2410c;background:#ffedd5;padding:1px 6px;border-radius:6px;border:1px solid #fdba74">🔑 Akun Game</span>' : ''}
+      </div>
       <p class="my-order-items">${itemsText}</p>
       <p style="font-size:11px;color:#888;margin:0 0 4px">${o.adminName || ''} · ${o.paymentMethod || ''} · ${dateStr}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${statusBadge}${actions}</div>
     </div>`;
   }).join('');
+
+  list.innerHTML = navHtml + headerNotice + cardsHtml;
 }
 
 let currentDurationOrderId = null;
@@ -18182,43 +18318,43 @@ function localizeSubgroupName(sub, lang = null){
 function enableHorizontalDragScroll(el){
   if(!el) return;
   if(!el.dataset) el.dataset = {};
-  if(el.dataset.dragInit === 'v3') return;
-  el.dataset.dragInit = 'v3';
+  if(el.dataset.dragInit === 'v5') return;
+  el.dataset.dragInit = 'v5';
 
-  let isDown = false;
-  let startX = 0;
-  let scrollStart = 0;
-  let hasMoved = false;
+  let isMouseDown = false;
+  let mouseStartX = 0;
+  let mouseScrollStart = 0;
+  let mouseMoved = false;
   let justDragged = false;
-  let dragTimer = null;
+  let dragResetTimer = null;
 
-  // Hanya drag mouse di Desktop (touchscreen HP menggunakan scroll bawaan GPU tanpa lag)
+  // 1. Desktop Mouse Drag (khusus klik-tahan mouse di PC/Laptop)
   el.addEventListener('mousedown', (e) => {
     if(e.button !== 0) return;
-    isDown = true;
-    hasMoved = false;
-    startX = e.pageX;
-    scrollStart = el.scrollLeft;
+    isMouseDown = true;
+    mouseMoved = false;
+    mouseStartX = e.pageX;
+    mouseScrollStart = el.scrollLeft;
     el.classList.add('is-dragging');
   });
 
   window.addEventListener('mousemove', (e) => {
-    if(!isDown) return;
-    const diff = e.pageX - startX;
+    if(!isMouseDown) return;
+    const diff = e.pageX - mouseStartX;
     if(Math.abs(diff) > 4){
-      hasMoved = true;
+      mouseMoved = true;
       justDragged = true;
-      el.scrollLeft = scrollStart - diff;
+      el.scrollLeft = mouseScrollStart - diff;
     }
   });
 
   function endMouseDrag(){
-    if(isDown){
-      isDown = false;
+    if(isMouseDown){
+      isMouseDown = false;
       el.classList.remove('is-dragging');
-      if(hasMoved){
-        clearTimeout(dragTimer);
-        dragTimer = setTimeout(() => { justDragged = false; hasMoved = false; }, 200);
+      if(mouseMoved){
+        clearTimeout(dragResetTimer);
+        dragResetTimer = setTimeout(() => { justDragged = false; mouseMoved = false; }, 150);
       }
     }
   }
@@ -18226,18 +18362,46 @@ function enableHorizontalDragScroll(el){
   window.addEventListener('mouseup', endMouseDrag);
   window.addEventListener('mouseleave', endMouseDrag);
 
-  // Mencegah klik tombol jika pengguna baru selesai menggeser mouse
+  // 2. Mobile Touch Screen (HP):
+  // Menggunakan scroll native 120Hz GPU browser secara mulus tanpa interupsi.
+  // JS hanya melacak swipe jari (> 8px) agar tidak memicu klik tombol saat scrolling.
+  let touchStartX = 0;
+  let touchMoved = false;
+
+  el.addEventListener('touchstart', (e) => {
+    if(!e.touches || e.touches.length !== 1) return;
+    touchStartX = e.touches[0].clientX;
+    touchMoved = false;
+  }, { passive: true });
+
+  el.addEventListener('touchmove', (e) => {
+    if(!e.touches || e.touches.length !== 1) return;
+    if(Math.abs(e.touches[0].clientX - touchStartX) > 8){
+      touchMoved = true;
+      justDragged = true;
+    }
+  }, { passive: true });
+
+  el.addEventListener('touchend', () => {
+    if(touchMoved){
+      clearTimeout(dragResetTimer);
+      dragResetTimer = setTimeout(() => { justDragged = false; touchMoved = false; }, 200);
+    }
+  }, { passive: true });
+
+  // 3. Cegah klik tombol terpencet jika pengguna baru selesai swipe/scroll
   el.addEventListener('click', (e) => {
-    if(justDragged || hasMoved){
+    if(justDragged || mouseMoved || touchMoved){
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      hasMoved = false;
+      mouseMoved = false;
+      touchMoved = false;
       return false;
     }
   }, true);
 
-  // Dukungan scroll horizontal wheel mouse
+  // 4. Mouse wheel horizontal
   el.addEventListener('wheel', (e) => {
     if(e.deltaY !== 0 && Math.abs(e.deltaX) < Math.abs(e.deltaY)){
       el.scrollLeft += e.deltaY;
@@ -18501,6 +18665,7 @@ function updateCategoryChipsUI(){
             }
           });
         }
+        enableHorizontalDragScroll(subBar);
       } else {
         if(subWrap) subWrap.style.display = 'none';
         subBar.style.display = 'none';
@@ -19190,7 +19355,7 @@ function initCatalogSwipeNavigation(){
   sec.addEventListener('touchstart', (e) => {
     if(!e.touches || e.touches.length !== 1) return;
     const t = e.target;
-    if(t.closest('.product-img-track') || t.closest('.cat-chips') || t.closest('.catalog-subfilter-bar') || t.closest('button') || t.closest('input') || t.closest('textarea') || t.closest('.modal-box') || t.closest('.search-suggestions-dropdown')) {
+    if(t.closest('.product-grid') || t.closest('.product-card') || t.closest('.product-img-track') || t.closest('.cat-chips') || t.closest('.catalog-subfilter-bar') || t.closest('.catalog-quick-badges-bar') || t.closest('button') || t.closest('input') || t.closest('textarea') || t.closest('.modal-box') || t.closest('.search-suggestions-dropdown')) {
       return;
     }
     startX = e.touches[0].clientX;
@@ -19206,7 +19371,7 @@ function initCatalogSwipeNavigation(){
     const diffX = endX - startX;
     const diffY = endY - startY;
 
-    if(Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.35){
+    if(Math.abs(diffX) > 90 && Math.abs(diffX) > Math.abs(diffY) * 2.0){
       const cats = ['all', 'genshin', 'hsr', 'wuwa', 'nte', 'lainnya'];
       let currentIdx = cats.indexOf(currentCatFilter);
       if(currentIdx === -1) currentIdx = 0;
