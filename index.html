@@ -4449,7 +4449,10 @@ button{cursor:pointer;font-family:inherit}
 
 <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:6px">
   <div class="admin-label" style="margin-bottom:0">Daftar Produk</div>
-  <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Atur Sub-Kategori Massal</button>
+  <div style="display:flex;gap:6px;align-items:center">
+    <button type="button" class="admin-btn-sm" style="background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-weight:700;font-size:10px;padding:4px 8px;border-radius:6px;cursor:pointer" onclick="if(confirm('Reset semua jumlah terjual ke 0 (nol)? Data akan mulai dihitung dari 0 saat ada order baru.')) resetSalesBankToZero(true)" title="Reset semua data penjualan produk ke 0">🔄 Reset Terjual ke 0</button>
+    <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Atur Sub-Kategori Massal</button>
+  </div>
 </div>
 <div class="reorder-hint-banner">
   <span style="font-size:14px">↕️</span>
@@ -15880,8 +15883,8 @@ if(window.fbAvailable && fbDB && fbDB.ref){
       if(val.counts && typeof val.counts === 'object'){
         for(const pid in val.counts){
           const num = Number(val.counts[pid]);
-          if(!isNaN(num) && num > 0){
-            if(salesBankState.counts[pid] === undefined || num >= salesBankState.counts[pid]){
+          if(!isNaN(num) && num >= 0){
+            if(salesBankState.counts[pid] !== num){
               salesBankState.counts[pid] = num;
               countsChanged = true;
             }
@@ -18630,63 +18633,29 @@ function localizeProductBadge(badge, lang = null){
 // di Firebase RTDB (norxstore/sales_bank) dan localStorage, sehingga catatan tidak akan hilang
 // meskipun riwayat pesanan personal dihapus atau dibersihkan.
 
-const SALES_BANK_STORAGE_KEY = 'norxstore_sales_bank_v1';
+const SALES_BANK_STORAGE_KEY = 'norxstore_sales_bank_v2';
 
-// Baseline penjualan terverifikasi awal per ID produk
-const INITIAL_SALES_BASELINE = {
-  '1': 194,   // 10 IF
-  '2': 156,   // 20 IF
-  '3': 128,   // 30 IF
-  '4': 88,    // 40 IF
-  '5': 96,    // 50 IF
-  '6': 72,    // 60 IF
-  '7': 54,    // 100 IF
-  '8': 42,    // 200 IF
-  '9': 112,   // EKSPLORE MONDSTADT
-  '10': 98,   // EKSPLORE LIYUE
-  '11': 84,   // EKSPLORE INAZUMA
-  '12': 78,   // EKSPLORE FONTAINE
-  '13': 68,   // EKSPLORE SUMERU
-  '14': 82,   // EKSPLORE NATLAN
-  '15': 64,   // EKSPLORE NODKRAI
-  '16': 46,   // EKSPLORE SNEZHNAYA
-  '17': 35,   // Genshin account
-  '18': 89,   // ARCHON MONDSTADT
-  '19': 76,   // ARCHON LIYUE
-  '20': 68,   // ARCHON INAZUMA
-  '21': 62,   // ARCHON SUMERU
-  '22': 58,   // ARCHON FONTAINE
-  '25': 74,   // ARCHON NATLAN
-  '54': 210,  // DAILY
-  '55': 165,  // WEEKLY
-  '56': 234,  // MONTHLY
-  '26': 130,  // 10 RT
-  '27': 98,   // 20 RT
-  '28': 84,   // 30 RT
-  '29': 62,   // 40 RT
-  '30': 75,   // 50 RT
-  '34': 92,   // EKSPLORE HUANGLONG
-  '35': 84,   // EKSPLORE LAHAI ROI
-  '39': 88    // STORY QUEST WUWA
-};
+// Baseline awal: Semua produk mulai dari 0 (nol) agar murni bertambah saat ada order pengunjung
+const INITIAL_SALES_BASELINE = {};
 
 let salesBankState = {
-  counts: Object.assign({}, INITIAL_SALES_BASELINE),
+  counts: {},
   ingestedOrders: {},
   lastUpdated: Date.now()
 };
 
 function loadSalesBankLocal(){
   try {
+    localStorage.removeItem('norxstore_sales_bank_v1');
     const raw = localStorage.getItem(SALES_BANK_STORAGE_KEY);
     if(raw){
       const parsed = JSON.parse(raw);
       if(parsed && typeof parsed === 'object'){
         if(parsed.counts && typeof parsed.counts === 'object'){
-          Object.assign(salesBankState.counts, parsed.counts);
+          salesBankState.counts = parsed.counts;
         }
         if(parsed.ingestedOrders && typeof parsed.ingestedOrders === 'object'){
-          Object.assign(salesBankState.ingestedOrders, parsed.ingestedOrders);
+          salesBankState.ingestedOrders = parsed.ingestedOrders;
         }
       }
     }
@@ -18702,12 +18671,35 @@ function saveSalesBankLocal(){
   } catch(e){}
 }
 
+// Reset seluruh data penjualan ke 0 (nol)
+function resetSalesBankToZero(showNotif = false){
+  salesBankState.counts = {};
+  if(typeof products === 'object' && Array.isArray(products)){
+    products.forEach(p => {
+      if(p && p.id !== undefined) salesBankState.counts[String(p.id)] = 0;
+    });
+  }
+  // Tandai pesanan yang sudah ada di memori saat ini agar tidak menambah hitungan retroaktif
+  if(typeof allOrders === 'object' && allOrders){
+    for(const oid in allOrders){
+      salesBankState.ingestedOrders[oid] = Date.now();
+    }
+  }
+  saveSalesBankLocal();
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/sales_bank/counts').set(salesBankState.counts).catch(()=>{});
+  }
+  renderProducts();
+  if(isAdminOpen()) renderAdminProductList();
+  if(showNotif && typeof showToast === 'function') showToast('✅ Seluruh data penjualan berhasil direset ke 0');
+}
+
 // Inisialisasi awal bank data ke cloud jika belum ada
 function initSalesBankCloud(){
   if(window.fbAvailable && fbDB && fbDB.ref){
     fbDB.ref('norxstore/sales_bank/counts').once('value').then(snap => {
       if(!snap.exists() || !snap.val()){
-        fbDB.ref('norxstore/sales_bank/counts').set(salesBankState.counts).catch(()=>{});
+        resetSalesBankToZero();
       }
     }).catch(()=>{});
   }
@@ -18733,8 +18725,8 @@ function recordOrderToSalesBank(order){
       const qty = Math.max(1, Number(it.qty) || 1);
       if(pid){
         const current = (salesBankState.counts[pid] !== undefined)
-          ? Number(salesBankState.counts[pid])
-          : (INITIAL_SALES_BASELINE[pid] || Math.max(18, ((Number(pid) * 23) % 65) + 32));
+          ? Math.max(0, Number(salesBankState.counts[pid]) || 0)
+          : 0;
         const updated = current + qty;
         salesBankState.counts[pid] = updated;
         cloudUpdates['counts/' + pid] = updated;
@@ -18793,8 +18785,8 @@ function ingestExistingOrdersIntoSalesBank(ordersObj){
         const qty = Math.max(1, Number(it.qty) || 1);
         if(pid){
           const current = (salesBankState.counts[pid] !== undefined)
-            ? Number(salesBankState.counts[pid])
-            : (INITIAL_SALES_BASELINE[pid] || Math.max(18, ((Number(pid) * 23) % 65) + 32));
+            ? Math.max(0, Number(salesBankState.counts[pid]) || 0)
+            : 0;
           const updated = current + qty;
           salesBankState.counts[pid] = updated;
           cloudUpdates['counts/' + pid] = updated;
@@ -18820,26 +18812,29 @@ function getProductSoldCount(p){
   if(!pid) return 0;
 
   if(salesBankState.counts[pid] !== undefined){
-    return Number(salesBankState.counts[pid]) || 0;
+    return Math.max(0, Number(salesBankState.counts[pid]) || 0);
   }
-
-  const fallback = INITIAL_SALES_BASELINE[pid] || Math.max(18, ((Number(pid) * 23) % 65) + 32);
-  salesBankState.counts[pid] = fallback;
-  return fallback;
+  return 0;
 }
 
 // Menampilkan teks jumlah terjual yang akurat dan transparan sesuai negara
 function formatProductSoldText(count){
   const lang = (typeof currentSelectedCountry !== 'undefined') ? currentSelectedCountry : 'ID';
-  const formattedCount = Number(count).toLocaleString('id-ID');
+  const c = Math.max(0, Number(count) || 0);
+  const formattedCount = c.toLocaleString('id-ID');
   if(lang === 'SG'){
     return `${formattedCount} sold`;
   }
   return `Terjual ${formattedCount}`;
 }
 
-// Jalankan pemuatan lokal segera
+// Jalankan pemuatan lokal & pastikan reset ke 0 jika belum pernah diinisialisasi
 loadSalesBankLocal();
+const SALES_BANK_ZERO_INIT_KEY = 'norxstore_sales_bank_zero_init_v2';
+if(localStorage.getItem(SALES_BANK_ZERO_INIT_KEY) !== 'done'){
+  localStorage.setItem(SALES_BANK_ZERO_INIT_KEY, 'done');
+  resetSalesBankToZero();
+}
 
 function renderProductCard(p, discount, idx){
   const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p);
