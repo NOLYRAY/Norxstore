@@ -1041,12 +1041,12 @@ body.dark-mode #cartPayCrossBorderNote > div{
 
 
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
-.carousel-track{display:flex;transition:transform .5s ease;width:100%}
+.carousel-track{display:flex;transition:transform .5s cubic-bezier(0.25,1,0.5,1);width:100%;will-change:transform;transform:translateZ(0)}
 .carousel-slide{flex:0 0 100%;position:relative;height:260px}
 .slide-bg{width:100%;height:100%;position:relative;background-size:cover;background-position:center}
 .slide-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.2) 50%,transparent 100%)}
 .slide-content{position:absolute;bottom:24px;left:16px;right:70px;color:#fff;z-index:2}
-.slide-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:20px;margin-bottom:8px;backdrop-filter:blur(6px)}
+.slide-tag{display:inline-block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:1px;padding:4px 10px;border-radius:20px;margin-bottom:8px}
 .slide-title{font-size:20px;font-weight:800;margin:0 0 3px;line-height:1.15;text-shadow:0 1px 4px rgba(0,0,0,.5)}
 .slide-desc{font-size:12px;margin:0;opacity:.9;line-height:1.4}
 .s1 .slide-tag{background:rgba(212,168,67,.3);color:#f5d78e;border:1px solid rgba(212,168,67,.5)}
@@ -1140,15 +1140,20 @@ body.dark-mode .live-pill-mode{
 .cat-chips{display:flex;gap:10px;overflow-x:auto;overflow-y:hidden;padding:8px 16px 12px;margin-bottom:8px;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;-webkit-overflow-scrolling:touch;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
 .cat-chips.is-dragging{cursor:grabbing;user-select:none}
 .cat-chips::-webkit-scrollbar{display:none;width:0;height:0}
-.cat-chip{padding:9px 18px;border-radius:12px;background:#ffffff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:#475569;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all 0.2s cubic-bezier(0.16,1,0.3,1);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 1px 3px rgba(0,0,0,0.04);display:inline-flex;align-items:center;gap:6px}
-.cat-chip:hover{border-color:#c4b5fd;color:#7c3aed;background:#faf5ff;transform:translateY(-1px)}
-.cat-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.32);transform:translateY(-1px)}
+.cat-chip{padding:9px 18px;border-radius:12px;background:#ffffff;border:1.5px solid #e2e8f0;font-size:12px;font-weight:700;letter-spacing:0.3px;text-transform:uppercase;color:#475569;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;box-shadow:0 1px 3px rgba(0,0,0,0.04);display:inline-flex;align-items:center;gap:6px;touch-action:manipulation}
+@media (hover: hover) and (pointer: fine){
+  .cat-chip:hover{border-color:#c4b5fd;color:#7c3aed;background:#faf5ff;transform:translateY(-1px)}
+}
+.cat-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.32)}
 .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;width:100%}
-.product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;touch-action:pan-y}
-.product-card:hover{transform:translateY(-4px)}
+.product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;touch-action:pan-y;content-visibility:auto;contain-intrinsic-size:280px}
+@media (hover: hover) and (pointer: fine){
+  .product-card{transition:transform .2s ease, box-shadow .2s ease}
+  .product-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(124,58,237,.14)}
+}
 
 .product-img-wrap{width:100%;aspect-ratio:1;position:relative;overflow:hidden;background:#f5f5f5}
-.product-img-track{display:flex;height:100%;scroll-snap-type:x mandatory;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;touch-action:pan-x pan-y}
+.product-img-track{display:flex;height:100%;scroll-snap-type:x mandatory;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
 .product-img-track::-webkit-scrollbar{display:none}
 .product-img-slide{flex:0 0 100%;height:100%;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative}
 .product-img-slide img{width:100%;height:100%;object-fit:cover}
@@ -1159,7 +1164,7 @@ body.dark-mode .live-pill-mode{
 .img-nav-dots{position:absolute;bottom:6px;left:50%;transform:translateX(-50%);display:flex;gap:4px;z-index:3}
 .img-nav-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.5);border:none;padding:0;transition:all 0.2s}
 .img-nav-dot.active{background:#fff;width:12px;border-radius:3px}
-.img-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.65);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;z-index:3;backdrop-filter:blur(2px)}
+.img-count{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.75);color:#fff;font-size:9px;font-weight:700;padding:2px 6px;border-radius:6px;z-index:3}
 
 .product-info{padding:10px 8px 10px;flex:1;display:flex;flex-direction:column}
 .product-name{font-size:12px;font-weight:600;margin:0 0 3px;line-height:1.3;transition:color 0.4s ease}
@@ -1168,6 +1173,13 @@ body.dark-mode .live-pill-mode{
 .product-price{font-size:13px;font-weight:800;color:#7c3aed}
 .product-price-discount{font-size:13px;font-weight:800;color:#dc2626}
 .product-disc-pill{font-size:9.5px;font-weight:800;color:#dc2626;background:#fee2e2;border:1px solid #fecaca;padding:1px 6px;border-radius:6px;display:inline-flex;align-items:center;line-height:1.2}
+.product-sold-row{display:flex;align-items:center;gap:4px;margin:3px 0 2px}
+.product-sold-pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:1px 6px;border-radius:6px;line-height:1.25}
+.product-sold-pill .product-sold-fire{font-size:10px;line-height:1}
+.product-sold-text{font-size:10px;font-weight:700;letter-spacing:-0.1px}
+.modal-sold-pill{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:700;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:2px 7px;border-radius:6px}
+body.dark-mode .product-sold-pill,
+body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rgba(245,158,11,0.32);color:#fbbf24}
 .product-meta{font-size:10px;color:#aaa;margin-top:2px;flex:1;transition:color 0.4s ease}
 .product-btn-row{display:flex;gap:5px;margin-top:8px;align-items:center;width:100%}
 .buy-now-btn,.add-cart-btn{height:35px;border-radius:10px;border:none;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap;line-height:1;box-sizing:border-box;text-decoration:none;user-select:none;overflow:hidden;transition:transform 0.2s ease,box-shadow 0.2s ease}
@@ -1238,8 +1250,7 @@ body.dark-mode .live-pill-mode{
 .skel-card .skel-body{padding:10px;display:flex;flex-direction:column;gap:8px}
 .skel-line{height:10px;border-radius:6px}
 .skel-review{aspect-ratio:3/4;border-radius:14px}
-.search-empty{grid-column:1/-1;text-align:center;padding:40px 16px;color:#aaa}
-.subgroup-heading{grid-column:1/-1;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.6px;padding:6px 2px;margin-top:4px;border-bottom:2px solid #ece5fb;animation:fadeIn .3s ease;display:flex;align-items:center;justify-content:space-between}
+.subgroup-heading{grid-column:1/-1;font-size:12px;font-weight:800;color:#7c3aed;text-transform:uppercase;letter-spacing:.6px;padding:6px 2px;margin-top:4px;border-bottom:2px solid #ece5fb;display:flex;align-items:center;justify-content:space-between}
 @keyframes fadeIn{from{opacity:0}to{opacity:1}}
 .subgroup-heading:first-child{margin-top:0}
 .subgroup-disc-badge{display:inline-flex;align-items:center;gap:3px;background:#fee2e2;color:#dc2626;font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;border:1px solid #fecaca;text-transform:none;letter-spacing:0}
@@ -1384,6 +1395,16 @@ body.dark-mode .live-pill-mode{
 .admin-btn-sm{padding:8px 14px;border-radius:8px;border:none;background:#ef4444;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
 .admin-btn-sm:active{background:#dc2626}
 .admin-btn-secondary{padding:8px 14px;border-radius:8px;border:1px solid #e5e5e5;background:#f5f5f5;color:#555;font-size:12px;font-weight:600;cursor:pointer}
+.admin-orders-nav{display:flex;gap:6px;background:#f1f5f9;padding:4px;border-radius:12px;margin-bottom:12px;box-sizing:border-box;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.admin-orders-nav::-webkit-scrollbar{display:none}
+.admin-orders-tab{flex:1;min-width:max-content;padding:8px 10px;font-size:11.5px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#64748b;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;white-space:nowrap}
+.admin-orders-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(124,58,237,.14)}
+.admin-tab-count{display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#e2e8f0;color:#475569;line-height:1.2}
+.admin-orders-tab.active .admin-tab-count{background:#ede9fe;color:#7c3aed}
+.admin-tab-count.highlight-active{background:#fef3c7;color:#b45309}
+.admin-orders-tab.active .admin-tab-count.highlight-active{background:#fde68a;color:#92400e}
+.admin-tab-count.highlight-done{background:#dcfce7;color:#166534}
+.admin-orders-tab.active .admin-tab-count.highlight-done{background:#bbf7d0;color:#14532d}
 .admin-status{margin-top:12px;padding:10px;border-radius:8px;background:#f0fdf4;border:1px solid #bbf7d0;color:#166534;font-size:12px;font-weight:600;text-align:center;display:none}
 .admin-status.show{display:block}
 .admin-current{font-size:13px;color:#555;text-align:center;margin-bottom:16px}
@@ -2057,13 +2078,15 @@ body.dark-mode .live-pill-mode{
 .sg-pop-item.active .sg-pop-check{border-color:#7c3aed;background:linear-gradient(135deg,#7c3aed,#9333ea);box-shadow:0 2px 6px rgba(124,58,237,0.35)}
 
 /* ============ ACTIVE SUB-FILTER BAR (COMPACT & MODERN HORIZONTAL SWIPE) ============ */
-.catalog-subfilter-bar{display:none;align-items:center;padding:6px 16px 12px;margin-bottom:10px;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;animation:fadeIn .2s ease;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
+.catalog-subfilter-bar{display:none;align-items:center;padding:6px 16px 12px;margin-bottom:10px;gap:8px;overflow-x:auto;overflow-y:hidden;-webkit-overflow-scrolling:touch;scrollbar-width:none;-ms-overflow-style:none;touch-action:pan-x pan-y;cursor:grab;user-select:none;-webkit-user-select:none;scroll-behavior:auto}
 .catalog-subfilter-bar.is-dragging{cursor:grabbing;user-select:none}
 .catalog-subfilter-bar::-webkit-scrollbar{display:none;width:0;height:0}
 
-.sub-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:10px;font-size:11.5px;font-weight:700;background:#ffffff;color:#475569;border:1.5px solid #e2e8f0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .2s ease;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
-.sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd;transform:translateY(-1px)}
-.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,58,237,0.32);transform:translateY(-1px)}
+.sub-chip{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:10px;font-size:11.5px;font-weight:700;background:#ffffff;color:#475569;border:1.5px solid #e2e8f0;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:background-color .15s ease, border-color .15s ease, color .15s ease, box-shadow .15s ease;-webkit-tap-highlight-color:transparent;box-shadow:0 1px 2px rgba(0,0,0,0.03);touch-action:manipulation}
+@media (hover: hover) and (pointer: fine){
+  .sub-chip:hover{background:#ede9fe;color:#7c3aed;border-color:#c4b5fd;transform:translateY(-1px)}
+}
+.sub-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 3px 12px rgba(124,58,237,0.32)}
 .sub-chip.has-discount{border-color:#fcd34d;background:#fffbeb}
 .sub-chip.active.has-discount{background:linear-gradient(135deg,#7c3aed,#9333ea);border-color:transparent}
 .sub-chip-disc{font-size:9.5px;font-weight:800;background:#ef4444;color:#fff;padding:2px 6px;border-radius:8px;line-height:1.2;margin-left:3px}
@@ -2713,6 +2736,368 @@ button{cursor:pointer;font-family:inherit}
   font-weight:700;
   color:#701a75;
 }
+
+/* ==================== QUICK BADGES BAR (PERATURAN JOKI & SALURAN WA) ==================== */
+.catalog-quick-badges-bar{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(130px, 1fr));
+  gap:8px;
+  margin:10px auto 14px;
+  padding:0 12px;
+  max-width:760px;
+  width:100%;
+  box-sizing:border-box;
+}
+.catalog-quick-card{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 10px;
+  border-radius:12px;
+  cursor:pointer;
+  transition:all .18s cubic-bezier(.16,1,.3,1);
+  text-decoration:none;
+  position:relative;
+  overflow:hidden;
+  box-shadow:0 1.5px 6px rgba(0,0,0,0.04);
+  border:1px solid transparent;
+  min-width:0;
+  background:#fff;
+}
+.catalog-quick-card:active{
+  transform:scale(0.98);
+}
+.catalog-quick-icon{
+  width:28px;
+  height:28px;
+  border-radius:8px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:14px;
+  flex-shrink:0;
+}
+.catalog-quick-info{
+  flex:1;
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  text-align:left;
+}
+.catalog-quick-title{
+  font-size:11.5px;
+  font-weight:800;
+  line-height:1.2;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  letter-spacing:-0.1px;
+}
+.catalog-quick-sub{
+  font-size:10px;
+  font-weight:600;
+  line-height:1.2;
+  margin-top:2px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:4px;
+  white-space:nowrap;
+}
+.catalog-quick-card.rules-card{
+  background:linear-gradient(135deg, rgba(254,243,199,0.7), rgba(254,249,195,0.45));
+  border-color:rgba(245,158,11,0.3);
+}
+.catalog-quick-card.rules-card:hover{
+  background:linear-gradient(135deg, #fef3c7, #fef08a);
+  border-color:#f59e0b;
+  transform:translateY(-1.5px);
+  box-shadow:0 4px 12px rgba(245,158,11,0.18);
+}
+.catalog-quick-card.rules-card .catalog-quick-icon{
+  background:rgba(245,158,11,0.18);
+  border:1px solid rgba(245,158,11,0.25);
+}
+.catalog-quick-card.rules-card .catalog-quick-title{
+  color:#92400e;
+}
+.catalog-quick-card.rules-card .catalog-quick-sub{
+  color:#b45309;
+}
+.catalog-quick-card.wa-channel-card{
+  background:linear-gradient(135deg, rgba(236,253,245,0.75), rgba(209,250,229,0.45));
+  border-color:rgba(16,185,129,0.3);
+}
+.catalog-quick-card.wa-channel-card:hover{
+  background:linear-gradient(135deg, #dcfce7, #bbf7d0);
+  border-color:#10b981;
+  transform:translateY(-1.5px);
+  box-shadow:0 4px 12px rgba(16,185,129,0.18);
+}
+.catalog-quick-card.wa-channel-card .catalog-quick-icon{
+  background:rgba(16,185,129,0.18);
+  border:1px solid rgba(16,185,129,0.25);
+}
+.catalog-quick-card.wa-channel-card .catalog-quick-title{
+  color:#065f46;
+}
+.catalog-quick-card.wa-channel-card .catalog-quick-sub{
+  color:#047857;
+}
+.catalog-quick-card.trending-card{
+  background:linear-gradient(135deg, rgba(255,237,213,0.85), rgba(254,215,170,0.55));
+  border-color:rgba(249,115,22,0.3);
+}
+.catalog-quick-card.trending-card:hover{
+  background:linear-gradient(135deg, #ffedd5, #fed7aa);
+  border-color:#f97316;
+  transform:translateY(-1.5px);
+  box-shadow:0 4px 12px rgba(249,115,22,0.22);
+}
+.catalog-quick-card.trending-card .catalog-quick-icon{
+  background:rgba(249,115,22,0.18);
+  border:1px solid rgba(249,115,22,0.25);
+}
+/* ==================== VIP WHATSAPP CHANNEL CARD ==================== */
+.whatsapp-channel-vip-card{
+  background:linear-gradient(135deg, rgba(6, 78, 59, 0.85), rgba(16, 185, 129, 0.25));
+  border:1.5px solid rgba(52, 211, 153, 0.5);
+  border-radius:18px;
+  padding:16px 18px;
+  margin-bottom:18px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  box-shadow:0 8px 30px rgba(6,78,59,0.3);
+  position:relative;
+  overflow:hidden;
+  backdrop-filter:blur(10px);
+}
+@media (min-width:680px){
+  .whatsapp-channel-vip-card{
+    flex-direction:row;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 22px;
+  }
+}
+.whatsapp-channel-vip-card::before{
+  content:'';
+  position:absolute;
+  top:-40px;
+  right:-40px;
+  width:120px;
+  height:120px;
+  background:radial-gradient(circle, rgba(37,211,102,0.35) 0%, transparent 70%);
+  pointer-events:none;
+}
+.wa-channel-vip-left{
+  flex:1;
+  min-width:0;
+}
+.wa-channel-vip-badge-row{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:6px;
+}
+.wa-channel-vip-badge{
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.6px;
+  background:#25D366;
+  color:#064e3b;
+  padding:3px 9px;
+  border-radius:20px;
+  text-transform:uppercase;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.wa-channel-vip-followers{
+  font-size:10.5px;
+  font-weight:700;
+  color:#a7f3d0;
+  background:rgba(255,255,255,0.1);
+  padding:2px 8px;
+  border-radius:12px;
+}
+.wa-channel-vip-title{
+  font-size:16px;
+  font-weight:800;
+  color:#fff;
+  margin:0 0 4px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+  letter-spacing:-0.2px;
+}
+.wa-verified-check{
+  width:18px;
+  height:18px;
+  border-radius:50%;
+  background:#25D366;
+  color:#064e3b;
+  font-size:11px;
+  font-weight:900;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+}
+.wa-channel-vip-desc{
+  font-size:12px;
+  color:#e2e8f0;
+  margin:0;
+  line-height:1.45;
+  max-width:620px;
+}
+.wa-channel-vip-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-shrink:0;
+}
+.wa-channel-btn-join{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  padding:10px 16px;
+  border-radius:12px;
+  background:linear-gradient(135deg, #25D366, #128C7E);
+  color:#fff;
+  font-size:12.5px;
+  font-weight:800;
+  text-decoration:none;
+  cursor:pointer;
+  box-shadow:0 4px 15px rgba(37,211,102,0.35);
+  transition:all .18s ease;
+  white-space:nowrap;
+}
+.wa-channel-btn-join:hover{
+  background:linear-gradient(135deg, #22c55e, #0f766e);
+  transform:translateY(-1.5px);
+  box-shadow:0 6px 20px rgba(37,211,102,0.45);
+}
+.wa-channel-btn-copy{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  padding:9.5px 13px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.12);
+  border:1.5px solid rgba(255,255,255,0.22);
+  color:#fff;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+  transition:all .15s ease;
+  white-space:nowrap;
+}
+.wa-channel-btn-copy:hover{
+  background:rgba(255,255,255,0.22);
+}
+
+/* ==================== CHECKOUT JOKI RULES SAFETY BOX ==================== */
+.checkout-joki-rules-box{
+  background:#fffbeb;
+  border:1.5px solid #fde68a;
+  border-radius:12px;
+  padding:10px 12px;
+  margin-top:10px;
+  margin-bottom:6px;
+  text-align:left;
+}
+.checkout-joki-rules-head{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  font-size:12px;
+  font-weight:800;
+  color:#92400e;
+  margin-bottom:6px;
+}
+.checkout-joki-rules-list{
+  margin:0;
+  padding-left:18px;
+  font-size:11px;
+  color:#78350f;
+  line-height:1.45;
+}
+.checkout-joki-rules-list li{
+  margin-bottom:3px;
+}
+.checkout-joki-rules-agreement{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-top:8px;
+  padding-top:7px;
+  border-top:1px dashed #fcd34d;
+  cursor:pointer;
+}
+
+/* ==================== JOKI RULES MODAL POLICY BOX ==================== */
+.joki-rules-hero-card{
+  background:linear-gradient(135deg, rgba(245,158,11,0.15), rgba(124,58,237,0.12));
+  border:1.5px solid rgba(245,158,11,0.35);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:14px;
+  text-align:center;
+}
+.joki-rules-card-item{
+  background:rgba(255,255,255,0.05);
+  border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:14px;
+  padding:12px 14px;
+  margin-bottom:10px;
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  transition:all .15s ease;
+}
+.joki-rules-card-item:hover{
+  border-color:rgba(245,158,11,0.4);
+  background:rgba(255,255,255,0.08);
+}
+.joki-rules-num-badge{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  background:linear-gradient(135deg, #f59e0b, #d97706);
+  color:#fff;
+  font-size:12px;
+  font-weight:900;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 3px 8px rgba(245,158,11,0.35);
+}
+.joki-rules-item-body{
+  flex:1;
+  min-width:0;
+}
+.joki-rules-item-title{
+  font-size:12.5px;
+  font-weight:800;
+  color:#fef08a;
+  margin-bottom:3px;
+  line-height:1.3;
+}
+.joki-rules-item-desc{
+  font-size:11.5px;
+  color:#e2e8f0;
+  line-height:1.45;
+  margin:0;
+}
+.joki-rules-item-desc strong{
+  color:#fff;
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js" crossorigin="anonymous"></script>
@@ -2878,14 +3263,36 @@ button{cursor:pointer;font-family:inherit}
   <button class="cat-chip" id="chip_nte" data-cat="nte" onclick="filterCat('nte',this)">🔮 NEVERNESS TO EVER</button>
   <button class="cat-chip" id="chip_lainnya" data-cat="lainnya" onclick="filterCat('lainnya',this)">🔑 AKUN STORE</button>
 </div>
+<div class="catalog-quick-badges-bar">
+  <button type="button" class="catalog-quick-card rules-card" onclick="openInfoModal('jokiRules')" title="Klik untuk membaca syarat & ketentuan joki Norxstore">
+    <div class="catalog-quick-icon">📋</div>
+    <div class="catalog-quick-info">
+      <span class="catalog-quick-title" id="quickBarRulesTitle">Peraturan Joki</span>
+      <span class="catalog-quick-sub">
+        <span>Wajib Dibaca</span>
+        <span style="font-size:9.5px;font-weight:800;opacity:0.75">➔</span>
+      </span>
+    </div>
+  </button>
+  <button type="button" class="catalog-quick-card wa-channel-card" onclick="openWaChannelDirect(event)" title="Gabung ke Saluran WhatsApp Resmi Norxstore">
+    <div class="catalog-quick-icon">📢</div>
+    <div class="catalog-quick-info">
+      <span class="catalog-quick-title" id="catalogQuickWaText">Saluran WhatsApp</span>
+      <span class="catalog-quick-sub">
+        <span id="quickBarWaSub">Gabung Resmi</span>
+        <span style="font-size:9.5px;font-weight:800;opacity:0.75">➔</span>
+      </span>
+    </div>
+  </button>
+</div>
 <div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
 <div class="product-grid" id="productGrid">
-  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
-  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
-  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
-  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
-  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
-  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
+  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
+  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
+  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
+  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
+  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
+  <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
 </div>
 <div style="padding:16px 16px 8px;text-align:center">
   <button type="button" class="testi-cta-banner-btn" onclick="goToTestiSection()" id="homeTestiCtaBtn" style="width:100%;max-width:540px;background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border:none;border-radius:12px;padding:12px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 15px rgba(124,58,237,0.3);transition:transform .15s ease">
@@ -3039,6 +3446,33 @@ button{cursor:pointer;font-family:inherit}
       </div>
     </div>
 
+    <!-- VIP WhatsApp Channel Card Resmi -->
+    <div class="whatsapp-channel-vip-card" id="waChannelVipCard">
+      <div class="wa-channel-vip-left" onclick="openWaChannelDirect(event)" style="cursor:pointer" title="Klik untuk membuka Saluran WhatsApp Resmi">
+        <div class="wa-channel-vip-badge-row">
+          <span class="wa-channel-vip-badge" id="waChannelSubLabelBadge">📢 SALURAN WHATSAPP RESMI</span>
+          <span class="wa-channel-vip-followers" id="waChannelFollowersBadge">1.5k+ Pengikut • Info Update Kilat</span>
+        </div>
+        <h4 class="wa-channel-vip-title">
+          <span id="waChannelTitleText">Saluran WhatsApp Resmi NORXSTORE</span>
+          <span class="wa-verified-check" title="Saluran Resmi Terverifikasi">✓</span>
+        </h4>
+        <div class="wa-channel-vip-handle" id="waChannelHandleText" style="font-size:11.5px;color:#a7f3d0;font-weight:700;margin:0 0 6px;display:inline-flex;align-items:center;gap:4px">
+          <span style="opacity:0.8" id="waChannelHandleLabel">ID / Handle:</span>
+          <span id="waChannelHandleVal">norx</span>
+        </div>
+        <p class="wa-channel-vip-desc" id="waChannelDescText">
+          Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!
+        </p>
+      </div>
+      <div class="wa-channel-vip-actions">
+        <a href="https://whatsapp.com/channel/0029VaNorxstore" id="waChannelJoinBtn" target="_blank" rel="noopener noreferrer" class="wa-channel-btn-join" onclick="openWaChannelDirect(event)">
+          <span id="waChannelJoinBtnText">Gabung Saluran WhatsApp</span>
+          <span style="font-size:14px">➔</span>
+        </a>
+      </div>
+    </div>
+
     <!-- Grid Kartu Media Sosial -->
     <div class="social-hub-grid" id="socialHubGrid"></div>
   </div>
@@ -3120,6 +3554,8 @@ button{cursor:pointer;font-family:inherit}
         <h4 class="footer-col-title" id="footerColHelpTitle">PUSAT BANTUAN & KEBIJAKAN</h4>
         <ul class="footer-nav-list">
           <li><a href="javascript:void(0)" onclick="openCart('orders')" class="footer-nav-link" id="footerLinkTrack">📦 Lacak Status Pesanan</a></li>
+          <li><a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" class="footer-nav-link" id="footerLinkJokiRules">📋 Peraturan Joki (Wajib Dibaca)</a></li>
+          <li><a href="javascript:void(0)" onclick="openWaChannelDirect()" class="footer-nav-link" id="footerLinkWaChannel">📢 Saluran WhatsApp Resmi</a></li>
           <li><a href="javascript:void(0)" onclick="openInfoModal('orderGuide')" class="footer-nav-link" id="footerLinkGuide">📖 Panduan Cara Pemesanan</a></li>
           <li><a href="javascript:void(0)" onclick="openInfoModal('terms')" class="footer-nav-link" id="footerLinkTerms">⚖️ Syarat & Ketentuan Layanan</a></li>
           <li><a href="javascript:void(0)" onclick="openInfoModal('privacy')" class="footer-nav-link" id="footerLinkPrivacy">🔒 Kebijakan Privasi & Garansi</a></li>
@@ -3185,9 +3621,29 @@ button{cursor:pointer;font-family:inherit}
 <div class="modal-label" id="modalChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridModal"></div>
 <div class="wa-preview" id="waPreview" style="display:none">
-<div class="wa-preview-label" id="waPreviewLabel">Pesan WhatsApp</div>
-<p class="wa-preview-text" id="waText"></p>
-<button class="wa-btn" id="waBtn" onclick="sendWA()">💬 Kirim ke WhatsApp</button>
+  <!-- PERATURAN JOKI SAFETY BOX & AGREEMENT -->
+  <div class="checkout-joki-rules-box">
+    <div class="checkout-joki-rules-head">
+      <span style="font-size:14px">⚠️</span>
+      <strong>PENTING: Peraturan Joki Norxstore</strong>
+    </div>
+    <ul class="checkout-joki-rules-list" id="modalCheckoutRulesList">
+      <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat joki sedang dikerjakan.</li>
+      <li>📲 <strong>Standby kode OTP</strong> atau matikan 2FA sementara agar lancar.</li>
+      <li>🔐 <strong>Ganti password</strong> akun game Anda setelah joki selesai 100%.</li>
+    </ul>
+    <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+      <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
+    </div>
+    <label class="checkout-joki-rules-agreement">
+      <input type="checkbox" id="modalJokiAgreement" checked style="width:16px;height:16px;accent-color:#7c3aed;cursor:pointer">
+      <span style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
+    </label>
+  </div>
+
+  <div class="wa-preview-label" id="waPreviewLabel">Pesan WhatsApp</div>
+  <p class="wa-preview-text" id="waText"></p>
+  <button class="wa-btn" id="waBtn" onclick="sendWA()">💬 Kirim ke WhatsApp</button>
 </div>
 </div>
 </div>
@@ -3254,6 +3710,27 @@ button{cursor:pointer;font-family:inherit}
 </div>
 <div class="modal-label" id="cartStepChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridCart"></div>
+
+<!-- PERATURAN JOKI SAFETY BOX & AGREEMENT DI KERANJANG -->
+<div class="checkout-joki-rules-box" style="margin-top:12px">
+  <div class="checkout-joki-rules-head">
+    <span style="font-size:14px">⚠️</span>
+    <strong>PENTING: Peraturan Joki Norxstore</strong>
+  </div>
+  <ul class="checkout-joki-rules-list" id="cartCheckoutRulesList">
+    <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat proses pengerjaan joki berlangsung.</li>
+    <li>📲 <strong>Standby respons cepat OTP</strong> atau nonaktifkan 2FA sementara.</li>
+    <li>🔐 <strong>Ganti kata sandi</strong> akun game Anda segera setelah pengerjaan selesai 100%.</li>
+  </ul>
+  <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
+    <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
+  </div>
+  <label class="checkout-joki-rules-agreement">
+    <input type="checkbox" id="cartJokiAgreement" checked style="width:16px;height:16px;accent-color:#7c3aed;cursor:pointer">
+    <span style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
+  </label>
+</div>
+
 <button class="cart-checkout" id="cartConfirmCheckoutBtn" style="margin-top:12px" onclick="checkoutCart()">✅ Konfirmasi & Kirim</button>
 <p class="cart-clear" id="cartBackToCartBtn" onclick="closeCartCheckoutStep()">← Kembali ke Keranjang</p>
 </div>
@@ -3947,6 +4424,9 @@ button{cursor:pointer;font-family:inherit}
 <div class="admin-label" style="margin-top:10px">Icon (emoji)</div>
 <input class="admin-input" type="text" id="newProdIcon" placeholder="Contoh: 💎 🌙 ⚔️" maxlength="2">
 <p class="admin-hint">Kosongkan = 💎 default. Maksimal 1 emoji.</p>
+<div class="admin-label" style="margin-top:10px">🔥 Jumlah Terjual (Bank Data)</div>
+<input class="admin-input" type="number" id="newProdSoldCount" placeholder="Contoh: 194" min="0">
+<p class="admin-hint">Jumlah riil penjualan tercatat di Bank Data Permanen. Otomatis bertambah saat ada order pengunjung.</p>
 <label class="pw-toggle-row" style="cursor:pointer;margin-top:4px;margin-bottom:12px">
   <div>
     <div class="pw-toggle-label">🔑 Akun Unik (Stok 1)</div>
@@ -3985,7 +4465,10 @@ button{cursor:pointer;font-family:inherit}
 
 <div style="display:flex;align-items:center;justify-content:space-between;margin-top:16px;margin-bottom:6px">
   <div class="admin-label" style="margin-bottom:0">Daftar Produk</div>
-  <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Atur Sub-Kategori Massal</button>
+  <div style="display:flex;gap:6px;align-items:center">
+    <button type="button" class="admin-btn-sm" style="background:#fef2f2;border:1px solid #fecaca;color:#b91c1c;font-weight:700;font-size:10px;padding:4px 8px;border-radius:6px;cursor:pointer" onclick="if(confirm('Reset semua jumlah terjual ke 0 (nol)? Data akan mulai dihitung dari 0 saat ada order baru.')) resetSalesBankToZero(true)" title="Reset semua data penjualan produk ke 0">🔄 Reset Terjual ke 0</button>
+    <button type="button" class="bulk-trigger-btn" onclick="openBulkSubgroupModal()">⚡ Atur Sub-Kategori Massal</button>
+  </div>
 </div>
 <div class="reorder-hint-banner">
   <span style="font-size:14px">↕️</span>
@@ -4087,6 +4570,8 @@ button{cursor:pointer;font-family:inherit}
   <!-- Sub Navigation Tabs di Panel Admin -->
   <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch" id="adminSocialSubNav">
     <button type="button" class="admin-tab-chip active" id="tabAdminSocialBtn" onclick="switchAdminSocialSubTab('social')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #d946ef;background:#fae8ff;color:#86198f;cursor:pointer;white-space:nowrap">📱 Akun Medsos</button>
+    <button type="button" class="admin-tab-chip" id="tabAdminWachannelBtn" onclick="switchAdminSocialSubTab('wachannel')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">📢 Saluran WhatsApp</button>
+    <button type="button" class="admin-tab-chip" id="tabAdminJokirulesBtn" onclick="switchAdminSocialSubTab('jokirules')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">📋 Peraturan Joki</button>
     <button type="button" class="admin-tab-chip" id="tabAdminScamBtn" onclick="switchAdminSocialSubTab('scam')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">🛡️ Header & Anti-Scam</button>
     <button type="button" class="admin-tab-chip" id="tabAdminPillarsBtn" onclick="switchAdminSocialSubTab('pillars')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">⚡ 4 Pilar Keunggulan</button>
     <button type="button" class="admin-tab-chip" id="tabAdminFooterBtn" onclick="switchAdminSocialSubTab('footer')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">🏬 Info Toko & Footer</button>
@@ -4099,6 +4584,185 @@ button{cursor:pointer;font-family:inherit}
       <button type="button" onclick="addNewSocialPlatformPrompt()" style="background:#f3e8ff;color:#7c3aed;border:1px solid #d8b4fe;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer;display:inline-flex;align-items:center;gap:4px">➕ Tambah Medsos Baru</button>
     </div>
     <div id="adminSocialInputsList" style="display:flex;flex-direction:column;gap:10px;margin-bottom:14px"></div>
+  </div>
+
+  <!-- TAB WA CHANNEL: SALURAN WHATSAPP -->
+  <div id="adminPanelWachannelTab" style="display:none;background:#fff;border:1px solid #bbf7d0;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:12.5px;font-weight:800;color:#065f46;display:flex;align-items:center;gap:6px">
+        <span>📢 Pengaturan Saluran WhatsApp Resmi</span>
+        <span style="font-size:9.5px;background:#dcfce7;color:#15803d;padding:2px 7px;border-radius:10px;font-weight:800">VIP Channel</span>
+      </div>
+      <label style="display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;cursor:pointer">
+        <span style="color:#64748b">Tampilkan di Web:</span>
+        <input type="checkbox" id="adminWaChannel_enabled" checked style="width:16px;height:16px;accent-color:#10b981;cursor:pointer" onchange="updateAdminWaChannelPreview()">
+      </label>
+    </div>
+    <p style="font-size:11px;color:#047857;margin:0 0 10px;line-height:1.4">
+      💡 <strong>Fitur Saluran WhatsApp:</strong> Banner VIP hijau di atas media sosial terhubung langsung ke link saluran Anda. Masukkan link saluran Anda di bawah, dan gunakan tombol sinkronisasi atau tombol cepat pengikut untuk mencocokkan jumlah pengikut yang ada di saluran.
+    </p>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Nama Saluran WhatsApp:</label>
+      <input type="text" id="adminWaChannel_name" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Saluran WhatsApp Resmi NORXSTORE" oninput="updateAdminWaChannelPreview()">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">ID / Handle Saluran (Opsional):</label>
+      <input type="text" id="adminWaChannel_handle" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="norx atau @norxstore" oninput="updateAdminWaChannelPreview()">
+    </div>
+
+    <div style="margin-bottom:10px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Tautan / Link Saluran WhatsApp:</label>
+      <div style="display:flex;gap:6px;align-items:center">
+        <input type="url" id="adminWaChannel_url" class="admin-input" style="font-size:12px;margin-bottom:0;flex:1" placeholder="https://whatsapp.com/channel/..." oninput="updateAdminWaChannelPreview()">
+        <button type="button" id="btnFetchWaChannelLive" onclick="autoFetchWaChannelInfoFromUrl()" style="background:#059669;color:#fff;border:none;border-radius:8px;padding:8px 12px;font-size:11px;font-weight:700;white-space:nowrap;cursor:pointer;display:flex;align-items:center;gap:4px">
+          <span>🔄 Ambil Data Saluran</span>
+        </button>
+      </div>
+      <span style="font-size:10px;color:#64748b;display:block;margin-top:2px">Contoh link resmi: https://whatsapp.com/channel/0029Va... atau link undangan grup</span>
+    </div>
+
+    <div style="margin-bottom:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+        <label class="admin-label" style="font-size:11px;margin-bottom:0">Badge / Jumlah Pengikut:</label>
+        <span style="font-size:10px;color:#059669;font-weight:600">Klik tombol cepat untuk menyesuaikan:</span>
+      </div>
+      <input type="text" id="adminWaChannel_badge" class="admin-input" style="font-size:12px;margin-bottom:4px" placeholder="1.5k+ Pengikut • Info Update Kilat" oninput="updateAdminWaChannelPreview()">
+      
+      <!-- Quick Follower Presets Chips -->
+      <div style="display:flex;gap:4px;flex-wrap:wrap">
+        <button type="button" onclick="setAdminWaFollowersPreset('500+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">500+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('1.2k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">1.2k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('1.5k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">1.5k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('2.5k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">2.5k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('5k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">5k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('10k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">10k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('25k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">25k+</button>
+        <button type="button" onclick="setAdminWaFollowersPreset('50k+ Pengikut')" style="background:#f0fdf4;border:1px solid #86efac;color:#166534;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;cursor:pointer">50k+</button>
+      </div>
+    </div>
+
+    <!-- Multi-Country Descriptions -->
+    <div style="background:#f8fafc;border:1px solid #cbd5e1;border-radius:10px;padding:10px;margin-bottom:12px">
+      <div style="font-size:11.5px;font-weight:800;color:#0f766e;margin-bottom:6px;display:flex;align-items:center;gap:6px">
+        <span>🌐 Deskripsi Saluran Sesuai Bahasa Negara:</span>
+      </div>
+      <p style="font-size:10.5px;color:#64748b;margin:0 0 8px;line-height:1.35">
+        💡 Teks deskripsi otomatis menyesuaikan bahasa negara pengunjung (Indonesia, Malaysia, Singapore). Anda bisa mengisi teks khusus per negara di bawah atau gunakan tombol <strong>Auto-Translate</strong>.
+      </p>
+
+      <div style="margin-bottom:8px">
+        <label class="admin-label" style="font-size:11px;margin-bottom:2px">🇮🇩 Deskripsi Indonesia (Default):</label>
+        <textarea id="adminWaChannel_desc" class="admin-input" rows="2" style="font-size:11.5px;margin-bottom:0;resize:vertical" placeholder="Bukti testimoni terdapat di saluran dan informasi diskon akan ada di saluran" oninput="updateAdminWaChannelPreview()"></textarea>
+      </div>
+
+      <div style="margin-bottom:8px">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <label class="admin-label" style="font-size:11px;margin-bottom:0">🇲🇾 Deskripsi Malaysia (Bahasa Melayu):</label>
+          <button type="button" onclick="autoTranslateWaDesc('MY')" style="background:#ecfdf5;border:1px solid #86efac;color:#065f46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;cursor:pointer">⚡ Auto Translate dari Indo</button>
+        </div>
+        <textarea id="adminWaChannel_desc_MY" class="admin-input" rows="2" style="font-size:11.5px;margin-bottom:0;resize:vertical" placeholder="Kosongkan untuk auto-translate otomatis (Contoh: Bukti testimoni terdapat di saluran dan maklumat diskaun akan dikongsikan di saluran)" oninput="updateAdminWaChannelPreview()"></textarea>
+      </div>
+
+      <div>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2px">
+          <label class="admin-label" style="font-size:11px;margin-bottom:0">🇸🇬 Deskripsi Singapore (English):</label>
+          <button type="button" onclick="autoTranslateWaDesc('SG')" style="background:#ecfdf5;border:1px solid #86efac;color:#065f46;font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;cursor:pointer">⚡ Auto Translate dari Indo</button>
+        </div>
+        <textarea id="adminWaChannel_desc_SG" class="admin-input" rows="2" style="font-size:11.5px;margin-bottom:0;resize:vertical" placeholder="Leave empty for auto-translate (e.g. Proof of reviews and discount updates will be shared directly in the channel)" oninput="updateAdminWaChannelPreview()"></textarea>
+      </div>
+    </div>
+
+    <!-- Live Preview Simulator with Country Toggle -->
+    <div style="background:#f0fdf4;border:1px dashed #86efac;border-radius:10px;padding:10px;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+        <div style="font-size:10.5px;font-weight:700;color:#15803d">👁️ Preview Tampilan Banner Saluran WhatsApp:</div>
+        <div style="display:flex;gap:4px">
+          <button type="button" id="btnPreviewWaLang_ID" onclick="setAdminWaPreviewLang('ID')" style="background:#22c55e;color:#fff;border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer">🇮🇩 ID</button>
+          <button type="button" id="btnPreviewWaLang_MY" onclick="setAdminWaPreviewLang('MY')" style="background:#e2e8f0;color:#475569;border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer">🇲🇾 MY</button>
+          <button type="button" id="btnPreviewWaLang_SG" onclick="setAdminWaPreviewLang('SG')" style="background:#e2e8f0;color:#475569;border:none;border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer">🇸🇬 SG</button>
+        </div>
+      </div>
+      <div style="background:linear-gradient(135deg, rgba(6, 78, 59, 0.95), rgba(16, 185, 129, 0.4));border:1.5px solid rgba(52, 211, 153, 0.5);border-radius:12px;padding:12px 14px;color:#fff">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap">
+          <span style="font-size:9px;background:#25D366;color:#064e3b;font-weight:800;padding:2px 7px;border-radius:10px" id="adminWaChannelPreviewSubLabel">📢 SALURAN RESMI</span>
+          <span style="font-size:9.5px;color:#a7f3d0;background:rgba(255,255,255,0.1);padding:2px 8px;border-radius:10px" id="adminWaChannelPreviewBadge">1.5k+ Pengikut • Info Update Kilat</span>
+        </div>
+        <div style="font-size:14px;font-weight:800;display:flex;align-items:center;gap:6px">
+          <span id="adminWaChannelPreviewName">Saluran WhatsApp Resmi NORXSTORE</span>
+          <span style="background:#25D366;color:#064e3b;border-radius:50%;width:16px;height:16px;font-size:10px;display:inline-flex;align-items:center;justify-content:center;font-weight:900">✓</span>
+        </div>
+        <div style="font-size:11px;color:#a7f3d0;font-weight:700;margin:1px 0 4px">
+          <span style="opacity:0.8" id="adminWaChannelPreviewHandleLabel">ID Saluran:</span>
+          <span id="adminWaChannelPreviewHandle">norx</span>
+        </div>
+        <div style="font-size:11.5px;color:#e2e8f0;line-height:1.4" id="adminWaChannelPreviewDesc">Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala...</div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <div style="background:linear-gradient(135deg, #25D366, #128C7E);color:#fff;padding:6px 14px;border-radius:8px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;gap:4px">
+            <span id="adminWaChannelPreviewBtn">Gabung Saluran WhatsApp ➔</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:8px">
+      <button type="button" class="admin-btn" style="background:#16a34a;color:#fff;font-weight:700;font-size:12px" onclick="saveAdminWaChannelConfig()">💾 Simpan Saluran WhatsApp</button>
+      <button type="button" class="admin-btn-sm" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;font-weight:700" onclick="resetAdminWaChannelConfig()">🔄 Reset Default</button>
+    </div>
+  </div>
+
+  <!-- TAB JOKI RULES: PERATURAN JOKI -->
+  <!-- TAB JOKI RULES: PERATURAN JOKI -->
+  <div id="adminPanelJokirulesTab" style="display:none;background:#fff;border:1px solid #fde68a;border-radius:10px;padding:12px;margin-bottom:14px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <div style="font-size:12.5px;font-weight:800;color:#92400e;display:flex;align-items:center;gap:6px">
+        <span>📋 Edit Peraturan Joki NORXSTORE</span>
+        <span style="font-size:9.5px;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:10px;font-weight:800" id="adminJokiRulesCountBadge">7 Poin Aturan</span>
+      </div>
+      <button type="button" onclick="openInfoModal('jokiRules')" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer">👁️ Preview Modal</button>
+    </div>
+    <p style="font-size:11px;color:#78350f;margin:0 0 10px;line-height:1.4">
+      💡 <strong>Kelola Peraturan Joki:</strong> Ubah judul, isi teks, atau tambah/kurang aturan joki di bawah ini. Semua perubahan akan langsung tersinkronisasi ke <strong>Modal Popup Peraturan</strong> dan <strong>Kotak Peringatan Checkout</strong>.
+    </p>
+
+    <!-- Header & Hero Settings -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
+      <div>
+        <label class="admin-label" style="font-size:11px;margin-bottom:2px">Judul Header Modal:</label>
+        <input type="text" id="adminJokiRules_headerTitle" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="PROTOKOL RESMI JOKI NORXSTORE">
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:11px;margin-bottom:2px">Subjudul Header:</label>
+        <input type="text" id="adminJokiRules_headerSub" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Peraturan Keamanan Akun & Pengerjaan Amanah">
+      </div>
+    </div>
+
+    <div style="margin-bottom:8px">
+      <label class="admin-label" style="font-size:11px;margin-bottom:2px">Keterangan Pengantar Singkat:</label>
+      <input type="text" id="adminJokiRules_heroDesc" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda...">
+    </div>
+
+    <div style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:8px;padding:8px 10px;margin-bottom:12px">
+      <label class="admin-label" style="font-size:11px;color:#6b21a8;margin-bottom:2px">Catatan Tambahan di Checkout (Opsional):</label>
+      <input type="text" id="adminJokiRules_extraNote" class="admin-input" style="font-size:12px;margin-bottom:0" placeholder="Contoh: Tim pilot bertugas mulai pk 09:00 - 24:00 WIB">
+    </div>
+
+    <!-- Dynamic Rules List -->
+    <div style="font-size:11.5px;font-weight:800;color:#92400e;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+      <span>Daftar Poin Peraturan Joki:</span>
+      <button type="button" onclick="addAdminJokiRule()" style="background:#16a34a;color:#fff;border:none;border-radius:6px;padding:4px 10px;font-size:11px;font-weight:700;cursor:pointer">➕ Tambah Poin Baru</button>
+    </div>
+
+    <div id="adminJokiRulesList" style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
+      <!-- Generated dynamically by renderAdminJokiRulesInputs() -->
+    </div>
+
+    <div style="display:flex;gap:6px;flex-wrap:wrap">
+      <button type="button" class="admin-btn" style="background:#16a34a;color:#fff;font-weight:700;font-size:12px;flex:1" onclick="saveAdminJokiRules()">💾 Simpan Semua Peraturan Joki</button>
+      <button type="button" class="admin-btn-sm" style="background:#059669;color:#fff;font-weight:700" onclick="addAdminJokiRule()">➕ Tambah Poin</button>
+      <button type="button" class="admin-btn-sm" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-weight:700" onclick="resetAdminJokiRules()">🔄 Reset Default</button>
+    </div>
   </div>
 
   <!-- TAB 2: HEADER MEDSOS & ANTI-SCAM -->
@@ -5387,9 +6051,26 @@ function refundSingleProductAccount(productId){
     renderAdminOrders();
   }
 }
+function orderHasAccountItem(o){
+  if(!o || !Array.isArray(o.items) || o.items.length === 0) return false;
+  return o.items.some(it => {
+    if(it.isAccount === true) return true;
+    const prod = (products || []).find(p => 
+      (it.id !== undefined && it.id !== null && Number(p.id) === Number(it.id)) || 
+      (p.name && it.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase())
+    );
+    if(prod && (prod.isAccount || prod.cat === 'lainnya' || prod.stock === 1)) return true;
+    return false;
+  });
+}
+
 function refundOrderAccount(orderId){
   const o = allOrders[orderId];
   if(!o) return;
+  if(!orderHasAccountItem(o)){
+    showToast('⚠️ Fitur refund akun hanya berlaku khusus untuk produk Jual Beli Akun!');
+    return;
+  }
   const itemsText = o.items ? o.items.map(it => it.name).join(', ') : 'Pesanan Akun';
   if(!confirm(`Pelanggan mengembalikan akun dari pesanan ini (${itemsText})?\n\nUbah status akun agar TERSEDIA kembali di katalog untuk pelanggan lain?`)) return;
 
@@ -5449,15 +6130,34 @@ function getCarouselConfig(){
 }
 function setCarouselConfig(data){
   carouselConfig = data;
-  fbDB.ref('norxstore/carousel').set(data).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
+  safeSetItem('norxstore_carousel_cache', JSON.stringify(data));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_carousel__').set({
+      carousel: data,
+      updatedAt: Date.now()
+    }).catch(()=>{});
+    fbDB.ref('norxstore/carousel').set(data).catch(()=>{});
+  }
 }
 
 function getAdminPassword(){
-  return adminPasswordCache;
+  const cached = safeGetItem('norxstore_admin_password', null);
+  if(cached && typeof cached === 'string' && cached.trim().length >= 4) return cached.trim();
+  return adminPasswordCache || DEFAULT_PASSWORD;
 }
 function setAdminPassword(pass){
-  adminPasswordCache = pass;
-  fbDB.ref('norxstore/adminPass').set(pass).catch(e=>console.error(e));
+  if(!pass || typeof pass !== 'string') return false;
+  const clean = pass.trim();
+  if(clean.length < 4) return false;
+  adminPasswordCache = clean;
+  safeSetItem('norxstore_admin_password', clean);
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_admin_pass__').set({
+      pass: clean,
+      updatedAt: Date.now()
+    }).catch(e=>console.warn('Sync notice pass:', e));
+    fbDB.ref('norxstore/adminPass').set(clean).catch(()=>{});
+  }
   return true;
 }
 
@@ -5586,8 +6286,7 @@ function setDiscount(pct){
   discountConfig.mode = 'all';
   discountConfig.global = val;
   discountVal = val;
-  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
-  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  setDiscountConfig(discountConfig);
   return val;
 }
 
@@ -5595,7 +6294,13 @@ function setDiscountConfig(cfg){
   discountConfig = normalizeDiscountConfig(cfg);
   discountVal = discountConfig.global;
   safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
-  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_discount__').set({
+      config: discountConfig,
+      updatedAt: Date.now()
+    }).catch(e=>console.warn('Sync notice discount:', e));
+    fbDB.ref('norxstore/discount').set(discountConfig).catch(()=>{});
+  }
   return discountConfig;
 }
 
@@ -5817,10 +6522,11 @@ function saveDiscountSettings(){
 
   const statusEl = document.getElementById('adminStatus');
   if(statusEl){
-    statusEl.textContent = '✅ Pengaturan diskon berhasil diperbarui!';
+    statusEl.textContent = '✅ Pengaturan diskon berhasil diperbarui & disinkronkan!';
     statusEl.classList.add('show');
     setTimeout(() => statusEl.classList.remove('show'), 2500);
   }
+  showToast('✅ Pengaturan diskon berhasil disimpan & disinkronkan!');
 }
 
 function resetAllDiscounts(){
@@ -5842,6 +6548,7 @@ function resetAllDiscounts(){
     statusEl.classList.add('show');
     setTimeout(() => statusEl.classList.remove('show'), 2500);
   }
+  showToast('🔄 Semua diskon berhasil direset ke 0%');
 }
 
 function saveDiscount(){
@@ -7322,7 +8029,9 @@ const I18N = {
     zoomProductPhoto: 'Perbesar foto produk',
     notifRatingSentTitle: 'Bintang & Penilaian Terkirim!',
     notifRatingSentSub: 'Terima kasih atas penilaian ⭐{stars} bintang Anda. Rating toko berhasil naik!',
-    ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang Anda berhasil menaikkan rating toko.'
+    ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang Anda berhasil menaikkan rating toko.',
+    jokiAgreementRequired: '⚠️ Harap centang dan setujui Peraturan Joki Norxstore untuk melanjutkan pesanan',
+    jokiRulesTitle: '📋 Peraturan & Ketentuan Joki Norxstore'
   },
   MY: {
     langName: 'Bahasa Melayu',
@@ -7538,7 +8247,9 @@ const I18N = {
     notifRatingSentTitle: 'Penilaian & Ulasan Dihantar!',
     notifRatingSentSub: 'Terima kasih atas penilaian ⭐{stars} bintang anda. Penilaian kedai berjaya dinaikkan!',
     ratingThankYouToast: '🎉 Terima kasih! Penilaian ⭐{stars} bintang anda berjaya menaikkan rating kedai.',
-    orderStatusRefunded: '↩️ Dikembalikan (Refund)'
+    orderStatusRefunded: '↩️ Dikembalikan (Refund)',
+    jokiAgreementRequired: '⚠️ Sila tandakan dan setujui Peraturan Joki Norxstore untuk meneruskan pesanan',
+    jokiRulesTitle: '📋 Peraturan & Terma Joki Norxstore'
   },
   SG: {
     langName: 'English (Singapore)',
@@ -7754,7 +8465,9 @@ const I18N = {
     notifRatingSentTitle: 'Rating & Review Submitted!',
     notifRatingSentSub: 'Thank you for your ⭐{stars} star review! Store rating updated successfully.',
     ratingThankYouToast: '🎉 Thank you! Your ⭐{stars} star review has been submitted.',
-    orderStatusRefunded: '↩️ Refunded'
+    orderStatusRefunded: '↩️ Refunded',
+    jokiAgreementRequired: '⚠️ Please accept and agree to the Norxstore Boosting Rules to proceed with your order',
+    jokiRulesTitle: '📋 Norxstore Boosting Rules & Terms'
   }
 };
 
@@ -9283,6 +9996,7 @@ function updateLanguageUI(){
   const socialModalScam = document.getElementById('socialModalScamText');
   if(socialModalScam) socialModalScam.innerHTML = t('socialModalScam');
 
+  if(typeof renderWaChannelUI === 'function') renderWaChannelUI();
   if(typeof renderSocialCards === 'function') renderSocialCards();
   if(typeof renderSocialModalList === 'function') renderSocialModalList();
   if(typeof renderFooterQuickSocialLinks === 'function') renderFooterQuickSocialLinks();
@@ -9506,9 +10220,47 @@ function saveCurrencyConfig(cfg){
   currencyConfigCache = cfg;
   safeSetItem('norxstore_currency_config', JSON.stringify(cfg));
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/currencyConfig').set(cfg).catch(e => {
-      console.warn('Sync notice: currencyConfig disimpan di penyimpanan lokal');
-    });
+    fbDB.ref('norxstore/currencyConfig').set(cfg).catch(()=>{});
+  }
+  syncAdminSettingsToCloud();
+}
+
+function syncAdminSettingsToCloud(){
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    const settingsPayload = {
+      currency: (typeof getCurrencyConfig === 'function') ? getCurrencyConfig() : null,
+      social: (typeof getSocialConfig === 'function') ? getSocialConfig() : null,
+      waChannel: (typeof getWaChannelConfig === 'function') ? getWaChannelConfig() : null,
+      jokiRules: (typeof getJokiRulesConfig === 'function') ? getJokiRulesConfig() : null,
+      updatedAt: Date.now()
+    };
+    fbDB.ref('norxstore/orders/__config_settings__').set({
+      data: settingsPayload,
+      updatedAt: Date.now()
+    }).catch(e=>console.warn('Sync notice settings:', e));
+  }
+}
+
+function applyAdminConfigSettings(data){
+  if(!data || typeof data !== 'object') return;
+  if(data.currency && typeof data.currency === 'object'){
+    currencyConfigCache = data.currency;
+    safeSetItem('norxstore_currency_config', JSON.stringify(data.currency));
+    if(typeof updateNavCountryBtn === 'function') updateNavCountryBtn();
+  }
+  if(data.social && typeof data.social === 'object'){
+    socialConfigCache = data.social;
+    safeSetItem('norxstore_social_config', JSON.stringify(data.social));
+    if(typeof renderSocialIcons === 'function') renderSocialIcons();
+  }
+  if(data.waChannel && typeof data.waChannel === 'object'){
+    waChannelConfigCache = data.waChannel;
+    safeSetItem('norxstore_wa_channel_config', JSON.stringify(data.waChannel));
+    if(typeof renderWaChannelUI === 'function') renderWaChannelUI();
+  }
+  if(data.jokiRules && typeof data.jokiRules === 'object'){
+    jokiRulesConfigCache = data.jokiRules;
+    safeSetItem('norxstore_joki_rules_config', JSON.stringify(data.jokiRules));
   }
 }
 
@@ -10111,7 +10863,8 @@ const SOCIAL_ICONS = {
   tiktok: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.24 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>`,
   discord: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.061 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.894.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>`,
   telegram: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69a.2.2 0 0 0-.05-.18c-.06-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.63-.2-1.12-.31-1.08-.66.02-.18.27-.36.75-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>`,
-  youtube: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`
+  youtube: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>`,
+  whatsapp_channel: `<svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12c0 1.82.49 3.53 1.34 5L2 22l5.16-1.31C8.61 21.52 10.26 22 12 22c5.52 0 10-4.48 10-10S17.52 2 12 2zm1 14h-2v-2h2v2zm0-4h-2V7h2v5z"/></svg>`
 };
 
 const DEFAULT_SOCIAL_CONFIG = {
@@ -10177,6 +10930,814 @@ const DEFAULT_SOCIAL_CONFIG = {
   }
 };
 
+/* ==================== SISTEM SALURAN WHATSAPP RESMI ==================== */
+const DEFAULT_WA_CHANNEL_CONFIG = {
+  enabled: true,
+  name: 'Saluran WhatsApp Resmi NORXSTORE',
+  url: 'https://whatsapp.com/channel/0029VaNorxstore',
+  handle: 'norx',
+  badge: '1.5k+ Pengikut • Info Update Kilat',
+  desc: 'Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!',
+  desc_MY: '',
+  desc_SG: ''
+};
+
+const WA_CHANNEL_I18N = {
+  ID: {
+    subLabel: '📢 SALURAN WHATSAPP RESMI',
+    name: 'Saluran WhatsApp Resmi NORXSTORE',
+    badgeSuffix: 'Info Update Kilat',
+    desc: 'Dapatkan bocoran pricelist diskon joki kilat, update antrean harian, giveaway akun berkala, dan tips meta game tercepat langsung di WhatsApp Anda!',
+    joinBtn: 'Gabung Saluran WhatsApp',
+    quickSub: 'Gabung Resmi',
+    handleLabel: 'ID / Handle:'
+  },
+  MY: {
+    subLabel: '📢 SALURAN WHATSAPP RASMI',
+    name: 'Saluran WhatsApp Rasmi NORXSTORE',
+    badgeSuffix: 'Maklumat Pantas & Diskaun',
+    desc: 'Dapatkan maklumat senarai harga diskaun joki kilat, giliran harian, giveaway akaun berkala, dan tip meta game terpantas terus di WhatsApp anda!',
+    joinBtn: 'Sertai Saluran WhatsApp',
+    quickSub: 'Sertai Rasmi',
+    handleLabel: 'ID / Pautan:'
+  },
+  SG: {
+    subLabel: '📢 OFFICIAL WHATSAPP CHANNEL',
+    name: 'Official WhatsApp Channel NORXSTORE',
+    badgeSuffix: 'Fast Updates & Discounts',
+    desc: 'Get flash boosting discount price lists, daily queue updates, periodic account giveaways, and fastest meta tips directly on WhatsApp!',
+    joinBtn: 'Join WhatsApp Channel',
+    quickSub: 'Official Join',
+    handleLabel: 'ID / Handle:'
+  }
+};
+
+function translateWaDescToMalay(text){
+  if(!text) return '';
+  let res = text;
+  const replacements = [
+    [/\bbukti testimoni terdapat di saluran dan informasi diskon akan ada di saluran\b/gi, 'Bukti testimoni terdapat di saluran dan maklumat diskaun akan dikongsikan di saluran'],
+    [/\binformasi diskon\b/gi, 'maklumat diskaun'],
+    [/\binformasi\b/gi, 'maklumat'],
+    [/\bInformasi\b/g, 'Maklumat'],
+    [/\bdiskon\b/gi, 'diskaun'],
+    [/\bDiskon\b/g, 'Diskaun'],
+    [/\bDISKON\b/g, 'DISKAUN'],
+    [/\bresmi\b/gi, 'rasmi'],
+    [/\bResmi\b/g, 'Rasmi'],
+    [/\bRESMI\b/g, 'RASMI'],
+    [/\bakan ada di saluran\b/gi, 'akan dikongsikan di saluran'],
+    [/\bakan ada di\b/gi, 'akan dikongsikan di'],
+    [/\bakan ada\b/gi, 'akan disediakan'],
+    [/\bbocoran\b/gi, 'maklumat awal'],
+    [/\bpricelist\b/gi, 'senarai harga'],
+    [/\bantrean\b/gi, 'giliran'],
+    [/\bakun\b/gi, 'akaun'],
+    [/\bAkun\b/g, 'Akaun'],
+    [/\bAKUN\b/g, 'AKAUN'],
+    [/\btips\b/gi, 'tip'],
+    [/\btercepat\b/gi, 'terpantas'],
+    [/\blangsung di WhatsApp Anda\b/gi, 'terus di WhatsApp anda'],
+    [/\blangsung di WhatsApp kamu\b/gi, 'terus di WhatsApp anda'],
+    [/\blangsung di\b/gi, 'terus di'],
+    [/\bAnda\b/g, 'anda'],
+    [/\bkamu\b/gi, 'anda'],
+    [/\bgratis\b/gi, 'percuma'],
+    [/\bkualitas\b/gi, 'kualiti'],
+    [/\bGabung Saluran\b/gi, 'Sertai Saluran'],
+    [/\bGabung\b/gi, 'Sertai'],
+    [/\bgabung\b/gi, 'sertai'],
+    [/\blayanan\b/gi, 'perkhidmatan'],
+    [/\bpelayanan\b/gi, 'perkhidmatan']
+  ];
+  replacements.forEach(([pattern, rep]) => {
+    res = res.replace(pattern, rep);
+  });
+  return res;
+}
+
+function translateWaDescToEnglish(text){
+  if(!text) return '';
+  if(/bukti testimoni terdapat di saluran dan informasi diskon akan ada di saluran/i.test(text)){
+    return 'Customer reviews and discount updates are shared directly in the channel.';
+  }
+  if(/dapatkan bocoran pricelist/i.test(text)){
+    return 'Get flash boosting discount price lists, daily queue updates, periodic account giveaways, and fastest meta tips directly on WhatsApp!';
+  }
+  let res = text;
+  const replacements = [
+    [/\bbukti testimoni\b/gi, 'reviews and proof'],
+    [/\binformasi diskon\b/gi, 'discount updates'],
+    [/\binformasi\b/gi, 'information'],
+    [/\bdiskon\b/gi, 'discount'],
+    [/\bresmi\b/gi, 'official'],
+    [/\bResmi\b/g, 'Official'],
+    [/\bRESMI\b/g, 'OFFICIAL'],
+    [/\bsaluran\b/gi, 'channel'],
+    [/\bSaluran\b/g, 'Channel'],
+    [/\bpengikut\b/gi, 'followers'],
+    [/\bterdapat di saluran\b/gi, 'available in the channel'],
+    [/\bakan ada di saluran\b/gi, 'will be announced in the channel'],
+    [/\bakan ada\b/gi, 'will be available']
+  ];
+  replacements.forEach(([pattern, rep]) => {
+    res = res.replace(pattern, rep);
+  });
+  return res;
+}
+
+let waChannelConfigCache = null;
+
+function getWaChannelConfig(){
+  if(waChannelConfigCache) return waChannelConfigCache;
+  try {
+    const raw = safeGetItem('norxstore_wa_channel_config', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        waChannelConfigCache = { ...DEFAULT_WA_CHANNEL_CONFIG, ...parsed };
+        return waChannelConfigCache;
+      }
+    }
+  } catch(e){}
+  waChannelConfigCache = JSON.parse(JSON.stringify(DEFAULT_WA_CHANNEL_CONFIG));
+  return waChannelConfigCache;
+}
+
+function saveWaChannelConfig(cfg){
+  waChannelConfigCache = cfg;
+  safeSetItem('norxstore_wa_channel_config', JSON.stringify(cfg));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/config/whatsappChannel').set(cfg).catch(()=>{});
+  }
+  syncAdminSettingsToCloud();
+  renderWaChannelUI();
+}
+
+function renderWaChannelUI(){
+  const cfg = getWaChannelConfig();
+  const lang = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID';
+  const i18n = WA_CHANNEL_I18N[lang] || WA_CHANNEL_I18N.ID;
+
+  const card = document.getElementById('waChannelVipCard');
+  if(card){
+    card.style.display = (cfg.enabled !== false) ? 'flex' : 'none';
+  }
+
+  // Sublabel badge pill (e.g. 📢 SALURAN WHATSAPP RESMI / RASMI / OFFICIAL)
+  const subLabelEl = document.getElementById('waChannelSubLabelBadge');
+  if(subLabelEl){
+    subLabelEl.textContent = i18n.subLabel;
+  }
+
+  // Title: adapt 'Resmi' -> 'Rasmi' in MY, or 'Official' in SG
+  const titleEl = document.getElementById('waChannelTitleText');
+  if(titleEl){
+    let rawTitle = cfg.name || DEFAULT_WA_CHANNEL_CONFIG.name;
+    if(lang === 'MY'){
+      rawTitle = rawTitle.replace(/\bresmi\b/gi, 'Rasmi');
+    } else if(lang === 'SG'){
+      rawTitle = rawTitle.replace(/\bSaluran WhatsApp Resmi\b/gi, 'Official WhatsApp Channel')
+                         .replace(/\bSaluran WhatsApp\b/gi, 'WhatsApp Channel');
+    }
+    titleEl.textContent = rawTitle;
+  }
+  
+  // Handle
+  const handleValEl = document.getElementById('waChannelHandleVal');
+  if(handleValEl) handleValEl.textContent = cfg.handle || 'norx';
+  const handleCont = document.getElementById('waChannelHandleText');
+  if(handleCont) handleCont.style.display = cfg.handle ? 'inline-flex' : 'none';
+  const handleLabelEl = document.getElementById('waChannelHandleLabel');
+  if(handleLabelEl) handleLabelEl.textContent = i18n.handleLabel;
+
+  // Followers badge
+  const followersEl = document.getElementById('waChannelFollowersBadge');
+  if(followersEl){
+    let rawBadge = cfg.badge || DEFAULT_WA_CHANNEL_CONFIG.badge;
+    if(lang === 'MY'){
+      rawBadge = rawBadge.replace(/\bInfo Update Kilat\b/gi, 'Maklumat Pantas & Diskaun')
+                         .replace(/\binfo update kilat\b/gi, 'maklumat pantas & diskaun');
+    } else if(lang === 'SG'){
+      rawBadge = rawBadge.replace(/\bpengikut\b/gi, 'Followers')
+                         .replace(/\bPengikut\b/g, 'Followers')
+                         .replace(/\bInfo Update Kilat\b/gi, 'Fast Updates & Discounts');
+    }
+    followersEl.textContent = rawBadge;
+  }
+
+  // Description!
+  const descEl = document.getElementById('waChannelDescText');
+  if(descEl){
+    let desc = '';
+    if(lang === 'MY'){
+      if(cfg.desc_MY && cfg.desc_MY.trim()){
+        desc = cfg.desc_MY.trim();
+      } else {
+        const base = (cfg.desc && cfg.desc.trim()) ? cfg.desc.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+        desc = translateWaDescToMalay(base);
+      }
+    } else if(lang === 'SG'){
+      if(cfg.desc_SG && cfg.desc_SG.trim()){
+        desc = cfg.desc_SG.trim();
+      } else {
+        const base = (cfg.desc && cfg.desc.trim()) ? cfg.desc.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+        desc = translateWaDescToEnglish(base);
+      }
+    } else {
+      desc = (cfg.desc && cfg.desc.trim()) ? cfg.desc.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+    }
+    descEl.textContent = desc;
+  }
+
+  // Join button & Link
+  const joinBtn = document.getElementById('waChannelJoinBtn');
+  if(joinBtn){
+    joinBtn.href = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
+  }
+  const joinBtnText = document.getElementById('waChannelJoinBtnText');
+  if(joinBtnText){
+    joinBtnText.textContent = i18n.joinBtn;
+  }
+
+  // Catalog quick card
+  const qbRules = document.getElementById('quickBarRulesTitle');
+  if(qbRules){
+    qbRules.textContent = (lang === 'SG') ? 'Boosting Rules' : 'Peraturan Joki';
+  }
+  const quickWaText = document.getElementById('catalogQuickWaText');
+  if(quickWaText){
+    quickWaText.textContent = (lang === 'SG') ? 'WhatsApp Channel' : 'Saluran WhatsApp';
+  }
+  const quickWaSub = document.getElementById('quickBarWaSub');
+  if(quickWaSub){
+    const followers = (cfg.badge || '').split('•')[0].trim();
+    if(followers){
+      if(lang === 'SG'){
+        quickWaSub.textContent = followers.replace(/\bpengikut\b/gi, 'Followers').replace(/\bPengikut\b/g, 'Followers');
+      } else {
+        quickWaSub.textContent = followers;
+      }
+    } else {
+      quickWaSub.textContent = i18n.quickSub;
+    }
+  }
+
+}
+
+function openWaChannelDirect(e){
+  if(e && e.stopPropagation) e.stopPropagation();
+  const cfg = getWaChannelConfig();
+  const url = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
+  if(!url) return;
+  const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  if(isMobile){
+    window.location.href = url;
+  } else {
+    window.open(url, '_blank');
+  }
+}
+
+function copyWaChannelLink(btnEl){
+  const cfg = getWaChannelConfig();
+  const url = cfg.url || DEFAULT_WA_CHANNEL_CONFIG.url;
+  const doFeedback = () => {
+    showToast('✅ Link Saluran WhatsApp berhasil disalin!');
+    if(btnEl){
+      const orig = btnEl.innerHTML;
+      btnEl.innerHTML = `<span>✓</span><span>Disalin!</span>`;
+      setTimeout(() => btnEl.innerHTML = orig, 1800);
+    }
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(doFeedback).catch(() => {
+      legacyCopyText(url, 'Saluran WhatsApp');
+    });
+  } else {
+    legacyCopyText(url, 'Saluran WhatsApp');
+  }
+}
+
+let adminWaPreviewLang = 'ID';
+
+function setAdminWaPreviewLang(lang){
+  adminWaPreviewLang = lang;
+  ['ID', 'MY', 'SG'].forEach(l => {
+    const btn = document.getElementById('btnPreviewWaLang_' + l);
+    if(btn){
+      if(l === lang){
+        btn.style.background = '#22c55e';
+        btn.style.color = '#fff';
+      } else {
+        btn.style.background = '#e2e8f0';
+        btn.style.color = '#475569';
+      }
+    }
+  });
+  updateAdminWaChannelPreview();
+}
+
+function updateAdminWaChannelPreview(){
+  const lang = adminWaPreviewLang || 'ID';
+  const i18n = WA_CHANNEL_I18N[lang] || WA_CHANNEL_I18N.ID;
+  
+  const nameInput = document.getElementById('adminWaChannel_name');
+  const handleInput = document.getElementById('adminWaChannel_handle');
+  const badgeInput = document.getElementById('adminWaChannel_badge');
+  const descInput = document.getElementById('adminWaChannel_desc');
+  const descMyInput = document.getElementById('adminWaChannel_desc_MY');
+  const descSgInput = document.getElementById('adminWaChannel_desc_SG');
+  
+  const pName = document.getElementById('adminWaChannelPreviewName');
+  const pHandle = document.getElementById('adminWaChannelPreviewHandle');
+  const pBadge = document.getElementById('adminWaChannelPreviewBadge');
+  const pDesc = document.getElementById('adminWaChannelPreviewDesc');
+  const pSubLabel = document.getElementById('adminWaChannelPreviewSubLabel');
+  const pHandleLabel = document.getElementById('adminWaChannelPreviewHandleLabel');
+  const pBtn = document.getElementById('adminWaChannelPreviewBtn');
+  
+  if(pSubLabel) pSubLabel.textContent = i18n.subLabel;
+  if(pHandleLabel) pHandleLabel.textContent = i18n.handleLabel;
+  if(pBtn) pBtn.innerHTML = `${i18n.joinBtn} ➔`;
+
+  if(pName){
+    let raw = nameInput ? nameInput.value.trim() : '';
+    if(!raw) raw = DEFAULT_WA_CHANNEL_CONFIG.name;
+    if(lang === 'MY') raw = raw.replace(/\bresmi\b/gi, 'Rasmi');
+    else if(lang === 'SG') raw = raw.replace(/\bSaluran WhatsApp Resmi\b/gi, 'Official WhatsApp Channel');
+    pName.textContent = raw;
+  }
+
+  if(pHandle && handleInput) pHandle.textContent = handleInput.value.trim() || DEFAULT_WA_CHANNEL_CONFIG.handle;
+
+  if(pBadge){
+    let rawBadge = badgeInput ? badgeInput.value.trim() : '';
+    if(!rawBadge) rawBadge = DEFAULT_WA_CHANNEL_CONFIG.badge;
+    if(lang === 'MY'){
+      rawBadge = rawBadge.replace(/\bInfo Update Kilat\b/gi, 'Maklumat Pantas & Diskaun');
+    } else if(lang === 'SG'){
+      rawBadge = rawBadge.replace(/\bpengikut\b/gi, 'Followers')
+                         .replace(/\bPengikut\b/g, 'Followers')
+                         .replace(/\bInfo Update Kilat\b/gi, 'Fast Updates & Discounts');
+    }
+    pBadge.textContent = rawBadge;
+  }
+
+  if(pDesc){
+    let desc = '';
+    const baseDesc = (descInput && descInput.value.trim()) ? descInput.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+    if(lang === 'MY'){
+      const myCustom = descMyInput ? descMyInput.value.trim() : '';
+      desc = myCustom || translateWaDescToMalay(baseDesc);
+    } else if(lang === 'SG'){
+      const sgCustom = descSgInput ? descSgInput.value.trim() : '';
+      desc = sgCustom || translateWaDescToEnglish(baseDesc);
+    } else {
+      desc = baseDesc;
+    }
+    pDesc.textContent = desc;
+  }
+}
+
+function autoTranslateWaDesc(targetLang){
+  const baseDesc = (document.getElementById('adminWaChannel_desc')?.value || '').trim() || DEFAULT_WA_CHANNEL_CONFIG.desc;
+  if(targetLang === 'MY'){
+    const translated = translateWaDescToMalay(baseDesc);
+    const targetEl = document.getElementById('adminWaChannel_desc_MY');
+    if(targetEl){
+      targetEl.value = translated;
+      setAdminWaPreviewLang('MY');
+      showToast('🇲🇾 Berhasil diterjemahkan ke Bahasa Melayu!');
+    }
+  } else if(targetLang === 'SG'){
+    const translated = translateWaDescToEnglish(baseDesc);
+    const targetEl = document.getElementById('adminWaChannel_desc_SG');
+    if(targetEl){
+      targetEl.value = translated;
+      setAdminWaPreviewLang('SG');
+      showToast('🇸🇬 Berhasil diterjemahkan ke Bahasa Inggris!');
+    }
+  }
+}
+
+function populateAdminWaChannelForm(){
+  const cfg = getWaChannelConfig();
+  const enableEl = document.getElementById('adminWaChannel_enabled');
+  const nameEl = document.getElementById('adminWaChannel_name');
+  const handleEl = document.getElementById('adminWaChannel_handle');
+  const urlEl = document.getElementById('adminWaChannel_url');
+  const badgeEl = document.getElementById('adminWaChannel_badge');
+  const descEl = document.getElementById('adminWaChannel_desc');
+  const descMyEl = document.getElementById('adminWaChannel_desc_MY');
+  const descSgEl = document.getElementById('adminWaChannel_desc_SG');
+  
+  if(enableEl) enableEl.checked = (cfg.enabled !== false);
+  if(nameEl) nameEl.value = cfg.name || '';
+  if(handleEl) handleEl.value = cfg.handle || '';
+  if(urlEl) urlEl.value = cfg.url || '';
+  if(badgeEl) badgeEl.value = cfg.badge || '';
+  if(descEl) descEl.value = cfg.desc || '';
+  if(descMyEl) descMyEl.value = cfg.desc_MY || '';
+  if(descSgEl) descSgEl.value = cfg.desc_SG || '';
+  updateAdminWaChannelPreview();
+
+  const noteInput = document.getElementById('adminJokiRules_extraNote');
+  if(noteInput){
+    noteInput.value = safeGetItem('norxstore_joki_rules_extra_note', '');
+  }
+}
+
+function setAdminWaFollowersPreset(val){
+  const badgeInput = document.getElementById('adminWaChannel_badge');
+  if(badgeInput){
+    badgeInput.value = `${val} • Info Update Kilat`;
+    updateAdminWaChannelPreview();
+    showToast(`⚡ Pengikut diatur: ${val}`);
+  }
+}
+
+function autoFetchWaChannelInfoFromUrl(){
+  const urlInput = document.getElementById('adminWaChannel_url');
+  const url = urlInput ? urlInput.value.trim() : '';
+  if(!url || !url.includes('whatsapp.com/channel/')){
+    showToast('⚠️ Masukkan link saluran whatsapp.com/channel/... terlebih dahulu!');
+    if(urlInput) urlInput.focus();
+    return;
+  }
+  const btn = document.getElementById('btnFetchWaChannelLive');
+  const origHtml = btn ? btn.innerHTML : '';
+  if(btn){
+    btn.disabled = true;
+    btn.innerHTML = '<span>⏳ Memeriksa data saluran...</span>';
+  }
+  fetch('/api/whatsapp-channel-info?url=' + encodeURIComponent(url))
+    .then(r => r.json())
+    .then(data => {
+      if(btn){
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+      if(data && data.success){
+        if(data.followers){
+          const badgeInput = document.getElementById('adminWaChannel_badge');
+          if(badgeInput){
+            badgeInput.value = `${data.followers} • Info Update Kilat`;
+          }
+        }
+        if(data.title && (!document.getElementById('adminWaChannel_name').value || document.getElementById('adminWaChannel_name').value.includes('NORXSTORE'))){
+          document.getElementById('adminWaChannel_name').value = data.title;
+        }
+        if(data.desc){
+          const descInput = document.getElementById('adminWaChannel_desc');
+          if(descInput && !descInput.value){
+            descInput.value = data.desc;
+          }
+        }
+        try {
+          const parts = url.split('/channel/')[1];
+          if(parts){
+            const code = parts.split(/[?#/]/)[0];
+            const handleInput = document.getElementById('adminWaChannel_handle');
+            if(handleInput && !handleInput.value){
+              handleInput.value = code;
+            }
+          }
+        } catch(e){}
+        updateAdminWaChannelPreview();
+        if(data.followers){
+          showToast(`✅ Berhasil mencocokkan pengikut: ${data.followers}`);
+        } else {
+          showToast('✅ Link saluran terverifikasi! Gunakan tombol cepat di bawah untuk menyesuaikan pengikut.');
+        }
+      } else {
+        showToast(data.message || '⚠️ Silakan gunakan tombol pilihan pengikut di bawah untuk mengatur jumlah pengikut.');
+      }
+    })
+    .catch(() => {
+      if(btn){
+        btn.disabled = false;
+        btn.innerHTML = origHtml;
+      }
+      showToast('ℹ️ Link siap digunakan. Gunakan tombol cepat pengikut di bawah.');
+    });
+}
+
+function saveAdminWaChannelConfig(){
+  const enableEl = document.getElementById('adminWaChannel_enabled');
+  const nameEl = document.getElementById('adminWaChannel_name');
+  const handleEl = document.getElementById('adminWaChannel_handle');
+  const urlEl = document.getElementById('adminWaChannel_url');
+  const badgeEl = document.getElementById('adminWaChannel_badge');
+  const descEl = document.getElementById('adminWaChannel_desc');
+  const descMyEl = document.getElementById('adminWaChannel_desc_MY');
+  const descSgEl = document.getElementById('adminWaChannel_desc_SG');
+
+  const url = (urlEl && urlEl.value.trim()) ? urlEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.url;
+  const name = (nameEl && nameEl.value.trim()) ? nameEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.name;
+  const handle = (handleEl && handleEl.value.trim()) ? handleEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.handle;
+  const badge = (badgeEl && badgeEl.value.trim()) ? badgeEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.badge;
+  const desc = (descEl && descEl.value.trim()) ? descEl.value.trim() : DEFAULT_WA_CHANNEL_CONFIG.desc;
+  const desc_MY = (descMyEl && descMyEl.value.trim()) ? descMyEl.value.trim() : '';
+  const desc_SG = (descSgEl && descSgEl.value.trim()) ? descSgEl.value.trim() : '';
+  const enabled = enableEl ? enableEl.checked : true;
+
+  const cfg = {
+    enabled: enabled,
+    name: name,
+    handle: handle,
+    url: url,
+    badge: badge,
+    desc: desc,
+    desc_MY: desc_MY,
+    desc_SG: desc_SG
+  };
+
+  saveWaChannelConfig(cfg);
+
+  // Bersihkan whatsapp_channel dari socialConfig agar tidak ada kartu ganda di grid media sosial
+  const socCfg = getSocialConfig();
+  if(socCfg.whatsapp_channel){
+    delete socCfg.whatsapp_channel;
+    saveSocialConfig(socCfg);
+  }
+
+  showToast('✅ Pengaturan Saluran WhatsApp berhasil disimpan dan disinkronkan!');
+}
+
+function resetAdminWaChannelConfig(){
+  if(!confirm('Reset pengaturan Saluran WhatsApp ke default bawaan?')) return;
+  saveWaChannelConfig(JSON.parse(JSON.stringify(DEFAULT_WA_CHANNEL_CONFIG)));
+  populateAdminWaChannelForm();
+  showToast('🔄 Saluran WhatsApp direset ke default.');
+}
+
+// ==================== JOKI RULES DYNAMIC CONFIG & ADMIN ====================
+const DEFAULT_JOKI_RULES_CONFIG = {
+  headerTitle: 'PROTOKOL RESMI JOKI NORXSTORE',
+  headerSub: 'Peraturan Keamanan Akun & Pengerjaan Amanah',
+  heroDesc: 'Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:',
+  extraNote: '',
+  rules: [
+    {
+      id: 'rule_1',
+      icon: '🚫',
+      title: 'DILARANG LOGIN / TABRAK AKUN SAAT JOKI BERJALAN',
+      desc: 'Jangan pernah membuka atau login ke game saat status pesanan adalah "🔵 Sedang Diproses". Tabrakan login dapat menyebabkan diskoneksi mendadak pada pilot, kegagalan rotasi Abyss/Boss, roll-back data quest, atau penalti rank. Bila ada keperluan mendesak ingin login, wajib konfirmasi dan tunggu balasan dari admin WhatsApp terlebih dahulu.'
+    },
+    {
+      id: 'rule_2',
+      icon: '📲',
+      title: 'STANDBY KODE OTP / NONAKTIFKAN 2FA SEMENTARA',
+      desc: 'Saat pilot hendak login pertama kali, sistem game biasanya mengirimkan kode OTP ke email atau SMS Anda. Harap standby merespons dalam 1-3 menit, atau matikan sementara verifikasi 2 langkah (2FA) sebelum checkout agar pilot bisa langsung mengeksekusi joki tanpa terhenti di antrean.'
+    },
+    {
+      id: 'rule_3',
+      icon: '🔐',
+      title: 'GUNAKAN PASSWORD SEMENTARA & GANTI SELESAI JOKI',
+      desc: 'Sebelum memberikan data login ke admin, ubah password akun game Anda menjadi kata sandi sementara. Setelah status pesanan dinyatakan selesai (🟢 Selesai) oleh admin, SEGERA ubah kembali password akun Anda untuk menjamin privasi dan keamanan akun 100%.'
+    },
+    {
+      id: 'rule_4',
+      icon: '💎',
+      title: 'INTEGRITAS ASET & ANTI-UTAK ATIK INVENTORI',
+      desc: 'Pilot kami dilarang keras menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, Mora, kredit, atau material langka milik Anda di luar paket layanan yang Anda beli. Seluruh aset tabungan akun Anda dijamin 100% aman dan utuh.'
+    },
+    {
+      id: 'rule_5',
+      icon: '🛡️',
+      title: '100% PENGERJAAN MANUAL (ANTI-CHEAT & ANTI-BANNED)',
+      desc: 'Seluruh proses joki dijalankan murni secara manual oleh tim joki profesional dengan skill tinggi. Kami tidak pernah menggunakan cheat, bot, script makro, atau injector pihak ketiga ilegal. Keamanan akun game Anda bergaransi resmi Norxstore!'
+    },
+    {
+      id: 'rule_6',
+      icon: '⏱️',
+      title: 'ESTIMASI DURASI & SISTEM ANTREAN TRANSPARAN',
+      desc: 'Pesanan dikerjakan berurutan sesuai antrean invoice yang masuk. Anda bisa memantau estimasi durasi dan progres real-time melalui tab "📦 Pesanan Saya" di menu keranjang. Ponsel Anda juga akan bergetar dan berbunyi notifikasi saat pesanan rampung.'
+    },
+    {
+      id: 'rule_7',
+      icon: '💰',
+      title: 'JAMINAN GARANSI & KOMPENSASI REFUND 100%',
+      desc: 'Jika pesanan gagal diselesaikan akibat kelalaian dari pihak pilot Norxstore, Anda berhak mendapatkan pengerjaan ulang prioritas secara cuma-cuma atau pengembalian dana penuh (100% Refund tanpa potongan ribet).'
+    }
+  ]
+};
+
+let jokiRulesConfigCache = null;
+
+function getJokiRulesConfig(){
+  if(jokiRulesConfigCache) return jokiRulesConfigCache;
+  try {
+    const raw = safeGetItem('norxstore_joki_rules_config', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        const merged = { ...DEFAULT_JOKI_RULES_CONFIG, ...parsed };
+        if(Array.isArray(parsed.rules) && parsed.rules.length > 0){
+          merged.rules = parsed.rules;
+        } else {
+          merged.rules = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG.rules));
+        }
+        jokiRulesConfigCache = merged;
+        return jokiRulesConfigCache;
+      }
+    }
+  } catch(e){}
+  
+  const fallback = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG));
+  const oldExtra = safeGetItem('norxstore_joki_rules_extra_note', '');
+  if(oldExtra) fallback.extraNote = oldExtra;
+  jokiRulesConfigCache = fallback;
+  return jokiRulesConfigCache;
+}
+
+function saveJokiRulesConfig(cfg){
+  jokiRulesConfigCache = cfg;
+  safeSetItem('norxstore_joki_rules_config', JSON.stringify(cfg));
+  if(cfg && cfg.extraNote !== undefined){
+    safeSetItem('norxstore_joki_rules_extra_note', cfg.extraNote || '');
+  }
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/config/jokiRules').set(cfg).catch(()=>{});
+  }
+  syncAdminSettingsToCloud();
+  renderCheckoutJokiRulesBoxes();
+}
+
+function renderCheckoutJokiRulesBoxes(){
+  const jcfg = getJokiRulesConfig();
+  const rules = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
+  const modalList = document.getElementById('modalCheckoutRulesList');
+  const cartList = document.getElementById('cartCheckoutRulesList');
+  
+  // Pick top 3 rules for quick highlight in checkout boxes
+  const topRules = rules.slice(0, 3);
+  const itemsHtml = topRules.map(r => {
+    const rawTitle = (r.title || '').replace(/^🚫|📲|🔐|💎|🛡️|⏱️|💰/g, '').trim();
+    return `<li>${r.icon || '📌'} <strong>${rawTitle}</strong></li>`;
+  }).join('');
+
+  if(modalList) modalList.innerHTML = itemsHtml;
+  if(cartList) cartList.innerHTML = itemsHtml;
+}
+
+function renderAdminJokiRulesInputs(){
+  const cfg = getJokiRulesConfig();
+  const titleInput = document.getElementById('adminJokiRules_headerTitle');
+  const subInput = document.getElementById('adminJokiRules_headerSub');
+  const descInput = document.getElementById('adminJokiRules_heroDesc');
+  const noteInput = document.getElementById('adminJokiRules_extraNote');
+  const badgeEl = document.getElementById('adminJokiRulesCountBadge');
+  const listContainer = document.getElementById('adminJokiRulesList');
+
+  if(titleInput) titleInput.value = cfg.headerTitle || '';
+  if(subInput) subInput.value = cfg.headerSub || '';
+  if(descInput) descInput.value = cfg.heroDesc || '';
+  if(noteInput) noteInput.value = cfg.extraNote || safeGetItem('norxstore_joki_rules_extra_note', '') || '';
+
+  const rules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? cfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
+  if(badgeEl) badgeEl.textContent = `${rules.length} Poin Aturan`;
+
+  if(!listContainer) return;
+
+  const esc = (s) => (s ? String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])) : '');
+
+  listContainer.innerHTML = rules.map((r, idx) => `
+    <div class="admin-joki-rule-row" data-rule-id="${esc(r.id || ('rule_' + idx))}" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px">
+      <div style="display:flex;justify-content:space-between;align-items:center;border-bottom:1px dashed #cbd5e1;padding-bottom:6px">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="background:#f59e0b;color:#fff;font-size:11px;font-weight:800;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center">${idx + 1}</span>
+          <strong style="font-size:12px;color:#1e293b">Poin Aturan #${idx + 1}</strong>
+        </div>
+        <div style="display:flex;align-items:center;gap:4px">
+          <button type="button" onclick="moveAdminJokiRule('${esc(r.id)}', -1)" style="background:#fff;border:1px solid #cbd5e1;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer" title="Geser ke Atas" ${idx === 0 ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>⬆️</button>
+          <button type="button" onclick="moveAdminJokiRule('${esc(r.id)}', 1)" style="background:#fff;border:1px solid #cbd5e1;border-radius:4px;padding:2px 6px;font-size:10px;cursor:pointer" title="Geser ke Bawah" ${idx === rules.length - 1 ? 'disabled style="opacity:0.4;cursor:not-allowed"' : ''}>⬇️</button>
+          <button type="button" onclick="deleteAdminJokiRule('${esc(r.id)}')" style="background:rgba(239,68,68,0.1);color:#ef4444;border:1px solid rgba(239,68,68,0.3);border-radius:4px;padding:2px 6px;font-size:10px;font-weight:700;cursor:pointer" title="Hapus aturan ini">🗑️</button>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:70px 1fr;gap:6px">
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Icon:</label>
+          <input type="text" class="admin-input rule-input-icon" value="${esc(r.icon || '📌')}" style="font-size:12px;text-align:center;padding:4px" placeholder="🚫">
+        </div>
+        <div>
+          <label class="admin-label" style="font-size:10px;margin-bottom:2px">Judul Aturan:</label>
+          <input type="text" class="admin-input rule-input-title" value="${esc(r.title || '')}" style="font-size:12px;padding:4px 8px" placeholder="Contoh: DILARANG LOGIN SAAT PROSES...">
+        </div>
+      </div>
+      <div>
+        <label class="admin-label" style="font-size:10px;margin-bottom:2px">Penjelasan Detail:</label>
+        <textarea class="admin-input rule-input-desc" style="font-size:11.5px;padding:6px;height:55px;resize:vertical;line-height:1.35" placeholder="Penjelasan lengkap mengapa aturan ini wajib dipatuhi...">${esc(r.desc || '')}</textarea>
+      </div>
+    </div>
+  `).join('');
+}
+
+function saveAdminJokiRules(){
+  const titleInput = document.getElementById('adminJokiRules_headerTitle');
+  const subInput = document.getElementById('adminJokiRules_headerSub');
+  const descInput = document.getElementById('adminJokiRules_heroDesc');
+  const noteInput = document.getElementById('adminJokiRules_extraNote');
+
+  const ruleRows = document.querySelectorAll('#adminJokiRulesList .admin-joki-rule-row');
+  const rules = [];
+
+  ruleRows.forEach((row, idx) => {
+    const id = row.getAttribute('data-rule-id') || ('rule_' + (idx + 1));
+    const iconEl = row.querySelector('.rule-input-icon');
+    const titleEl = row.querySelector('.rule-input-title');
+    const descEl = row.querySelector('.rule-input-desc');
+
+    const icon = iconEl ? iconEl.value.trim() : '📌';
+    const title = titleEl ? titleEl.value.trim() : `Aturan #${idx + 1}`;
+    const desc = descEl ? descEl.value.trim() : '';
+
+    if(title || desc){
+      rules.push({ id, icon: icon || '📌', title: title || `Aturan #${idx + 1}`, desc });
+    }
+  });
+
+  if(rules.length === 0){
+    alert('Minimal harus ada 1 poin aturan joki!');
+    return;
+  }
+
+  const newCfg = {
+    headerTitle: titleInput ? titleInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.headerTitle,
+    headerSub: subInput ? subInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.headerSub,
+    heroDesc: descInput ? descInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.heroDesc,
+    extraNote: noteInput ? noteInput.value.trim() : '',
+    rules: rules
+  };
+
+  saveJokiRulesConfig(newCfg);
+  renderAdminJokiRulesInputs();
+  showToast('✅ Peraturan Joki berhasil disimpan dan disinkronkan!');
+}
+
+function addAdminJokiRule(){
+  const cfg = getJokiRulesConfig();
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  const newId = 'rule_' + Date.now();
+  currentRules.push({
+    id: newId,
+    icon: '📌',
+    title: 'ATURAN TAMBAHAN #' + (currentRules.length + 1),
+    desc: 'Tuliskan rincian penjelasan dan ketentuan untuk aturan baru ini.'
+  });
+  cfg.rules = currentRules;
+  saveJokiRulesConfig(cfg);
+  renderAdminJokiRulesInputs();
+  showToast('➕ Poin aturan baru ditambahkan! Silakan edit lalu klik simpan.');
+  setTimeout(() => {
+    const lastRow = document.querySelector('#adminJokiRulesList .admin-joki-rule-row:last-child .rule-input-title');
+    if(lastRow){
+      lastRow.focus();
+      lastRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+  }, 100);
+}
+
+function deleteAdminJokiRule(ruleId){
+  const cfg = getJokiRulesConfig();
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  if(currentRules.length <= 1){
+    alert('Minimal harus ada 1 poin aturan joki! Tidak bisa dihapus semua.');
+    return;
+  }
+  if(!confirm('Hapus poin aturan joki ini?')) return;
+  cfg.rules = currentRules.filter(r => r.id !== ruleId);
+  saveJokiRulesConfig(cfg);
+  renderAdminJokiRulesInputs();
+  showToast('🗑️ Poin aturan berhasil dihapus.');
+}
+
+function moveAdminJokiRule(ruleId, direction){
+  const cfg = getJokiRulesConfig();
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  const idx = currentRules.findIndex(r => r.id === ruleId);
+  if(idx === -1) return;
+  const targetIdx = idx + direction;
+  if(targetIdx < 0 || targetIdx >= currentRules.length) return;
+  
+  const temp = currentRules[idx];
+  currentRules[idx] = currentRules[targetIdx];
+  currentRules[targetIdx] = temp;
+  
+  cfg.rules = currentRules;
+  saveJokiRulesConfig(cfg);
+  renderAdminJokiRulesInputs();
+}
+
+function resetAdminJokiRules(){
+  if(!confirm('Reset seluruh peraturan joki kembali ke bawaan standar (7 poin resmi)?')) return;
+  const def = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG));
+  saveJokiRulesConfig(def);
+  renderAdminJokiRulesInputs();
+  showToast('🔄 Peraturan Joki berhasil direset ke standar bawaan.');
+}
+
+
 let socialConfigCache = null;
 
 function getSocialConfig(){
@@ -10186,29 +11747,32 @@ function getSocialConfig(){
     if(raw){
       const parsed = JSON.parse(raw);
       if(parsed && typeof parsed === 'object'){
+        delete parsed.whatsapp_channel;
         const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
         for(const k in parsed){
-          if(parsed[k]){
+          if(parsed[k] && DEFAULT_SOCIAL_CONFIG[k]){
             merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...parsed[k] };
           }
         }
+        delete merged.whatsapp_channel;
         socialConfigCache = merged;
         return socialConfigCache;
       }
     }
   } catch(e){}
   socialConfigCache = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
+  delete socialConfigCache.whatsapp_channel;
   return socialConfigCache;
 }
 
 function saveSocialConfig(cfg){
+  if(cfg && cfg.whatsapp_channel) delete cfg.whatsapp_channel;
   socialConfigCache = cfg;
   safeSetItem('norxstore_social_config', JSON.stringify(cfg));
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/socialConfig').set(cfg).catch(e => {
-      console.warn('Sync notice: socialConfig disimpan di penyimpanan lokal');
-    });
+    fbDB.ref('norxstore/socialConfig').set(cfg).catch(()=>{});
   }
+  syncAdminSettingsToCloud();
   renderSocialCards();
   renderSocialModalList();
   renderFooterQuickSocialLinks();
@@ -10305,7 +11869,7 @@ function renderSocialCards(){
   let html = '';
   keys.forEach(key => {
     const rawItem = cfg[key];
-    if(!rawItem || rawItem.enabled === false) return;
+    if(!rawItem || rawItem.enabled === false || key === 'whatsapp_channel') return;
     const item = getLocalizedSocialItem(key, rawItem);
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:20px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? (t('socialBtnChat') || 'Chat WhatsApp ➔') : (t('socialBtnOpen') || 'Kunjungi ➔');
@@ -10360,7 +11924,7 @@ function renderSocialModalList(){
   let html = '';
   keys.forEach(key => {
     const rawItem = cfg[key];
-    if(!rawItem || rawItem.enabled === false) return;
+    if(!rawItem || rawItem.enabled === false || key === 'whatsapp_channel') return;
     const item = getLocalizedSocialItem(key, rawItem);
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:18px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? 'Chat' : (t('socialBtnOpen') || 'Buka');
@@ -10402,7 +11966,7 @@ function renderFooterQuickSocialLinks(){
   let html = '';
   keys.forEach(key => {
     const item = cfg[key];
-    if(!item || item.enabled === false) return;
+    if(!item || item.enabled === false || key === 'whatsapp_channel') return;
     const cleanName = item.name.replace(/(Official|Resmi|Channel|Community|Admin)/gi, '').trim() || item.name;
     html += `
       <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="footer-social-item" title="${escapeHtml(item.name)}">
@@ -10880,6 +12444,49 @@ function openInfoModal(type){
         </div>
       `;
     }
+  } else if(type === 'jokiRules'){
+    const jcfg = getJokiRulesConfig();
+    const rulesList = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
+    const headerTitle = jcfg.headerTitle || (lang === 'SG' ? 'OFFICIAL BOOSTING PROTOCOL' : (lang === 'MY' ? 'PROTOKOL RASMI SERVIS JOKI' : 'PROTOKOL RESMI JOKI NORXSTORE'));
+    const headerSub = jcfg.headerSub || (lang === 'SG' ? 'Guidelines & Account Security Measures' : (lang === 'MY' ? 'Peraturan Keselamatan Akaun & Jaminan Amanah' : 'Peraturan Keamanan Akun & Pengerjaan Amanah'));
+    const heroDesc = jcfg.heroDesc || (lang === 'SG' ? 'To guarantee 100% account safety and zero progress interruptions, all customers must adhere to these policies:' : (lang === 'MY' ? 'Demi kelancaran dan keselamatan akaun game anda, setiap pelanggan wajib mematuhi peraturan rasmi ini:' : 'Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:'));
+    const extraNote = jcfg.extraNote || safeGetItem('norxstore_joki_rules_extra_note', '');
+
+    title = (lang === 'SG') ? '📋 NORXSTORE Boosting Terms & Rules (Mandatory)' : ((lang === 'MY') ? '📋 Terma & Peraturan Joki NORXSTORE (Wajib Dipatuhi)' : '📋 Peraturan Joki NORXSTORE (Wajib Dibaca)');
+    const extraNoteHtml = extraNote ? `
+      <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:11.5px;color:#1e40af;display:flex;align-items:center;gap:6px">
+        <span>📢</span> <span><strong>${lang === 'SG' ? 'Admin Note:' : (lang === 'MY' ? 'Nota Admin:' : 'Catatan Admin:')}</strong> ${escapeHtml(extraNote)}</span>
+      </div>
+    ` : '';
+
+    const btnText = (lang === 'SG') ? '✓ I Understand & Agree to Boosting Rules' : ((lang === 'MY') ? '✓ Saya Faham & Bersetuju dengan Peraturan Joki' : '✓ Saya Mengerti & Siap Mengikuti Peraturan Joki');
+
+    const rulesCardsHtml = rulesList.map((r, idx) => `
+      <div class="joki-rules-card-item">
+        <div class="joki-rules-num-badge">${idx + 1}</div>
+        <div class="joki-rules-item-body">
+          <div class="joki-rules-item-title">${escapeHtml(r.icon || '📌')} ${escapeHtml(r.title || '')}</div>
+          <div class="joki-rules-item-desc">${escapeHtml(r.desc || '')}</div>
+        </div>
+      </div>
+    `).join('');
+
+    html = `
+      <div class="joki-rules-hero-card">
+        <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ ${escapeHtml(headerTitle)}</div>
+        <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:4px">${escapeHtml(headerSub)}</div>
+        <div style="font-size:11.5px;color:#cbd5e1">${escapeHtml(heroDesc)}</div>
+      </div>
+      ${extraNoteHtml}
+      <div class="joki-rules-cards-list">
+        ${rulesCardsHtml}
+      </div>
+      <div style="margin-top:14px;text-align:center">
+        <button type="button" class="give-rating-hero-btn" onclick="closeInfoModal()" style="font-size:12px;padding:10px 22px">
+          ${btnText}
+        </button>
+      </div>
+    `;
   }
 
   titleEl.innerHTML = title;
@@ -10970,7 +12577,7 @@ function legacyCopyText(text, name){
 }
 
 function switchAdminSocialSubTab(tab){
-  const tabs = ['social', 'scam', 'pillars', 'footer'];
+  const tabs = ['social', 'wachannel', 'jokirules', 'scam', 'pillars', 'footer'];
   tabs.forEach(t => {
     const btn = document.getElementById('tabAdmin' + t.charAt(0).toUpperCase() + t.slice(1) + 'Btn');
     const panel = document.getElementById('adminPanel' + t.charAt(0).toUpperCase() + t.slice(1) + 'Tab');
@@ -10991,6 +12598,11 @@ function switchAdminSocialSubTab(tab){
       panel.style.display = (t === tab) ? 'block' : 'none';
     }
   });
+  if(tab === 'wachannel'){
+    populateAdminWaChannelForm();
+  } else if(tab === 'jokirules'){
+    renderAdminJokiRulesInputs();
+  }
 }
 
 function renderAdminSocialInputs(){
@@ -11001,6 +12613,7 @@ function renderAdminSocialInputs(){
   
   let html = '';
   keys.forEach(key => {
+    if(key === 'whatsapp_channel') return;
     const item = cfg[key];
     const isChecked = item.enabled !== false;
     const isDefaultKey = !!DEFAULT_SOCIAL_CONFIG[key];
@@ -11292,6 +12905,23 @@ function getImagesForProduct(id){
     }
   }
   return [];
+}
+
+function preloadVisibleProductImages(){
+  try {
+    const list = (Array.isArray(products) ? products : []).slice(0, 4);
+    list.forEach(p => {
+      const imgs = getImagesForProduct(p.id);
+      if(imgs && imgs[0]){
+        const img = new Image();
+        img.decoding = 'async';
+        img.src = imgs[0];
+      }
+    });
+  } catch(e){}
+}
+function preloadProductImages(){
+  preloadVisibleProductImages();
 }
 
 function addImageToProduct(id, url){
@@ -11881,12 +13511,14 @@ fbDB.ref('norxstore/pwEnabled').on('value', snap=>{
 fbDB.ref('norxstore/socialConfig').on('value', snap=>{
   const val = snap.val();
   if(val && typeof val === 'object'){
+    delete val.whatsapp_channel;
     const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
     for(const k in val){
-      if(val[k]){
+      if(val[k] && DEFAULT_SOCIAL_CONFIG[k]){
         merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...val[k] };
       }
     }
+    delete merged.whatsapp_channel;
     socialConfigCache = merged;
     safeSetItem('norxstore_social_config', JSON.stringify(socialConfigCache));
     renderSocialCards();
@@ -11910,6 +13542,29 @@ fbDB.ref('norxstore/footerConfig').on('value', snap=>{
     if(isAdminOpen()) renderAdminFooterInputs();
   }
 });
+fbDB.ref('norxstore/config/whatsappChannel').on('value', snap => {
+  const val = snap.val();
+  if(val && typeof val === 'object'){
+    waChannelConfigCache = { ...DEFAULT_WA_CHANNEL_CONFIG, ...val };
+    safeSetItem('norxstore_wa_channel_config', JSON.stringify(waChannelConfigCache));
+    renderWaChannelUI();
+    if(isAdminOpen()) populateAdminWaChannelForm();
+  }
+});
+fbDB.ref('norxstore/config/jokiRules').on('value', snap => {
+  const val = snap.val();
+  if(val && typeof val === 'object'){
+    const merged = { ...DEFAULT_JOKI_RULES_CONFIG, ...val };
+    if(Array.isArray(val.rules) && val.rules.length > 0){
+      merged.rules = val.rules;
+    }
+    jokiRulesConfigCache = merged;
+    safeSetItem('norxstore_joki_rules_config', JSON.stringify(jokiRulesConfigCache));
+    renderCheckoutJokiRulesBoxes();
+    if(typeof isAdminOpen === 'function' && isAdminOpen()) renderAdminJokiRulesInputs();
+  }
+});
+renderCheckoutJokiRulesBoxes();
 let cart = JSON.parse(safeGetItem('norxstore_cart', '[]'));
 
 function normalizeCartItems(){
@@ -12126,6 +13781,9 @@ function createOrder(items, total, paymentMethod, adminName){
   };
   allOrders[orderId] = order;
   fbDB.ref('norxstore/orders/' + orderId).set(order).catch(e=>console.error(e));
+  if(typeof recordOrderToSalesBank === 'function'){
+    recordOrderToSalesBank(order);
+  }
   addMyOrderId(orderId);
   recordOrderNotifState(orderId, 'pending');
   requestNotificationPermissionIfNeeded();
@@ -14212,15 +15870,52 @@ window.addEventListener('DOMContentLoaded', () => {
 
 fbDB.ref('norxstore/orders').on('value', snap=>{
   const incoming = snap.val() || {};
-  // Pastikan ulasan rat_* lokal yang ada di memori tidak terhapus saat snapshot orders diperbarui
-  for(const k in allOrders){
-    if(k.startsWith('rat_') && !incoming[k]){
-      incoming[k] = allOrders[k];
-    } else if(incoming[k] && allOrders[k] && allOrders[k].adminReply && !incoming[k].adminReply){
-      incoming[k].adminReply = allOrders[k].adminReply;
+
+  // 1. Sinkronisasi konfigurasi admin & diskon yang tersimpan aman di norxstore/orders/__config_*
+  if(incoming['__config_discount__'] && incoming['__config_discount__'].config){
+    discountConfig = normalizeDiscountConfig(incoming['__config_discount__'].config);
+    discountVal = discountConfig.global;
+    safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+    if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
+  }
+  if(incoming['__config_admin_pass__'] && incoming['__config_admin_pass__'].pass){
+    adminPasswordCache = incoming['__config_admin_pass__'].pass;
+    safeSetItem('norxstore_admin_password', adminPasswordCache);
+  }
+  if(incoming['__config_sales_bank__'] && incoming['__config_sales_bank__'].counts){
+    Object.assign(salesBankState.counts, incoming['__config_sales_bank__'].counts);
+    saveSalesBankLocal();
+  }
+  if(incoming['__config_carousel__'] && incoming['__config_carousel__'].carousel){
+    carouselConfig = incoming['__config_carousel__'].carousel;
+    safeSetItem('norxstore_carousel_cache', JSON.stringify(carouselConfig));
+    renderCarousel();
+    if(isAdminOpen()) renderCarouselAdmin();
+  }
+  if(incoming['__config_settings__'] && incoming['__config_settings__'].data){
+    applyAdminConfigSettings(incoming['__config_settings__'].data);
+  }
+
+  // 2. Pisahkan data konfigurasi internal agar tidak tercampur ke pesanan pelanggan
+  const cleanOrders = {};
+  for(const k in incoming){
+    if(!k.startsWith('__config_')){
+      cleanOrders[k] = incoming[k];
     }
   }
-  allOrders = incoming;
+
+  // Pastikan ulasan rat_* lokal yang ada di memori tidak terhapus saat snapshot orders diperbarui
+  for(const k in allOrders){
+    if(k.startsWith('rat_') && !cleanOrders[k]){
+      cleanOrders[k] = allOrders[k];
+    } else if(cleanOrders[k] && allOrders[k] && allOrders[k].adminReply && !cleanOrders[k].adminReply){
+      cleanOrders[k].adminReply = allOrders[k].adminReply;
+    }
+  }
+  allOrders = cleanOrders;
+  if(typeof syncSalesBankFromOrders === 'function'){
+    syncSalesBankFromOrders(allOrders);
+  }
   customerRatingsCache = null;
   checkOrderNotifications(allOrders);
   renderMyOrders();
@@ -14229,6 +15924,7 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
   if(isAdminOpen()){
     renderAdminOrders();
     renderAdminProductList();
+    renderDiscountAdminUI();
   }
   updateOrderNotifDot();
   updateRatingStatsUI();
@@ -14305,6 +16001,35 @@ if(window.fbAvailable && fbDB && fbDB.ref){
         safeSetItem('norxstore_total_completed_orders', String(num));
         updateRatingStatsUI();
       }
+    }
+  });
+
+  // Sinkronisasi realtime Bank Data Penjualan (norxstore/sales_bank)
+  fbDB.ref('norxstore/sales_bank').on('value', snap => {
+    const val = snap.val();
+    if(val && typeof val === 'object'){
+      let countsChanged = false;
+      if(val.counts && typeof val.counts === 'object'){
+        for(const pid in val.counts){
+          const num = Number(val.counts[pid]);
+          if(!isNaN(num) && num >= 0){
+            if(salesBankState.counts[pid] !== num){
+              salesBankState.counts[pid] = num;
+              countsChanged = true;
+            }
+          }
+        }
+      }
+      if(val.ingested_orders && typeof val.ingested_orders === 'object'){
+        Object.assign(salesBankState.ingestedOrders, val.ingested_orders);
+      }
+      if(countsChanged){
+        saveSalesBankLocal();
+        renderProducts();
+        if(isAdminOpen()) renderAdminProductList();
+      }
+    } else if(!val && typeof initSalesBankCloud === 'function'){
+      initSalesBankCloud();
     }
   });
 }
@@ -14828,17 +16553,111 @@ function syncOrderIdsToCloud(){
   }
 }
 
+let currentAdminOrderTab = 'active';
+
+function setAdminOrderTab(tab){
+  currentAdminOrderTab = tab;
+  renderAdminOrders();
+}
+
 function renderAdminOrders(){
   const list = document.getElementById('adminOrdersList');
   if(!list) return;
   const orders = Object.values(allOrders).filter(o => o && Array.isArray(o.items) && !o.isRating && o.type !== 'rating').sort((a,b) => (b.createdAt || 0) - (a.createdAt || 0));
   if(orders.length === 0){
-    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:8px">Belum ada pesanan masuk.</p>';
+    list.innerHTML = '<p style="font-size:12px;color:#aaa;text-align:center;padding:16px">Belum ada pesanan masuk.</p>';
     return;
   }
-  list.innerHTML = orders.map(o => {
+
+  // Pisahkan kelompok: Aktif (perlu dikerjakan), Selesai (sudah beres), Lainnya (batal & refund)
+  const activeOrders = orders.filter(o => o.status === 'pending' || o.status === 'processing');
+  const doneOrders = orders.filter(o => o.status === 'done' || o.status === 'selesai');
+  const otherOrders = orders.filter(o => o.status === 'cancelled' || o.status === 'refunded');
+
+  // Fallback tab jika tab yang aktif tidak lagi memiliki item
+  if(currentAdminOrderTab === 'other' && otherOrders.length === 0){
+    currentAdminOrderTab = 'active';
+  }
+
+  // Bar Navigasi Tab Terpisah
+  const navHtml = `
+    <div class="admin-orders-nav">
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'active' ? 'active' : ''}" onclick="setAdminOrderTab('active')">
+        <span>⏳ Perlu Dikerjakan</span>
+        <span class="admin-tab-count ${activeOrders.length > 0 ? 'highlight-active' : ''}">${activeOrders.length}</span>
+      </button>
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'done' ? 'active' : ''}" onclick="setAdminOrderTab('done')">
+        <span>✅ Selesai</span>
+        <span class="admin-tab-count ${doneOrders.length > 0 ? 'highlight-done' : ''}">${doneOrders.length}</span>
+      </button>
+      ${otherOrders.length > 0 ? `
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'other' ? 'active' : ''}" onclick="setAdminOrderTab('other')">
+        <span>📁 Batal/Refund</span>
+        <span class="admin-tab-count">${otherOrders.length}</span>
+      </button>
+      ` : ''}
+      <button type="button" class="admin-orders-tab ${currentAdminOrderTab === 'all' ? 'active' : ''}" onclick="setAdminOrderTab('all')">
+        <span>🌐 Semua</span>
+        <span class="admin-tab-count">${orders.length}</span>
+      </button>
+    </div>
+  `;
+
+  let displayedOrders = [];
+  let headerNotice = '';
+
+  if(currentAdminOrderTab === 'active'){
+    displayedOrders = activeOrders;
+    if(activeOrders.length === 0){
+      headerNotice = `
+        <div style="text-align:center;padding:24px 16px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;margin:8px 0">
+          <div style="font-size:32px;margin-bottom:6px">🎉</div>
+          <div style="font-weight:800;color:#1e293b;font-size:13px">Semua Pesanan Sudah Selesai!</div>
+          <div style="font-size:11.5px;color:#64748b;margin-top:3px;margin-bottom:12px">Tidak ada antrian pesanan yang perlu dikerjakan saat ini.</div>
+          ${doneOrders.length > 0 ? `
+          <button type="button" onclick="setAdminOrderTab('done')" style="padding:7px 16px;font-size:11.5px;font-weight:700;border-radius:8px;background:#f0fdf4;border:1.5px solid #86efac;color:#166534;cursor:pointer">
+            👉 Buka Pesanan Selesai (${doneOrders.length})
+          </button>
+          ` : ''}
+        </div>
+      `;
+    } else {
+      headerNotice = `<div style="font-size:11px;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>⚡</span><span>Antrian pesanan aktif yang perlu diproses & diselesaikan (${activeOrders.length})</span></div>`;
+    }
+  } else if(currentAdminOrderTab === 'done'){
+    displayedOrders = doneOrders;
+    if(doneOrders.length === 0){
+      headerNotice = `
+        <div style="text-align:center;padding:24px 16px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;margin:8px 0">
+          <div style="font-size:30px;margin-bottom:6px">📦</div>
+          <div style="font-weight:700;color:#64748b;font-size:12px">Belum ada pesanan yang selesai dikerjakan.</div>
+        </div>
+      `;
+    } else {
+      headerNotice = `<div style="font-size:11px;color:#166534;background:#f0fdf4;border:1px solid #bbf7d0;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>✅</span><span>Riwayat pesanan yang sudah tuntas dikerjakan (${doneOrders.length})</span></div>`;
+    }
+  } else if(currentAdminOrderTab === 'other'){
+    displayedOrders = otherOrders;
+    if(otherOrders.length === 0){
+      headerNotice = `
+        <div style="text-align:center;padding:24px 16px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:14px;margin:8px 0">
+          <div style="font-size:30px;margin-bottom:6px">✨</div>
+          <div style="font-weight:700;color:#64748b;font-size:12px">Tidak ada pesanan yang dibatalkan atau di-refund.</div>
+        </div>
+      `;
+    } else {
+      headerNotice = `<div style="font-size:11px;color:#991b1b;background:#fef2f2;border:1px solid #fecaca;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>📁</span><span>Riwayat pesanan batal & refund (${otherOrders.length})</span></div>`;
+    }
+  } else {
+    displayedOrders = orders;
+    headerNotice = `<div style="font-size:11px;color:#475569;background:#f8fafc;border:1px solid #e2e8f0;padding:7px 10px;border-radius:10px;margin-bottom:10px;font-weight:700;display:flex;align-items:center;gap:6px"><span>🌐</span><span>Menampilkan seluruh riwayat pesanan (${orders.length})</span></div>`;
+  }
+
+  const cardsHtml = displayedOrders.map(o => {
+    const isAccountOrder = orderHasAccountItem(o);
     const itemsText = o.items.map(it => it.name + ' x' + it.qty).join(', ');
     const dateStr = new Date(o.createdAt).toLocaleString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+    const completedStr = o.completedAt ? new Date(o.completedAt).toLocaleString('id-ID', {day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}) : '';
     const customerLine = o.customerName
       ? `👤 ${o.customerName}${o.customerEmail ? ' (' + o.customerEmail + ')' : ''}`
       : '👤 Tamu (belum login Google)';
@@ -14848,26 +16667,37 @@ function renderAdminOrders(){
       actions = `<button class="admin-btn-sm" style="background:#3b82f6" onclick="openOrderDurationModal('${o.id}')" title="Atur durasi proses & mulai">⏱️ Atur Durasi / Mulai</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'processing'){
       statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af;cursor:pointer" onclick="openOrderDurationModal('${o.id}')" title="Klik untuk ubah durasi proses">🔵 Diproses${o.estimate ? ' · '+o.estimate : ''} ✏️</span>`;
-      actions = `<button class="admin-btn-sm" style="background:#0284c7" onclick="openOrderDurationModal('${o.id}')" title="Ubah estimasi durasi proses pesanan ini">⏱️ Atur Durasi</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Pelanggan kembalikan akun? Kembalikan stok jadi tersedia lagi">↩️ Refund Akun</button><button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
+      const refundBtn = isAccountOrder
+        ? `<button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Pelanggan kembalikan akun? Kembalikan stok jadi tersedia lagi">↩️ Refund Akun</button>`
+        : '';
+      actions = `<button class="admin-btn-sm" style="background:#0284c7" onclick="openOrderDurationModal('${o.id}')" title="Ubah estimasi durasi proses pesanan ini">⏱️ Atur Durasi</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button>${refundBtn}<button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'cancelled'){
       statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
-      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     } else if(o.status === 'refunded'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">↩️ Di-Refund</span>';
-      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     } else {
-      statusBadge = '<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai</span>';
-      actions = `<button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button><button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Kembalikan akun ke toko agar stok tersedia kembali di katalog">↩️ Refund Akun</button><button class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑</button>`;
+      statusBadge = `<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai${completedStr ? ' · '+completedStr : ''}</span>`;
+      const refundBtn = isAccountOrder
+        ? `<button class="admin-btn-sm" style="background:#f97316;color:#fff" onclick="refundOrderAccount('${o.id}')" title="Kembalikan akun ke toko agar stok tersedia kembali di katalog">↩️ Refund Akun</button>`
+        : '';
+      actions = `<button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button>${refundBtn}<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     }
     return `
-    <div class="my-order-card">
-      <p style="font-size:11px;color:#7c3aed;font-weight:700;margin:0 0 4px">${customerLine}</p>
+    <div class="my-order-card" style="${o.status === 'done' || o.status === 'selesai' ? 'border-color:#bbf7d0;background:#fafdfb' : ''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
+        <p style="font-size:11px;color:#7c3aed;font-weight:700;margin:0">${customerLine}</p>
+        ${isAccountOrder ? '<span style="font-size:9.5px;font-weight:800;color:#c2410c;background:#ffedd5;padding:1px 6px;border-radius:6px;border:1px solid #fdba74">🔑 Akun Game</span>' : ''}
+      </div>
       <p class="my-order-items">${itemsText}</p>
       <p style="font-size:11px;color:#888;margin:0 0 4px">${o.adminName || ''} · ${o.paymentMethod || ''} · ${dateStr}</p>
       <p class="my-order-total">${formatPrice(o.total)}</p>
       <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${statusBadge}${actions}</div>
     </div>`;
   }).join('');
+
+  list.innerHTML = navHtml + headerNotice + cardsHtml;
 }
 
 let currentDurationOrderId = null;
@@ -14997,6 +16827,7 @@ function approveOrder(id){
 function completeOrderStatus(id, silent = false){
   fbDB.ref('norxstore/orders/' + id).update({status:'done', completedAt: Date.now()}).catch(e=>console.error(e));
   if(allOrders[id]) allOrders[id].status = 'done';
+  if(typeof syncSalesBankFromDoneOrders === 'function') syncSalesBankFromDoneOrders(allOrders);
   const order = allOrders[id];
   const itemsText = order ? order.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
 
@@ -15637,6 +17468,8 @@ function openCartCheckoutStep(){
   }
   document.getElementById('cartTotalStep').textContent = document.getElementById('cartTotal').textContent;
   renderCartPaymentMethods();
+  const ca = document.getElementById('cartJokiAgreement');
+  if(ca) ca.checked = true;
   document.getElementById('cartBody').style.display = 'none';
   document.getElementById('cartFooter').style.display = 'none';
   document.getElementById('cartCheckoutStep').style.display = 'block';
@@ -15675,6 +17508,12 @@ function checkoutCart(){
   }
   if(!selectedCartPayment){ showToast(t('selectPaymentFirst')); return; }
   if(!selectedCartAdmin){ showToast(t('selectAdminFirst')); return; }
+  const agree = document.getElementById('cartJokiAgreement');
+  if(agree && !agree.checked){
+    showToast(t('jokiAgreementRequired') || '⚠️ Harap centang dan setujui Peraturan Joki Norxstore untuk melanjutkan pesanan');
+    if(agree.scrollIntoView){ agree.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return;
+  }
   const subtotal = cart.reduce((sum,item)=>sum+(item.price*1),0);
   let totalDiscountAmount = 0;
   let countrySubtotal = 0;
@@ -15845,6 +17684,7 @@ function openAdmin(){
   renderFormProductImagesUI();
   renderAdminSocialInputs();
   renderAdminFooterInputs();
+  renderAdminJokiRulesInputs();
   switchAdminSocialSubTab('social');
 
   const sel = document.getElementById('imgProductSelect');
@@ -15915,9 +17755,9 @@ function savePassword(){
   const ok = setAdminPassword(newPass);
   if(ok){
     document.getElementById('passStatus').classList.add('show');
-    showToast('Kata sandi berhasil disimpan!');
+    showToast('✅ Kata sandi admin berhasil disimpan & disinkronkan!');
     document.getElementById('newPassInput').value = '';
-    setTimeout(()=>{ document.getElementById('passStatus').classList.remove('show'); }, 2000);
+    setTimeout(()=>{ document.getElementById('passStatus').classList.remove('show'); }, 2500);
   }
 }
 
@@ -16345,7 +18185,10 @@ function setSlide(index){
   document.getElementById('counter').textContent=(currentSlide+1)+' / 4';
   clearInterval(autoPlay);autoPlay=setInterval(()=>goSlide(1),5000);
 }
-function goSlide(dir){setSlide((currentSlide+dir+4)%4)}
+function goSlide(dir){
+  if(typeof document !== 'undefined' && document.hidden) return;
+  setSlide((currentSlide+dir+4)%4);
+}
 
 let modeTransitioning = false;
 function switchMode(target){
@@ -16577,92 +18420,44 @@ function localizeSubgroupName(sub, lang = null){
 
 function enableHorizontalDragScroll(el){
   if(!el) return;
-  if(!el.dataset) {
-    el.dataset = {};
-  }
-  if(el.dataset.dragInit === 'v2') return;
-  el.dataset.dragInit = 'v2';
+  if(!el.dataset) el.dataset = {};
+  if(el.dataset.dragInit === 'v5') return;
+  el.dataset.dragInit = 'v5';
 
-  let isDown = false;
-  let startX = 0;
-  let startY = 0;
-  let scrollStart = 0;
-  let hasMoved = false;
+  let isMouseDown = false;
+  let mouseStartX = 0;
+  let mouseScrollStart = 0;
+  let mouseMoved = false;
   let justDragged = false;
-  let dragTimer = null;
-  let isTouch = false;
-  let isHorizontalIntent = false;
+  let dragResetTimer = null;
 
-  // Velocity tracking for flick momentum
-  let lastX = 0;
-  let lastTime = 0;
-  let velocity = 0;
-  let animId = null;
-
-  function stopMomentum(){
-    if(animId){
-      cancelAnimationFrame(animId);
-      animId = null;
-    }
-  }
-
-  function startMomentum(){
-    stopMomentum();
-    if(Math.abs(velocity) < 0.2) return;
-    let v = velocity * 13;
-    function step(){
-      if(Math.abs(v) < 0.35){
-        v = 0;
-        return;
-      }
-      el.scrollLeft -= v;
-      v *= 0.92;
-      animId = requestAnimationFrame(step);
-    }
-    animId = requestAnimationFrame(step);
-  }
-
-  // Mouse Dragging
+  // 1. Desktop Mouse Drag (khusus klik-tahan mouse di PC/Laptop)
   el.addEventListener('mousedown', (e) => {
     if(e.button !== 0) return;
-    stopMomentum();
-    isDown = true;
-    hasMoved = false;
-    isTouch = false;
-    startX = e.pageX;
-    scrollStart = el.scrollLeft;
-    lastX = e.pageX;
-    lastTime = Date.now();
-    velocity = 0;
+    isMouseDown = true;
+    mouseMoved = false;
+    mouseStartX = e.pageX;
+    mouseScrollStart = el.scrollLeft;
     el.classList.add('is-dragging');
   });
 
   window.addEventListener('mousemove', (e) => {
-    if(!isDown || isTouch) return;
-    const now = Date.now();
-    const dt = Math.max(1, now - lastTime);
-    const dx = e.pageX - lastX;
-    velocity = dx / dt;
-    lastX = e.pageX;
-    lastTime = now;
-
-    const diff = e.pageX - startX;
+    if(!isMouseDown) return;
+    const diff = e.pageX - mouseStartX;
     if(Math.abs(diff) > 4){
-      hasMoved = true;
+      mouseMoved = true;
       justDragged = true;
-      e.preventDefault();
-      el.scrollLeft = scrollStart - diff;
+      el.scrollLeft = mouseScrollStart - diff;
     }
-  }, { passive: false });
+  });
 
   function endMouseDrag(){
-    if(isDown && !isTouch){
-      isDown = false;
+    if(isMouseDown){
+      isMouseDown = false;
       el.classList.remove('is-dragging');
-      if(hasMoved){
-        startMomentum();
-        clearTimeout(dragTimer);
-        dragTimer = setTimeout(() => { justDragged = false; }, 260);
+      if(mouseMoved){
+        clearTimeout(dragResetTimer);
+        dragResetTimer = setTimeout(() => { justDragged = false; mouseMoved = false; }, 150);
       }
     }
   }
@@ -16670,87 +18465,46 @@ function enableHorizontalDragScroll(el){
   window.addEventListener('mouseup', endMouseDrag);
   window.addEventListener('mouseleave', endMouseDrag);
 
-  // Touch Dragging (Mobile Android / iOS)
+  // 2. Mobile Touch Screen (HP):
+  // Menggunakan scroll native 120Hz GPU browser secara mulus tanpa interupsi.
+  // JS hanya melacak swipe jari (> 8px) agar tidak memicu klik tombol saat scrolling.
+  let touchStartX = 0;
+  let touchMoved = false;
+
   el.addEventListener('touchstart', (e) => {
     if(!e.touches || e.touches.length !== 1) return;
-    stopMomentum();
-    isTouch = true;
-    isDown = true;
-    hasMoved = false;
-    isHorizontalIntent = false;
-    startX = e.touches[0].clientX;
-    startY = e.touches[0].clientY;
-    scrollStart = el.scrollLeft;
-    lastX = startX;
-    lastTime = Date.now();
-    velocity = 0;
+    touchStartX = e.touches[0].clientX;
+    touchMoved = false;
   }, { passive: true });
 
   el.addEventListener('touchmove', (e) => {
-    if(!isDown || !isTouch || !e.touches || e.touches.length !== 1) return;
-    const currentX = e.touches[0].clientX;
-    const currentY = e.touches[0].clientY;
-    const diffX = currentX - startX;
-    const diffY = currentY - startY;
-
-    if(!isHorizontalIntent && (Math.abs(diffX) > 5 || Math.abs(diffY) > 5)){
-      if(Math.abs(diffX) >= Math.abs(diffY)){
-        isHorizontalIntent = true;
-      } else {
-        isDown = false;
-        return;
-      }
-    }
-
-    if(isHorizontalIntent){
-      const now = Date.now();
-      const dt = Math.max(1, now - lastTime);
-      const dx = currentX - lastX;
-      velocity = dx / dt;
-      lastX = currentX;
-      lastTime = now;
-
-      hasMoved = true;
+    if(!e.touches || e.touches.length !== 1) return;
+    if(Math.abs(e.touches[0].clientX - touchStartX) > 8){
+      touchMoved = true;
       justDragged = true;
-      el.scrollLeft = scrollStart - diffX;
-      el.classList.add('is-dragging');
-
-      if(e.cancelable){
-        e.preventDefault();
-      }
     }
-  }, { passive: false });
+  }, { passive: true });
 
-  function endTouchDrag(){
-    if(isDown && isTouch){
-      isDown = false;
-      el.classList.remove('is-dragging');
-      if(hasMoved){
-        startMomentum();
-        clearTimeout(dragTimer);
-        dragTimer = setTimeout(() => {
-          justDragged = false;
-          hasMoved = false;
-        }, 320);
-      }
+  el.addEventListener('touchend', () => {
+    if(touchMoved){
+      clearTimeout(dragResetTimer);
+      dragResetTimer = setTimeout(() => { justDragged = false; touchMoved = false; }, 200);
     }
-  }
+  }, { passive: true });
 
-  el.addEventListener('touchend', endTouchDrag, { passive: true });
-  el.addEventListener('touchcancel', endTouchDrag, { passive: true });
-
-  // Suppress button clicks on child chips when dragging has occurred
+  // 3. Cegah klik tombol terpencet jika pengguna baru selesai swipe/scroll
   el.addEventListener('click', (e) => {
-    if(hasMoved || justDragged){
+    if(justDragged || mouseMoved || touchMoved){
       e.preventDefault();
       e.stopPropagation();
       e.stopImmediatePropagation();
-      hasMoved = false;
+      mouseMoved = false;
+      touchMoved = false;
       return false;
     }
   }, true);
 
-  // Wheel handling for trackpad/mouse
+  // 4. Mouse wheel horizontal
   el.addEventListener('wheel', (e) => {
     if(e.deltaY !== 0 && Math.abs(e.deltaX) < Math.abs(e.deltaY)){
       el.scrollLeft += e.deltaY;
@@ -16919,11 +18673,6 @@ function selectSubgroupFilter(sub, chipBtn){
     label = localizeSubgroupName(currentSubgroupFilter);
   }
   showToast(t('sgToastShowing', { label: label }));
-  
-  const grid = document.getElementById('productGrid');
-  if(grid){
-    grid.scrollIntoView({behavior:'smooth', block:'start'});
-  }
 }
 
 function updateCategoryChipsUI(){
@@ -16951,9 +18700,12 @@ function updateCategoryChipsUI(){
     const catDisc = (cat === 'all') ? 0 : getCategoryMaxDiscount(cat);
     const discTitle = (currentSelectedCountry === 'SG') ? `Up to ${catDisc}% Off` : ((currentSelectedCountry === 'MY') ? `Diskaun sehingga ${catDisc}%` : `Diskon hingga ${catDisc}%`);
     const discBadge = catDisc > 0 ? `<span class="cat-chip-disc" title="${discTitle}">🔥 -${catDisc}%</span>` : '';
+    const nextHtml = `${catShortName}${discBadge ? ' ' + discBadge : ''}`;
     
+    if(chip.innerHTML !== nextHtml){
+      chip.innerHTML = nextHtml;
+    }
     chip.classList.toggle('active', cat === currentCatFilter);
-    chip.innerHTML = `${catShortName}${discBadge ? ' ' + discBadge : ''}`;
   });
 
   const catChipsEl = document.getElementById('catChips');
@@ -16964,43 +18716,64 @@ function updateCategoryChipsUI(){
   const subBar = document.getElementById('catalogSubFilterBar');
   const subWrap = document.getElementById('subfilterWrapper');
   if(subBar){
-    // JANGAN tampilkan sub-filter jika katalog "SEMUA" ('all')!
-    // Sub-filter HANYA ditampilkan untuk game seperti genshin, wuwa, hsr, nte, lainnya
     if(!currentCatFilter || currentCatFilter === 'all'){
       if(subWrap) subWrap.style.display = 'none';
       subBar.style.display = 'none';
       subBar.innerHTML = '';
+      subBar.dataset.subBarKey = '';
     } else {
       const subs = getExistingSubgroups(currentCatFilter);
       if(subs.length > 0){
         const isAllActive = (!currentSubgroupFilter || currentSubgroupFilter === 'all');
         const allLabel = (currentSelectedCountry === 'SG') ? 'All' : 'Semua';
-        let chipsHtml = `
-          <button type="button" class="sub-chip ${isAllActive ? 'active' : ''}" onclick="selectSubgroupFilter('all', this)">
-            🌟 ${allLabel}
-          </button>
-        `;
-        subs.forEach(s => {
-          const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
-          const sDisc = getDiscount(currentCatFilter, s);
-          const locName = localizeSubgroupName(s);
-          const discBadge = sDisc > 0 ? `<span class="sub-chip-disc">🔥 -${sDisc}%</span>` : '';
-          const icon = getSubgroupIcon(s);
-          chipsHtml += `
-            <button type="button" class="sub-chip ${isActive ? 'active' : ''} ${sDisc > 0 ? 'has-discount' : ''}" onclick="selectSubgroupFilter('${s.replace(/'/g, "\\'")}', this)">
-              ${icon} ${escapeHtml(locName)} ${discBadge}
+        
+        // Cek apakah struktur chip sub-kategori perlu dibangun ulang
+        const subBarKey = currentCatFilter + '_' + subs.join('|') + '_' + (currentSelectedCountry || 'ID');
+        if(subBar.dataset.subBarKey !== subBarKey){
+          subBar.dataset.subBarKey = subBarKey;
+          let chipsHtml = `
+            <button type="button" class="sub-chip ${isAllActive ? 'active' : ''}" data-sub="all" onclick="selectSubgroupFilter('all', this)">
+              🌟 ${allLabel}
             </button>
           `;
-        });
+          subs.forEach(s => {
+            const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
+            const sDisc = getDiscount(currentCatFilter, s);
+            const locName = localizeSubgroupName(s);
+            const discBadge = sDisc > 0 ? `<span class="sub-chip-disc">🔥 -${sDisc}%</span>` : '';
+            const icon = getSubgroupIcon(s);
+            chipsHtml += `
+              <button type="button" class="sub-chip ${isActive ? 'active' : ''} ${sDisc > 0 ? 'has-discount' : ''}" data-sub="${escapeHtml(s)}" onclick="selectSubgroupFilter('${s.replace(/'/g, "\\'")}', this)">
+                ${icon} ${escapeHtml(locName)} ${discBadge}
+              </button>
+            `;
+          });
 
-        if(subWrap) subWrap.style.display = 'block';
-        subBar.style.display = 'flex';
-        subBar.innerHTML = chipsHtml;
+          if(subWrap) subWrap.style.display = 'block';
+          subBar.style.display = 'flex';
+          subBar.innerHTML = chipsHtml;
+          enableHorizontalDragScroll(subBar);
+        } else {
+          // Subgroup tidak berubah, JANGAN buat ulang DOM agar scroll tidak putus atau lag!
+          if(subWrap) subWrap.style.display = 'block';
+          subBar.style.display = 'flex';
+          const buttons = subBar.querySelectorAll('.sub-chip');
+          buttons.forEach((btn, idx) => {
+            if(idx === 0){
+              btn.classList.toggle('active', isAllActive);
+            } else {
+              const s = subs[idx - 1];
+              const isActive = (currentSubgroupFilter && currentSubgroupFilter.toLowerCase() === s.toLowerCase());
+              btn.classList.toggle('active', isActive);
+            }
+          });
+        }
         enableHorizontalDragScroll(subBar);
       } else {
         if(subWrap) subWrap.style.display = 'none';
         subBar.style.display = 'none';
         subBar.innerHTML = '';
+        subBar.dataset.subBarKey = '';
       }
     }
   }
@@ -17021,6 +18794,267 @@ function localizeProductBadge(badge, lang = null){
   }
   return b;
 }
+
+// ==================== BANK DATA PENJUALAN PRODUK & PENGAIT PESANAN ====================
+// Bank data permanen untuk menghitung dan mencatat secara akurat total penjualan per produk.
+// Setiap pesanan yang dibuat pengunjung/pelanggan dikaitkan dan dicatat secara abadi
+// di Firebase RTDB (norxstore/sales_bank) dan localStorage, sehingga catatan tidak akan hilang
+// meskipun riwayat pesanan personal dihapus atau dibersihkan.
+
+const SALES_BANK_STORAGE_KEY = 'norxstore_sales_bank_v2';
+
+// Baseline awal: Semua produk mulai dari 0 (nol) agar murni bertambah saat ada order pengunjung
+const INITIAL_SALES_BASELINE = {};
+
+let salesBankState = {
+  counts: {},
+  ingestedOrders: {},
+  lastUpdated: Date.now()
+};
+
+function loadSalesBankLocal(){
+  try {
+    localStorage.removeItem('norxstore_sales_bank_v1');
+    const raw = localStorage.getItem(SALES_BANK_STORAGE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        if(parsed.counts && typeof parsed.counts === 'object'){
+          salesBankState.counts = parsed.counts;
+        }
+        if(parsed.ingestedOrders && typeof parsed.ingestedOrders === 'object'){
+          salesBankState.ingestedOrders = parsed.ingestedOrders;
+        }
+      }
+    }
+  } catch(e){
+    console.warn('Gagal memuat cache bank data penjualan:', e);
+  }
+}
+
+function saveSalesBankLocal(){
+  try {
+    salesBankState.lastUpdated = Date.now();
+    localStorage.setItem(SALES_BANK_STORAGE_KEY, JSON.stringify(salesBankState));
+  } catch(e){}
+}
+
+// Reset seluruh data penjualan ke 0 (nol)
+function resetSalesBankToZero(showNotif = false){
+  salesBankState.counts = {};
+  if(typeof products === 'object' && Array.isArray(products)){
+    products.forEach(p => {
+      if(p && p.id !== undefined) salesBankState.counts[String(p.id)] = 0;
+    });
+  }
+  // Tandai pesanan yang sudah ada di memori saat ini agar tidak menambah hitungan retroaktif
+  if(typeof allOrders === 'object' && allOrders){
+    for(const oid in allOrders){
+      salesBankState.ingestedOrders[oid] = Date.now();
+    }
+  }
+  saveSalesBankLocal();
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/sales_bank/counts').set(salesBankState.counts).catch(()=>{});
+  }
+  renderProducts();
+  if(isAdminOpen()) renderAdminProductList();
+  if(showNotif && typeof showToast === 'function') showToast('✅ Seluruh data penjualan berhasil direset ke 0');
+}
+
+// Inisialisasi awal bank data ke cloud jika belum ada
+function initSalesBankCloud(){
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/sales_bank/counts').once('value').then(snap => {
+      if(snap.exists() && snap.val()){
+        const val = snap.val();
+        for(const pid in val){
+          salesBankState.counts[pid] = Math.max(Number(salesBankState.counts[pid]) || 0, Number(val[pid]) || 0);
+        }
+        saveSalesBankLocal();
+        renderProducts();
+      } else {
+        syncSalesBankFromDoneOrders(allOrders);
+      }
+    }).catch(()=>{});
+  }
+}
+
+// Pengait data: Mencatat pesanan baru secara permanen ke Bank Data Penjualan
+function recordOrderToSalesBank(order){
+  if(!order || !order.id) return;
+  if(salesBankState.ingestedOrders[order.id]) return; // Cegah duplikasi
+
+  salesBankState.ingestedOrders[order.id] = Date.now();
+
+  let items = order.items;
+  if(!Array.isArray(items) && order.productTitle){
+    items = [{ id: order.productId || order.id, name: order.productTitle, qty: order.qty || 1 }];
+  }
+
+  const cloudUpdates = {};
+  if(Array.isArray(items)){
+    items.forEach(it => {
+      if(!it) return;
+      const pid = (it.id !== undefined && it.id !== null) ? String(it.id) : '';
+      const qty = Math.max(1, Number(it.qty) || 1);
+      if(pid){
+        const current = (salesBankState.counts[pid] !== undefined)
+          ? Math.max(0, Number(salesBankState.counts[pid]) || 0)
+          : 0;
+        const updated = current + qty;
+        salesBankState.counts[pid] = updated;
+        cloudUpdates['counts/' + pid] = updated;
+      }
+    });
+  }
+
+  saveSalesBankLocal();
+  renderProducts();
+  if(isAdminOpen()) renderAdminProductList();
+
+  // Simpan secara permanen ke Firebase Bank Data (tidak akan terhapus meski order di-delete pelanggan)
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    // 1. Simpan salinan permanen ke buku besar bank data (norxstore/sales_bank/ledger)
+    fbDB.ref('norxstore/sales_bank/ledger/' + order.id).set({
+      orderId: order.id,
+      items: items || [],
+      total: order.total || 0,
+      createdAt: order.createdAt || Date.now(),
+      customerName: order.customerName || 'Pelanggan',
+      paymentMethod: order.paymentMethod || '-'
+    }).catch(()=>{});
+
+    // 2. Tandai ID pesanan telah masuk pembukuan bank data
+    cloudUpdates['ingested_orders/' + order.id] = Date.now();
+    fbDB.ref('norxstore/sales_bank').update(cloudUpdates).catch(()=>{});
+  }
+}
+
+// Sinkronisasi data produk terjual riil dari seluruh pesanan pelanggan (pending, processing, selesai)
+function syncSalesBankFromOrders(ordersObj){
+  const orders = ordersObj || (typeof allOrders === 'object' ? allOrders : null);
+  if(!orders || typeof orders !== 'object') return;
+
+  const orderCounts = {};
+  for(const oid in orders){
+    if(!oid || oid.startsWith('rat_') || oid.startsWith('RAT-') || oid.startsWith('__config_')) continue;
+    const ord = orders[oid];
+    if(!ord) continue;
+    const st = String(ord.status || '').toLowerCase().trim();
+    // Hanya kecualikan pesanan yang dibatalkan / refund
+    if(st === 'batal' || st === 'cancelled' || st === 'refund') continue;
+
+    let items = ord.items;
+    if(!Array.isArray(items) && (ord.productTitle || ord.productId)){
+      items = [{ id: ord.productId, name: ord.productTitle, qty: ord.qty || 1 }];
+    }
+    if(Array.isArray(items)){
+      items.forEach(it => {
+        if(!it) return;
+        const pid = (it.id !== undefined && it.id !== null) ? String(it.id) : '';
+        const qty = Math.max(1, Number(it.qty) || 1);
+        if(pid){
+          orderCounts[pid] = (orderCounts[pid] || 0) + qty;
+        } else if(it.name && Array.isArray(products)){
+          const matched = products.find(p => p && p.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase());
+          if(matched && matched.id !== undefined){
+            const mId = String(matched.id);
+            orderCounts[mId] = (orderCounts[mId] || 0) + qty;
+          }
+        }
+      });
+    }
+  }
+
+  // Perbarui salesBankState.counts jika data riil lebih besar dari baseline saat ini
+  let changed = false;
+  for(const pid in orderCounts){
+    const existing = Math.max(0, Number(salesBankState.counts[pid]) || 0);
+    const calculated = orderCounts[pid];
+    if(calculated > existing){
+      salesBankState.counts[pid] = calculated;
+      changed = true;
+    }
+  }
+
+  if(changed){
+    saveSalesBankLocal();
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/orders/__config_sales_bank__').set({
+        counts: salesBankState.counts,
+        updatedAt: Date.now()
+      }).catch(()=>{});
+      fbDB.ref('norxstore/sales_bank/counts').update(salesBankState.counts).catch(()=>{});
+    }
+  }
+}
+
+function syncSalesBankFromDoneOrders(ordersObj){
+  syncSalesBankFromOrders(ordersObj);
+}
+
+// Menghitung dan menyerap riwayat pesanan (kompatibilitas backward)
+function ingestExistingOrdersIntoSalesBank(ordersObj){
+  syncSalesBankFromOrders(ordersObj);
+}
+
+// Mengambil jumlah produk terjual yang akurat dan transparan langsung dari seluruh pesanan pelanggan
+function getProductSoldCount(p){
+  if(!p) return 0;
+  const pid = (p.id !== undefined && p.id !== null) ? String(p.id) : '';
+  const pName = (p.name || '').trim().toLowerCase();
+
+  // 1. Hitung langsung dari seluruh pesanan masuk di database (allOrders)
+  // Menghitung SEMUA pesanan yang pernah masuk (pending, diproses, maupun selesai)
+  // Hanya mengecualikan pesanan yang dibatalkan / refund
+  let countFromActiveOrders = 0;
+  if(typeof allOrders === 'object' && allOrders){
+    for(const oid in allOrders){
+      if(!oid || oid.startsWith('rat_') || oid.startsWith('RAT-') || oid.startsWith('__config_')) continue;
+      const ord = allOrders[oid];
+      if(!ord) continue;
+      const st = String(ord.status || '').toLowerCase().trim();
+      if(st === 'batal' || st === 'cancelled' || st === 'refund') continue;
+
+      let items = ord.items;
+      if(!Array.isArray(items) && (ord.productTitle || ord.productId)){
+        items = [{ id: ord.productId, name: ord.productTitle, qty: ord.qty || 1 }];
+      }
+      if(Array.isArray(items)){
+        for(const it of items){
+          if(!it) continue;
+          const itId = (it.id !== undefined && it.id !== null) ? String(it.id) : '';
+          const itName = (it.name || '').trim().toLowerCase();
+          if((pid && itId === pid) || (pName && itName && pName === itName)){
+            countFromActiveOrders += Math.max(1, Number(it.qty) || 1);
+          }
+        }
+      }
+    }
+  }
+
+  // 2. Ambil dari cache bank data jika ada input manual atau baseline tersimpan
+  const salesBankCount = (pid && salesBankState && salesBankState.counts && salesBankState.counts[pid] !== undefined)
+    ? Math.max(0, Number(salesBankState.counts[pid]) || 0)
+    : 0;
+
+  return Math.max(countFromActiveOrders, salesBankCount);
+}
+
+// Menampilkan teks jumlah terjual yang akurat dan transparan sesuai negara
+function formatProductSoldText(count){
+  const lang = (typeof currentSelectedCountry !== 'undefined') ? currentSelectedCountry : 'ID';
+  const c = Math.max(0, Number(count) || 0);
+  const formattedCount = c.toLocaleString('id-ID');
+  if(lang === 'SG'){
+    return `${formattedCount} sold`;
+  }
+  return `Terjual ${formattedCount}`;
+}
+
+// Muat cache bank data lokal
+loadSalesBankLocal();
 
 function renderProductCard(p, discount, idx){
   const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p);
@@ -17049,6 +19083,9 @@ function renderProductCard(p, discount, idx){
   const activeOrder = getActiveOrderForProduct(p.id);
   const isOrderProcessing = !!activeOrder;
   const isLocked = isSold || isReserved || isOrderProcessing;
+
+  const soldCount = getProductSoldCount(p);
+  const soldText = formatProductSoldText(soldCount);
 
   let busyBadge = '';
   if(isSold){
@@ -17090,6 +19127,12 @@ function renderProductCard(p, discount, idx){
         ${hasDisc ? `<span class="product-price-old">${formatProductPrice(p, false)}</span>` : ''}
         <span class="${hasDisc ? 'product-price-discount' : 'product-price'}">${formatProductPrice(p, hasDisc)}</span>
         ${hasDisc ? `<span class="product-disc-pill">🔥 -${disc}%</span>` : ''}
+      </div>
+      <div class="product-sold-row">
+        <span class="product-sold-pill">
+          <span class="product-sold-fire">🔥</span>
+          <span class="product-sold-text">${soldText}</span>
+        </span>
       </div>
       <p class="product-meta">${getProductDesc(p)}</p>
       <div class="product-btn-row" onclick="event.stopPropagation()">
@@ -17505,7 +19548,7 @@ function initCatalogSwipeNavigation(){
   sec.addEventListener('touchstart', (e) => {
     if(!e.touches || e.touches.length !== 1) return;
     const t = e.target;
-    if(t.closest('.product-img-track') || t.closest('.cat-chips') || t.closest('.catalog-subfilter-bar') || t.closest('button') || t.closest('input') || t.closest('textarea') || t.closest('.modal-box') || t.closest('.search-suggestions-dropdown')) {
+    if(t.closest('.product-grid') || t.closest('.product-card') || t.closest('.product-img-track') || t.closest('.cat-chips') || t.closest('.catalog-subfilter-bar') || t.closest('.catalog-quick-badges-bar') || t.closest('button') || t.closest('input') || t.closest('textarea') || t.closest('.modal-box') || t.closest('.search-suggestions-dropdown')) {
       return;
     }
     startX = e.touches[0].clientX;
@@ -17521,7 +19564,7 @@ function initCatalogSwipeNavigation(){
     const diffX = endX - startX;
     const diffY = endY - startY;
 
-    if(Math.abs(diffX) > 50 && Math.abs(diffX) > Math.abs(diffY) * 1.35){
+    if(Math.abs(diffX) > 90 && Math.abs(diffX) > Math.abs(diffY) * 2.0){
       const cats = ['all', 'genshin', 'hsr', 'wuwa', 'nte', 'lainnya'];
       let currentIdx = cats.indexOf(currentCatFilter);
       if(currentIdx === -1) currentIdx = 0;
@@ -17787,14 +19830,17 @@ function openModal(id){
   const imgs = getImagesForProduct(id);
   const hasProdImgs = imgs.length > 0;
   const thumbImg = hasProdImgs ? `<img src="${imgs[0]}" alt="" title="${t('viewFullPhoto')}">` : `<span style="font-size:22px">${selectedProduct.icon}</span>`;
+  const soldCount = getProductSoldCount(selectedProduct);
+  const soldText = formatProductSoldText(soldCount);
   document.getElementById('modalProduct').innerHTML=`
     <div class="modal-thumb" ${hasProdImgs ? `onclick="openProductImageViewer(${id},0)" style="cursor:pointer" title="${t('viewFullPhoto')}"` : ''}>${thumbImg}</div>
     <div class="modal-detail">
       <p class="name">${getProductName(selectedProduct)}</p>
-      <div class="price-row">
+      <div class="price-row" style="align-items:center;flex-wrap:wrap;gap:6px">
         ${hasDisc ? `<span class="price-old">${oldPriceFormatted}</span>` : ''}
         <p class="${hasDisc ? 'price-discount' : 'price'}">${finalPriceFormatted}</p>
         ${hasDisc ? `<span class="discount-tag">-${discount}%</span>` : ''}
+        <span class="modal-sold-pill">🔥 ${soldText}</span>
       </div>
       ${hasRange ? `<div style="font-size:11px;color:#7c3aed;font-weight:600;margin:2px 0 3px">${t('priceRangeHint', {price: finalPriceFormatted})}</div>` : ''}
       <p class="desc" style="font-size:12px;color:#64748b;margin:3px 0 4px">${getProductDesc(selectedProduct)}</p>
@@ -17805,6 +19851,8 @@ function openModal(id){
   selectedModalAdmin=null;
   renderAdminGrid('adminGridModal','selectAdminModal');
   document.getElementById('waPreview').style.display='none';
+  const agreeEl = document.getElementById('modalJokiAgreement');
+  if(agreeEl) agreeEl.checked = true;
   document.getElementById('modalOverlay').classList.add('open');
 }
 function closeModal(e){
@@ -17843,6 +19891,12 @@ function updateWA(){
   document.getElementById('waBtn').dataset.text=text;
 }
 function sendWA(){
+  const agree = document.getElementById('modalJokiAgreement');
+  if(agree && !agree.checked){
+    showToast(t('jokiAgreementRequired') || '⚠️ Harap centang dan setujui Peraturan Joki Norxstore untuk melanjutkan pesanan');
+    if(agree.scrollIntoView){ agree.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
+    return;
+  }
   const text=document.getElementById('waBtn').dataset.text;
   const url=getWaLink(text, selectedModalAdmin);
   if(selectedProduct){
@@ -18297,6 +20351,17 @@ function addNewProduct(){
       const curImgs = getImagesForProduct(savedId);
       products[idx] = { ...products[idx], name, price, maxPrice, priceRaw, badge, icon, desc, cat, subgroup, isAccount, images: curImgs };
     }
+    const soldEl = document.getElementById('newProdSoldCount');
+    if(soldEl && soldEl.value !== ''){
+      const soldVal = parseInt(soldEl.value, 10);
+      if(!isNaN(soldVal) && soldVal >= 0){
+        salesBankState.counts[String(savedId)] = soldVal;
+        saveSalesBankLocal();
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/sales_bank/counts/' + savedId).set(soldVal).catch(()=>{});
+        }
+      }
+    }
     setProducts(products);
     showToast('Produk "' + name + '" berhasil diperbarui!');
     cancelEditProduct();
@@ -18324,6 +20389,15 @@ function addNewProduct(){
       stagedNewProductImages = [];
     }
 
+    const soldEl = document.getElementById('newProdSoldCount');
+    const soldVal = soldEl ? parseInt(soldEl.value, 10) : NaN;
+    const initialSold = (!isNaN(soldVal) && soldVal >= 0) ? soldVal : 0;
+    salesBankState.counts[String(newId)] = initialSold;
+    saveSalesBankLocal();
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/sales_bank/counts/' + newId).set(initialSold).catch(()=>{});
+    }
+
     products.push(newProduct);
     if(!DEFAULT_PRODUCTS.some(dp => dp.id === newId)){
       DEFAULT_PRODUCTS.push({...newProduct});
@@ -18332,6 +20406,7 @@ function addNewProduct(){
 
     document.getElementById('newProdName').value = '';
     document.getElementById('newProdPrice').value = '';
+    if(soldEl) soldEl.value = '';
     document.getElementById('newProdSubgroup').value = '';
     document.getElementById('newProdDesc').value = '';
     document.getElementById('newProdBadge').value = '';
@@ -18382,6 +20457,8 @@ function editProduct(id){
   document.getElementById('newProdDesc').value = p.desc || '';
   document.getElementById('newProdBadge').value = p.badge || '';
   document.getElementById('newProdIcon').value = p.icon || '';
+  const soldEl = document.getElementById('newProdSoldCount');
+  if(soldEl) soldEl.value = (typeof getProductSoldCount === 'function') ? getProductSoldCount(p) : 0;
   document.getElementById('newProdIsAccount').classList.toggle('on', !!p.isAccount);
   document.getElementById('prodFormTitle').textContent = '✏️ Edit Produk';
   document.getElementById('prodFormBtn').textContent = '💾 Simpan Perubahan';
@@ -18402,6 +20479,8 @@ function cancelEditProduct(){
   stagedNewProductImages = [];
   document.getElementById('newProdName').value = '';
   document.getElementById('newProdPrice').value = '';
+  const soldEl = document.getElementById('newProdSoldCount');
+  if(soldEl) soldEl.value = '';
   document.getElementById('newProdSubgroup').value = '';
   document.getElementById('newProdDesc').value = '';
   document.getElementById('newProdBadge').value = '';
@@ -18567,7 +20646,7 @@ function renderAdminProductList(){
       <div class="p-info">
         <p class="p-name">${p.name}${p.isAccount ? ' 🔑' : ''}</p>
         <p class="p-cat">${p.cat.toUpperCase()}${p.subgroup ? ` • <span class="bulk-sub-tag">${p.subgroup}</span>` : ''}</p>
-        <p class="p-price">${formatProductPrice(p, false)}</p>
+        <p class="p-price">${formatProductPrice(p, false)} <span style="display:inline-flex;align-items:center;gap:3px;margin-left:6px;font-size:10px;font-weight:700;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:1px 6px;border-radius:6px;vertical-align:middle">🔥 Terjual: ${getProductSoldCount(p)}</span></p>
         ${statusLine}
       </div>
       <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">

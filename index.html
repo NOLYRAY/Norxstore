@@ -1041,7 +1041,7 @@ body.dark-mode #cartPayCrossBorderNote > div{
 
 
 .carousel-wrap{position:relative;width:100vw;margin:0;border-radius:0;overflow:hidden;left:50%;transform:translateX(-50%);box-shadow:0 4px 20px rgba(124,58,237,.1)}
-.carousel-track{display:flex;transition:transform .5s ease;width:100%}
+.carousel-track{display:flex;transition:transform .5s cubic-bezier(0.25,1,0.5,1);width:100%;will-change:transform;transform:translateZ(0)}
 .carousel-slide{flex:0 0 100%;position:relative;height:260px}
 .slide-bg{width:100%;height:100%;position:relative;background-size:cover;background-position:center}
 .slide-overlay{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.75) 0%,rgba(0,0,0,.2) 50%,transparent 100%)}
@@ -1146,11 +1146,14 @@ body.dark-mode .live-pill-mode{
 }
 .cat-chip.active{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(124,58,237,0.32)}
 .product-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:0 16px;width:100%}
-.product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;transition:transform .2s ease;touch-action:pan-y}
-.product-card:hover{transform:translateY(-4px)}
+.product-card{border:1px solid #ece9f7;border-radius:16px;overflow:hidden;background:#fff;cursor:pointer;box-shadow:0 3px 10px rgba(124,58,237,.06);display:flex;flex-direction:column;touch-action:pan-y;content-visibility:auto;contain-intrinsic-size:280px}
+@media (hover: hover) and (pointer: fine){
+  .product-card{transition:transform .2s ease, box-shadow .2s ease}
+  .product-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(124,58,237,.14)}
+}
 
 .product-img-wrap{width:100%;aspect-ratio:1;position:relative;overflow:hidden;background:#f5f5f5}
-.product-img-track{display:flex;height:100%;scroll-snap-type:x mandatory;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:smooth;touch-action:pan-x pan-y}
+.product-img-track{display:flex;height:100%;scroll-snap-type:x mandatory;overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;scroll-behavior:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y}
 .product-img-track::-webkit-scrollbar{display:none}
 .product-img-slide{flex:0 0 100%;height:100%;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;position:relative}
 .product-img-slide img{width:100%;height:100%;object-fit:cover}
@@ -6127,15 +6130,34 @@ function getCarouselConfig(){
 }
 function setCarouselConfig(data){
   carouselConfig = data;
-  fbDB.ref('norxstore/carousel').set(data).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
+  safeSetItem('norxstore_carousel_cache', JSON.stringify(data));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_carousel__').set({
+      carousel: data,
+      updatedAt: Date.now()
+    }).catch(()=>{});
+    fbDB.ref('norxstore/carousel').set(data).catch(()=>{});
+  }
 }
 
 function getAdminPassword(){
-  return adminPasswordCache;
+  const cached = safeGetItem('norxstore_admin_password', null);
+  if(cached && typeof cached === 'string' && cached.trim().length >= 4) return cached.trim();
+  return adminPasswordCache || DEFAULT_PASSWORD;
 }
 function setAdminPassword(pass){
-  adminPasswordCache = pass;
-  fbDB.ref('norxstore/adminPass').set(pass).catch(e=>console.error(e));
+  if(!pass || typeof pass !== 'string') return false;
+  const clean = pass.trim();
+  if(clean.length < 4) return false;
+  adminPasswordCache = clean;
+  safeSetItem('norxstore_admin_password', clean);
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_admin_pass__').set({
+      pass: clean,
+      updatedAt: Date.now()
+    }).catch(e=>console.warn('Sync notice pass:', e));
+    fbDB.ref('norxstore/adminPass').set(clean).catch(()=>{});
+  }
   return true;
 }
 
@@ -6264,8 +6286,7 @@ function setDiscount(pct){
   discountConfig.mode = 'all';
   discountConfig.global = val;
   discountVal = val;
-  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
-  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  setDiscountConfig(discountConfig);
   return val;
 }
 
@@ -6273,7 +6294,13 @@ function setDiscountConfig(cfg){
   discountConfig = normalizeDiscountConfig(cfg);
   discountVal = discountConfig.global;
   safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
-  fbDB.ref('norxstore/discount').set(discountConfig).catch(e=>console.error(e));
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_discount__').set({
+      config: discountConfig,
+      updatedAt: Date.now()
+    }).catch(e=>console.warn('Sync notice discount:', e));
+    fbDB.ref('norxstore/discount').set(discountConfig).catch(()=>{});
+  }
   return discountConfig;
 }
 
@@ -6495,10 +6522,11 @@ function saveDiscountSettings(){
 
   const statusEl = document.getElementById('adminStatus');
   if(statusEl){
-    statusEl.textContent = '✅ Pengaturan diskon berhasil diperbarui!';
+    statusEl.textContent = '✅ Pengaturan diskon berhasil diperbarui & disinkronkan!';
     statusEl.classList.add('show');
     setTimeout(() => statusEl.classList.remove('show'), 2500);
   }
+  showToast('✅ Pengaturan diskon berhasil disimpan & disinkronkan!');
 }
 
 function resetAllDiscounts(){
@@ -6520,6 +6548,7 @@ function resetAllDiscounts(){
     statusEl.classList.add('show');
     setTimeout(() => statusEl.classList.remove('show'), 2500);
   }
+  showToast('🔄 Semua diskon berhasil direset ke 0%');
 }
 
 function saveDiscount(){
@@ -10191,9 +10220,47 @@ function saveCurrencyConfig(cfg){
   currencyConfigCache = cfg;
   safeSetItem('norxstore_currency_config', JSON.stringify(cfg));
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/currencyConfig').set(cfg).catch(e => {
-      console.warn('Sync notice: currencyConfig disimpan di penyimpanan lokal');
-    });
+    fbDB.ref('norxstore/currencyConfig').set(cfg).catch(()=>{});
+  }
+  syncAdminSettingsToCloud();
+}
+
+function syncAdminSettingsToCloud(){
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    const settingsPayload = {
+      currency: (typeof getCurrencyConfig === 'function') ? getCurrencyConfig() : null,
+      social: (typeof getSocialConfig === 'function') ? getSocialConfig() : null,
+      waChannel: (typeof getWaChannelConfig === 'function') ? getWaChannelConfig() : null,
+      jokiRules: (typeof getJokiRulesConfig === 'function') ? getJokiRulesConfig() : null,
+      updatedAt: Date.now()
+    };
+    fbDB.ref('norxstore/orders/__config_settings__').set({
+      data: settingsPayload,
+      updatedAt: Date.now()
+    }).catch(e=>console.warn('Sync notice settings:', e));
+  }
+}
+
+function applyAdminConfigSettings(data){
+  if(!data || typeof data !== 'object') return;
+  if(data.currency && typeof data.currency === 'object'){
+    currencyConfigCache = data.currency;
+    safeSetItem('norxstore_currency_config', JSON.stringify(data.currency));
+    if(typeof updateNavCountryBtn === 'function') updateNavCountryBtn();
+  }
+  if(data.social && typeof data.social === 'object'){
+    socialConfigCache = data.social;
+    safeSetItem('norxstore_social_config', JSON.stringify(data.social));
+    if(typeof renderSocialIcons === 'function') renderSocialIcons();
+  }
+  if(data.waChannel && typeof data.waChannel === 'object'){
+    waChannelConfigCache = data.waChannel;
+    safeSetItem('norxstore_wa_channel_config', JSON.stringify(data.waChannel));
+    if(typeof renderWaChannelUI === 'function') renderWaChannelUI();
+  }
+  if(data.jokiRules && typeof data.jokiRules === 'object'){
+    jokiRulesConfigCache = data.jokiRules;
+    safeSetItem('norxstore_joki_rules_config', JSON.stringify(data.jokiRules));
   }
 }
 
@@ -11001,10 +11068,9 @@ function saveWaChannelConfig(cfg){
   waChannelConfigCache = cfg;
   safeSetItem('norxstore_wa_channel_config', JSON.stringify(cfg));
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/config/whatsappChannel').set(cfg).catch(e => {
-      console.warn('Sync notice: whatsappChannel disimpan di penyimpanan lokal');
-    });
+    fbDB.ref('norxstore/config/whatsappChannel').set(cfg).catch(()=>{});
   }
+  syncAdminSettingsToCloud();
   renderWaChannelUI();
 }
 
@@ -11492,10 +11558,9 @@ function saveJokiRulesConfig(cfg){
     safeSetItem('norxstore_joki_rules_extra_note', cfg.extraNote || '');
   }
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/config/jokiRules').set(cfg).catch(e => {
-      console.warn('Sync notice: jokiRules disimpan di lokal');
-    });
+    fbDB.ref('norxstore/config/jokiRules').set(cfg).catch(()=>{});
   }
+  syncAdminSettingsToCloud();
   renderCheckoutJokiRulesBoxes();
 }
 
@@ -11705,10 +11770,9 @@ function saveSocialConfig(cfg){
   socialConfigCache = cfg;
   safeSetItem('norxstore_social_config', JSON.stringify(cfg));
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/socialConfig').set(cfg).catch(e => {
-      console.warn('Sync notice: socialConfig disimpan di penyimpanan lokal');
-    });
+    fbDB.ref('norxstore/socialConfig').set(cfg).catch(()=>{});
   }
+  syncAdminSettingsToCloud();
   renderSocialCards();
   renderSocialModalList();
   renderFooterQuickSocialLinks();
@@ -15806,17 +15870,51 @@ window.addEventListener('DOMContentLoaded', () => {
 
 fbDB.ref('norxstore/orders').on('value', snap=>{
   const incoming = snap.val() || {};
-  // Pastikan ulasan rat_* lokal yang ada di memori tidak terhapus saat snapshot orders diperbarui
-  for(const k in allOrders){
-    if(k.startsWith('rat_') && !incoming[k]){
-      incoming[k] = allOrders[k];
-    } else if(incoming[k] && allOrders[k] && allOrders[k].adminReply && !incoming[k].adminReply){
-      incoming[k].adminReply = allOrders[k].adminReply;
+
+  // 1. Sinkronisasi konfigurasi admin & diskon yang tersimpan aman di norxstore/orders/__config_*
+  if(incoming['__config_discount__'] && incoming['__config_discount__'].config){
+    discountConfig = normalizeDiscountConfig(incoming['__config_discount__'].config);
+    discountVal = discountConfig.global;
+    safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+    if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
+  }
+  if(incoming['__config_admin_pass__'] && incoming['__config_admin_pass__'].pass){
+    adminPasswordCache = incoming['__config_admin_pass__'].pass;
+    safeSetItem('norxstore_admin_password', adminPasswordCache);
+  }
+  if(incoming['__config_sales_bank__'] && incoming['__config_sales_bank__'].counts){
+    Object.assign(salesBankState.counts, incoming['__config_sales_bank__'].counts);
+    saveSalesBankLocal();
+  }
+  if(incoming['__config_carousel__'] && incoming['__config_carousel__'].carousel){
+    carouselConfig = incoming['__config_carousel__'].carousel;
+    safeSetItem('norxstore_carousel_cache', JSON.stringify(carouselConfig));
+    renderCarousel();
+    if(isAdminOpen()) renderCarouselAdmin();
+  }
+  if(incoming['__config_settings__'] && incoming['__config_settings__'].data){
+    applyAdminConfigSettings(incoming['__config_settings__'].data);
+  }
+
+  // 2. Pisahkan data konfigurasi internal agar tidak tercampur ke pesanan pelanggan
+  const cleanOrders = {};
+  for(const k in incoming){
+    if(!k.startsWith('__config_')){
+      cleanOrders[k] = incoming[k];
     }
   }
-  allOrders = incoming;
-  if(typeof ingestExistingOrdersIntoSalesBank === 'function'){
-    ingestExistingOrdersIntoSalesBank(allOrders);
+
+  // Pastikan ulasan rat_* lokal yang ada di memori tidak terhapus saat snapshot orders diperbarui
+  for(const k in allOrders){
+    if(k.startsWith('rat_') && !cleanOrders[k]){
+      cleanOrders[k] = allOrders[k];
+    } else if(cleanOrders[k] && allOrders[k] && allOrders[k].adminReply && !cleanOrders[k].adminReply){
+      cleanOrders[k].adminReply = allOrders[k].adminReply;
+    }
+  }
+  allOrders = cleanOrders;
+  if(typeof syncSalesBankFromOrders === 'function'){
+    syncSalesBankFromOrders(allOrders);
   }
   customerRatingsCache = null;
   checkOrderNotifications(allOrders);
@@ -15826,6 +15924,7 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
   if(isAdminOpen()){
     renderAdminOrders();
     renderAdminProductList();
+    renderDiscountAdminUI();
   }
   updateOrderNotifDot();
   updateRatingStatsUI();
@@ -16728,6 +16827,7 @@ function approveOrder(id){
 function completeOrderStatus(id, silent = false){
   fbDB.ref('norxstore/orders/' + id).update({status:'done', completedAt: Date.now()}).catch(e=>console.error(e));
   if(allOrders[id]) allOrders[id].status = 'done';
+  if(typeof syncSalesBankFromDoneOrders === 'function') syncSalesBankFromDoneOrders(allOrders);
   const order = allOrders[id];
   const itemsText = order ? order.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
 
@@ -17655,9 +17755,9 @@ function savePassword(){
   const ok = setAdminPassword(newPass);
   if(ok){
     document.getElementById('passStatus').classList.add('show');
-    showToast('Kata sandi berhasil disimpan!');
+    showToast('✅ Kata sandi admin berhasil disimpan & disinkronkan!');
     document.getElementById('newPassInput').value = '';
-    setTimeout(()=>{ document.getElementById('passStatus').classList.remove('show'); }, 2000);
+    setTimeout(()=>{ document.getElementById('passStatus').classList.remove('show'); }, 2500);
   }
 }
 
@@ -18085,7 +18185,10 @@ function setSlide(index){
   document.getElementById('counter').textContent=(currentSlide+1)+' / 4';
   clearInterval(autoPlay);autoPlay=setInterval(()=>goSlide(1),5000);
 }
-function goSlide(dir){setSlide((currentSlide+dir+4)%4)}
+function goSlide(dir){
+  if(typeof document !== 'undefined' && document.hidden) return;
+  setSlide((currentSlide+dir+4)%4);
+}
 
 let modeTransitioning = false;
 function switchMode(target){
@@ -18763,8 +18866,15 @@ function resetSalesBankToZero(showNotif = false){
 function initSalesBankCloud(){
   if(window.fbAvailable && fbDB && fbDB.ref){
     fbDB.ref('norxstore/sales_bank/counts').once('value').then(snap => {
-      if(!snap.exists() || !snap.val()){
-        resetSalesBankToZero();
+      if(snap.exists() && snap.val()){
+        const val = snap.val();
+        for(const pid in val){
+          salesBankState.counts[pid] = Math.max(Number(salesBankState.counts[pid]) || 0, Number(val[pid]) || 0);
+        }
+        saveSalesBankLocal();
+        renderProducts();
+      } else {
+        syncSalesBankFromDoneOrders(allOrders);
       }
     }).catch(()=>{});
   }
@@ -18821,27 +18931,115 @@ function recordOrderToSalesBank(order){
   }
 }
 
-// Menghitung dan menyerap riwayat pesanan dari snapshot database norxstore/orders
-// Menandai riwayat pesanan yang sudah ada agar tidak dihitung ulang secara retroaktif
-function ingestExistingOrdersIntoSalesBank(ordersObj){
-  if(!ordersObj || typeof ordersObj !== 'object') return;
-  for(const oid in ordersObj){
-    if(oid && !salesBankState.ingestedOrders[oid]){
-      salesBankState.ingestedOrders[oid] = (ordersObj[oid] && ordersObj[oid].createdAt) ? ordersObj[oid].createdAt : Date.now();
+// Sinkronisasi data produk terjual riil dari seluruh pesanan pelanggan (pending, processing, selesai)
+function syncSalesBankFromOrders(ordersObj){
+  const orders = ordersObj || (typeof allOrders === 'object' ? allOrders : null);
+  if(!orders || typeof orders !== 'object') return;
+
+  const orderCounts = {};
+  for(const oid in orders){
+    if(!oid || oid.startsWith('rat_') || oid.startsWith('RAT-') || oid.startsWith('__config_')) continue;
+    const ord = orders[oid];
+    if(!ord) continue;
+    const st = String(ord.status || '').toLowerCase().trim();
+    // Hanya kecualikan pesanan yang dibatalkan / refund
+    if(st === 'batal' || st === 'cancelled' || st === 'refund') continue;
+
+    let items = ord.items;
+    if(!Array.isArray(items) && (ord.productTitle || ord.productId)){
+      items = [{ id: ord.productId, name: ord.productTitle, qty: ord.qty || 1 }];
+    }
+    if(Array.isArray(items)){
+      items.forEach(it => {
+        if(!it) return;
+        const pid = (it.id !== undefined && it.id !== null) ? String(it.id) : '';
+        const qty = Math.max(1, Number(it.qty) || 1);
+        if(pid){
+          orderCounts[pid] = (orderCounts[pid] || 0) + qty;
+        } else if(it.name && Array.isArray(products)){
+          const matched = products.find(p => p && p.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase());
+          if(matched && matched.id !== undefined){
+            const mId = String(matched.id);
+            orderCounts[mId] = (orderCounts[mId] || 0) + qty;
+          }
+        }
+      });
+    }
+  }
+
+  // Perbarui salesBankState.counts jika data riil lebih besar dari baseline saat ini
+  let changed = false;
+  for(const pid in orderCounts){
+    const existing = Math.max(0, Number(salesBankState.counts[pid]) || 0);
+    const calculated = orderCounts[pid];
+    if(calculated > existing){
+      salesBankState.counts[pid] = calculated;
+      changed = true;
+    }
+  }
+
+  if(changed){
+    saveSalesBankLocal();
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/orders/__config_sales_bank__').set({
+        counts: salesBankState.counts,
+        updatedAt: Date.now()
+      }).catch(()=>{});
+      fbDB.ref('norxstore/sales_bank/counts').update(salesBankState.counts).catch(()=>{});
     }
   }
 }
 
-// Mengambil jumlah produk terjual yang akurat dari Bank Data
+function syncSalesBankFromDoneOrders(ordersObj){
+  syncSalesBankFromOrders(ordersObj);
+}
+
+// Menghitung dan menyerap riwayat pesanan (kompatibilitas backward)
+function ingestExistingOrdersIntoSalesBank(ordersObj){
+  syncSalesBankFromOrders(ordersObj);
+}
+
+// Mengambil jumlah produk terjual yang akurat dan transparan langsung dari seluruh pesanan pelanggan
 function getProductSoldCount(p){
   if(!p) return 0;
   const pid = (p.id !== undefined && p.id !== null) ? String(p.id) : '';
-  if(!pid) return 0;
+  const pName = (p.name || '').trim().toLowerCase();
 
-  if(salesBankState.counts[pid] !== undefined){
-    return Math.max(0, Number(salesBankState.counts[pid]) || 0);
+  // 1. Hitung langsung dari seluruh pesanan masuk di database (allOrders)
+  // Menghitung SEMUA pesanan yang pernah masuk (pending, diproses, maupun selesai)
+  // Hanya mengecualikan pesanan yang dibatalkan / refund
+  let countFromActiveOrders = 0;
+  if(typeof allOrders === 'object' && allOrders){
+    for(const oid in allOrders){
+      if(!oid || oid.startsWith('rat_') || oid.startsWith('RAT-') || oid.startsWith('__config_')) continue;
+      const ord = allOrders[oid];
+      if(!ord) continue;
+      const st = String(ord.status || '').toLowerCase().trim();
+      if(st === 'batal' || st === 'cancelled' || st === 'refund') continue;
+
+      let items = ord.items;
+      if(!Array.isArray(items) && (ord.productTitle || ord.productId)){
+        items = [{ id: ord.productId, name: ord.productTitle, qty: ord.qty || 1 }];
+      }
+      if(Array.isArray(items)){
+        for(const it of items){
+          if(!it) continue;
+          const itId = (it.id !== undefined && it.id !== null) ? String(it.id) : '';
+          const itName = (it.name || '').trim().toLowerCase();
+          if((pid && itId === pid) || (pName && itName && pName === itName)){
+            countFromActiveOrders += Math.max(1, Number(it.qty) || 1);
+          }
+        }
+      }
+    }
   }
-  return 0;
+
+  // 2. Ambil dari cache bank data jika ada input manual atau baseline tersimpan
+  const salesBankCount = (pid && salesBankState && salesBankState.counts && salesBankState.counts[pid] !== undefined)
+    ? Math.max(0, Number(salesBankState.counts[pid]) || 0)
+    : 0;
+
+  return Math.max(countFromActiveOrders, salesBankCount);
 }
 
 // Menampilkan teks jumlah terjual yang akurat dan transparan sesuai negara
@@ -18855,13 +19053,8 @@ function formatProductSoldText(count){
   return `Terjual ${formattedCount}`;
 }
 
-// Jalankan pemuatan lokal & pastikan reset ke 0 jika belum pernah diinisialisasi
+// Muat cache bank data lokal
 loadSalesBankLocal();
-const SALES_BANK_ZERO_INIT_KEY = 'norxstore_sales_bank_zero_init_v2';
-if(localStorage.getItem(SALES_BANK_ZERO_INIT_KEY) !== 'done'){
-  localStorage.setItem(SALES_BANK_ZERO_INIT_KEY, 'done');
-  resetSalesBankToZero();
-}
 
 function renderProductCard(p, discount, idx){
   const disc = (discount !== undefined && discount !== null) ? discount : getDiscount(p);
