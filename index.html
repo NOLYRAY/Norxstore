@@ -3277,7 +3277,7 @@ button{cursor:pointer;font-family:inherit}
     <div class="catalog-quick-info">
       <span class="catalog-quick-title" id="quickBarRulesTitle">Peraturan Joki</span>
       <span class="catalog-quick-sub">
-        <span>Wajib Dibaca</span>
+        <span id="quickBarRulesSub">Wajib Dibaca</span>
         <span style="font-size:9.5px;font-weight:800;opacity:0.75">➔</span>
       </span>
     </div>
@@ -6278,21 +6278,16 @@ function setAdminPassword(pass){
 
 // ==================== DISCOUNT ENGINE (GLOBAL, PER-CATEGORY, & PER-SUBGROUP) ====================
 const DEFAULT_DISCOUNT_CONFIG = {
-  mode: 'subgroup', // 'all', 'category', atau 'subgroup'
+  mode: 'all', // 'all', 'category', atau 'subgroup'
   global: 0,
   categories: {
     genshin: 0,
     hsr: 0,
-    wuwa: 20,
+    wuwa: 0,
     nte: 0,
-    lainnya: 20
+    lainnya: 0
   },
-  subgroups: {
-    "genshin:::eksploration": 20,
-    "genshin:::intertwined fate": 20,
-    "hsr:::star rail special pass": 10,
-    "lainnya:::__none__": 50
-  }
+  subgroups: {}
 };
 
 function normalizeDiscountConfig(raw){
@@ -6325,7 +6320,8 @@ function normalizeDiscountConfig(raw){
   const subgroups = {};
   for(const k in rawSubs){
     const val = Math.max(0, Math.min(100, parseInt(rawSubs[k]) || 0));
-    if(val > 0) subgroups[k.toLowerCase()] = val;
+    // Simpan semua nilai terdefinisi termasuk 0 agar tidak revert ke default
+    subgroups[k.toLowerCase()] = val;
   }
 
   return { mode, global, categories, subgroups };
@@ -6408,6 +6404,7 @@ function setDiscount(pct){
 function setDiscountConfig(cfg){
   discountConfig = normalizeDiscountConfig(cfg);
   discountVal = discountConfig.global;
+  window._discountConfigFromOrders = true;
   safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
   if(window.fbAvailable && fbDB && fbDB.ref){
     fbDB.ref('norxstore/orders/__config_discount__').set({
@@ -6478,9 +6475,9 @@ function collectCurrentSubgroupInputs(){
     const sub = inp.getAttribute('data-sub');
     if(cat && sub){
       const key = `${cat}:::${sub}`.toLowerCase();
-      const val = Math.max(0, Math.min(100, parseInt(inp.value) || 0));
-      if(val > 0) discountConfig.subgroups[key] = val;
-      else delete discountConfig.subgroups[key];
+      const raw = inp.value !== undefined && inp.value !== null ? String(inp.value).trim() : '';
+      const val = raw === '' ? 0 : Math.max(0, Math.min(100, parseInt(raw) || 0));
+      discountConfig.subgroups[key] = val;
     }
   });
 }
@@ -6491,10 +6488,11 @@ function onDiscountSubCatChange(){
 }
 
 function applyQuickSubDiscount(){
-  const val = Math.max(0, Math.min(100, parseInt(document.getElementById('quickSubDiscountInput').value) || 0));
+  const quickInput = document.getElementById('quickSubDiscountInput');
+  const val = Math.max(0, Math.min(100, parseInt(quickInput ? quickInput.value : 0) || 0));
   const inputs = document.querySelectorAll('.disc-sub-input');
   inputs.forEach(inp => {
-    inp.value = val > 0 ? val : '';
+    inp.value = val;
   });
   collectCurrentSubgroupInputs();
   showToast(`Persentase ${val}% diterapkan ke semua sub di kategori ini`);
@@ -6530,7 +6528,7 @@ function renderDiscountSubgroupList(){
 
   subs.forEach(sub => {
     const key = `${cat}:::${sub.toLowerCase()}`;
-    const currentVal = (typeof subConfig[key] === 'number' && subConfig[key] > 0) ? subConfig[key] : '';
+    const currentVal = (typeof subConfig[key] === 'number') ? subConfig[key] : 0;
     let subIcon = '🏷️';
     const subLower = sub.toLowerCase();
     if(subLower.includes('top-up') || subLower.includes('topup') || subLower.includes('crystal') || subLower.includes('gem') || subLower.includes('primogem') || subLower.includes('oneiric')) subIcon = '💎';
@@ -6558,7 +6556,7 @@ function renderDiscountSubgroupList(){
 
   if(noneCount > 0){
     const noneKey = `${cat}:::__none__`;
-    const noneVal = (typeof subConfig[noneKey] === 'number' && subConfig[noneKey] > 0) ? subConfig[noneKey] : '';
+    const noneVal = (typeof subConfig[noneKey] === 'number') ? subConfig[noneKey] : 0;
     html += `
       <div class="discount-cat-item" style="border-style:dashed;background:#f8fafc">
         <div class="discount-cat-label">
@@ -6645,11 +6643,19 @@ function saveDiscountSettings(){
 }
 
 function resetAllDiscounts(){
+  const allSubgroups = {};
+  if(products && Array.isArray(products)){
+    products.forEach(p => {
+      const c = (p.cat || '').toLowerCase();
+      const s = (p.subgroup || '__none__').trim().toLowerCase();
+      if(c) allSubgroups[`${c}:::${s}`] = 0;
+    });
+  }
   const newConfig = {
     mode: 'all',
     global: 0,
     categories: { genshin: 0, hsr: 0, wuwa: 0, nte: 0, lainnya: 0 },
-    subgroups: {}
+    subgroups: allSubgroups
   };
   setDiscountConfig(newConfig);
   renderDiscountAdminUI();
@@ -8897,10 +8903,104 @@ const DESC_EXACT_MAP = {
   "Daily Activity, Waveplate, Daily Bp, Nightmare Purification, wekkly boss, Fantasies of the Thousand Gateway, Event, Endgame Content(menyesuaikan akun)": {
     MY: "Aktiviti Harian, Waveplate, Daily BP, Pembersihan Nightmare, Bos Mingguan, Fantasies of the Thousand Gateway, Event, Kandungan Endgame (mengikut akaun)",
     SG: "Daily activities, Waveplate, Daily BP, Nightmare purification, Weekly bosses, Fantasies of the Thousand Gateway, Events, Endgame content (adjusted to account)"
+  },
+  "Akun rerol punya admin dan ada 47 IF": {
+    MY: "Akaun reroll rasmi admin, dilengkapi 47 Intertwined Fate (IF)",
+    SG: "Official admin reroll account, equipped with 47 Intertwined Fates (IF)"
+  },
+  "Akun rerol punya admin and ada 47 IF": {
+    MY: "Akaun reroll rasmi admin, dilengkapi 47 Intertwined Fate (IF)",
+    SG: "Official admin reroll account, equipped with 47 Intertwined Fates (IF)"
+  },
+  "Account rerol punya admin dan ada 47 IF": {
+    MY: "Akaun reroll rasmi admin, dilengkapi 47 Intertwined Fate (IF)",
+    SG: "Official admin reroll account, equipped with 47 Intertwined Fates (IF)"
+  },
+  "Account rerol punya admin and ada 47 IF": {
+    MY: "Akaun reroll rasmi admin, dilengkapi 47 Intertwined Fate (IF)",
+    SG: "Official admin reroll account, equipped with 47 Intertwined Fates (IF)"
+  },
+  "Akun reroll punya admin dan ada 47 IF": {
+    MY: "Akaun reroll rasmi admin, dilengkapi 47 Intertwined Fate (IF)",
+    SG: "Official admin reroll account, equipped with 47 Intertwined Fates (IF)"
+  },
+  "Akun reroll punya admin and ada 47 IF": {
+    MY: "Akaun reroll rasmi admin, dilengkapi 47 Intertwined Fate (IF)",
+    SG: "Official admin reroll account, equipped with 47 Intertwined Fates (IF)"
+  },
+  "Akun rerol punya admin": {
+    MY: "Akaun reroll rasmi admin, 100% selamat & berjaminan",
+    SG: "Official admin-owned reroll account, 100% safe & verified"
+  },
+  "Akun reroll punya admin": {
+    MY: "Akaun reroll rasmi admin, 100% selamat & berjaminan",
+    SG: "Official admin-owned reroll account, 100% safe & verified"
+  },
+  "Akun siap pakai aman & bergaransi": {
+    MY: "Akaun sedia digunakan, 100% selamat & berjaminan rasmi",
+    SG: "Verified ready-to-play account, 100% safe & under official warranty"
+  },
+  "Akun siap pakai aman dan bergaransi": {
+    MY: "Akaun sedia digunakan, 100% selamat & berjaminan rasmi",
+    SG: "Verified ready-to-play account, 100% safe & under official warranty"
   }
 };
 
 const WORD_MAP_MY = [
+  // Multi-word reroll, admin ownership & currencies
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+(?:punya|milik)?\s*admin\s*(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)?\s*(\d+)\s*(?:IF|intertwined\s*fate(?:s)?)\b/gi, 'Akaun reroll rasmi admin dilengkapi $1 Intertwined Fate (IF)'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+(?:punya|milik)\s*admin\b/gi, 'Akaun reroll rasmi admin'],
+  [/\brerol(?:l)?\s+(?:punya|milik)\s*admin\b/gi, 'Akaun reroll rasmi admin'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+admin\b/gi, 'Akaun reroll rasmi admin'],
+  [/\brerol(?:l)?\s+admin\b/gi, 'Akaun reroll admin'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\b/gi, 'Akaun reroll'],
+  [/\brerol\b/gi, 'reroll'],
+  [/\breroll\b/gi, 'reroll'],
+  [/\b(?:punya|milik)\s*admin\s*pribadi\b/gi, 'milik peribadi admin'],
+  [/\b(?:punya|milik)\s*admin\b/gi, 'milik admin rasmi'],
+  [/\bpunya\b/gi, 'dengan'],
+  [/\bmilik\b/gi, 'milik'],
+
+  // Currencies & inventory
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:IF|intertwined\s*fate(?:s)?)\b/gi, ', dilengkapi $1 Intertwined Fate (IF)'],
+  [/\b(\d+)\s*IF\b/gi, '$1 Intertwined Fate (IF)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:AF|acquaint\s*fate(?:s)?)\b/gi, ', dilengkapi $1 Acquaint Fate (AF)'],
+  [/\b(\d+)\s*AF\b/gi, '$1 Acquaint Fate (AF)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:RT|radiant\s*tide(?:s)?)\b/gi, ', dilengkapi $1 Radiant Tide (RT)'],
+  [/\b(\d+)\s*RT\b/gi, '$1 Radiant Tide (RT)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:FT|forging\s*tide(?:s)?)\b/gi, ', dilengkapi $1 Forging Tide (FT)'],
+  [/\b(\d+)\s*FT\b/gi, '$1 Forging Tide (FT)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:LT|lustrous\s*tide(?:s)?)\b/gi, ', dilengkapi $1 Lustrous Tide (LT)'],
+  [/\b(\d+)\s*LT\b/gi, '$1 Lustrous Tide (LT)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:SD|stellar\s*dice(?:s)?)\b/gi, ', dilengkapi $1 Stellar Dice (SD)'],
+  [/\b(\d+)\s*SD\b/gi, '$1 Stellar Dice (SD)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:SP|special\s*pass(?:es)?)\b/gi, ', dilengkapi $1 Special Pass (SP)'],
+  [/\b(\d+)\s*SP\b/gi, '$1 Special Pass (SP)'],
+  [/\bbanyak\s+primogem(?:s)?\b/gi, 'banyak Primogem'],
+  [/\bprimogem(?:s)?\b/gi, 'Primogem'],
+  [/\bbanyak\s+stellar\s+jade(?:s)?\b/gi, 'banyak Stellar Jade'],
+  [/\bstellar\s+jade(?:s)?\b/gi, 'Stellar Jade'],
+  [/\bada\s+(\d+)\b/gi, 'terdapat $1'],
+  [/\bada\b/gi, 'terdapat'],
+  [/\bberisi\b/gi, 'mengandungi'],
+  [/\bbanyak\b/gi, 'banyak'],
+
+  // Account status & safety
+  [/\bakun\s+siap\s+pakai\s+aman\s*(?:&|dan|and)\s*bergaransi\b/gi, 'Akaun sedia digunakan, 100% selamat & berjaminan'],
+  [/\bsiap\s+pakai\s+aman\s*(?:&|dan|and)\s*bergaransi\b/gi, 'sedia digunakan, 100% selamat & berjaminan'],
+  [/\bpolosan\s+fresh\b/gi, 'akaun kosong serba baharu'],
+  [/\bpolos(?:an)?\b/gi, 'akaun kosong'],
+  [/\btanpa\s+deadlink\b/gi, 'tiada deadlink / 100% bersih'],
+  [/\bno\s+deadlink\b/gi, 'tiada deadlink / 100% bersih'],
+  [/\bbebas\s+deadlink\b/gi, 'tiada deadlink / 100% bersih'],
+  [/\bpity\s+rate\s+on\b/gi, 'dijamin dapat karakter terhad (pity rate on)'],
+  [/\bpity\s+rate\s+off\b/gi, '50/50 pity rate off'],
+  [/\bpity\s+on\b/gi, 'pity on'],
+  [/\bpity\s+off\b/gi, 'pity off'],
+  [/\bserver\s+asia\b/gi, 'Server Asia'],
+  [/\bserver\s+amerika\b/gi, 'Server Amerika'],
+  [/\bserver\s+eropa\b/gi, 'Server Eropah'],
+
   // Multi-word level & ascension patterns
   [/\bup level karakter (\d+)\s*[-–]\s*(\d+)\b/gi, 'Tingkatkan tahap karakter $1-$2'],
   [/\bup level karakter\b/gi, 'Tingkatkan tahap karakter'],
@@ -9020,6 +9120,60 @@ const WORD_MAP_MY = [
 ];
 
 const WORD_MAP_SG = [
+  // Multi-word reroll, admin ownership & currencies
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+(?:punya|milik)?\s*admin\s*(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)?\s*(\d+)\s*(?:IF|intertwined\s*fate(?:s)?)\b/gi, 'Official admin reroll account with $1 Intertwined Fates (IF)'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+(?:punya|milik)\s*admin\b/gi, 'Official admin-owned reroll account'],
+  [/\brerol(?:l)?\s+(?:punya|milik)\s*admin\b/gi, 'Official admin reroll account'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+admin\b/gi, 'Official admin reroll account'],
+  [/\brerol(?:l)?\s+admin\b/gi, 'Admin reroll account'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\b/gi, 'Reroll account'],
+  [/\brerol\b/gi, 'reroll'],
+  [/\breroll\b/gi, 'reroll'],
+  [/\b(?:punya|milik)\s*admin\s*pribadi\b/gi, 'personal admin-owned'],
+  [/\b(?:punya|milik)\s*admin\b/gi, 'admin-owned / verified admin'],
+  [/\bpunya\b/gi, 'with'],
+  [/\bmilik\b/gi, 'owned by'],
+
+  // Currencies & inventory
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:IF|intertwined\s*fate(?:s)?)\b/gi, ', equipped with $1 Intertwined Fates (IF)'],
+  [/\b(\d+)\s*IF\b/gi, '$1 Intertwined Fates (IF)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:AF|acquaint\s*fate(?:s)?)\b/gi, ', equipped with $1 Acquaint Fates (AF)'],
+  [/\b(\d+)\s*AF\b/gi, '$1 Acquaint Fates (AF)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:RT|radiant\s*tide(?:s)?)\b/gi, ', equipped with $1 Radiant Tides (RT)'],
+  [/\b(\d+)\s*RT\b/gi, '$1 Radiant Tides (RT)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:FT|forging\s*tide(?:s)?)\b/gi, ', equipped with $1 Forging Tides (FT)'],
+  [/\b(\d+)\s*FT\b/gi, '$1 Forging Tides (FT)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:LT|lustrous\s*tide(?:s)?)\b/gi, ', equipped with $1 Lustrous Tides (LT)'],
+  [/\b(\d+)\s*LT\b/gi, '$1 Lustrous Tides (LT)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:SD|stellar\s*dice(?:s)?)\b/gi, ', equipped with $1 Stellar Dices (SD)'],
+  [/\b(\d+)\s*SD\b/gi, '$1 Stellar Dices (SD)'],
+  [/\b(?:dan|and)?\s*(?:ada|isi|tersedia|berisi)\s*(\d+)\s*(?:SP|special\s*pass(?:es)?)\b/gi, ', equipped with $1 Special Passes (SP)'],
+  [/\b(\d+)\s*SP\b/gi, '$1 Special Passes (SP)'],
+  [/\bbanyak\s+primogem(?:s)?\b/gi, 'plenty of Primogems'],
+  [/\bprimogem(?:s)?\b/gi, 'Primogems'],
+  [/\bbanyak\s+stellar\s+jade(?:s)?\b/gi, 'plenty of Stellar Jades'],
+  [/\bstellar\s+jade(?:s)?\b/gi, 'Stellar Jades'],
+  [/\bada\s+(\d+)\b/gi, 'includes $1'],
+  [/\bada\b/gi, 'includes'],
+  [/\bberisi\b/gi, 'contains'],
+  [/\bbanyak\b/gi, 'plenty of'],
+
+  // Account status & safety
+  [/\bakun\s+siap\s+pakai\s+aman\s*(?:&|dan|and)\s*bergaransi\b/gi, 'Ready-to-play verified account, 100% safe & guaranteed'],
+  [/\bsiap\s+pakai\s+aman\s*(?:&|dan|and)\s*bergaransi\b/gi, 'ready to play, 100% safe & guaranteed'],
+  [/\bpolosan\s+fresh\b/gi, 'clean fresh account'],
+  [/\bpolos(?:an)?\b/gi, 'clean / unlinked'],
+  [/\btanpa\s+deadlink\b/gi, 'no deadlinks / 100% clean bind'],
+  [/\bno\s+deadlink\b/gi, 'no deadlinks / 100% clean bind'],
+  [/\bbebas\s+deadlink\b/gi, 'no deadlinks / 100% clean bind'],
+  [/\bpity\s+rate\s+on\b/gi, 'guaranteed event rate-on pity'],
+  [/\bpity\s+rate\s+off\b/gi, '50/50 event rate-off pity'],
+  [/\bpity\s+on\b/gi, 'guaranteed pity on'],
+  [/\bpity\s+off\b/gi, '50/50 pity off'],
+  [/\bserver\s+asia\b/gi, 'Asia Server'],
+  [/\bserver\s+amerika\b/gi, 'America Server'],
+  [/\bserver\s+eropa\b/gi, 'Europe Server'],
+
   // Multi-word level & ascension patterns
   [/\bup level karakter (\d+)\s*[-–]\s*(\d+)\b/gi, 'Level up character $1-$2'],
   [/\bup level karakter\b/gi, 'Level up character'],
@@ -9311,12 +9465,29 @@ const NAME_EXACT_MAP = {
   "60 SP": { MY: "60 Special Pass", SG: "60 Special Pass" },
   "100 SP": { MY: "100 Special Pass", SG: "100 Special Pass" },
 
+  // Reroll & Admin Accounts
+  "AKUN REROL ADMIN": { MY: "Akaun Reroll Rasmi Admin", SG: "Admin Official Reroll Account" },
+  "Akun Rerol Admin": { MY: "Akaun Reroll Rasmi Admin", SG: "Admin Official Reroll Account" },
+  "AKUN REROLL ADMIN": { MY: "Akaun Reroll Rasmi Admin", SG: "Admin Official Reroll Account" },
+  "Akun Reroll Admin": { MY: "Akaun Reroll Rasmi Admin", SG: "Admin Official Reroll Account" },
+  "ACCOUNT REROL ADMIN": { MY: "Akaun Reroll Rasmi Admin", SG: "Admin Official Reroll Account" },
+  "Account Rerol Admin": { MY: "Akaun Reroll Rasmi Admin", SG: "Admin Official Reroll Account" },
+  "REROL ADMIN": { MY: "Akaun Reroll Admin", SG: "Admin Reroll Account" },
+  "Rerol Admin": { MY: "Akaun Reroll Admin", SG: "Admin Reroll Account" },
+  "REROLL ADMIN": { MY: "Akaun Reroll Admin", SG: "Admin Reroll Account" },
+  "Reroll Admin": { MY: "Akaun Reroll Admin", SG: "Admin Reroll Account" },
+
   // NTE Exploration
   "BRIGDE CROSSINGS": { MY: "Eksplorasi Bridge Crossings", SG: "Bridge Crossings Exploration" },
   "BRIDGE CROSSINGS": { MY: "Eksplorasi Bridge Crossings", SG: "Bridge Crossings Exploration" }
 };
 
 const NAME_WORD_MAP_MY = [
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+admin\b/gi, 'Akaun Reroll Rasmi Admin'],
+  [/\brerol(?:l)?\s+admin\b/gi, 'Akaun Reroll Admin'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\b/gi, 'Akaun Reroll'],
+  [/\brerol\b/gi, 'Reroll'],
+  [/\breroll\b/gi, 'Reroll'],
   [/\beksplore\s+all\s+map\b/gi, 'Eksplorasi Semua Peta 100%'],
   [/\beksplore\b/gi, 'Eksplorasi'],
   [/\brawat account\b/gi, 'Rawat Akaun'],
@@ -9351,6 +9522,11 @@ const NAME_WORD_MAP_MY = [
 ];
 
 const NAME_WORD_MAP_SG = [
+  [/\b(?:akun|account)\s+rerol(?:l)?\s+admin\b/gi, 'Admin Official Reroll Account'],
+  [/\brerol(?:l)?\s+admin\b/gi, 'Admin Reroll Account'],
+  [/\b(?:akun|account)\s+rerol(?:l)?\b/gi, 'Reroll Account'],
+  [/\brerol\b/gi, 'Reroll'],
+  [/\breroll\b/gi, 'Reroll'],
   [/\beksplore\s+all\s+map\b/gi, '100% Map Exploration'],
   [/\beksplore\b/gi, 'Exploration'],
   [/\beksplorasi\b/gi, 'Exploration'],
@@ -9409,8 +9585,20 @@ function translateProductName(name, lang){
 
   let s = name;
   const wordMap = (targetLang === 'MY') ? NAME_WORD_MAP_MY : (targetLang === 'SG' ? NAME_WORD_MAP_SG : []);
-  wordMap.forEach(([regex, rep]) => {
-    s = s.replace(regex, rep);
+  const tokenMap = [];
+  wordMap.forEach(([regex, rep], idx) => {
+    s = s.replace(regex, (match, ...args) => {
+      const token = `__NAME_TOK_${idx}_${tokenMap.length}__`;
+      let replaced = rep;
+      if(rep.includes('$1') && args[0] !== undefined){
+        replaced = rep.replace(/\$1/g, args[0]).replace(/\$2/g, args[1] || '').replace(/\$3/g, args[2] || '');
+      }
+      tokenMap.push({ token, replaced });
+      return token;
+    });
+  });
+  tokenMap.forEach(({ token, replaced }) => {
+    s = s.replace(token, replaced);
   });
   return s;
 }
@@ -11291,7 +11479,11 @@ function renderWaChannelUI(){
   // Catalog quick card
   const qbRules = document.getElementById('quickBarRulesTitle');
   if(qbRules){
-    qbRules.textContent = (lang === 'SG') ? 'Boosting Rules' : 'Peraturan Joki';
+    qbRules.textContent = (lang === 'SG') ? 'Boosting Rules' : ((lang === 'MY') ? 'Peraturan Joki' : 'Peraturan Joki');
+  }
+  const qbRulesSub = document.getElementById('quickBarRulesSub');
+  if(qbRulesSub){
+    qbRulesSub.textContent = (lang === 'SG') ? 'Mandatory' : ((lang === 'MY') ? 'Wajib Dipatuhi' : 'Wajib Dibaca');
   }
   const quickWaText = document.getElementById('catalogQuickWaText');
   if(quickWaText){
@@ -13843,7 +14035,11 @@ fbDB.ref('norxstore/carousel').on('value', snap=>{
   if(isAdminOpen()) renderCarouselAdmin();
 });
 fbDB.ref('norxstore/discount').on('value', snap=>{
+  if(window._discountConfigFromOrders) return;
+  const cached = safeGetItem('norxstore_discount_config_cache', null);
+  if(cached) return;
   const val = snap.val();
+  if(!val) return;
   discountConfig = normalizeDiscountConfig(val);
   discountVal = discountConfig.global;
   safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
@@ -16326,10 +16522,14 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
 
   // 1. Sinkronisasi konfigurasi admin & diskon yang tersimpan aman di norxstore/orders/__config_*
   if(incoming['__config_discount__'] && incoming['__config_discount__'].config){
+    window._discountConfigFromOrders = true;
     discountConfig = normalizeDiscountConfig(incoming['__config_discount__'].config);
     discountVal = discountConfig.global;
     safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+    renderProducts();
     if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
+    if(cart.length > 0) renderCart();
+    if(isAdminOpen()) renderDiscountAdminUI();
   }
   if(incoming['__config_admin_pass__'] && incoming['__config_admin_pass__'].pass){
     adminPasswordCache = incoming['__config_admin_pass__'].pass;
