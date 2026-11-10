@@ -1426,17 +1426,17 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .discount-cat-input-wrap span{font-size:13px;font-weight:700;color:#7c3aed}
 .admin-price-adjust-box{background:#fdf4ff;border:1.5px solid #e9d5ff;border-radius:14px;padding:14px;margin-bottom:14px;box-sizing:border-box}
 .price-target-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;background:#ede9fe;padding:6px;border-radius:10px;margin-bottom:12px;box-sizing:border-box}
-.price-target-tab{padding:8px 8px;font-size:11.5px;font-weight:700;border:none;border-radius:8px;background:transparent;color:#5b21b6;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;text-align:center}
+.price-target-tab{min-height:42px;padding:8px 8px;font-size:11.5px;font-weight:700;border:none;border-radius:8px;background:transparent;color:#5b21b6;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;text-align:center}
 .price-target-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.18)}
 
 .price-country-tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
-.price-country-tab{padding:8px 10px;border:1.5px solid #e9d5ff;border-radius:10px;background:#fff;color:#475569;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;gap:8px;text-align:left}
+.price-country-tab{min-height:50px;padding:8px 10px;border:1.5px solid #e9d5ff;border-radius:10px;background:#fff;color:#475569;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;gap:8px;text-align:left;box-sizing:border-box}
 .price-country-tab .pct-info{display:flex;flex-direction:column;line-height:1.2;min-width:0}
 .price-country-tab .pct-info strong{font-size:11.5px;color:#1e1b4b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .price-country-tab .pct-info small{font-size:9.5px;color:#64748b;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .price-country-tab.active{background:#faf5ff;border-color:#8b5cf6;box-shadow:0 2px 8px rgba(139,92,246,0.18)}
 .price-country-tab.active .pct-info strong{color:#7c3aed}
-.price-country-tab.active .pct-info small{color:#6d28d9}
+.price-country-tab.active .pct-info small{color:#6d28d9;font-weight:700}
 
 .country-adjust-card{background:#fff;border:1.5px solid #e9d5ff;border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(124,58,237,0.06)}
 .country-adjust-card:last-child{margin-bottom:0}
@@ -1445,20 +1445,28 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .country-adjust-head strong{font-size:12.5px;color:#1e1b4b}
 .country-adjust-head small{font-size:10px;color:#6d28d9;font-weight:700}
 
-.price-type-toggle{display:inline-flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px}
-.price-type-btn{padding:4px 8px;font-size:10px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease}
+.country-controls-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;width:100%;box-sizing:border-box}
+.price-type-toggle{display:flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px;width:100%;box-sizing:border-box}
+.price-type-btn{flex:1;padding:5px 2px;font-size:10.5px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease;text-align:center;white-space:nowrap}
 .price-type-btn.active{background:#7c3aed;color:#fff;box-shadow:0 1px 3px rgba(124,58,237,0.3)}
 
-.price-dir-toggle{display:inline-flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px}
-.price-dir-btn{padding:4px 8px;font-size:10.5px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease}
+.price-dir-toggle{display:flex;background:#ede9fe;border-radius:8px;padding:2px;gap:2px;width:100%;box-sizing:border-box}
+.price-dir-btn{flex:1;padding:5px 2px;font-size:10.5px;font-weight:700;border:none;border-radius:6px;background:transparent;color:#6b21a8;cursor:pointer;transition:all .15s ease;text-align:center;white-space:nowrap}
 .price-dir-btn.active{background:#7c3aed;color:#fff}
 
-.baseline-btn{padding:7px 10px;font-size:11px;font-weight:700;border:1.5px solid #cbd5e1;border-radius:8px;background:#fff;color:#475569;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:4px}
+.baseline-btn{min-height:38px;padding:6px 8px;font-size:11px;font-weight:700;border:1.5px solid #cbd5e1;border-radius:8px;background:#fff;color:#475569;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:4px;text-align:center;line-height:1.2}
 .baseline-btn.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.25)}
 
 .price-pct-pills{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-bottom:8px}
 .price-pct-pill{padding:6px 2px;font-size:10.5px;font-weight:700;border:1.5px solid #ddd6fe;border-radius:8px;background:#fff;color:#6d28d9;cursor:pointer;transition:all .15s ease;text-align:center}
 .price-pct-pill.active{background:#7c3aed;color:#fff;border-color:#7c3aed;box-shadow:0 2px 6px rgba(124,58,237,0.25)}
+
+.joki-rules-country-nav{display:flex;gap:6px;margin-bottom:14px;background:rgba(255,255,255,0.08);padding:4px;border-radius:12px;border:1px solid rgba(255,255,255,0.12)}
+.jrc-nav-btn{flex:1;padding:8px 4px;font-size:11.5px;font-weight:700;border:none;border-radius:8px;background:transparent;color:#cbd5e1;cursor:pointer;transition:all .15s ease;display:flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap}
+.jrc-nav-btn.active{background:linear-gradient(135deg, #7c3aed, #6d28d9);color:#fff;font-weight:800;box-shadow:0 2px 8px rgba(124,58,237,0.35)}
+
+.admin-joki-lang-tab{flex:1;padding:6px 4px;font-size:11px;font-weight:700;border:1px solid #fcd34d;border-radius:6px;background:#fff;color:#92400e;cursor:pointer;transition:all .15s ease;text-align:center}
+.admin-joki-lang-tab.active{background:#d97706;color:#fff;border-color:#d97706;box-shadow:0 1px 4px rgba(217,119,6,0.25)}
 
 .price-preview-card{background:#fff;border:1.5px solid #ddd6fe;border-radius:12px;padding:10px 12px;margin-bottom:8px;box-sizing:border-box}
 .price-preview-header{display:flex;align-items:center;justify-content:space-between;gap:6px;margin-bottom:8px;border-bottom:1px solid #f3e8ff;padding-bottom:6px}
@@ -4128,39 +4136,39 @@ button{cursor:pointer;font-family:inherit}
   </div>
 
   <!-- 2. PILIHAN MODE ATUR NEGARA -->
-  <div style="margin-top:12px;margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">
+  <div style="margin-top:12px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px">
     <div class="admin-label" style="margin-bottom:0">2. Kenaikan Harga Per Negara:</div>
-    <span id="priceCountryModeBadge" style="font-size:10px;font-weight:800;color:#7c3aed;background:#ede9fe;padding:2px 8px;border-radius:8px">
+    <span id="priceCountryModeBadge" style="font-size:10px;font-weight:800;color:#7c3aed;background:#ede9fe;padding:3px 10px;border-radius:999px;white-space:nowrap">
       Beda-Beda Tiap Negara
     </span>
   </div>
 
   <div class="price-country-tabs">
     <button type="button" class="price-country-tab active" id="tabPriceCountryALL" onclick="switchPriceAdjustCountryMode('ALL')">
-      <span style="font-size:16px">🌐</span>
+      <span style="font-size:18px">🌐</span>
       <div class="pct-info">
         <strong>Semua Negara</strong>
-        <small>Atur Sekaligus (Beda %)</small>
+        <small>Semua Kurs</small>
       </div>
     </button>
     <button type="button" class="price-country-tab" id="tabPriceCountryID" onclick="switchPriceAdjustCountryMode('ID')">
-      <span style="font-size:16px">🇮🇩</span>
+      <span style="font-size:18px">🇮🇩</span>
       <div class="pct-info">
-        <strong>Indonesia Saja</strong>
+        <strong>Indonesia</strong>
         <small>Rupiah (IDR)</small>
       </div>
     </button>
     <button type="button" class="price-country-tab" id="tabPriceCountryMY" onclick="switchPriceAdjustCountryMode('MY')">
-      <span style="font-size:16px">🇲🇾</span>
+      <span style="font-size:18px">🇲🇾</span>
       <div class="pct-info">
-        <strong>Malaysia Saja</strong>
+        <strong>Malaysia</strong>
         <small>Ringgit (MYR)</small>
       </div>
     </button>
     <button type="button" class="price-country-tab" id="tabPriceCountrySG" onclick="switchPriceAdjustCountryMode('SG')">
-      <span style="font-size:16px">🇸🇬</span>
+      <span style="font-size:18px">🇸🇬</span>
       <div class="pct-info">
-        <strong>Singapura Saja</strong>
+        <strong>Singapura</strong>
         <small>Dollar (SGD)</small>
       </div>
     </button>
@@ -4168,13 +4176,13 @@ button{cursor:pointer;font-family:inherit}
 
   <!-- BASIS PERHITUNGAN KENAIKAN (ANTI-NUMPUK) -->
   <div style="background:#f8fafc;border:1.5px solid #e2e8f0;border-radius:12px;padding:10px 12px;margin-bottom:12px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
-      <span style="font-size:11px;font-weight:700;color:#334155">🎯 Basis Perhitungan Kenaikan:</span>
-      <span id="priceBaselineLabel" style="font-size:9.5px;color:#7c3aed;font-weight:800;background:#ede9fe;padding:2px 7px;border-radius:6px">Harga Asli Bawaan (Anti Numpuk)</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:8px">
+      <span style="font-size:11px;font-weight:700;color:#334155">🎯 Basis Perhitungan:</span>
+      <span id="priceBaselineLabel" style="font-size:9.5px;color:#7c3aed;font-weight:800;background:#ede9fe;padding:2px 8px;border-radius:6px;white-space:nowrap">Harga Asli (Anti-Numpuk)</span>
     </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:4px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px">
       <button type="button" id="btnBaselineOriginal" class="baseline-btn active" onclick="setPriceAdjustBaseline('original')">
-        🎯 Dari Harga Asli Bawaan
+        🎯 Dari Harga Asli
       </button>
       <button type="button" id="btnBaselineCurrent" class="baseline-btn" onclick="setPriceAdjustBaseline('current')">
         📈 Dari Harga Saat Ini
@@ -4206,7 +4214,7 @@ button{cursor:pointer;font-family:inherit}
         </div>
       </div>
       <div id="bodyCountry_ID">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="country-controls-row">
           <div class="price-type-toggle">
             <button type="button" class="price-type-btn active" id="btnType_ID_percent" onclick="setCountryAdjustType('ID', 'percent')">% Persen</button>
             <button type="button" class="price-type-btn" id="btnType_ID_nominal" onclick="setCountryAdjustType('ID', 'nominal')">Rp Nominal</button>
@@ -4259,7 +4267,7 @@ button{cursor:pointer;font-family:inherit}
         </div>
       </div>
       <div id="bodyCountry_MY">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="country-controls-row">
           <div class="price-type-toggle">
             <button type="button" class="price-type-btn active" id="btnType_MY_percent" onclick="setCountryAdjustType('MY', 'percent')">% Persen</button>
             <button type="button" class="price-type-btn" id="btnType_MY_nominal" onclick="setCountryAdjustType('MY', 'nominal')">RM Nominal</button>
@@ -4312,7 +4320,7 @@ button{cursor:pointer;font-family:inherit}
         </div>
       </div>
       <div id="bodyCountry_SG">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <div class="country-controls-row">
           <div class="price-type-toggle">
             <button type="button" class="price-type-btn active" id="btnType_SG_percent" onclick="setCountryAdjustType('SG', 'percent')">% Persen</button>
             <button type="button" class="price-type-btn" id="btnType_SG_nominal" onclick="setCountryAdjustType('SG', 'nominal')">S$ Nominal</button>
@@ -4720,11 +4728,18 @@ button{cursor:pointer;font-family:inherit}
         <span>📋 Edit Peraturan Joki NORXSTORE</span>
         <span style="font-size:9.5px;background:#fef3c7;color:#b45309;padding:2px 7px;border-radius:10px;font-weight:800" id="adminJokiRulesCountBadge">7 Poin Aturan</span>
       </div>
-      <button type="button" onclick="openInfoModal('jokiRules')" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer">👁️ Preview Modal</button>
+      <button type="button" onclick="openInfoModal('jokiRules', currentAdminJokiLang)" style="background:#fef3c7;color:#92400e;border:1px solid #fcd34d;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;cursor:pointer">👁️ Preview Modal</button>
     </div>
     <p style="font-size:11px;color:#78350f;margin:0 0 10px;line-height:1.4">
-      💡 <strong>Kelola Peraturan Joki:</strong> Ubah judul, isi teks, atau tambah/kurang aturan joki di bawah ini. Semua perubahan akan langsung tersinkronisasi ke <strong>Modal Popup Peraturan</strong> dan <strong>Kotak Peringatan Checkout</strong>.
+      💡 <strong>Kelola Peraturan Joki:</strong> Ubah judul, isi teks, atau tambah/kurang aturan joki per negara (Indonesia, Malaysia, Singapura). Semua perubahan langsung tersinkronisasi ke <strong>Modal Popup Peraturan</strong> dan <strong>Kotak Peringatan Checkout</strong>.
     </p>
+
+    <!-- Pilihan Negara untuk Edit Peraturan Joki -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;background:#fef3c7;padding:4px;border-radius:8px;border:1px solid #fcd34d">
+      <button type="button" id="adminJokiLangBtn_ID" class="admin-joki-lang-tab active" onclick="switchAdminJokiRulesLang('ID')">🇮🇩 Indonesia</button>
+      <button type="button" id="adminJokiLangBtn_MY" class="admin-joki-lang-tab" onclick="switchAdminJokiRulesLang('MY')">🇲🇾 Malaysia</button>
+      <button type="button" id="adminJokiLangBtn_SG" class="admin-joki-lang-tab" onclick="switchAdminJokiRulesLang('SG')">🇸🇬 Singapura</button>
+    </div>
 
     <!-- Header & Hero Settings -->
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px">
@@ -5889,11 +5904,15 @@ function mergeProductsData(parsed){
   rawList.forEach(p => {
     if(!p || typeof p !== 'object' || p.id === undefined) return;
     const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
-    let pImgs = (Array.isArray(p.images) && p.images.length > 0)
-      ? p.images
-      : (dp && Array.isArray(dp.images) && dp.images.length > 0
-          ? dp.images
-          : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : [`/prod_${p.id}.jpg`]));
+    let pImgs = (typeof customProductImages === 'object' && customProductImages && customProductImages[p.id] && Array.isArray(customProductImages[p.id]) && customProductImages[p.id].length > 0)
+      ? [...customProductImages[p.id]]
+      : ((typeof productImagesCache === 'object' && productImagesCache && productImagesCache[p.id] && Array.isArray(productImagesCache[p.id]) && productImagesCache[p.id].length > 0)
+          ? [...productImagesCache[p.id]]
+          : (Array.isArray(p.images) && p.images.length > 0
+              ? p.images
+              : (dp && Array.isArray(dp.images) && dp.images.length > 0
+                  ? dp.images
+                  : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : [`/prod_${p.id}.jpg`]))));
     let item = dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs};
 
     // Terapkan override harga admin jika ada
@@ -5912,7 +5931,12 @@ function mergeProductsData(parsed){
   });
   DEFAULT_PRODUCTS.forEach(dp => {
     if(!seenIds.has(dp.id)){
-      let item = {...dp};
+      let pImgs = (typeof customProductImages === 'object' && customProductImages && customProductImages[dp.id] && Array.isArray(customProductImages[dp.id]) && customProductImages[dp.id].length > 0)
+        ? [...customProductImages[dp.id]]
+        : ((typeof productImagesCache === 'object' && productImagesCache && productImagesCache[dp.id] && Array.isArray(productImagesCache[dp.id]) && productImagesCache[dp.id].length > 0)
+            ? [...productImagesCache[dp.id]]
+            : (dp.images && dp.images.length > 0 ? dp.images : [`/prod_${dp.id}.jpg`]));
+      let item = {...dp, images: pImgs};
       if(savedPriceAdjustments[item.id]){
         const adj = savedPriceAdjustments[item.id];
         if(adj.price !== undefined) item.price = Number(adj.price);
@@ -5935,7 +5959,9 @@ function setProducts(data){
   products = data;
   safeSetItem('norxstore_products_cache', JSON.stringify(data));
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/products').set(data).catch(e=>{ console.error(e); showToast('Gagal sinkron ke server'); });
+    fbDB.ref('norxstore/products').set(data).catch(e=>{
+      console.warn('Notice: products persisted locally, cloud root restricted:', e);
+    });
   }
 }
 function getNextProductId(){
@@ -6998,7 +7024,7 @@ function setPriceAdjustBaseline(mode){
     btnCurr.classList.toggle('active', mode === 'current');
   }
   if(labelEl){
-    labelEl.textContent = mode === 'original' ? 'Harga Asli Bawaan (Anti Numpuk)' : 'Harga Saat Ini (Akumulatif)';
+    labelEl.textContent = mode === 'original' ? 'Harga Asli (Anti-Numpuk)' : 'Harga Saat Ini (Akumulatif)';
     labelEl.style.color = mode === 'original' ? '#7c3aed' : '#b45309';
     labelEl.style.background = mode === 'original' ? '#ede9fe' : '#fef3c7';
   }
@@ -10588,6 +10614,7 @@ function selectCountry(countryCode){
   if(typeof renderReviews === 'function') renderReviews();
   if(typeof renderCart === 'function') renderCart();
   if(typeof renderMyOrders === 'function') renderMyOrders();
+  if(typeof renderCheckoutJokiRulesBoxes === 'function') renderCheckoutJokiRulesBoxes();
   closeCountryCurrencyModal('force');
   const cInfo = cfg.countries[countryCode];
   const cName = (countryCode === 'SG') ? 'Singapore' : cInfo.name;
@@ -11472,101 +11499,232 @@ function resetAdminWaChannelConfig(){
 }
 
 // ==================== JOKI RULES DYNAMIC CONFIG & ADMIN ====================
-const DEFAULT_JOKI_RULES_CONFIG = {
-  headerTitle: 'PROTOKOL RESMI JOKI NORXSTORE',
-  headerSub: 'Peraturan Keamanan Akun & Pengerjaan Amanah',
-  heroDesc: 'Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:',
-  extraNote: '',
-  rules: [
-    {
-      id: 'rule_1',
-      icon: '🚫',
-      title: 'DILARANG LOGIN / TABRAK AKUN SAAT JOKI BERJALAN',
-      desc: 'Jangan pernah membuka atau login ke game saat status pesanan adalah "🔵 Sedang Diproses". Tabrakan login dapat menyebabkan diskoneksi mendadak pada pilot, kegagalan rotasi Abyss/Boss, roll-back data quest, atau penalti rank. Bila ada keperluan mendesak ingin login, wajib konfirmasi dan tunggu balasan dari admin WhatsApp terlebih dahulu.'
-    },
-    {
-      id: 'rule_2',
-      icon: '📲',
-      title: 'STANDBY KODE OTP / NONAKTIFKAN 2FA SEMENTARA',
-      desc: 'Saat pilot hendak login pertama kali, sistem game biasanya mengirimkan kode OTP ke email atau SMS Anda. Harap standby merespons dalam 1-3 menit, atau matikan sementara verifikasi 2 langkah (2FA) sebelum checkout agar pilot bisa langsung mengeksekusi joki tanpa terhenti di antrean.'
-    },
-    {
-      id: 'rule_3',
-      icon: '🔐',
-      title: 'GUNAKAN PASSWORD SEMENTARA & GANTI SELESAI JOKI',
-      desc: 'Sebelum memberikan data login ke admin, ubah password akun game Anda menjadi kata sandi sementara. Setelah status pesanan dinyatakan selesai (🟢 Selesai) oleh admin, SEGERA ubah kembali password akun Anda untuk menjamin privasi dan keamanan akun 100%.'
-    },
-    {
-      id: 'rule_4',
-      icon: '💎',
-      title: 'INTEGRITAS ASET & ANTI-UTAK ATIK INVENTORI',
-      desc: 'Pilot kami dilarang keras menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, Mora, kredit, atau material langka milik Anda di luar paket layanan yang Anda beli. Seluruh aset tabungan akun Anda dijamin 100% aman dan utuh.'
-    },
-    {
-      id: 'rule_5',
-      icon: '🛡️',
-      title: '100% PENGERJAAN MANUAL (ANTI-CHEAT & ANTI-BANNED)',
-      desc: 'Seluruh proses joki dijalankan murni secara manual oleh tim joki profesional dengan skill tinggi. Kami tidak pernah menggunakan cheat, bot, script makro, atau injector pihak ketiga ilegal. Keamanan akun game Anda bergaransi resmi Norxstore!'
-    },
-    {
-      id: 'rule_6',
-      icon: '⏱️',
-      title: 'ESTIMASI DURASI & SISTEM ANTREAN TRANSPARAN',
-      desc: 'Pesanan dikerjakan berurutan sesuai antrean invoice yang masuk. Anda bisa memantau estimasi durasi dan progres real-time melalui tab "📦 Pesanan Saya" di menu keranjang. Ponsel Anda juga akan bergetar dan berbunyi notifikasi saat pesanan rampung.'
-    },
-    {
-      id: 'rule_7',
-      icon: '💰',
-      title: 'JAMINAN GARANSI & KOMPENSASI REFUND 100%',
-      desc: 'Jika pesanan gagal diselesaikan akibat kelalaian dari pihak pilot Norxstore, Anda berhak mendapatkan pengerjaan ulang prioritas secara cuma-cuma atau pengembalian dana penuh (100% Refund tanpa potongan ribet).'
-    }
-  ]
+const DEFAULT_JOKI_RULES_BY_COUNTRY = {
+  ID: {
+    headerTitle: 'PROTOKOL RESMI JOKI NORXSTORE',
+    headerSub: 'Peraturan Keamanan Akun & Pengerjaan Amanah',
+    heroDesc: 'Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:',
+    btnText: '✓ Saya Mengerti & Siap Mengikuti Peraturan Joki',
+    modalTitle: '📋 Peraturan Joki NORXSTORE (Wajib Dibaca)',
+    extraNote: '',
+    extraNoteLabel: 'Catatan Admin:',
+    rules: [
+      {
+        id: 'rule_1',
+        icon: '🚫',
+        title: 'DILARANG LOGIN / TABRAK AKUN SAAT JOKI BERJALAN',
+        desc: 'Jangan pernah membuka atau login ke game saat status pesanan adalah "🔵 Sedang Diproses". Tabrakan login dapat menyebabkan diskoneksi mendadak pada pilot, kegagalan rotasi Abyss/Boss, roll-back data quest, atau penalti rank. Bila ada keperluan mendesak ingin login, wajib konfirmasi dan tunggu balasan dari admin WhatsApp terlebih dahulu.'
+      },
+      {
+        id: 'rule_2',
+        icon: '📲',
+        title: 'STANDBY KODE OTP / NONAKTIFKAN 2FA SEMENTARA',
+        desc: 'Saat pilot hendak login pertama kali, sistem game biasanya mengirimkan kode OTP ke email atau SMS Anda. Harap standby merespons dalam 1-3 menit, atau matikan sementara verifikasi 2 langkah (2FA) sebelum checkout agar pilot bisa langsung mengeksekusi joki tanpa terhenti di antrean.'
+      },
+      {
+        id: 'rule_3',
+        icon: '🔐',
+        title: 'GUNAKAN PASSWORD SEMENTARA & GANTI SELESAI JOKI',
+        desc: 'Sebelum memberikan data login ke admin, ubah password akun game Anda menjadi kata sandi sementara. Setelah status pesanan dinyatakan selesai (🟢 Selesai) oleh admin, SEGERA ubah kembali password akun Anda untuk menjamin privasi dan keamanan akun 100%.'
+      },
+      {
+        id: 'rule_4',
+        icon: '💎',
+        title: 'INTEGRITAS ASET & ANTI-UTAK ATIK INVENTORI',
+        desc: 'Pilot kami dilarang keras menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, Mora, kredit, atau material langka milik Anda di luar paket layanan yang Anda beli. Seluruh aset tabungan akun Anda dijamin 100% aman dan utuh.'
+      },
+      {
+        id: 'rule_5',
+        icon: '🛡️',
+        title: '100% PENGERJAAN MANUAL (ANTI-CHEAT & ANTI-BANNED)',
+        desc: 'Seluruh proses joki dijalankan murni secara manual oleh tim joki profesional dengan skill tinggi. Kami tidak pernah menggunakan cheat, bot, script makro, atau injector pihak ketiga ilegal. Keamanan akun game Anda bergaransi resmi Norxstore!'
+      },
+      {
+        id: 'rule_6',
+        icon: '⏱️',
+        title: 'ESTIMASI DURASI & SISTEM ANTREAN TRANSPARAN',
+        desc: 'Pesanan dikerjakan berurutan sesuai antrean invoice yang masuk. Anda bisa memantau estimasi durasi dan progres real-time melalui tab "📦 Pesanan Saya" di menu keranjang. Ponsel Anda juga akan bergetar dan berbunyi notifikasi saat pesanan rampung.'
+      },
+      {
+        id: 'rule_7',
+        icon: '💰',
+        title: 'JAMINAN GARANSI & KOMPENSASI REFUND 100%',
+        desc: 'Jika pesanan gagal diselesaikan akibat kelalaian dari pihak pilot Norxstore, Anda berhak mendapatkan pengerjaan ulang prioritas secara cuma-cuma atau pengembalian dana penuh (100% Refund tanpa potongan ribet).'
+      }
+    ]
+  },
+  MY: {
+    headerTitle: 'PROTOKOL RASMI SERVIS JOKI NORXSTORE',
+    headerSub: 'Peraturan Keselamatan Akaun & Jaminan Amanah',
+    heroDesc: 'Demi kelancaran pelaksanaan dan keselamatan maksimum akaun permainan anda, semua pelanggan wajib mematuhi peraturan rasmi berikut:',
+    btnText: '✓ Saya Faham & Bersetuju dengan Peraturan Joki',
+    modalTitle: '📋 Terma & Peraturan Joki NORXSTORE (Wajib Dipatuhi)',
+    extraNote: '',
+    extraNoteLabel: 'Nota Admin:',
+    rules: [
+      {
+        id: 'rule_1',
+        icon: '🚫',
+        title: 'DILARANG LOG MASUK / LANGGAR AKAUN SEMASA JOKI BERJALAN',
+        desc: 'Jangan sesekali membuka atau log masuk ke dalam permainan semasa status pesanan adalah "🔵 Sedang Diproses". Percubaan log masuk serentak boleh menyebabkan gangguan sambungan mengejut kepada pilot, kegagalan putaran Abyss/Boss, data misi terbalik (roll-back), atau penalti penurunan pangkat. Sekiranya ada keperluan mendesak untuk log masuk, wajib maklumkan dan tunggu balasan daripada admin WhatsApp terlebih dahulu.'
+      },
+      {
+        id: 'rule_2',
+        icon: '📲',
+        title: 'SEDIAKAN KOD OTP / MATIKAN 2FA SEMENTARA WAKTU',
+        desc: 'Semasa pilot ingin log masuk buat kali pertama, sistem keselamatan permainan biasanya akan menghantar kod OTP ke emel atau SMS telefon anda. Sila bersedia memberi respons dalam masa 1-3 minit, atau matikan sementara fungsi pengesahan 2 langkah (2FA) sebelum membuat bayaran agar pilot dapat terus memulakan servis tanpa tersangkut dalam barisan menunggu.'
+      },
+      {
+        id: 'rule_3',
+        icon: '🔐',
+        title: 'GUNAKAN KATA LALUAN SEMENTARA & TUKAR SELEPAS SELESAI',
+        desc: 'Sebelum menyerahkan butiran log masuk kepada admin, tukar kata laluan akaun permainan anda kepada kata laluan sementara. Selepas status pesanan disahkan siap (🟢 Selesai) oleh pihak kami, SEGERA tukar semula kata laluan akaun anda bagi menjamin privasi serta keselamatan akaun 100%.'
+      },
+      {
+        id: 'rule_4',
+        icon: '💎',
+        title: 'INTEGRITI ASET & DILARANG USIK INVENTORI AKAUN',
+        desc: 'Pilot kami dilarang keras menggunakan Primogem, Stellar Jade, Astrite, tiket gacha, Mora, kredit, atau sebarang bahan simpanan bernilai milik anda di luar skop pakej yang ditempah. Kesemua aset tabungan akaun anda dijamin 100% selamat, utuh dan tidak disentuh.'
+      },
+      {
+        id: 'rule_5',
+        icon: '🛡️',
+        title: '100% PELAKSANAAN MANUAL (ANTI-CHEAT & ANTI-BANNED)',
+        desc: 'Keseluruhan proses servis joki dilakukan sepenuhnya secara manual oleh pemain joki profesional berkemahiran tinggi. Kami tidak pernah menggunakan perisian haram (cheat), bot, skrip makro, atau sebarang aplikasi pihak ketiga yang dilarang. Keselamatan akaun permainan anda dilindungi jaminan rasmi Norxstore!'
+      },
+      {
+        id: 'rule_6',
+        icon: '⏱️',
+        title: 'ANGGARAN MASA & SISTEM GILIRAN TELUS',
+        desc: 'Setiap pesanan diproses mengikut turutan giliran invois yang diterima masuk. Anda boleh memantau anggaran masa dan perkembangan terkini secara langsung melalui tab "📦 Pesanan Saya" pada menu troli. Telefon anda juga akan bergetar serta mengeluarkan nada dering notifikasi apabila pesanan siap sepenuhnya.'
+      },
+      {
+        id: 'rule_7',
+        icon: '💰',
+        title: 'JAMINAN KESELAMATAN & PEMULANGAN WANG 100% (REFUND)',
+        desc: 'Sekiranya pesanan gagal disempurnakan atas kecuaian daripada pihak pilot Norxstore, anda berhak menerima pelaksanaan semula secara keutamaan tanpa sebarang caj tambahan, atau pemulangan wang penuh (100% Refund tanpa sebarang potongan).'
+      }
+    ]
+  },
+  SG: {
+    headerTitle: 'OFFICIAL NORXSTORE BOOSTING PROTOCOL',
+    headerSub: 'Account Security Rules & Trusted Pilot Standards',
+    heroDesc: 'To ensure flawless order execution and maximum account security, all valued customers must strictly adhere to these official guidelines:',
+    btnText: '✓ I Understand & Agree to Boosting Rules',
+    modalTitle: '📋 NORXSTORE Boosting Terms & Rules (Mandatory)',
+    extraNote: '',
+    extraNoteLabel: 'Admin Note:',
+    rules: [
+      {
+        id: 'rule_1',
+        icon: '🚫',
+        title: 'NO LOGGING IN / SESSION CONFLICT DURING BOOSTING',
+        desc: 'Never launch or log into the game while your order status is marked as "🔵 In Progress". Simultaneous login attempts will abruptly disconnect the pilot, disrupt Abyss/Boss rotations, roll back quest progression, or incur rank penalties. If you urgently need to access your account, you must contact and receive confirmation from the official WhatsApp support admin first.'
+      },
+      {
+        id: 'rule_2',
+        icon: '📲',
+        title: 'STANDBY FOR OTP CODE / TEMPORARILY DISABLE 2FA',
+        desc: 'When the pilot logs in for the first time, the game verification system usually sends a 2FA OTP code to your email or SMS. Please be on standby to reply within 1-3 minutes, or temporarily disable Two-Factor Authentication (2FA) prior to checkout so our pilot can begin immediately without queue bottlenecks.'
+      },
+      {
+        id: 'rule_3',
+        icon: '🔐',
+        title: 'USE A TEMPORARY PASSWORD & RESET UPON COMPLETION',
+        desc: 'Before providing credentials to the admin, change your game account password to a temporary one. Once the order status is updated to completed (🟢 Completed) by our team, IMMEDIATELY reset your password to guarantee 100% privacy and long-term security.'
+      },
+      {
+        id: 'rule_4',
+        icon: '💎',
+        title: 'ASSET INTEGRITY & ZERO INVENTORY TAMPERING',
+        desc: 'Our pilots are strictly prohibited from using or spending your Primogems, Stellar Jades, Astrites, Gacha Tickets, Mora, Credits, or rare character enhancement materials beyond the agreed package. All personal account savings are guaranteed 100% secure and untouched.'
+      },
+      {
+        id: 'rule_5',
+        icon: '🛡️',
+        title: '100% HANDPLAY EXECUTION (ANTI-CHEAT & ZERO-BAN GUARANTEE)',
+        desc: 'All services are played manually by vetted high-tier veteran gamers. We never utilize cheats, bots, macro automation, or unauthorized third-party injectors. Your account safety is backed by Norxstore\'s official zero-ban warranty!'
+      },
+      {
+        id: 'rule_6',
+        icon: '⏱️',
+        title: 'TRANSPARENT QUEUE SYSTEM & REAL-TIME ESTIMATES',
+        desc: 'Orders are processed sequentially based on invoice arrival. You can monitor duration estimates and live status updates via the "📦 My Orders" tab in your cart. Your device will also vibrate and play an audible notification chime the moment your order is done.'
+      },
+      {
+        id: 'rule_7',
+        icon: '💰',
+        title: '100% MONEY-BACK WARRANTY & REFUND GUARANTEE',
+        desc: 'If an order cannot be completed due to unforeseen fault or negligence on our pilot team\'s part, you are entitled to a complimentary priority re-run or a full 100% refund with zero hassle or deductions.'
+      }
+    ]
+  }
 };
+
+const DEFAULT_JOKI_RULES_CONFIG = DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
 
 let jokiRulesConfigCache = null;
 
-function getJokiRulesConfig(){
-  if(jokiRulesConfigCache) return jokiRulesConfigCache;
+function getJokiRulesConfig(targetCountry = null){
+  const country = (targetCountry || (typeof currentSelectedCountry !== 'undefined' ? currentSelectedCountry : 'ID') || 'ID').toUpperCase();
+  const baseRules = DEFAULT_JOKI_RULES_BY_COUNTRY[country] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
+  
   try {
     const raw = safeGetItem('norxstore_joki_rules_config', '');
     if(raw){
       const parsed = JSON.parse(raw);
       if(parsed && typeof parsed === 'object'){
-        const merged = { ...DEFAULT_JOKI_RULES_CONFIG, ...parsed };
-        if(Array.isArray(parsed.rules) && parsed.rules.length > 0){
-          merged.rules = parsed.rules;
-        } else {
-          merged.rules = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG.rules));
+        if(parsed.byCountry && parsed.byCountry[country] && typeof parsed.byCountry[country] === 'object'){
+          const merged = { ...baseRules, ...parsed.byCountry[country] };
+          if(Array.isArray(parsed.byCountry[country].rules) && parsed.byCountry[country].rules.length > 0){
+            merged.rules = parsed.byCountry[country].rules;
+          }
+          return merged;
         }
-        jokiRulesConfigCache = merged;
-        return jokiRulesConfigCache;
+        if(country === 'ID' && Array.isArray(parsed.rules) && parsed.rules.length > 0){
+          return { ...baseRules, ...parsed };
+        }
       }
     }
   } catch(e){}
   
-  const fallback = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG));
-  const oldExtra = safeGetItem('norxstore_joki_rules_extra_note', '');
-  if(oldExtra) fallback.extraNote = oldExtra;
-  jokiRulesConfigCache = fallback;
-  return jokiRulesConfigCache;
+  return JSON.parse(JSON.stringify(baseRules));
 }
 
-function saveJokiRulesConfig(cfg){
-  jokiRulesConfigCache = cfg;
-  safeSetItem('norxstore_joki_rules_config', JSON.stringify(cfg));
+function saveJokiRulesConfig(cfg, country = null){
+  const targetCountry = (country || currentAdminJokiLang || 'ID').toUpperCase();
+  
+  let currentAll = {};
+  try {
+    const raw = safeGetItem('norxstore_joki_rules_config', '');
+    if(raw) currentAll = JSON.parse(raw) || {};
+  } catch(e){}
+
+  if(!currentAll.byCountry || typeof currentAll.byCountry !== 'object'){
+    currentAll.byCountry = {};
+  }
+
+  currentAll.byCountry[targetCountry] = cfg;
+  if(targetCountry === 'ID'){
+    Object.assign(currentAll, cfg);
+  }
+
+  jokiRulesConfigCache = currentAll;
+  safeSetItem('norxstore_joki_rules_config', JSON.stringify(currentAll));
   if(cfg && cfg.extraNote !== undefined){
     safeSetItem('norxstore_joki_rules_extra_note', cfg.extraNote || '');
   }
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/config/jokiRules').set(cfg).catch(()=>{});
+    fbDB.ref('norxstore/config/jokiRules').set(currentAll).catch(()=>{});
   }
   syncAdminSettingsToCloud();
   renderCheckoutJokiRulesBoxes();
 }
 
 function renderCheckoutJokiRulesBoxes(){
-  const jcfg = getJokiRulesConfig();
-  const rules = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
+  const lang = (typeof currentSelectedCountry !== 'undefined' ? currentSelectedCountry : 'ID') || 'ID';
+  const jcfg = getJokiRulesConfig(lang);
+  const rules = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : (DEFAULT_JOKI_RULES_BY_COUNTRY[lang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID).rules;
   const modalList = document.getElementById('modalCheckoutRulesList');
   const cartList = document.getElementById('cartCheckoutRulesList');
   
@@ -11574,15 +11732,27 @@ function renderCheckoutJokiRulesBoxes(){
   const topRules = rules.slice(0, 3);
   const itemsHtml = topRules.map(r => {
     const rawTitle = (r.title || '').replace(/^🚫|📲|🔐|💎|🛡️|⏱️|💰/g, '').trim();
-    return `<li>${r.icon || '📌'} <strong>${rawTitle}</strong></li>`;
+    return `<li>${r.icon || '📌'} <strong>${escapeHtml(rawTitle)}</strong></li>`;
   }).join('');
 
   if(modalList) modalList.innerHTML = itemsHtml;
   if(cartList) cartList.innerHTML = itemsHtml;
 }
 
-function renderAdminJokiRulesInputs(){
-  const cfg = getJokiRulesConfig();
+let currentAdminJokiLang = 'ID';
+
+function switchAdminJokiRulesLang(lang){
+  currentAdminJokiLang = lang || 'ID';
+  ['ID', 'MY', 'SG'].forEach(c => {
+    const btn = document.getElementById(`adminJokiLangBtn_${c}`);
+    if(btn) btn.classList.toggle('active', c === currentAdminJokiLang);
+  });
+  renderAdminJokiRulesInputs();
+}
+
+function renderAdminJokiRulesInputs(lang = null){
+  const targetLang = (lang || currentAdminJokiLang || 'ID').toUpperCase();
+  const cfg = getJokiRulesConfig(targetLang);
   const titleInput = document.getElementById('adminJokiRules_headerTitle');
   const subInput = document.getElementById('adminJokiRules_headerSub');
   const descInput = document.getElementById('adminJokiRules_heroDesc');
@@ -11593,10 +11763,10 @@ function renderAdminJokiRulesInputs(){
   if(titleInput) titleInput.value = cfg.headerTitle || '';
   if(subInput) subInput.value = cfg.headerSub || '';
   if(descInput) descInput.value = cfg.heroDesc || '';
-  if(noteInput) noteInput.value = cfg.extraNote || safeGetItem('norxstore_joki_rules_extra_note', '') || '';
+  if(noteInput) noteInput.value = cfg.extraNote || '';
 
-  const rules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? cfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
-  if(badgeEl) badgeEl.textContent = `${rules.length} Poin Aturan`;
+  const rules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? cfg.rules : (DEFAULT_JOKI_RULES_BY_COUNTRY[targetLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID).rules;
+  if(badgeEl) badgeEl.textContent = `${rules.length} Poin Aturan (${targetLang})`;
 
   if(!listContainer) return;
 
@@ -11634,6 +11804,7 @@ function renderAdminJokiRulesInputs(){
 }
 
 function saveAdminJokiRules(){
+  const targetLang = currentAdminJokiLang || 'ID';
   const titleInput = document.getElementById('adminJokiRules_headerTitle');
   const subInput = document.getElementById('adminJokiRules_headerSub');
   const descInput = document.getElementById('adminJokiRules_heroDesc');
@@ -11662,31 +11833,37 @@ function saveAdminJokiRules(){
     return;
   }
 
+  const baseDef = DEFAULT_JOKI_RULES_BY_COUNTRY[targetLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
+
   const newCfg = {
-    headerTitle: titleInput ? titleInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.headerTitle,
-    headerSub: subInput ? subInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.headerSub,
-    heroDesc: descInput ? descInput.value.trim() : DEFAULT_JOKI_RULES_CONFIG.heroDesc,
+    headerTitle: titleInput ? titleInput.value.trim() : baseDef.headerTitle,
+    headerSub: subInput ? subInput.value.trim() : baseDef.headerSub,
+    heroDesc: descInput ? descInput.value.trim() : baseDef.heroDesc,
+    btnText: baseDef.btnText,
     extraNote: noteInput ? noteInput.value.trim() : '',
     rules: rules
   };
 
-  saveJokiRulesConfig(newCfg);
+  saveJokiRulesConfig(newCfg, targetLang);
   renderAdminJokiRulesInputs();
-  showToast('✅ Peraturan Joki berhasil disimpan dan disinkronkan!');
+  const cName = targetLang === 'SG' ? 'Singapura (English)' : (targetLang === 'MY' ? 'Malaysia (Melayu)' : 'Indonesia');
+  showToast(`✅ Peraturan Joki untuk ${cName} berhasil disimpan & disinkronkan!`);
 }
 
 function addAdminJokiRule(){
-  const cfg = getJokiRulesConfig();
-  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  const targetLang = currentAdminJokiLang || 'ID';
+  const cfg = getJokiRulesConfig(targetLang);
+  const baseDef = DEFAULT_JOKI_RULES_BY_COUNTRY[targetLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...baseDef.rules];
   const newId = 'rule_' + Date.now();
   currentRules.push({
     id: newId,
     icon: '📌',
-    title: 'ATURAN TAMBAHAN #' + (currentRules.length + 1),
-    desc: 'Tuliskan rincian penjelasan dan ketentuan untuk aturan baru ini.'
+    title: (targetLang === 'SG' ? 'ADDITIONAL RULE #' : (targetLang === 'MY' ? 'PERATURAN TAMBAHAN #' : 'ATURAN TAMBAHAN #')) + (currentRules.length + 1),
+    desc: (targetLang === 'SG' ? 'Provide detailed description and guidelines for this additional rule.' : (targetLang === 'MY' ? 'Sila nyatakan huraian dan syarat lengkap untuk peraturan baharu ini.' : 'Tuliskan rincian penjelasan dan ketentuan untuk aturan baru ini.'))
   });
   cfg.rules = currentRules;
-  saveJokiRulesConfig(cfg);
+  saveJokiRulesConfig(cfg, targetLang);
   renderAdminJokiRulesInputs();
   showToast('➕ Poin aturan baru ditambahkan! Silakan edit lalu klik simpan.');
   setTimeout(() => {
@@ -11699,22 +11876,26 @@ function addAdminJokiRule(){
 }
 
 function deleteAdminJokiRule(ruleId){
-  const cfg = getJokiRulesConfig();
-  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  const targetLang = currentAdminJokiLang || 'ID';
+  const cfg = getJokiRulesConfig(targetLang);
+  const baseDef = DEFAULT_JOKI_RULES_BY_COUNTRY[targetLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...baseDef.rules];
   if(currentRules.length <= 1){
     alert('Minimal harus ada 1 poin aturan joki! Tidak bisa dihapus semua.');
     return;
   }
   if(!confirm('Hapus poin aturan joki ini?')) return;
   cfg.rules = currentRules.filter(r => r.id !== ruleId);
-  saveJokiRulesConfig(cfg);
+  saveJokiRulesConfig(cfg, targetLang);
   renderAdminJokiRulesInputs();
   showToast('🗑️ Poin aturan berhasil dihapus.');
 }
 
 function moveAdminJokiRule(ruleId, direction){
-  const cfg = getJokiRulesConfig();
-  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...DEFAULT_JOKI_RULES_CONFIG.rules];
+  const targetLang = currentAdminJokiLang || 'ID';
+  const cfg = getJokiRulesConfig(targetLang);
+  const baseDef = DEFAULT_JOKI_RULES_BY_COUNTRY[targetLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
+  const currentRules = (Array.isArray(cfg.rules) && cfg.rules.length > 0) ? [...cfg.rules] : [...baseDef.rules];
   const idx = currentRules.findIndex(r => r.id === ruleId);
   if(idx === -1) return;
   const targetIdx = idx + direction;
@@ -11725,16 +11906,18 @@ function moveAdminJokiRule(ruleId, direction){
   currentRules[targetIdx] = temp;
   
   cfg.rules = currentRules;
-  saveJokiRulesConfig(cfg);
+  saveJokiRulesConfig(cfg, targetLang);
   renderAdminJokiRulesInputs();
 }
 
 function resetAdminJokiRules(){
-  if(!confirm('Reset seluruh peraturan joki kembali ke bawaan standar (7 poin resmi)?')) return;
-  const def = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_CONFIG));
-  saveJokiRulesConfig(def);
+  const targetLang = currentAdminJokiLang || 'ID';
+  const cName = targetLang === 'SG' ? 'Singapura (English)' : (targetLang === 'MY' ? 'Malaysia (Melayu)' : 'Indonesia');
+  if(!confirm(`Reset peraturan joki untuk ${cName} kembali ke standar resmi (7 poin bawaan)?`)) return;
+  const def = JSON.parse(JSON.stringify(DEFAULT_JOKI_RULES_BY_COUNTRY[targetLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID));
+  saveJokiRulesConfig(def, targetLang);
   renderAdminJokiRulesInputs();
-  showToast('🔄 Peraturan Joki berhasil direset ke standar bawaan.');
+  showToast(`🔄 Peraturan Joki ${cName} berhasil direset ke standar resmi.`);
 }
 
 
@@ -12166,13 +12349,13 @@ function renderFooterContent(){
   if(bDisc) bDisc.textContent = (!isDefaultLang && fcfg.disclaimerText === DEFAULT_FOOTER_CONFIG.disclaimerText) ? (t('footerDisclaimer') || fcfg.disclaimerText) : fcfg.disclaimerText;
 }
 
-function openInfoModal(type){
+function openInfoModal(type, extraLang = null){
   const overlay = document.getElementById('infoModalOverlay');
   const titleEl = document.getElementById('infoModalTitle');
   const contentEl = document.getElementById('infoModalContent');
   if(!overlay || !titleEl || !contentEl) return;
 
-  const lang = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID';
+  const lang = (extraLang || (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID').toUpperCase();
 
   let title = '';
   let html = '';
@@ -12445,21 +12628,24 @@ function openInfoModal(type){
       `;
     }
   } else if(type === 'jokiRules'){
-    const jcfg = getJokiRulesConfig();
-    const rulesList = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : DEFAULT_JOKI_RULES_CONFIG.rules;
-    const headerTitle = jcfg.headerTitle || (lang === 'SG' ? 'OFFICIAL BOOSTING PROTOCOL' : (lang === 'MY' ? 'PROTOKOL RASMI SERVIS JOKI' : 'PROTOKOL RESMI JOKI NORXSTORE'));
-    const headerSub = jcfg.headerSub || (lang === 'SG' ? 'Guidelines & Account Security Measures' : (lang === 'MY' ? 'Peraturan Keselamatan Akaun & Jaminan Amanah' : 'Peraturan Keamanan Akun & Pengerjaan Amanah'));
-    const heroDesc = jcfg.heroDesc || (lang === 'SG' ? 'To guarantee 100% account safety and zero progress interruptions, all customers must adhere to these policies:' : (lang === 'MY' ? 'Demi kelancaran dan keselamatan akaun game anda, setiap pelanggan wajib mematuhi peraturan rasmi ini:' : 'Demi kelancaran pengerjaan dan keamanan maksimal akun game Anda, seluruh pelanggan wajib mengikuti peraturan resmi berikut:'));
-    const extraNote = jcfg.extraNote || safeGetItem('norxstore_joki_rules_extra_note', '');
+    const jokiLang = (extraLang || activeJokiRulesModalLang || (typeof currentSelectedCountry !== 'undefined' ? currentSelectedCountry : 'ID') || 'ID').toUpperCase();
+    activeJokiRulesModalLang = jokiLang;
+    const jcfg = getJokiRulesConfig(jokiLang);
+    const baseDef = DEFAULT_JOKI_RULES_BY_COUNTRY[jokiLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
+    const rulesList = (Array.isArray(jcfg.rules) && jcfg.rules.length > 0) ? jcfg.rules : baseDef.rules;
+    const headerTitle = jcfg.headerTitle || baseDef.headerTitle;
+    const headerSub = jcfg.headerSub || baseDef.headerSub;
+    const heroDesc = jcfg.heroDesc || baseDef.heroDesc;
+    const extraNote = jcfg.extraNote || '';
 
-    title = (lang === 'SG') ? '📋 NORXSTORE Boosting Terms & Rules (Mandatory)' : ((lang === 'MY') ? '📋 Terma & Peraturan Joki NORXSTORE (Wajib Dipatuhi)' : '📋 Peraturan Joki NORXSTORE (Wajib Dibaca)');
+    title = baseDef.modalTitle || (jokiLang === 'SG' ? '📋 NORXSTORE Boosting Terms & Rules (Mandatory)' : (jokiLang === 'MY' ? '📋 Terma & Peraturan Joki NORXSTORE (Wajib Dipatuhi)' : '📋 Peraturan Joki NORXSTORE (Wajib Dibaca)'));
     const extraNoteHtml = extraNote ? `
       <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:9px 12px;margin-bottom:12px;font-size:11.5px;color:#1e40af;display:flex;align-items:center;gap:6px">
-        <span>📢</span> <span><strong>${lang === 'SG' ? 'Admin Note:' : (lang === 'MY' ? 'Nota Admin:' : 'Catatan Admin:')}</strong> ${escapeHtml(extraNote)}</span>
+        <span>📢</span> <span><strong>${baseDef.extraNoteLabel || 'Catatan Admin:'}</strong> ${escapeHtml(extraNote)}</span>
       </div>
     ` : '';
 
-    const btnText = (lang === 'SG') ? '✓ I Understand & Agree to Boosting Rules' : ((lang === 'MY') ? '✓ Saya Faham & Bersetuju dengan Peraturan Joki' : '✓ Saya Mengerti & Siap Mengikuti Peraturan Joki');
+    const btnText = jcfg.btnText || baseDef.btnText;
 
     const rulesCardsHtml = rulesList.map((r, idx) => `
       <div class="joki-rules-card-item">
@@ -12471,7 +12657,16 @@ function openInfoModal(type){
       </div>
     `).join('');
 
+    const countryNavHtml = `
+      <div class="joki-rules-country-nav">
+        <button type="button" class="jrc-nav-btn ${jokiLang === 'ID' ? 'active' : ''}" onclick="switchJokiRulesModalLang('ID')">🇮🇩 Indonesia</button>
+        <button type="button" class="jrc-nav-btn ${jokiLang === 'MY' ? 'active' : ''}" onclick="switchJokiRulesModalLang('MY')">🇲🇾 Malaysia</button>
+        <button type="button" class="jrc-nav-btn ${jokiLang === 'SG' ? 'active' : ''}" onclick="switchJokiRulesModalLang('SG')">🇸🇬 Singapore</button>
+      </div>
+    `;
+
     html = `
+      ${countryNavHtml}
       <div class="joki-rules-hero-card">
         <div style="font-size:11px;font-weight:800;color:#f59e0b;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">🛡️ ${escapeHtml(headerTitle)}</div>
         <div style="font-size:13.5px;font-weight:800;color:#fff;margin-bottom:4px">${escapeHtml(headerSub)}</div>
@@ -12495,10 +12690,18 @@ function openInfoModal(type){
   document.body.style.overflow = 'hidden';
 }
 
+let activeJokiRulesModalLang = null;
+
+function switchJokiRulesModalLang(cCode){
+  activeJokiRulesModalLang = cCode;
+  openInfoModal('jokiRules', cCode);
+}
+
 function closeInfoModal(e){
   if(e && e.target && !e.target.classList.contains('social-modal-overlay') && !e.target.classList.contains('social-modal-close') && e.target.id !== 'infoModalOverlay'){
     return;
   }
+  activeJokiRulesModalLang = null;
   const overlay = document.getElementById('infoModalOverlay');
   if(overlay){
     overlay.classList.remove('open');
@@ -12852,6 +13055,43 @@ function resetAdminSocialAndFooterConfig(){
 
 const DEFAULT_REVIEW_PHOTOS = ['/rev_0.jpg', '/rev_1.jpg', '/rev_2.jpg', '/rev_3.jpg', '/rev_4.jpg'];
 
+let customProductImages = (function(){
+  try {
+    const raw = safeGetItem('norxstore_custom_images', null);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object') return parsed;
+    }
+  }catch(e){}
+  return {};
+})();
+
+function saveCustomImagesLocal(){
+  try {
+    safeSetItem('norxstore_custom_images', JSON.stringify(customProductImages));
+  } catch(e){}
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
+      tx.objectStore(NORX_IDB_STORE).put(customProductImages, 'customProductImages');
+    } catch(e){}
+  });
+}
+
+function syncCustomImagesToCloud(){
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    try {
+      // Node norxstore/orders/__config_images__ memiliki izin tulis di Firebase RTDB
+      fbDB.ref('norxstore/orders/__config_images__').set({
+        images: customProductImages,
+        updatedAt: Date.now()
+      }).catch(e=>console.warn('Sync notice config_images:', e));
+      fbDB.ref('norxstore/images').set(productImagesCache).catch(()=>{});
+    } catch(e){}
+  }
+}
+
 function getProductImages(){
   return productImagesCache;
 }
@@ -12878,33 +13118,44 @@ function purgeReviewPhotosFromProducts(){
 
 function getImagesForProduct(id){
   const numId = typeof id === 'number' ? id : parseInt(id);
-  const all = getProductImages();
+  const targetId = numId || id;
 
-  // 1. Jika di all[id] sudah tersimpan array (termasuk jika sengaja dikosongkan/dihapus: []), hormati pilihan user!
-  if(all){
-    if(all[id] !== undefined && Array.isArray(all[id])){
-      return all[id].filter(Boolean);
+  // 1. Prioritas Utama: Foto kustom yang diunggah/diubah admin (TIDAK BOLEH tertimpa default)
+  if(customProductImages && typeof customProductImages === 'object'){
+    if(customProductImages[targetId] !== undefined && Array.isArray(customProductImages[targetId])){
+      return customProductImages[targetId].filter(Boolean);
     }
-    if(numId && all[numId] !== undefined && Array.isArray(all[numId])){
-      return all[numId].filter(Boolean);
+    if(customProductImages[String(targetId)] !== undefined && Array.isArray(customProductImages[String(targetId)])){
+      return customProductImages[String(targetId)].filter(Boolean);
     }
   }
 
-  // 2. Jika di objek produk tersimpan array images eksplisit, hormati!
-  const prod = products.find(p => p.id === id || (numId && p.id === numId));
-  if(prod && prod.images !== undefined && Array.isArray(prod.images)){
-    if(all){ all[id] = [...prod.images]; if(numId) all[numId] = [...prod.images]; }
+  // 2. Cache gambar aktif
+  const all = getProductImages();
+  if(all && typeof all === 'object'){
+    if(all[targetId] !== undefined && Array.isArray(all[targetId])){
+      return all[targetId].filter(Boolean);
+    }
+    if(all[String(targetId)] !== undefined && Array.isArray(all[String(targetId)])){
+      return all[String(targetId)].filter(Boolean);
+    }
+  }
+
+  // 3. Objek produk saat ini
+  const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
+  if(prod && prod.images !== undefined && Array.isArray(prod.images) && prod.images.length > 0){
+    if(all){ all[targetId] = [...prod.images]; all[String(targetId)] = [...prod.images]; }
     return prod.images.filter(Boolean);
   }
 
-  // 3. Fallback HANYA jika produk belum pernah dikonfigurasi sama sekali (undefined di all dan prod.images)
+  // 4. Default toko (bawaan sistem)
   if(typeof DEFAULT_PRODUCT_IMAGES === 'object'){
-    const def = DEFAULT_PRODUCT_IMAGES[id] || (numId && DEFAULT_PRODUCT_IMAGES[numId]);
+    const def = DEFAULT_PRODUCT_IMAGES[targetId] || (numId && DEFAULT_PRODUCT_IMAGES[numId]);
     if(def && Array.isArray(def) && def.length > 0){
       return [...def];
     }
   }
-  return [];
+  return targetId ? [`/prod_${targetId}.jpg`] : [];
 }
 
 function preloadVisibleProductImages(){
@@ -12927,18 +13178,27 @@ function preloadProductImages(){
 function addImageToProduct(id, url){
   if(!url || !id) return;
   const numId = typeof id === 'number' ? id : parseInt(id);
+  const targetId = numId || id;
   const all = getProductImages() || {};
-  let cur = (all[id] !== undefined ? all[id] : (numId && all[numId] !== undefined ? all[numId] : null));
+  
+  let cur = (customProductImages[targetId] || customProductImages[String(targetId)] || all[targetId] || all[String(targetId)]);
   if(!Array.isArray(cur)){
-    const currentImgs = getImagesForProduct(id);
+    const currentImgs = getImagesForProduct(targetId);
     cur = currentImgs.length > 0 ? [...currentImgs] : [];
   }
+  cur = [...cur];
   if(!cur.includes(url)) cur.push(url);
-  all[id] = [...cur];
-  if(numId) all[numId] = [...cur];
+  
+  all[targetId] = [...cur];
+  all[String(targetId)] = [...cur];
+  customProductImages[targetId] = [...cur];
+  customProductImages[String(targetId)] = [...cur];
+  
+  saveCustomImagesLocal();
   setProductImages(all);
+  syncCustomImagesToCloud();
 
-  const prod = products.find(p => p.id === id || (numId && p.id === numId));
+  const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
   if(prod){
     prod.images = [...cur];
     setProducts(products);
@@ -12948,22 +13208,31 @@ function addImageToProduct(id, url){
 function replaceImageInProduct(id, idx, url){
   if(!url || !id) return;
   const numId = typeof id === 'number' ? id : parseInt(id);
+  const targetId = numId || id;
   const all = getProductImages() || {};
-  let cur = (all[id] !== undefined ? all[id] : (numId && all[numId] !== undefined ? all[numId] : null));
+  
+  let cur = (customProductImages[targetId] || customProductImages[String(targetId)] || all[targetId] || all[String(targetId)]);
   if(!Array.isArray(cur)){
-    const currentImgs = getImagesForProduct(id);
+    const currentImgs = getImagesForProduct(targetId);
     cur = currentImgs.length > 0 ? [...currentImgs] : [];
   }
+  cur = [...cur];
   if(idx >= 0 && idx < cur.length){
     cur[idx] = url;
   } else {
     cur.push(url);
   }
-  all[id] = [...cur];
-  if(numId) all[numId] = [...cur];
+  
+  all[targetId] = [...cur];
+  all[String(targetId)] = [...cur];
+  customProductImages[targetId] = [...cur];
+  customProductImages[String(targetId)] = [...cur];
+  
+  saveCustomImagesLocal();
   setProductImages(all);
+  syncCustomImagesToCloud();
 
-  const prod = products.find(p => p.id === id || (numId && p.id === numId));
+  const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
   if(prod){
     prod.images = [...cur];
     setProducts(products);
@@ -12972,22 +13241,31 @@ function replaceImageInProduct(id, idx, url){
 
 function removeImageFromProduct(id, idx){
   const numId = typeof id === 'number' ? id : parseInt(id);
+  const targetId = numId || id;
   const all = getProductImages() || {};
-  let cur = (all[id] !== undefined ? all[id] : (numId && all[numId] !== undefined ? all[numId] : null));
+  
+  let cur = (customProductImages[targetId] || customProductImages[String(targetId)] || all[targetId] || all[String(targetId)]);
   if(!Array.isArray(cur)){
-    const currentImgs = getImagesForProduct(id);
+    const currentImgs = getImagesForProduct(targetId);
     cur = currentImgs.length > 0 ? [...currentImgs] : [];
   }
+  cur = [...cur];
   if(Array.isArray(cur)){
     cur.splice(idx, 1);
   } else {
     cur = [];
   }
-  all[id] = [...cur];
-  if(numId) all[numId] = [...cur];
+  
+  all[targetId] = [...cur];
+  all[String(targetId)] = [...cur];
+  customProductImages[targetId] = [...cur];
+  customProductImages[String(targetId)] = [...cur];
+  
+  saveCustomImagesLocal();
   setProductImages(all);
+  syncCustomImagesToCloud();
 
-  const prod = products.find(p => p.id === id || (numId && p.id === numId));
+  const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
   if(prod){
     prod.images = [...cur];
     setProducts(products);
@@ -12996,16 +13274,28 @@ function removeImageFromProduct(id, idx){
 
 function resetProductImageToDefault(id){
   const numId = typeof id === 'number' ? id : parseInt(id);
-  const def = (DEFAULT_PRODUCT_IMAGES[id] || (numId && DEFAULT_PRODUCT_IMAGES[numId])) || [];
+  const targetId = numId || id;
+  
+  // Hapus override foto custom
+  if(customProductImages){
+    delete customProductImages[targetId];
+    delete customProductImages[String(targetId)];
+    saveCustomImagesLocal();
+  }
+  
+  const def = (DEFAULT_PRODUCT_IMAGES[targetId] || (numId && DEFAULT_PRODUCT_IMAGES[numId])) || [`/prod_${targetId}.jpg`];
   const all = getProductImages() || {};
-  all[id] = [...def];
-  if(numId) all[numId] = [...def];
+  all[targetId] = [...def];
+  all[String(targetId)] = [...def];
   setProductImages(all);
-  const prod = products.find(p => p.id === id || (numId && p.id === numId));
+  
+  const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
   if(prod){
     prod.images = [...def];
     setProducts(products);
   }
+  
+  syncCustomImagesToCloud();
   renderAdminImgList();
   renderFormProductImagesUI();
   renderProducts();
@@ -13329,11 +13619,33 @@ function idlePreloadRemainingImages(){
     if(!db) return;
     try {
       const tx = db.transaction(NORX_IDB_STORE, 'readonly');
-      const req = tx.objectStore(NORX_IDB_STORE).get('productImages');
+      const store = tx.objectStore(NORX_IDB_STORE);
+
+      const reqCustom = store.get('customProductImages');
+      reqCustom.onsuccess = () => {
+        const customData = reqCustom.result;
+        if(customData && typeof customData === 'object' && Object.keys(customData).length > 0){
+          for(const k in customData){
+            if(Array.isArray(customData[k]) && customData[k].length > 0){
+              customProductImages[k] = [...customData[k]];
+              productImagesCache[k] = [...customData[k]];
+            }
+          }
+          imagesDataReady = true;
+          renderProducts();
+          if(isAdminOpen()){
+            if(typeof renderAdminImgList === 'function') renderAdminImgList();
+            if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+          }
+        }
+      };
+
+      const req = store.get('productImages');
       req.onsuccess = () => {
         const idbData = req.result;
         if(idbData && typeof idbData === 'object' && Object.keys(idbData).length > 0){
           for(const k in idbData){
+            if(customProductImages && (customProductImages[k] || customProductImages[String(k)])) continue;
             if(Array.isArray(idbData[k]) && idbData[k].length > 0){
               productImagesCache[k] = idbData[k];
             }
@@ -13454,14 +13766,21 @@ fbDB.ref('norxstore/images').on('value', snap=>{
   const val = snap.val();
   if(val && typeof val === 'object' && Object.keys(val).length > 0){
     for(const k in val){
+      // JANGAN timpa foto custom produk yang telah diunggah admin
+      if(customProductImages && (customProductImages[k] || customProductImages[String(k)]) && Array.isArray(customProductImages[k] || customProductImages[String(k)])){
+        continue;
+      }
       if(Array.isArray(val[k])){
         productImagesCache[k] = [...val[k]];
       }
     }
-  } else {
-    // Jika di Firebase kosong/belum ada data, sinkronkan cache lokal/default ke Firebase agar server terisi
-    if(window.fbAvailable && fbDB && fbDB.ref && Object.keys(productImagesCache).length > 0){
-      fbDB.ref('norxstore/images').set(productImagesCache).catch(e=>{});
+  }
+  // Selalu pastikan foto custom admin tetap aktif di cache
+  if(customProductImages && typeof customProductImages === 'object'){
+    for(const k in customProductImages){
+      if(Array.isArray(customProductImages[k])){
+        productImagesCache[k] = [...customProductImages[k]];
+      }
     }
   }
   imagesDataReady = true;
@@ -15895,6 +16214,30 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
   if(incoming['__config_settings__'] && incoming['__config_settings__'].data){
     applyAdminConfigSettings(incoming['__config_settings__'].data);
   }
+  if(incoming['__config_images__'] && incoming['__config_images__'].images){
+    const cloudCustomImgs = incoming['__config_images__'].images;
+    if(cloudCustomImgs && typeof cloudCustomImgs === 'object'){
+      let hasImgChange = false;
+      for(const k in cloudCustomImgs){
+        if(Array.isArray(cloudCustomImgs[k])){
+          customProductImages[k] = [...cloudCustomImgs[k]];
+          productImagesCache[k] = [...cloudCustomImgs[k]];
+          const p = products.find(p => p.id == k);
+          if(p) p.images = [...cloudCustomImgs[k]];
+          hasImgChange = true;
+        }
+      }
+      if(hasImgChange){
+        saveCustomImagesLocal();
+        saveImagesCache(productImagesCache);
+        renderProducts();
+        if(isAdminOpen()){
+          if(typeof renderAdminImgList === 'function') renderAdminImgList();
+          if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+        }
+      }
+    }
+  }
 
   // 2. Pisahkan data konfigurasi internal agar tidak tercampur ke pesanan pelanggan
   const cleanOrders = {};
@@ -17763,7 +18106,10 @@ function savePassword(){
 
 function triggerFileInput(inputId){
   const input = document.getElementById(inputId);
-  if(input) input.click();
+  if(input){
+    input.value = '';
+    input.click();
+  }
 }
 function onImageProductChange(){
   const sel = document.getElementById('imgProductSelect');
@@ -17784,9 +18130,12 @@ function onImageProductChange(){
 let replacingImageContext = null;
 
 function triggerReplaceProductImage(id, idx){
-  replacingImageContext = { id, idx };
+  replacingImageContext = { id: parseInt(id), idx: parseInt(idx) };
   const fi = document.getElementById('imgFileInput');
-  if(fi) fi.click();
+  if(fi){
+    fi.value = '';
+    fi.click();
+  }
 }
 
 function renderAdminImgList(){
@@ -17806,7 +18155,7 @@ function renderAdminImgList(){
   }
   list.innerHTML = imgs.map((url, idx) => `
     <div class="admin-img-item" style="flex-wrap:wrap;gap:6px;align-items:center;padding:8px 10px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;margin-bottom:6px">
-      <img src="${url}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:zoom-in" onclick="openImageViewer('${url}')" title="Klik untuk lihat penuh">
+      <img src="${url}" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:6px;cursor:zoom-in" onclick="openProductImageViewer(${id}, ${idx})" title="Klik untuk lihat penuh">
       <span style="flex:1;min-width:70px;font-weight:700;font-size:12px;color:#1e293b">Foto ${idx+1}</span>
       <button type="button" class="admin-btn-sm" style="background:#0284c7;color:#fff;font-size:11px;padding:6px 10px;font-weight:600" onclick="triggerReplaceProductImage(${id},${idx})" title="Ganti foto ini dengan foto lain">🔄 Ubah</button>
       <button type="button" class="admin-btn-sm" style="background:#7c3aed;color:#fff;font-size:11px;padding:6px 10px;font-weight:600" onclick="moveProductImgToReviews(${id},${idx})" title="Pindahkan foto ini ke Galeri Testimoni Pelanggan">⭐ Testi</button>
@@ -17872,7 +18221,10 @@ function renderFormProductImagesUI(){
 
 function triggerFormProductPhotoUpload(type){
   const input = document.getElementById(type === 'camera' ? 'formProdPhotoCameraInput' : 'formProdPhotoFileInput');
-  if(input) input.click();
+  if(input){
+    input.value = '';
+    input.click();
+  }
 }
 
 function deleteFormProductPhoto(idx){
@@ -17888,8 +18240,8 @@ function deleteFormProductPhoto(idx){
 function handleFormProductPhotoUpload(event){
   const file = event.target.files && event.target.files[0];
   if(!file) return;
-  if(file.size > 8 * 1024 * 1024){
-    showToast('⚠️ File terlalu besar! Maksimal 8MB');
+  if(file.size > 15 * 1024 * 1024){
+    showToast('⚠️ File terlalu besar! Maksimal 15MB');
     event.target.value = '';
     return;
   }
@@ -17900,7 +18252,7 @@ function handleFormProductPhotoUpload(event){
     img.onload = function(){
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const maxSize = 960;
+      const maxSize = 640;
       let w = img.width, h = img.height;
       if(w > h && w > maxSize){ h = Math.round(h * (maxSize/w)); w = maxSize; }
       else if(h > maxSize){ w = Math.round(h * (maxSize/h)); h = maxSize; }
@@ -17908,7 +18260,7 @@ function handleFormProductPhotoUpload(event){
       ctx.fillStyle = '#f5f5f5';
       ctx.fillRect(0,0,w,h);
       ctx.drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.76);
       
       if(editingProductId !== null){
         addImageToProduct(editingProductId, dataUrl);
@@ -17933,24 +18285,35 @@ function handleFormProductPhotoUpload(event){
 }
 
 function handleImageUpload(event){
-  const file = event.target.files[0];
+  const file = event.target.files && event.target.files[0];
   if(!file) return;
-  const selEl = document.getElementById('imgProductSelect');
-  let id = parseInt(selEl ? selEl.value : 0);
-  if(!id && editingProductId !== null){
-    id = editingProductId;
+
+  let id = 0;
+  let replaceIdx = -1;
+  if(replacingImageContext && replacingImageContext.id){
+    id = parseInt(replacingImageContext.id);
+    replaceIdx = parseInt(replacingImageContext.idx);
+  } else {
+    const selEl = document.getElementById('imgProductSelect');
+    id = parseInt(selEl ? selEl.value : 0);
+    if(!id && editingProductId !== null){
+      id = parseInt(editingProductId);
+    }
   }
-  if(!id){
+
+  if(!id || isNaN(id)){
     showToast('⚠️ Silakan pilih produk terlebih dahulu sebelum upload foto!');
     const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
     const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
+    replacingImageContext = null;
     return;
   }
 
-  if(file.size > 8 * 1024 * 1024){
-    showToast('Gambar terlalu besar! Max 8MB');
+  if(file.size > 15 * 1024 * 1024){
+    showToast('Gambar terlalu besar! Max 15MB');
     const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
     const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
+    replacingImageContext = null;
     return;
   }
 
@@ -17961,7 +18324,7 @@ function handleImageUpload(event){
     img.onload = function(){
       const canvas = document.createElement('canvas');
       const ctx = canvas.getContext('2d');
-      const maxSize = 960;
+      const maxSize = 640;
       let w = img.width, h = img.height;
       if(w > h && w > maxSize){ h = Math.round(h * (maxSize/w)); w = maxSize; }
       else if(h > maxSize){ w = Math.round(h * (maxSize/h)); h = maxSize; }
@@ -17969,12 +18332,11 @@ function handleImageUpload(event){
       ctx.fillStyle = '#f5f5f5';
       ctx.fillRect(0,0,w,h);
       ctx.drawImage(img, 0, 0, w, h);
-      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.76);
       try {
-        if(replacingImageContext && (replacingImageContext.id === id || replacingImageContext.id === parseInt(id))){
-          replaceImageInProduct(id, replacingImageContext.idx, dataUrl);
-          replacingImageContext = null;
-          showToast('✅ Foto berhasil diubah!');
+        if(replaceIdx >= 0){
+          replaceImageInProduct(id, replaceIdx, dataUrl);
+          showToast('✅ Foto produk berhasil diubah!');
         } else {
           addImageToProduct(id, dataUrl);
           showToast('✅ Foto produk berhasil disimpan!');
@@ -17987,11 +18349,13 @@ function handleImageUpload(event){
         showToast('Storage penuh! Hapus gambar lama dulu.');
         console.error(err);
       }
+      replacingImageContext = null;
       const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
       const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
     };
     img.onerror = function(){ 
       showToast('Gagal memuat gambar'); 
+      replacingImageContext = null;
       const fi = document.getElementById('imgFileInput'); if(fi) fi.value = '';
       const ci = document.getElementById('imgCameraInput'); if(ci) ci.value = '';
     };
