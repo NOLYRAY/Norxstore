@@ -3633,7 +3633,7 @@ button{cursor:pointer;font-family:inherit}
   <div class="checkout-joki-rules-box">
     <div class="checkout-joki-rules-head">
       <span style="font-size:14px">⚠️</span>
-      <strong>PENTING: Peraturan Joki Norxstore</strong>
+      <strong id="modalJokiRulesHead">PENTING: Peraturan Joki Norxstore</strong>
     </div>
     <ul class="checkout-joki-rules-list" id="modalCheckoutRulesList">
       <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat joki sedang dikerjakan.</li>
@@ -3641,11 +3641,11 @@ button{cursor:pointer;font-family:inherit}
       <li>🔐 <strong>Ganti password</strong> akun game Anda setelah joki selesai 100%.</li>
     </ul>
     <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
-      <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
+      <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" id="modalJokiRulesLink" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
     </div>
     <label class="checkout-joki-rules-agreement">
       <input type="checkbox" id="modalJokiAgreement" checked style="width:16px;height:16px;accent-color:#7c3aed;cursor:pointer">
-      <span style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
+      <span id="modalJokiRulesAgreeText" style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
     </label>
   </div>
 
@@ -3723,7 +3723,7 @@ button{cursor:pointer;font-family:inherit}
 <div class="checkout-joki-rules-box" style="margin-top:12px">
   <div class="checkout-joki-rules-head">
     <span style="font-size:14px">⚠️</span>
-    <strong>PENTING: Peraturan Joki Norxstore</strong>
+    <strong id="cartJokiRulesHead">PENTING: Peraturan Joki Norxstore</strong>
   </div>
   <ul class="checkout-joki-rules-list" id="cartCheckoutRulesList">
     <li>🚫 <strong>Dilarang login/tabrak akun</strong> saat proses pengerjaan joki berlangsung.</li>
@@ -3731,11 +3731,11 @@ button{cursor:pointer;font-family:inherit}
     <li>🔐 <strong>Ganti kata sandi</strong> akun game Anda segera setelah pengerjaan selesai 100%.</li>
   </ul>
   <div style="margin-top:6px;display:flex;justify-content:space-between;align-items:center">
-    <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
+    <a href="javascript:void(0)" onclick="openInfoModal('jokiRules')" id="cartJokiRulesLink" style="font-size:11px;color:#7c3aed;font-weight:700;text-decoration:underline">📖 Baca Peraturan Joki Lengkap ➔</a>
   </div>
   <label class="checkout-joki-rules-agreement">
     <input type="checkbox" id="cartJokiAgreement" checked style="width:16px;height:16px;accent-color:#7c3aed;cursor:pointer">
-    <span style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
+    <span id="cartJokiRulesAgreeText" style="font-size:11px;font-weight:700;color:#1e1b4b">Saya setuju & siap mengikuti Peraturan Joki</span>
   </label>
 </div>
 
@@ -5882,6 +5882,65 @@ function saveReviewsCache(arr){
   });
 }
 
+let customProductsCache = (function(){
+  try {
+    const raw = safeGetItem('norxstore_custom_products', '');
+    if(raw) {
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed)) return parsed;
+    }
+  } catch(e){}
+  return [];
+})();
+
+let deletedProductIds = (function(){
+  try {
+    const raw = safeGetItem('norxstore_deleted_product_ids', '');
+    if(raw) {
+      const parsed = JSON.parse(raw);
+      if(Array.isArray(parsed)) return new Set(parsed);
+    }
+  } catch(e){}
+  return new Set();
+})();
+
+// Restore custom products & deleted IDs from IndexedDB asynchronously for offline & crash recovery
+(function initProductsIDB(){
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const tx = db.transaction(NORX_IDB_STORE, 'readonly');
+      const store = tx.objectStore(NORX_IDB_STORE);
+      const reqCp = store.get('customProducts');
+      reqCp.onsuccess = () => {
+        if(Array.isArray(reqCp.result) && reqCp.result.length > 0){
+          const map = new Map(customProductsCache.map(p => [p.id, p]));
+          let changed = false;
+          reqCp.result.forEach(p => {
+            if(p && p.id && !map.has(p.id)){
+              customProductsCache.push(p);
+              changed = true;
+            }
+          });
+          if(changed){
+            safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
+            products = mergeProductsData(products);
+            renderProducts();
+            if(isAdminOpen()) renderAdminProductList();
+          }
+        }
+      };
+      const reqDel = store.get('deletedProductIds');
+      reqDel.onsuccess = () => {
+        if(Array.isArray(reqDel.result)){
+          reqDel.result.forEach(id => deletedProductIds.add(id));
+          safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
+        }
+      };
+    } catch(e){}
+  });
+})();
+
 function mergeProductsData(parsed){
   let rawList = [];
   if(Array.isArray(parsed)){
@@ -5898,21 +5957,25 @@ function mergeProductsData(parsed){
     if(rawAdj) savedPriceAdjustments = JSON.parse(rawAdj) || {};
   } catch(e){}
 
-  // Pertahankan urutan eksak sesuai yang diatur admin (drag & drop)
   const merged = [];
   const seenIds = new Set();
-  rawList.forEach(p => {
+
+  const processProductItem = (p, isFromDefault = false) => {
     if(!p || typeof p !== 'object' || p.id === undefined) return;
+    if(deletedProductIds.has(p.id)) return;
+    if(seenIds.has(p.id)) return;
+
     const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
-    let pImgs = (typeof customProductImages === 'object' && customProductImages && customProductImages[p.id] && Array.isArray(customProductImages[p.id]) && customProductImages[p.id].length > 0)
-      ? [...customProductImages[p.id]]
-      : ((typeof productImagesCache === 'object' && productImagesCache && productImagesCache[p.id] && Array.isArray(productImagesCache[p.id]) && productImagesCache[p.id].length > 0)
-          ? [...productImagesCache[p.id]]
+    let pImgs = (typeof customProductImages === 'object' && customProductImages && (customProductImages[p.id] || customProductImages[String(p.id)]) && Array.isArray(customProductImages[p.id] || customProductImages[String(p.id)]) && (customProductImages[p.id] || customProductImages[String(p.id)]).length > 0)
+      ? [...(customProductImages[p.id] || customProductImages[String(p.id)])]
+      : ((typeof productImagesCache === 'object' && productImagesCache && (productImagesCache[p.id] || productImagesCache[String(p.id)]) && Array.isArray(productImagesCache[p.id] || productImagesCache[String(p.id)]) && (productImagesCache[p.id] || productImagesCache[String(p.id)]).length > 0)
+          ? [...(productImagesCache[p.id] || productImagesCache[String(p.id)])]
           : (Array.isArray(p.images) && p.images.length > 0
               ? p.images
               : (dp && Array.isArray(dp.images) && dp.images.length > 0
                   ? dp.images
-                  : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : [`/prod_${p.id}.jpg`]))));
+                  : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : []))));
+    
     let item = dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs};
 
     // Terapkan override harga admin jika ada
@@ -5928,46 +5991,72 @@ function mergeProductsData(parsed){
 
     merged.push(item);
     seenIds.add(p.id);
-  });
+  };
+
+  // 1. Prioritas pertama: data dari server / input
+  rawList.forEach(p => processProductItem(p, false));
+
+  // 2. Gabungkan produk kustom admin yang pernah ditambahkan (agar tidak hilang saat sync server)
+  if(Array.isArray(customProductsCache)){
+    customProductsCache.forEach(cp => processProductItem(cp, false));
+  }
+
+  // 3. Gabungkan produk bawaan jika belum ada dan tidak dihapus
   DEFAULT_PRODUCTS.forEach(dp => {
-    if(!seenIds.has(dp.id)){
-      let pImgs = (typeof customProductImages === 'object' && customProductImages && customProductImages[dp.id] && Array.isArray(customProductImages[dp.id]) && customProductImages[dp.id].length > 0)
-        ? [...customProductImages[dp.id]]
-        : ((typeof productImagesCache === 'object' && productImagesCache && productImagesCache[dp.id] && Array.isArray(productImagesCache[dp.id]) && productImagesCache[dp.id].length > 0)
-            ? [...productImagesCache[dp.id]]
-            : (dp.images && dp.images.length > 0 ? dp.images : [`/prod_${dp.id}.jpg`]));
-      let item = {...dp, images: pImgs};
-      if(savedPriceAdjustments[item.id]){
-        const adj = savedPriceAdjustments[item.id];
-        if(adj.price !== undefined) item.price = Number(adj.price);
-        if(adj.maxPrice !== undefined) item.maxPrice = Number(adj.maxPrice);
-        if(adj.priceRaw !== undefined) item.priceRaw = adj.priceRaw;
-        if(adj.countryPrice) item.countryPrice = { ...adj.countryPrice };
-        if(adj.countryMaxPrice) item.countryMaxPrice = { ...adj.countryMaxPrice };
-        if(adj.countryMarkup) item.countryMarkup = { ...adj.countryMarkup };
-      }
-      merged.push(item);
-      seenIds.add(dp.id);
+    if(!seenIds.has(dp.id) && !deletedProductIds.has(dp.id)){
+      processProductItem(dp, true);
     }
   });
+
   return merged;
 }
+
 function getProducts(){
   return products;
 }
+
 function setProducts(data){
+  if(!Array.isArray(data)) return;
   products = data;
   safeSetItem('norxstore_products_cache', JSON.stringify(data));
+
+  // Deteksi dan simpan produk kustom admin secara permanen
+  const defaultIds = new Set(DEFAULT_PRODUCTS.map(dp => dp.id));
+  customProductsCache = data.filter(p => !defaultIds.has(p.id) || p.isCustom);
+  safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
+  safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
+
+  // Simpan ke IndexedDB untuk ketahanan maksimal
+  openNorxIDB().then(db => {
+    if(!db) return;
+    try {
+      const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
+      tx.objectStore(NORX_IDB_STORE).put(data, 'cachedProducts');
+      tx.objectStore(NORX_IDB_STORE).put(customProductsCache, 'customProducts');
+      tx.objectStore(NORX_IDB_STORE).put(Array.from(deletedProductIds), 'deletedProductIds');
+    } catch(e){}
+  });
+
+  // Sinkronisasi ke Firebase Cloud via norxstore/orders/__config_products__ (memiliki izin tulis)
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/products').set(data).catch(e=>{
-      console.warn('Notice: products persisted locally, cloud root restricted:', e);
-    });
+    try {
+      fbDB.ref('norxstore/orders/__config_products__').set({
+        products: data,
+        customProducts: customProductsCache,
+        deletedIds: Array.from(deletedProductIds),
+        updatedAt: Date.now()
+      }).catch(e => console.warn('Notice sync __config_products__:', e));
+
+      fbDB.ref('norxstore/products').set(data).catch(()=>{});
+    } catch(e){}
   }
 }
+
 function getNextProductId(){
   const prods = Array.isArray(products) ? products : (getProducts() || []);
   const dp = Array.isArray(DEFAULT_PRODUCTS) ? DEFAULT_PRODUCTS : [];
-  const allIds = [...prods, ...dp]
+  const cp = Array.isArray(customProductsCache) ? customProductsCache : [];
+  const allIds = [...prods, ...dp, ...cp]
     .map(p => Number(p && p.id))
     .filter(n => !isNaN(n) && n > 0);
   return (allIds.length > 0 ? Math.max(...allIds) : 0) + 1;
@@ -8028,6 +8117,8 @@ const I18N = {
     footerLinkAccount: '🔑 Akun Store & Starter',
     footerLinkReviews: '⭐ Ulasan & Testimoni',
     footerLinkTrack: '📦 Lacak Status Pesanan',
+    footerLinkJokiRules: '📋 Peraturan Joki (Wajib Dibaca)',
+    footerLinkWaChannel: '📢 Saluran WhatsApp Resmi',
     footerLinkGuide: '📖 Panduan Cara Pemesanan',
     footerLinkTerms: '⚖️ Syarat & Ketentuan Layanan',
     footerLinkPrivacy: '🔒 Kebijakan Privasi & Garansi',
@@ -8245,6 +8336,8 @@ const I18N = {
     footerLinkAccount: '🔑 Kedai Akaun & Starter',
     footerLinkReviews: '⭐ Penilaian & Testimoni',
     footerLinkTrack: '📦 Semak Status Pesanan',
+    footerLinkJokiRules: '📋 Terma & Peraturan Joki (Wajib Dipatuhi)',
+    footerLinkWaChannel: '📢 Saluran WhatsApp Rasmi',
     footerLinkGuide: '📖 Panduan Cara Membuat Pesanan',
     footerLinkTerms: '⚖️ Terma & Syarat Perkhidmatan',
     footerLinkPrivacy: '🔒 Dasar Privasi & Jaminan',
@@ -8463,6 +8556,8 @@ const I18N = {
     footerLinkAccount: '🔑 Accounts Store & Starters',
     footerLinkReviews: '⭐ Reviews & Testimonials',
     footerLinkTrack: '📦 Track My Order Status',
+    footerLinkJokiRules: '📋 Boosting Terms & Rules (Mandatory)',
+    footerLinkWaChannel: '📢 Official WhatsApp Channel',
     footerLinkGuide: '📖 How to Order Guide',
     footerLinkTerms: '⚖️ Terms of Service',
     footerLinkPrivacy: '🔒 Privacy Policy & Warranty',
@@ -10055,6 +10150,8 @@ function updateLanguageUI(){
   const flRev = document.getElementById('footerLinkReviews'); if(flRev) flRev.textContent = t('footerLinkReviews');
 
   const flTrk = document.getElementById('footerLinkTrack'); if(flTrk) flTrk.textContent = t('footerLinkTrack');
+  const flJoki = document.getElementById('footerLinkJokiRules'); if(flJoki) flJoki.textContent = t('footerLinkJokiRules');
+  const flWa = document.getElementById('footerLinkWaChannel'); if(flWa) flWa.textContent = t('footerLinkWaChannel');
   const flGde = document.getElementById('footerLinkGuide'); if(flGde) flGde.textContent = t('footerLinkGuide');
   const flTrm = document.getElementById('footerLinkTerms'); if(flTrm) flTrm.textContent = t('footerLinkTerms');
   const flPrv = document.getElementById('footerLinkPrivacy'); if(flPrv) flPrv.textContent = t('footerLinkPrivacy');
@@ -10143,6 +10240,10 @@ function updateLanguageUI(){
   const sgModal = document.getElementById('subgroupPopupOverlay');
   if(sgModal && sgModal.classList.contains('open') && typeof openSubgroupPopup === 'function' && currentCatFilter && currentCatFilter !== 'all'){
     openSubgroupPopup(currentCatFilter);
+  }
+
+  if(typeof renderCheckoutJokiRulesBoxes === 'function'){
+    renderCheckoutJokiRulesBoxes();
   }
 }
 
@@ -11669,6 +11770,16 @@ function getJokiRulesConfig(targetCountry = null){
   const country = (targetCountry || (typeof currentSelectedCountry !== 'undefined' ? currentSelectedCountry : 'ID') || 'ID').toUpperCase();
   const baseRules = DEFAULT_JOKI_RULES_BY_COUNTRY[country] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
   
+  if(jokiRulesConfigCache && typeof jokiRulesConfigCache === 'object'){
+    if(jokiRulesConfigCache.byCountry && jokiRulesConfigCache.byCountry[country]){
+      const merged = { ...baseRules, ...jokiRulesConfigCache.byCountry[country] };
+      if(Array.isArray(jokiRulesConfigCache.byCountry[country].rules) && jokiRulesConfigCache.byCountry[country].rules.length > 0){
+        merged.rules = jokiRulesConfigCache.byCountry[country].rules;
+      }
+      return merged;
+    }
+  }
+
   try {
     const raw = safeGetItem('norxstore_joki_rules_config', '');
     if(raw){
@@ -11737,6 +11848,23 @@ function renderCheckoutJokiRulesBoxes(){
 
   if(modalList) modalList.innerHTML = itemsHtml;
   if(cartList) cartList.innerHTML = itemsHtml;
+
+  const headText = (lang === 'SG') ? 'IMPORTANT: Norxstore Boosting Rules' : ((lang === 'MY') ? 'PENTING: Terma & Peraturan Joki Norxstore' : 'PENTING: Peraturan Joki Norxstore');
+  const linkText = (lang === 'SG') ? '📖 Read Full Boosting Rules ➔' : ((lang === 'MY') ? '📖 Baca Terma & Peraturan Joki Lengkap ➔' : '📖 Baca Peraturan Joki Lengkap ➔');
+  const agreeText = (lang === 'SG') ? 'I agree to the Boosting Terms & Rules' : ((lang === 'MY') ? 'Saya setuju & mematuhi Peraturan Joki' : 'Saya setuju & siap mengikuti Peraturan Joki');
+
+  ['modalJokiRulesHead', 'cartJokiRulesHead'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = headText;
+  });
+  ['modalJokiRulesLink', 'cartJokiRulesLink'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = linkText;
+  });
+  ['modalJokiRulesAgreeText', 'cartJokiRulesAgreeText'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el) el.textContent = agreeText;
+  });
 }
 
 let currentAdminJokiLang = 'ID';
@@ -12355,7 +12483,7 @@ function openInfoModal(type, extraLang = null){
   const contentEl = document.getElementById('infoModalContent');
   if(!overlay || !titleEl || !contentEl) return;
 
-  const lang = (extraLang || (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? currentSelectedCountry : 'ID').toUpperCase();
+  const lang = (extraLang || (typeof currentSelectedCountry !== 'undefined' ? currentSelectedCountry : 'ID') || 'ID').toUpperCase();
 
   let title = '';
   let html = '';
@@ -12628,7 +12756,7 @@ function openInfoModal(type, extraLang = null){
       `;
     }
   } else if(type === 'jokiRules'){
-    const jokiLang = (extraLang || activeJokiRulesModalLang || (typeof currentSelectedCountry !== 'undefined' ? currentSelectedCountry : 'ID') || 'ID').toUpperCase();
+    const jokiLang = (extraLang || (typeof currentSelectedCountry !== 'undefined' ? currentSelectedCountry : 'ID') || 'ID').toUpperCase();
     activeJokiRulesModalLang = jokiLang;
     const jcfg = getJokiRulesConfig(jokiLang);
     const baseDef = DEFAULT_JOKI_RULES_BY_COUNTRY[jokiLang] || DEFAULT_JOKI_RULES_BY_COUNTRY.ID;
@@ -13578,19 +13706,6 @@ let splashHidden = false;
 let productsDataReady = Array.isArray(products) && products.length > 0;
 let imagesDataReady = true;
 
-function preloadVisibleProductImages(){
-  try {
-    const list = (Array.isArray(products) ? products : []).slice(0, 4);
-    list.forEach(p => {
-      const imgs = getImagesForProduct(p.id);
-      if(imgs && imgs[0]){
-        const img = new Image();
-        img.decoding = 'async';
-        img.src = imgs[0];
-      }
-    });
-  } catch(e){}
-}
 preloadVisibleProductImages();
 
 function idlePreloadRemainingImages(){
@@ -13873,11 +13988,30 @@ fbDB.ref('norxstore/config/whatsappChannel').on('value', snap => {
 fbDB.ref('norxstore/config/jokiRules').on('value', snap => {
   const val = snap.val();
   if(val && typeof val === 'object'){
-    const merged = { ...DEFAULT_JOKI_RULES_CONFIG, ...val };
-    if(Array.isArray(val.rules) && val.rules.length > 0){
-      merged.rules = val.rules;
+    const mergedByCountry = {
+      ID: { ...DEFAULT_JOKI_RULES_BY_COUNTRY.ID },
+      MY: { ...DEFAULT_JOKI_RULES_BY_COUNTRY.MY },
+      SG: { ...DEFAULT_JOKI_RULES_BY_COUNTRY.SG }
+    };
+    if(val.byCountry && typeof val.byCountry === 'object'){
+      ['ID', 'MY', 'SG'].forEach(code => {
+        if(val.byCountry[code] && typeof val.byCountry[code] === 'object'){
+          mergedByCountry[code] = {
+            ...mergedByCountry[code],
+            ...val.byCountry[code]
+          };
+          if(Array.isArray(val.byCountry[code].rules) && val.byCountry[code].rules.length > 0){
+            mergedByCountry[code].rules = val.byCountry[code].rules;
+          }
+        }
+      });
+    } else if(Array.isArray(val.rules) && val.rules.length > 0){
+      mergedByCountry.ID = { ...mergedByCountry.ID, ...val };
     }
-    jokiRulesConfigCache = merged;
+    jokiRulesConfigCache = {
+      byCountry: mergedByCountry,
+      ...mergedByCountry.ID
+    };
     safeSetItem('norxstore_joki_rules_config', JSON.stringify(jokiRulesConfigCache));
     renderCheckoutJokiRulesBoxes();
     if(typeof isAdminOpen === 'function' && isAdminOpen()) renderAdminJokiRulesInputs();
@@ -16236,6 +16370,26 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
           if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
         }
       }
+    }
+  }
+
+  if(incoming['__config_products__'] && Array.isArray(incoming['__config_products__'].products)){
+    const cloudCfg = incoming['__config_products__'];
+    if(Array.isArray(cloudCfg.deletedIds)){
+      cloudCfg.deletedIds.forEach(id => deletedProductIds.add(id));
+      safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
+    }
+    if(Array.isArray(cloudCfg.customProducts)){
+      customProductsCache = cloudCfg.customProducts;
+      safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
+    }
+    products = mergeProductsData(cloudCfg.products);
+    safeSetItem('norxstore_products_cache', JSON.stringify(products));
+    productsDataReady = true;
+    renderProducts();
+    if(isAdminOpen()){
+      renderAdminProductList();
+      refreshSubgroupFormUI();
     }
   }
 
@@ -19428,7 +19582,7 @@ function renderProductCard(p, discount, idx){
   const isAboveFold = (idx === undefined || idx < 8);
   const imgSlides = hasImgs ? imgs.map((url,i)=>`
     <div class="product-img-slide" data-index="${i}" onclick="openProductImageViewer(${p.id},${i},event)" style="cursor:zoom-in" title="${t('zoomProductPhoto') || 'Perbesar foto produk'}">
-      <img src="${url}" alt="${getProductName(p)}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}" onerror="if(!this.dataset.erred){this.dataset.erred='1';this.src='/prod_${p.id}.jpg';}">
+      <img src="${url}" alt="${getProductName(p)}" draggable="false" loading="${isAboveFold ? 'eager' : 'lazy'}" decoding="async" fetchpriority="${isAboveFold && i===0 ? 'high' : 'auto'}" onerror="if(!this.dataset.erred){this.dataset.erred='1';this.src='/prod_${p.id}.jpg';}else{this.onerror=null;this.style.display='none';if(this.nextElementSibling)this.nextElementSibling.style.display='none';if(this.parentElement){this.parentElement.innerHTML='<span class=\\'emoji-fallback\\'>${p.icon || '💎'}</span>';}}">
       <div class="slide-protect-shield"></div>
     </div>
   `).join('') : (!imagesDataReady ? `
@@ -20743,13 +20897,21 @@ function addNewProduct(){
       cat: cat,
       subgroup: subgroup,
       isAccount: isAccount,
-      images: stagedNewProductImages.length > 0 ? [...stagedNewProductImages] : [`/prod_${newId}.jpg`]
+      isCustom: true,
+      images: stagedNewProductImages.length > 0 ? [...stagedNewProductImages] : []
     };
 
+    deletedProductIds.delete(newId);
+
     if(stagedNewProductImages.length > 0){
-      const all = getProductImages();
+      const all = getProductImages() || {};
       all[newId] = [...stagedNewProductImages];
+      all[String(newId)] = [...stagedNewProductImages];
+      customProductImages[newId] = [...stagedNewProductImages];
+      customProductImages[String(newId)] = [...stagedNewProductImages];
+      saveCustomImagesLocal();
       setProductImages(all);
+      syncCustomImagesToCloud();
       stagedNewProductImages = [];
     }
 
@@ -20860,12 +21022,19 @@ function cancelEditProduct(){
 
 function deleteProduct(id){
   if(!confirm('Yakin ingin menghapus produk ini?')) return;
+  deletedProductIds.add(id);
+  customProductsCache = customProductsCache.filter(p => p.id !== id);
   products = products.filter(p => p.id !== id);
   setProducts(products);
 
-  const imgs = getProductImages();
+  const imgs = getProductImages() || {};
   if(imgs[id]) delete imgs[id];
+  if(imgs[String(id)]) delete imgs[String(id)];
+  delete customProductImages[id];
+  delete customProductImages[String(id)];
+  saveCustomImagesLocal();
   setProductImages(imgs);
+  syncCustomImagesToCloud();
 
   cart = cart.filter(item => item.id !== id);
   saveCart();
@@ -20876,8 +21045,10 @@ function deleteProduct(id){
   refreshSubgroupFormUI();
 
   const sel = document.getElementById('imgProductSelect');
-  sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
-    products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
+  if(sel){
+    sel.innerHTML = '<option value="">-- Pilih produk --</option>' + 
+      products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
+  }
 
   showToast('Produk dihapus');
 }
@@ -20887,6 +21058,7 @@ function duplicateProduct(id){
   if(!p) return;
 
   const newId = getNextProductId();
+  deletedProductIds.delete(newId);
   const copyName = p.name + ' (Salinan)';
   const newProduct = {
     id: newId,
@@ -20899,16 +21071,24 @@ function duplicateProduct(id){
     desc: p.desc || '',
     badge: p.badge || '',
     icon: p.icon || '💎',
-    isAccount: !!p.isAccount
+    isAccount: !!p.isAccount,
+    isCustom: true
   };
 
   // Salin gambar produk jika produk sumber memiliki gambar
   const existingImgs = getImagesForProduct(p.id);
   if(existingImgs && existingImgs.length > 0){
-    const allImgs = getProductImages();
+    const allImgs = getProductImages() || {};
     allImgs[newId] = [...existingImgs];
+    allImgs[String(newId)] = [...existingImgs];
+    customProductImages[newId] = [...existingImgs];
+    customProductImages[String(newId)] = [...existingImgs];
+    saveCustomImagesLocal();
     setProductImages(allImgs);
+    syncCustomImagesToCloud();
     newProduct.images = [...existingImgs];
+  } else {
+    newProduct.images = [];
   }
 
   // Sisipkan produk baru tepat setelah produk sumber agar posisinya berdekatan
