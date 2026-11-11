@@ -5978,8 +5978,8 @@ function mergeProductsData(parsed){
     
     let item = dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs};
 
-    // Terapkan override harga admin jika ada
-    if(savedPriceAdjustments[item.id]){
+    // Terapkan override harga admin jika ada (hanya untuk produk bawaan yang belum dikustomisasi admin secara eksplisit)
+    if(savedPriceAdjustments[item.id] && !item.isCustom){
       const adj = savedPriceAdjustments[item.id];
       if(adj.price !== undefined) item.price = Number(adj.price);
       if(adj.maxPrice !== undefined) item.maxPrice = Number(adj.maxPrice);
@@ -10603,7 +10603,12 @@ function getCountryOriginalPrice(prod, countryCode = null, isMax = false){
   const cCode = countryCode || currentSelectedCountry || 'ID';
   const country = getCountryConfig(cCode);
 
-  // 1. Cek custom override countryPrice
+  // Jika negara Indonesia (ID), harga asli SELALU harga rupiah dasar produk
+  if(cCode === 'ID'){
+    return Number(isMax ? (prod.maxPrice || prod.price || 0) : (prod.price || 0));
+  }
+
+  // 1. Cek custom override countryPrice untuk negara asing (MY, SG)
   if(!isMax && prod.countryPrice && prod.countryPrice[cCode] !== undefined && prod.countryPrice[cCode] > 0){
     return Number(prod.countryPrice[cCode]);
   }
@@ -10613,7 +10618,7 @@ function getCountryOriginalPrice(prod, countryCode = null, isMax = false){
 
   // 2. Base IDR price
   const baseIdr = Number(isMax ? (prod.maxPrice || prod.price || 0) : (prod.price || 0));
-  if(cCode === 'ID' || !country || !country.rate || country.rate <= 0){
+  if(!country || !country.rate || country.rate <= 0){
     return baseIdr;
   }
 
@@ -10665,7 +10670,20 @@ function convertPrice(idrPrice, targetCountryCode, prod = null, isMax = false){
   const cCode = targetCountryCode || currentSelectedCountry || 'ID';
   const country = getCountryConfig(cCode);
 
-  // 1. Cek apakah ada custom override countryPrice untuk produk ini
+  // Jika negara Indonesia, gunakan nilai harga idrPrice langsung
+  if(cCode === 'ID' || !country || !country.rate || country.rate <= 0){
+    const num = (typeof idrPrice === 'number') ? idrPrice : (Number(idrPrice) || 0);
+    return {
+      amount: num,
+      formatted: 'Rp' + Math.round(num).toLocaleString('id-ID'),
+      raw: num,
+      symbol: 'Rp',
+      currency: 'IDR',
+      country: country || DEFAULT_CURRENCY_CONFIG.countries.ID
+    };
+  }
+
+  // 1. Cek apakah ada custom override countryPrice khusus negara asing (MY, SG)
   if(prod && typeof prod === 'object'){
     const hasCustom = !isMax
       ? (prod.countryPrice && prod.countryPrice[cCode] !== undefined && prod.countryPrice[cCode] > 0)
@@ -10679,12 +10697,7 @@ function convertPrice(idrPrice, targetCountryCode, prod = null, isMax = false){
       // Jika idrPrice yang di-passing lebih kecil dari baseIdr (misal perhitungan diskon proporsional)
       if(typeof idrPrice === 'number' && idrPrice > 0 && baseIdr > 0 && idrPrice < baseIdr){
         const ratio = idrPrice / baseIdr;
-        val = baseCustom * ratio;
-        if(cCode === 'ID'){
-          val = val >= 100 ? Math.round(val / 100) * 100 : Math.round(val);
-        } else {
-          val = Math.round(val * 100) / 100;
-        }
+        val = Math.round(baseCustom * ratio * 100) / 100;
       }
 
       return {
@@ -14034,20 +14047,9 @@ fbDB.ref('norxstore/carousel').on('value', snap=>{
   renderCarousel();
   if(isAdminOpen()) renderCarouselAdmin();
 });
-fbDB.ref('norxstore/discount').on('value', snap=>{
-  if(window._discountConfigFromOrders) return;
-  const cached = safeGetItem('norxstore_discount_config_cache', null);
-  if(cached) return;
-  const val = snap.val();
-  if(!val) return;
-  discountConfig = normalizeDiscountConfig(val);
-  discountVal = discountConfig.global;
-  safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
-  renderProducts();
-  if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
-  if(cart.length > 0) renderCart();
-  if(isAdminOpen()) renderDiscountAdminUI();
-});
+// Catatan: norxstore/discount bersifat read-only di server dan dapat berisi data usang.
+// Sumber kebenaran diskon tunggal yang aman & sinkron adalah norxstore/orders/__config_discount__.
+// fbDB.ref('norxstore/discount').off();
 fbDB.ref('norxstore/currencyConfig').on('value', snap=>{
   const val = snap.val();
   if(val && val.countries){
@@ -21063,12 +21065,73 @@ function addNewProduct(){
   }
 
   if(editingProductId !== null){
-    const savedId = editingProductId;
-    const idx = products.findIndex(p => p.id === editingProductId);
+    const savedId = Number(editingProductId);
+    const idx = products.findIndex(p => Number(p.id) === savedId);
     if(idx !== -1){
       const curImgs = getImagesForProduct(savedId);
-      products[idx] = { ...products[idx], name, price, maxPrice, priceRaw, badge, icon, desc, cat, subgroup, isAccount, images: curImgs };
+      products[idx] = {
+        ...products[idx],
+        id: savedId,
+        name,
+        price,
+        maxPrice,
+        priceRaw,
+        badge,
+        icon,
+        desc,
+        cat,
+        subgroup,
+        isAccount,
+        images: curImgs,
+        isCustom: true,
+        basePrice: price,
+        baseMaxPrice: maxPrice || 0,
+        countryPrice: {},
+        countryMaxPrice: {},
+        countryMarkup: {}
+      };
     }
+
+    const dpIdx = DEFAULT_PRODUCTS.findIndex(dp => Number(dp.id) === savedId);
+    if(dpIdx !== -1){
+      DEFAULT_PRODUCTS[dpIdx] = {
+        ...DEFAULT_PRODUCTS[dpIdx],
+        id: savedId,
+        name,
+        price,
+        maxPrice,
+        priceRaw,
+        badge,
+        icon,
+        desc,
+        cat,
+        subgroup,
+        isAccount,
+        isCustom: true,
+        basePrice: price,
+        baseMaxPrice: maxPrice || 0,
+        countryPrice: {},
+        countryMaxPrice: {},
+        countryMarkup: {}
+      };
+    }
+
+    // Bersihkan override penyesuaian harga lama agar tidak menimpa harga baru
+    try {
+      const rawAdj = safeGetItem('norxstore_price_adjustments', '');
+      if(rawAdj){
+        const adjMap = JSON.parse(rawAdj) || {};
+        if(adjMap[savedId] || adjMap[String(savedId)]){
+          delete adjMap[savedId];
+          delete adjMap[String(savedId)];
+          safeSetItem('norxstore_price_adjustments', JSON.stringify(adjMap));
+          if(window.fbAvailable && fbDB && fbDB.ref){
+            fbDB.ref('norxstore/priceAdjustments/' + savedId).remove().catch(()=>{});
+          }
+        }
+      }
+    } catch(e){}
+
     const soldEl = document.getElementById('newProdSoldCount');
     if(soldEl && soldEl.value !== ''){
       const soldVal = parseInt(soldEl.value, 10);
@@ -21089,7 +21152,7 @@ function addNewProduct(){
       id: newId,
       name: name,
       price: price,
-      maxPrice: maxPrice,
+      maxPrice: maxPrice || 0,
       priceRaw: priceRaw,
       badge: badge,
       icon: icon,
@@ -21098,6 +21161,11 @@ function addNewProduct(){
       subgroup: subgroup,
       isAccount: isAccount,
       isCustom: true,
+      basePrice: price,
+      baseMaxPrice: maxPrice || 0,
+      countryPrice: {},
+      countryMaxPrice: {},
+      countryMarkup: {},
       images: stagedNewProductImages.length > 0 ? [...stagedNewProductImages] : []
     };
 
@@ -21125,7 +21193,7 @@ function addNewProduct(){
     }
 
     products.push(newProduct);
-    if(!DEFAULT_PRODUCTS.some(dp => dp.id === newId)){
+    if(!DEFAULT_PRODUCTS.some(dp => Number(dp.id) === Number(newId))){
       DEFAULT_PRODUCTS.push({...newProduct});
     }
     setProducts(products);
@@ -21162,9 +21230,10 @@ function addNewProduct(){
 }
 
 function editProduct(id){
-  const p = products.find(p => p.id === id);
+  const prodId = Number(id);
+  const p = products.find(p => Number(p.id) === prodId);
   if(!p) return;
-  editingProductId = id;
+  editingProductId = prodId;
   stagedNewProductImages = [];
   document.getElementById('newProdName').value = p.name;
   let priceStr = '';
@@ -21175,7 +21244,7 @@ function editProduct(id){
     const p2 = (p.maxPrice >= 1000 && p.maxPrice % 1000 === 0) ? (p.maxPrice / 1000 + 'k') : p.maxPrice;
     priceStr = `${p1} - ${p2}`;
   } else {
-    priceStr = p.price;
+    priceStr = (p.price >= 1000 && p.price % 1000 === 0) ? (p.price / 1000 + 'k') : p.price;
   }
   document.getElementById('newProdPrice').value = priceStr;
   document.getElementById('newProdCat').value = p.cat;
@@ -21194,7 +21263,7 @@ function editProduct(id){
   // Sinkronkan pilihan foto produk dengan produk yang sedang diedit
   const sel = document.getElementById('imgProductSelect');
   if(sel){
-    sel.value = id;
+    sel.value = prodId;
     onImageProductChange();
   }
   document.getElementById('prodFormTitle').scrollIntoView({behavior:'smooth', block:'start'});
@@ -21221,22 +21290,24 @@ function cancelEditProduct(){
 }
 
 function deleteProduct(id){
+  const prodId = Number(id);
   if(!confirm('Yakin ingin menghapus produk ini?')) return;
-  deletedProductIds.add(id);
-  customProductsCache = customProductsCache.filter(p => p.id !== id);
-  products = products.filter(p => p.id !== id);
+  deletedProductIds.add(prodId);
+  customProductsCache = customProductsCache.filter(p => Number(p.id) !== prodId);
+  products = products.filter(p => Number(p.id) !== prodId);
+  DEFAULT_PRODUCTS = DEFAULT_PRODUCTS.filter(dp => Number(dp.id) !== prodId);
   setProducts(products);
 
   const imgs = getProductImages() || {};
-  if(imgs[id]) delete imgs[id];
-  if(imgs[String(id)]) delete imgs[String(id)];
-  delete customProductImages[id];
-  delete customProductImages[String(id)];
+  if(imgs[prodId]) delete imgs[prodId];
+  if(imgs[String(prodId)]) delete imgs[String(prodId)];
+  delete customProductImages[prodId];
+  delete customProductImages[String(prodId)];
   saveCustomImagesLocal();
   setProductImages(imgs);
   syncCustomImagesToCloud();
 
-  cart = cart.filter(item => item.id !== id);
+  cart = cart.filter(item => Number(item.id) !== prodId);
   saveCart();
   updateCartBadge();
 
@@ -21254,7 +21325,8 @@ function deleteProduct(id){
 }
 
 function duplicateProduct(id){
-  const p = products.find(p => p.id === id);
+  const prodId = Number(id);
+  const p = products.find(p => Number(p.id) === prodId);
   if(!p) return;
 
   const newId = getNextProductId();
@@ -21272,8 +21344,33 @@ function duplicateProduct(id){
     badge: p.badge || '',
     icon: p.icon || '💎',
     isAccount: !!p.isAccount,
-    isCustom: true
+    isCustom: true,
+    basePrice: p.price,
+    baseMaxPrice: p.maxPrice || 0,
+    countryPrice: {},
+    countryMaxPrice: {},
+    countryMarkup: {}
   };
+
+  // Akun salinan adalah akun baru yang belum terjual (stok 1 tersedia)
+  salesBankState.counts[String(newId)] = 0;
+  saveSalesBankLocal();
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/sales_bank/counts/' + newId).set(0).catch(()=>{});
+  }
+
+  // Bersihkan penyesuaian harga lama jika ada
+  try {
+    const rawAdj = safeGetItem('norxstore_price_adjustments', '');
+    if(rawAdj){
+      const adjMap = JSON.parse(rawAdj) || {};
+      if(adjMap[newId] || adjMap[String(newId)]){
+        delete adjMap[newId];
+        delete adjMap[String(newId)];
+        safeSetItem('norxstore_price_adjustments', JSON.stringify(adjMap));
+      }
+    }
+  } catch(e){}
 
   // Salin gambar produk jika produk sumber memiliki gambar
   const existingImgs = getImagesForProduct(p.id);
@@ -21292,11 +21389,15 @@ function duplicateProduct(id){
   }
 
   // Sisipkan produk baru tepat setelah produk sumber agar posisinya berdekatan
-  const origIndex = products.findIndex(item => item.id === id);
+  const origIndex = products.findIndex(item => Number(item.id) === prodId);
   if(origIndex !== -1){
     products.splice(origIndex + 1, 0, newProduct);
   } else {
     products.push(newProduct);
+  }
+
+  if(!DEFAULT_PRODUCTS.some(dp => Number(dp.id) === Number(newId))){
+    DEFAULT_PRODUCTS.push({...newProduct});
   }
 
   setProducts(products);
@@ -21325,7 +21426,7 @@ function duplicateProduct(id){
     }
   }, 100);
 
-  showToast('📋 Produk "' + p.name + '" berhasil digandakan! Silakan sesuaikan data & simpan.');
+  showToast('📋 Produk "' + p.name + '" berhasil digandakan! Silakan sesuaikan harga & data.');
 }
 
 function renderAdminProductList(){
