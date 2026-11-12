@@ -5887,7 +5887,10 @@ let customProductsCache = (function(){
     const raw = safeGetItem('norxstore_custom_products', '');
     if(raw) {
       const parsed = JSON.parse(raw);
-      if(Array.isArray(parsed)) return parsed;
+      if(Array.isArray(parsed)) {
+        // Bersihkan entri salinan usang/draft dari cache lokal agar tidak pernah muncul lagi
+        return parsed.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
+      }
     }
   } catch(e){}
   return [];
@@ -5898,7 +5901,7 @@ let deletedProductIds = (function(){
     const raw = safeGetItem('norxstore_deleted_product_ids', '');
     if(raw) {
       const parsed = JSON.parse(raw);
-      if(Array.isArray(parsed)) return new Set(parsed);
+      if(Array.isArray(parsed)) return new Set(parsed.map(Number));
     }
   } catch(e){}
   return new Set();
@@ -5914,12 +5917,16 @@ let deletedProductIds = (function(){
       const reqCp = store.get('customProducts');
       reqCp.onsuccess = () => {
         if(Array.isArray(reqCp.result) && reqCp.result.length > 0){
-          const map = new Map(customProductsCache.map(p => [p.id, p]));
+          const map = new Map(customProductsCache.map(p => [Number(p.id), p]));
           let changed = false;
           reqCp.result.forEach(p => {
-            if(p && p.id && !map.has(p.id)){
-              customProductsCache.push(p);
-              changed = true;
+            const pid = Number(p && p.id);
+            if(!isNaN(pid) && pid > 0 && !map.has(pid)){
+              // Jangan pulihkan snapshot duplikat usang yang bertuliskan '(Salinan)'
+              if(!p.name || !p.name.includes('(Salinan)')){
+                customProductsCache.push(p);
+                changed = true;
+              }
             }
           });
           if(changed){
@@ -5933,7 +5940,7 @@ let deletedProductIds = (function(){
       const reqDel = store.get('deletedProductIds');
       reqDel.onsuccess = () => {
         if(Array.isArray(reqDel.result)){
-          reqDel.result.forEach(id => deletedProductIds.add(id));
+          reqDel.result.forEach(id => deletedProductIds.add(Number(id)));
           safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
         }
       };
@@ -5962,25 +5969,26 @@ function mergeProductsData(parsed){
 
   const processProductItem = (p, isFromDefault = false) => {
     if(!p || typeof p !== 'object' || p.id === undefined) return;
-    if(deletedProductIds.has(p.id)) return;
-    if(seenIds.has(p.id)) return;
+    const pid = Number(p.id);
+    if(deletedProductIds.has(pid)) return;
+    if(seenIds.has(pid)) return;
 
-    const dp = DEFAULT_PRODUCTS.find(d => d.id === p.id);
-    let pImgs = (typeof customProductImages === 'object' && customProductImages && (customProductImages[p.id] || customProductImages[String(p.id)]) && Array.isArray(customProductImages[p.id] || customProductImages[String(p.id)]) && (customProductImages[p.id] || customProductImages[String(p.id)]).length > 0)
-      ? [...(customProductImages[p.id] || customProductImages[String(p.id)])]
-      : ((typeof productImagesCache === 'object' && productImagesCache && (productImagesCache[p.id] || productImagesCache[String(p.id)]) && Array.isArray(productImagesCache[p.id] || productImagesCache[String(p.id)]) && (productImagesCache[p.id] || productImagesCache[String(p.id)]).length > 0)
-          ? [...(productImagesCache[p.id] || productImagesCache[String(p.id)])]
+    const dp = DEFAULT_PRODUCTS.find(d => Number(d.id) === pid);
+    let pImgs = (typeof customProductImages === 'object' && customProductImages && (customProductImages[pid] || customProductImages[String(pid)]) && Array.isArray(customProductImages[pid] || customProductImages[String(pid)]) && (customProductImages[pid] || customProductImages[String(pid)]).length > 0)
+      ? [...(customProductImages[pid] || customProductImages[String(pid)])]
+      : ((typeof productImagesCache === 'object' && productImagesCache && (productImagesCache[pid] || productImagesCache[String(pid)]) && Array.isArray(productImagesCache[pid] || productImagesCache[String(pid)]) && (productImagesCache[pid] || productImagesCache[String(pid)]).length > 0)
+          ? [...(productImagesCache[pid] || productImagesCache[String(pid)])]
           : (Array.isArray(p.images) && p.images.length > 0
               ? p.images
               : (dp && Array.isArray(dp.images) && dp.images.length > 0
                   ? dp.images
-                  : (DEFAULT_PRODUCT_IMAGES[p.id] ? [...DEFAULT_PRODUCT_IMAGES[p.id]] : []))));
+                  : (DEFAULT_PRODUCT_IMAGES[pid] ? [...DEFAULT_PRODUCT_IMAGES[pid]] : []))));
     
     let item = dp ? {...dp, ...p, images: pImgs} : {...p, images: pImgs};
 
     // Terapkan override harga admin jika ada (hanya untuk produk bawaan yang belum dikustomisasi admin secara eksplisit)
-    if(savedPriceAdjustments[item.id] && !item.isCustom){
-      const adj = savedPriceAdjustments[item.id];
+    if(savedPriceAdjustments[pid] && !item.isCustom){
+      const adj = savedPriceAdjustments[pid];
       if(adj.price !== undefined) item.price = Number(adj.price);
       if(adj.maxPrice !== undefined) item.maxPrice = Number(adj.maxPrice);
       if(adj.priceRaw !== undefined) item.priceRaw = adj.priceRaw;
@@ -5990,7 +5998,7 @@ function mergeProductsData(parsed){
     }
 
     merged.push(item);
-    seenIds.add(p.id);
+    seenIds.add(pid);
   };
 
   // 1. Prioritas pertama: data dari server / input
@@ -6003,7 +6011,7 @@ function mergeProductsData(parsed){
 
   // 3. Gabungkan produk bawaan jika belum ada dan tidak dihapus
   DEFAULT_PRODUCTS.forEach(dp => {
-    if(!seenIds.has(dp.id) && !deletedProductIds.has(dp.id)){
+    if(!seenIds.has(Number(dp.id)) && !deletedProductIds.has(Number(dp.id))){
       processProductItem(dp, true);
     }
   });
@@ -6018,12 +6026,27 @@ function getProducts(){
 function setProducts(data){
   if(!Array.isArray(data)) return;
   products = data;
-  safeSetItem('norxstore_products_cache', JSON.stringify(data));
+
+  // Bersihkan data gambar base64 besar dari cache localStorage agar TIDAK PERNAH melebihi kuota 5MB browser!
+  // Gambar tetap utuh di objek memori, Firebase, dan IndexedDB.
+  const leanForLocalStorage = (arr) => {
+    if(!Array.isArray(arr)) return [];
+    return arr.map(p => {
+      if(!p || typeof p !== 'object') return p;
+      const clone = { ...p };
+      if(Array.isArray(clone.images) && clone.images.some(img => typeof img === 'string' && img.startsWith('data:'))){
+        clone.images = clone.images.filter(img => typeof img === 'string' && !img.startsWith('data:'));
+      }
+      return clone;
+    });
+  };
+
+  safeSetItem('norxstore_products_cache', JSON.stringify(leanForLocalStorage(data)));
 
   // Deteksi dan simpan produk kustom admin secara permanen
-  const defaultIds = new Set(DEFAULT_PRODUCTS.map(dp => dp.id));
-  customProductsCache = data.filter(p => !defaultIds.has(p.id) || p.isCustom);
-  safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
+  const defaultIds = new Set(DEFAULT_PRODUCTS.map(dp => Number(dp.id)));
+  customProductsCache = data.filter(p => !defaultIds.has(Number(p.id)) || p.isCustom);
+  safeSetItem('norxstore_custom_products', JSON.stringify(leanForLocalStorage(customProductsCache)));
   safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
 
   // Simpan ke IndexedDB untuk ketahanan maksimal
@@ -13836,7 +13859,11 @@ let products = (function(){
     const raw = safeGetItem('norxstore_products_cache', null);
     if(raw){
       const parsed = JSON.parse(raw);
-      if(Array.isArray(parsed) && parsed.length > 0) return mergeProductsData(parsed);
+      if(Array.isArray(parsed) && parsed.length > 0){
+        // Bersihkan entri salinan usang/draft dari cache lokal agar tidak pernah muncul lagi saat refresh
+        const cleaned = parsed.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
+        return mergeProductsData(cleaned);
+      }
     }
   }catch(e){}
   return [...DEFAULT_PRODUCTS];
@@ -13853,12 +13880,40 @@ let carouselConfig = (function(){
   return JSON.parse(JSON.stringify(DEFAULT_CAROUSEL));
 })();
 
-const NORX_SYSTEM_VER = '2026.10.08.v13';
+const NORX_SYSTEM_VER = '2026.11.12.v1';
 (function checkSystemVersion(){
   try {
     const cur = safeGetItem('norx_sys_version', null);
     if(cur !== NORX_SYSTEM_VER){
       safeSetItem('norx_sys_version', NORX_SYSTEM_VER);
+      // Bersihkan cache lama yang mungkin berisi snapshot duplikat usang
+      ['norxstore_products_cache', 'norxstore_custom_products'].forEach(k => {
+        const raw = safeGetItem(k, '');
+        if(raw && raw.includes('(Salinan)')){
+          try {
+            const arr = JSON.parse(raw);
+            if(Array.isArray(arr)){
+              const cleaned = arr.filter(p => p && (!p.name || !p.name.includes('(Salinan)')));
+              safeSetItem(k, JSON.stringify(cleaned));
+            }
+          } catch(e){}
+        }
+      });
+      openNorxIDB().then(db => {
+        if(!db) return;
+        try {
+          const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
+          const store = tx.objectStore(NORX_IDB_STORE);
+          const req = store.get('customProducts');
+          req.onsuccess = () => {
+            if(Array.isArray(req.result)){
+              const cleaned = req.result.filter(p => p && (!p.name || !p.name.includes('(Salinan)')));
+              const writeTx = db.transaction(NORX_IDB_STORE, 'readwrite');
+              writeTx.objectStore(NORX_IDB_STORE).put(cleaned, 'customProducts');
+            }
+          };
+        } catch(e){}
+      });
     }
   } catch(e){}
 })();
@@ -14021,23 +14076,38 @@ function tryHideSplash(){
 // Instant safety reveal: never stall splash on mobile phones
 setTimeout(hideSplash, 350);
 
-fbDB.ref('norxstore/products').on('value', snap=>{
-  products = mergeProductsData(snap.val());
-  safeSetItem('norxstore_products_cache', JSON.stringify(products));
-  productsDataReady = true;
-  renderProducts();
-  tryHideSplash();
-  if(isAdminOpen()){
-    renderAdminProductList();
-    const sel = document.getElementById('imgProductSelect');
-    const curVal = sel ? sel.value : '';
-    if(sel){
-      sel.innerHTML = '<option value="">-- Pilih produk --</option>' + products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
-      if(curVal && products.some(p => p.id === parseInt(curVal))){
-        sel.value = curVal;
-      }
+// Catatan: norxstore/products di server RTDB bersifat read-only dan tertahan pada 77 produk bawaan.
+// Sumber data produk terkini & sinkron (termasuk produk kustom admin) adalah norxstore/orders/__config_products__.
+fbDB.ref('norxstore/orders/__config_products__').on('value', snap=>{
+  const cloudCfg = snap.val();
+  if(cloudCfg && Array.isArray(cloudCfg.products)){
+    if(Array.isArray(cloudCfg.deletedIds)){
+      cloudCfg.deletedIds.forEach(id => deletedProductIds.add(Number(id)));
+      safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
     }
-    if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+    if(Array.isArray(cloudCfg.customProducts)){
+      // Bersihkan snapshot salinan usang/draft dari cloud custom products
+      customProductsCache = cloudCfg.customProducts.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
+      safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
+    }
+    products = mergeProductsData(cloudCfg.products);
+    safeSetItem('norxstore_products_cache', JSON.stringify(products));
+    productsDataReady = true;
+    renderProducts();
+    tryHideSplash();
+    if(isAdminOpen()){
+      renderAdminProductList();
+      if(typeof refreshSubgroupFormUI === 'function') refreshSubgroupFormUI();
+      const sel = document.getElementById('imgProductSelect');
+      const curVal = sel ? sel.value : '';
+      if(sel){
+        sel.innerHTML = '<option value="">-- Pilih produk --</option>' + products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
+        if(curVal && products.some(p => p.id === parseInt(curVal))){
+          sel.value = curVal;
+        }
+      }
+      if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+    }
   }
 });
 fbDB.ref('norxstore/carousel').on('value', snap=>{
@@ -16578,15 +16648,27 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
   if(incoming['__config_products__'] && Array.isArray(incoming['__config_products__'].products)){
     const cloudCfg = incoming['__config_products__'];
     if(Array.isArray(cloudCfg.deletedIds)){
-      cloudCfg.deletedIds.forEach(id => deletedProductIds.add(id));
+      cloudCfg.deletedIds.forEach(id => deletedProductIds.add(Number(id)));
       safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
     }
     if(Array.isArray(cloudCfg.customProducts)){
-      customProductsCache = cloudCfg.customProducts;
-      safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
+      customProductsCache = cloudCfg.customProducts.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
+      const leanCp = customProductsCache.map(p => {
+        if(p && Array.isArray(p.images) && p.images.some(img => typeof img === 'string' && img.startsWith('data:'))){
+          return { ...p, images: p.images.filter(img => typeof img === 'string' && !img.startsWith('data:')) };
+        }
+        return p;
+      });
+      safeSetItem('norxstore_custom_products', JSON.stringify(leanCp));
     }
     products = mergeProductsData(cloudCfg.products);
-    safeSetItem('norxstore_products_cache', JSON.stringify(products));
+    const leanProds = products.map(p => {
+      if(p && Array.isArray(p.images) && p.images.some(img => typeof img === 'string' && img.startsWith('data:'))){
+        return { ...p, images: p.images.filter(img => typeof img === 'string' && !img.startsWith('data:')) };
+      }
+      return p;
+    });
+    safeSetItem('norxstore_products_cache', JSON.stringify(leanProds));
     productsDataReady = true;
     renderProducts();
     if(isAdminOpen()){
@@ -21396,9 +21478,7 @@ function duplicateProduct(id){
     products.push(newProduct);
   }
 
-  if(!DEFAULT_PRODUCTS.some(dp => Number(dp.id) === Number(newId))){
-    DEFAULT_PRODUCTS.push({...newProduct});
-  }
+  // Produk kustom baru ditambahkan ke products dan customProductsCache via setProducts (bukan DEFAULT_PRODUCTS)
 
   setProducts(products);
   renderProducts();
