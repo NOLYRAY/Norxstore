@@ -233,3 +233,66 @@ export async function readJsonBody(req) {
     req.on('error', () => resolve({}));
   });
 }
+
+const RTDB_NTFY_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_ntfy__.json';
+
+export async function getAdminNtfyTopic() {
+  if (process.env.NTFY_TOPIC && String(process.env.NTFY_TOPIC).trim()) {
+    return String(process.env.NTFY_TOPIC).trim();
+  }
+  try {
+    const res = await fetch(RTDB_NTFY_URL, {
+      signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data && data.topic && String(data.topic).trim()) {
+        return String(data.topic).trim();
+      }
+    }
+  } catch (e) {}
+  return '';
+}
+
+export async function sendNtfyPush({ topic, title, body, url, priority }) {
+  const cleanTopic = String(topic || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+  if (!cleanTopic) return { ntfySent: false, reason: 'no-topic' };
+  try {
+    const res = await fetch('https://ntfy.sh/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        topic: cleanTopic,
+        title: title || 'NORXSTORE - Pesanan Baru',
+        message: body || 'Ada pesanan baru masuk!',
+        priority: priority || 5,
+        tags: ['bell', 'moneybag'],
+        click: url || 'https://norxstore.vercel.app/'
+      }),
+      signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined
+    });
+    return { ntfySent: res.ok, ntfyStatus: res.status };
+  } catch (e) {
+    return { ntfySent: false, reason: e && e.message ? e.message : 'ntfy-error' };
+  }
+}
+
+export async function sendTelegramAdminAlert({ title, body }) {
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+  const chatId = process.env.TELEGRAM_CHAT_ID;
+  if (!botToken || !chatId) return { tgSent: false };
+  try {
+    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        chat_id: chatId,
+        text: `${title || 'NORXSTORE'}\n${body || ''}`
+      }),
+      signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined
+    });
+    return { tgSent: res.ok };
+  } catch (e) {
+    return { tgSent: false };
+  }
+}

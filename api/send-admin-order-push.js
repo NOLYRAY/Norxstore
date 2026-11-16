@@ -1,4 +1,13 @@
-import { getAllSubscriptionsMap, getSubKey, sendWebPushToTargets, applyCorsHeaders, readJsonBody } from './_pushStore.js';
+import {
+  getAllSubscriptionsMap,
+  getSubKey,
+  sendWebPushToTargets,
+  getAdminNtfyTopic,
+  sendNtfyPush,
+  sendTelegramAdminAlert,
+  applyCorsHeaders,
+  readJsonBody
+} from './_pushStore.js';
 
 export default async function handler(req, res) {
   applyCorsHeaders(res);
@@ -18,7 +27,8 @@ export default async function handler(req, res) {
       mode,
       delayMs,
       directSubscription,
-      deviceId
+      deviceId,
+      ntfyTopic
     } = body || {};
     if (!orderId && !itemName) {
       return res.status(400).json({ error: 'Missing orderId or itemName' });
@@ -27,10 +37,14 @@ export default async function handler(req, res) {
     const waitMs = Math.min(Math.max(Number(delayMs) || 0, 0), 5000);
     const subsPromise = (mode === 'test' && directSubscription && directSubscription.endpoint)
       ? Promise.resolve({})
-      : getAllSubscriptionsMap();
+      : (mode === 'ntfy_test' ? Promise.resolve({}) : getAllSubscriptionsMap());
+    const ntfyTopicPromise = (ntfyTopic && String(ntfyTopic).trim())
+      ? Promise.resolve(String(ntfyTopic).trim())
+      : getAdminNtfyTopic();
 
-    const [allMap] = await Promise.all([
+    const [allMap, resolvedNtfyTopic] = await Promise.all([
       subsPromise,
+      ntfyTopicPromise,
       waitMs > 0 ? new Promise((r) => setTimeout(r, waitMs)) : Promise.resolve()
     ]);
 
@@ -43,7 +57,7 @@ export default async function handler(req, res) {
     let notifTitle = '🛎️ Pesanan Baru Masuk! - NORXSTORE';
     if (mode === 'paid') {
       notifTitle = '💳 Pelanggan Sudah Transfer! - NORXSTORE';
-    } else if (mode === 'test') {
+    } else if (mode === 'test' || mode === 'ntfy_test') {
       notifTitle = '🛎️ Tes Push Masuk (App Ditutup) - NORXSTORE';
     }
 
@@ -52,7 +66,7 @@ export default async function handler(req, res) {
     const payload = {
       title: notifTitle,
       body: notifBody,
-      url: '/',
+      url: 'https://norxstore.vercel.app/',
       serviceType: serviceType || 'topup',
       tag: 'admin-new-order-' + (orderId || Date.now())
     };
@@ -68,9 +82,25 @@ export default async function handler(req, res) {
       });
     }
 
-    const result = await sendWebPushToTargets(adminTargets, payload);
+    const [webRes, ntfyRes, tgRes] = await Promise.all([
+      (mode === 'ntfy_test' || adminTargets.length === 0)
+        ? Promise.resolve({ sent: 0, targetCount: 0, removedStale: 0 })
+        : sendWebPushToTargets(adminTargets, payload),
+      resolvedNtfyTopic
+        ? sendNtfyPush({ topic: resolvedNtfyTopic, title: notifTitle, body: notifBody, url: payload.url, priority: 5 })
+        : Promise.resolve({ ntfySent: false }),
+      (mode === 'ntfy_test')
+        ? Promise.resolve({ tgSent: false })
+        : sendTelegramAdminAlert({ title: notifTitle, body: notifBody })
+    ]);
 
-    return res.status(200).json({ success: true, ...result });
+    return res.status(200).json({
+      success: true,
+      ...webRes,
+      ntfySent: !!ntfyRes.ntfySent,
+      tgSent: !!tgRes.tgSent,
+      totalDelivered: (webRes.sent || 0) + (ntfyRes.ntfySent ? 1 : 0) + (tgRes.tgSent ? 1 : 0)
+    });
   } catch (err) {
     console.error('send-admin-order-push error:', err);
     return res.status(500).json({ error: err.message || 'Push send failed' });

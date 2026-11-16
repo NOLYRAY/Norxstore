@@ -5750,6 +5750,24 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
     <button type="button" class="admin-pwa-btn sound" onclick="testAdminNotificationSound()">🔊 Tes Suara</button>
     <button type="button" class="admin-pwa-btn sound" onclick="simulateAdminAppOrderNotif()">🛎️ Tes Popup Order</button>
   </div>
+  <div id="adminNtfyBackupBox" style="margin-top:10px;padding:10px;border-radius:11px;background:#fff;border:1.5px solid #bae6fd">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:4px">
+      <span style="font-size:11.5px;font-weight:800;color:#0369a1">📲 Anti-Gagal (Brave / Xiaomi / App Tutup Total): App ntfy</span>
+      <span id="adminNtfyStatusBadge" style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#f1f5f9;color:#475569">Belum Diatur</span>
+    </div>
+    <div style="font-size:10.5px;color:#475569;line-height:1.45;margin-bottom:7px">
+      Brave sering memblokir Web Push bawaan. Pakai app gratis <b>ntfy</b> (Play Store, tanpa login): <b>1)</b> Buat &amp; Simpan Topik → <b>2)</b> Subscribe topik tersebut di app ntfy → <b>3)</b> Klik Tes. Notif langsung masuk walau HP dikunci!
+    </div>
+    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+      <input type="text" id="adminNtfyTopicInput" placeholder="cth: norxstore-adm-9281" style="flex:1;min-width:140px;height:34px;border:1.5px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:12px;font-weight:700;color:#0f172a;outline:none">
+      <button type="button" onclick="generateAdminNtfyTopic()" style="height:34px;padding:0 9px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#334155;font-size:11px;font-weight:700;cursor:pointer">🎲 Acak</button>
+      <button type="button" onclick="saveAdminNtfyTopic()" style="height:34px;padding:0 10px;border-radius:8px;border:none;background:#0284c7;color:#fff;font-size:11px;font-weight:800;cursor:pointer">💾 Simpan</button>
+    </div>
+    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
+      <button type="button" onclick="openAdminNtfySubscribeLink()" style="flex:1;min-width:120px;height:32px;border-radius:8px;border:1px solid #0284c7;background:#f0f9ff;color:#0369a1;font-size:11px;font-weight:800;cursor:pointer">🔗 Buka Topik di ntfy</button>
+      <button type="button" onclick="testAdminNtfyPushNow()" style="flex:1;min-width:120px;height:32px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-size:11px;font-weight:800;cursor:pointer">🚀 Tes Kirim ke ntfy</button>
+    </div>
+  </div>
 </div>
 
 <!-- FLOATING POPUP NOTIF PESANAN MASUK UNTUK DI APLIKASI -->
@@ -5777,7 +5795,10 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
 
   <!-- JOKI PANE 1: PESANAN MASUK JOKI & AKUN -->
   <div class="admin-joki-pane" id="adminJokiPane_orders">
-    <div class="admin-section-title" style="margin-top:0">📋 Pesanan Masuk (Joki & Akun)</div>
+    <div class="admin-section-title" style="margin-top:0;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+      <span>📋 Pesanan Masuk (Joki &amp; Akun)</span>
+      <button type="button" onclick="syncOrdersFromCloudRest(true)" style="border:1px solid #ddd6fe;background:#f5f3ff;color:#6d28d9;border-radius:8px;padding:4px 10px;font-size:11px;font-weight:800;cursor:pointer">🔄 Muat Ulang</button>
+    </div>
     <div id="adminOrdersList"></div>
   </div>
 
@@ -6971,7 +6992,10 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
   <div class="admin-topup-pane" id="adminTopupPane_orders">
     <div class="admin-topup-section-h">
       <span>⚡ Antrian Pesanan Top Up (Via UID)</span>
-      <span style="font-size:10.5px;font-weight:700;color:#0369a1;background:#e0f2fe;padding:3px 9px;border-radius:999px" id="adminTopupOrderSummaryPill">0 Antrian</span>
+      <div style="display:flex;align-items:center;gap:6px">
+        <button type="button" onclick="syncOrdersFromCloudRest(true)" style="border:1px solid #bae6fd;background:#fff;color:#0284c7;border-radius:999px;padding:3px 9px;font-size:10.5px;font-weight:800;cursor:pointer">🔄 Refresh</button>
+        <span style="font-size:10.5px;font-weight:700;color:#0369a1;background:#e0f2fe;padding:3px 9px;border-radius:999px" id="adminTopupOrderSummaryPill">0 Antrian</span>
+      </div>
     </div>
     <p class="admin-hint" style="margin-top:0;margin-bottom:10px">
       Semua order dari <b>Side Jasa Top Up</b> masuk ke panel khusus ini lengkap dengan <b>UID, Server, Metode Bayar & Status Konfirmasi Pembayaran</b> pelanggan.
@@ -8850,12 +8874,30 @@ function setProducts(data){
     });
   };
 
-  safeSetItem('norxstore_products_cache', JSON.stringify(leanForLocalStorage(data)));
+  // Pastikan gambar kustom base64 tersimpan terpisah di customProductImages (bukan di __config_products__)
+  let syncedCustomImgNeeded = false;
+  data.forEach(p => {
+    if(!p || p.id === undefined || !Array.isArray(p.images)) return;
+    const dataImgs = p.images.filter(img => typeof img === 'string' && img.startsWith('data:'));
+    if(dataImgs.length > 0 && (!defaultIds.has(Number(p.id)) || p.isCustom)){
+      const pidKey = String(p.id);
+      if(!Array.isArray(customProductImages[pidKey]) || customProductImages[pidKey].length === 0){
+        customProductImages[p.id] = [...dataImgs];
+        customProductImages[pidKey] = [...dataImgs];
+        syncedCustomImgNeeded = true;
+      }
+    }
+  });
+  if(syncedCustomImgNeeded){
+    saveCustomImagesLocal();
+    if(typeof syncCustomImagesToCloud === 'function') syncCustomImagesToCloud();
+  }
 
-  // Deteksi dan simpan produk kustom admin secara permanen
-  const defaultIds = new Set(DEFAULT_PRODUCTS.map(dp => Number(dp.id)));
-  customProductsCache = data.filter(p => !defaultIds.has(Number(p.id)) || p.isCustom);
-  safeSetItem('norxstore_custom_products', JSON.stringify(leanForLocalStorage(customProductsCache)));
+  const leanAll = leanForLocalStorage(data);
+  const leanCustom = leanForLocalStorage(customProductsCache);
+
+  safeSetItem('norxstore_products_cache', JSON.stringify(leanAll));
+  safeSetItem('norxstore_custom_products', JSON.stringify(leanCustom));
   safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
 
   // Simpan ke IndexedDB untuk ketahanan maksimal
@@ -8869,17 +8911,17 @@ function setProducts(data){
     } catch(e){}
   });
 
-  // Sinkronisasi ke Firebase Cloud via norxstore/orders/__config_products__ (memiliki izin tulis)
+  // Sinkronisasi versi ringan (~25KB tanpa base64) ke __config_products__ agar RTDB orders tetap super cepat
   if(window.fbAvailable && fbDB && fbDB.ref){
     try {
       fbDB.ref('norxstore/orders/__config_products__').set({
-        products: data,
-        customProducts: customProductsCache,
+        products: leanAll,
+        customProducts: leanCustom,
         deletedIds: Array.from(deletedProductIds),
         updatedAt: Date.now()
       }).catch(e => console.warn('Notice sync __config_products__:', e));
 
-      fbDB.ref('norxstore/products').set(data).catch(()=>{});
+      fbDB.ref('norxstore/products').set(leanAll).catch(()=>{});
     } catch(e){}
   }
 }
@@ -17323,36 +17365,42 @@ setTimeout(hideSplash, 350);
 // Catatan: norxstore/products di server RTDB bersifat read-only dan tertahan pada 77 produk bawaan.
 // Sumber data produk terkini & sinkron (termasuk produk kustom admin) adalah norxstore/orders/__config_products__.
 fbDB.ref('norxstore/orders/__config_products__').on('value', snap=>{
-  const cloudCfg = snap.val();
-  if(cloudCfg && Array.isArray(cloudCfg.products)){
-    if(Array.isArray(cloudCfg.deletedIds)){
-      cloudCfg.deletedIds.forEach(id => deletedProductIds.add(Number(id)));
-      safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
-    }
-    if(Array.isArray(cloudCfg.customProducts)){
-      // Bersihkan snapshot salinan usang/draft dari cloud custom products
-      customProductsCache = cloudCfg.customProducts.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
-      safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
-    }
-    products = mergeProductsData(cloudCfg.products);
-    safeSetItem('norxstore_products_cache', JSON.stringify(products));
-    productsDataReady = true;
-    renderProducts();
-    tryHideSplash();
-    if(isAdminOpen()){
-      renderAdminProductList();
-      if(typeof refreshSubgroupFormUI === 'function') refreshSubgroupFormUI();
-      const sel = document.getElementById('imgProductSelect');
-      const curVal = sel ? sel.value : '';
-      if(sel){
-        sel.innerHTML = '<option value="">-- Pilih produk --</option>' + products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
-        if(curVal && products.some(p => p.id === parseInt(curVal))){
-          sel.value = curVal;
-        }
+  try {
+    const cloudCfg = snap.val();
+    if(cloudCfg && Array.isArray(cloudCfg.products)){
+      const stripDataForStorage = (arr) => (Array.isArray(arr) ? arr.map(p => {
+        if(!p || typeof p !== 'object' || !Array.isArray(p.images)) return p;
+        return { ...p, images: p.images.filter(img => typeof img === 'string' && !img.startsWith('data:')) };
+      }) : []);
+      if(Array.isArray(cloudCfg.deletedIds)){
+        cloudCfg.deletedIds.forEach(id => deletedProductIds.add(Number(id)));
+        safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
       }
-      if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+      if(Array.isArray(cloudCfg.customProducts)){
+        customProductsCache = cloudCfg.customProducts.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
+        safeSetItem('norxstore_custom_products', JSON.stringify(stripDataForStorage(customProductsCache)));
+      }
+      products = mergeProductsData(cloudCfg.products);
+      safeSetItem('norxstore_products_cache', JSON.stringify(stripDataForStorage(products)));
+      productsDataReady = true;
+      renderProducts();
+      tryHideSplash();
+      if(isAdminOpen()){
+        renderAdminProductList();
+        if(typeof renderAdminTopupProductList === 'function') renderAdminTopupProductList();
+        if(typeof refreshSubgroupFormUI === 'function') refreshSubgroupFormUI();
+        const sel = document.getElementById('imgProductSelect');
+        const curVal = sel ? sel.value : '';
+        if(sel){
+          sel.innerHTML = '<option value="">-- Pilih produk --</option>' + products.map(p => `<option value="${p.id}">${p.icon} ${p.name}</option>`).join('');
+          if(curVal && products.some(p => p.id === parseInt(curVal))){
+            sel.value = curVal;
+          }
+        }
+        if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+      }
     }
-  }
+  } catch(e){ console.warn('__config_products__ sync notice:', e); }
 });
 fbDB.ref('norxstore/carousel').on('value', snap=>{
   const val = snap.val();
@@ -17554,7 +17602,16 @@ function saveCart(){
 }
 
 // ==================== ORDER TRACKING (Pesanan Saya) ====================
-let allOrders = {};
+let allOrders = (function loadCachedOrdersInit(){
+  try {
+    const raw = safeGetItem('norxstore_orders_cache', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object') return parsed;
+    }
+  } catch(e){}
+  return {};
+})();
 
 function getDeletedOrderIds(){
   try {
@@ -17786,6 +17843,7 @@ function createOrder(items, total, paymentMethod, adminName, extraMeta = null){
         serviceType: inferredServiceType,
         topupUid: order.topupUid || '',
         topupServer: order.topupServer || '',
+        ntfyTopic: (typeof getAdminNtfyTopicLocal === 'function') ? getAdminNtfyTopicLocal() : '',
         mode: 'new'
       })
     }).catch(()=>{});
@@ -18415,17 +18473,126 @@ function testAdminNotificationSound(){
   showToast('🔊 Suara notifikasi dites! Pastikan volume media & dering HP menyala.');
 }
 
+function getAdminNtfyTopicLocal(){
+  return String(safeGetItem('norxstore_admin_ntfy_topic', '') || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
+function renderAdminNtfyUI(){
+  const inp = document.getElementById('adminNtfyTopicInput');
+  const badge = document.getElementById('adminNtfyStatusBadge');
+  const topic = getAdminNtfyTopicLocal();
+  if(inp && document.activeElement !== inp) inp.value = topic;
+  if(badge){
+    if(topic){
+      badge.textContent = '🟢 Aktif (' + topic + ')';
+      badge.style.background = '#dcfce7';
+      badge.style.color = '#15803d';
+    } else {
+      badge.textContent = 'Belum Diatur';
+      badge.style.background = '#f1f5f9';
+      badge.style.color = '#475569';
+    }
+  }
+}
+
+function generateAdminNtfyTopic(){
+  const rnd = 'norxstore-adm-' + Math.floor(100000 + Math.random() * 900000);
+  const inp = document.getElementById('adminNtfyTopicInput');
+  if(inp) inp.value = rnd;
+  saveAdminNtfyTopic();
+}
+
+function saveAdminNtfyTopic(){
+  const inp = document.getElementById('adminNtfyTopicInput');
+  const clean = String(inp ? inp.value : '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+  if(inp) inp.value = clean;
+  safeSetItem('norxstore_admin_ntfy_topic', clean);
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_ntfy__').set({
+      topic: clean,
+      updatedAt: Date.now()
+    }).catch(()=>{});
+  }
+  renderAdminNtfyUI();
+  if(clean){
+    showToast('✅ Topik ntfy "' + clean + '" disimpan! Pastikan Anda Subscribe topik ini di aplikasi ntfy.');
+  } else {
+    showToast('ℹ️ Topik ntfy dikosongkan.');
+  }
+}
+
+function openAdminNtfySubscribeLink(){
+  let topic = getAdminNtfyTopicLocal();
+  if(!topic){
+    generateAdminNtfyTopic();
+    topic = getAdminNtfyTopicLocal();
+  }
+  const url = 'https://ntfy.sh/' + encodeURIComponent(topic);
+  try {
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(topic).catch(()=>{});
+  } catch(e){}
+  window.open(url, '_blank', 'noopener');
+  showToast('📋 Topik "' + topic + '" disalin! Buka di aplikasi ntfy lalu tekan Subscribe.');
+}
+
+async function testAdminNtfyPushNow(){
+  const inp = document.getElementById('adminNtfyTopicInput');
+  const clean = String(inp ? inp.value : getAdminNtfyTopicLocal()).trim().replace(/[^a-zA-Z0-9_-]/g, '');
+  if(!clean){
+    showToast('⚠️ Klik 🎲 Acak & 💾 Simpan topik ntfy dulu!');
+    return;
+  }
+  if(clean !== getAdminNtfyTopicLocal()) saveAdminNtfyTopic();
+  showToast('⏳ Mengirim tes notif ke aplikasi ntfy...');
+  try {
+    const res = await fetch('/api/send-admin-order-push', {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: 'NTFY_TEST_' + Date.now(),
+        itemName: 'TES NOTIFIKASI NTFY NORXSTORE',
+        total: 75000,
+        paymentMethod: 'QRIS All Payment',
+        serviceType: 'topup',
+        topupUid: '812345678',
+        topupServer: 'Asia',
+        ntfyTopic: clean,
+        mode: 'ntfy_test'
+      })
+    });
+    const data = await res.json();
+    if(data && data.ntfySent){
+      showToast('✅ Terkirim ke topik ntfy "' + clean + '"! Cek notif di aplikasi ntfy HP Anda.');
+    } else {
+      showToast('⚠️ Gagal mengirim ke ntfy. Pastikan nama topik valid.');
+    }
+  } catch(e){
+    showToast('⚠️ Error ntfy: ' + (e.message || ''));
+  }
+}
+
 async function syncAdminWebPushSubscription(){
+  window._lastWebPushError = '';
   if(!('serviceWorker' in navigator) || !('Notification' in window) || Notification.permission !== 'granted'){
     return false;
   }
   try {
     const reg = swRegistration || await navigator.serviceWorker.ready;
-    if(!reg || !reg.pushManager) return false;
+    if(!reg || !reg.pushManager){
+      window._lastWebPushError = 'PushManager tidak tersedia di browser ini.';
+      return false;
+    }
     const res = await fetch('/api/push-public-key');
-    if(!res.ok) return false;
+    if(!res.ok){
+      window._lastWebPushError = 'API Push server mengembalikan status ' + res.status;
+      return false;
+    }
     const { publicKey } = await res.json();
-    if(!publicKey) return false;
+    if(!publicKey){
+      window._lastWebPushError = 'VAPID public key kosong.';
+      return false;
+    }
 
     let sub = await reg.pushManager.getSubscription();
     if(!sub){
@@ -18450,8 +18617,10 @@ async function syncAdminWebPushSubscription(){
       updateAdminNotifUiState();
       return true;
     }
+    window._lastWebPushError = 'Gagal simpan langganan ke server (' + subRes.status + ').';
     return false;
   } catch(err){
+    window._lastWebPushError = (err && (err.name || err.message)) ? `${err.name || 'Error'}: ${err.message || ''}` : 'Diblokir browser';
     console.warn('syncAdminWebPushSubscription warning:', err);
     return false;
   }
@@ -18464,7 +18633,7 @@ async function enableAdminOrderNotifications(silent = false){
   try {
     if(!('Notification' in window)){
       updateAdminNotifUiState();
-      if(!silent) showToast('🔊 Notif popup & suara dalam aplikasi aktif (perangkat tidak mendukung Web Push latar belakang).');
+      if(!silent) showToast('🔊 Notif dalam app aktif. Gunakan Aplikasi ntfy di bawah agar notif tembus saat app ditutup.');
       return false;
     }
     const perm = (Notification.permission === 'granted') ? 'granted' : await Notification.requestPermission();
@@ -18491,7 +18660,12 @@ async function enableAdminOrderNotifications(silent = false){
       return true;
     } else {
       if(!silent){
-        showToast('⚠️ Izin aktif, tapi koneksi server Push gagal. Pastikan akses via HTTPS & sudah deploy terbaru.');
+        const reason = String(window._lastWebPushError || '');
+        if(/push service|AbortError|NotAllowedError|Registration failed/i.test(reason)){
+          showToast('⚠️ Browser ini (seperti Brave) memblokir layanan Google Push! Pakai Google Chrome atau aktifkan App ntfy di bawah.');
+        } else {
+          showToast('⚠️ Gagal daftar Push browser' + (reason ? ' (' + reason + ')' : '') + '. Gunakan Chrome atau App ntfy di bawah.');
+        }
       }
       return false;
     }
@@ -18504,29 +18678,32 @@ async function enableAdminOrderNotifications(silent = false){
 }
 
 async function testAdminBackgroundPush5s(){
-  if(!('Notification' in window) || !('serviceWorker' in navigator)){
-    showToast('⚠️ Perangkat/Browser ini belum mendukung Push Notification.');
-    return;
-  }
-
+  const ntfyTopic = getAdminNtfyTopicLocal();
   let sub = null;
-  if(Notification.permission === 'granted'){
+  if(('Notification' in window) && ('serviceWorker' in navigator) && Notification.permission === 'granted'){
     try {
       const reg = swRegistration || await navigator.serviceWorker.ready;
       if(reg && reg.pushManager) sub = await reg.pushManager.getSubscription();
     } catch(e){}
   }
 
-  if(!sub){
+  if(!sub && !ntfyTopic){
     const ok = await enableAdminOrderNotifications(true);
-    if(!ok){
-      showToast('⚠️ Aktifkan dulu izin Notifikasi Latar Belakang di HP/Browser ini!');
+    if(ok){
+      try {
+        const reg = swRegistration || await navigator.serviceWorker.ready;
+        if(reg && reg.pushManager) sub = await reg.pushManager.getSubscription();
+      } catch(e){}
+    }
+    if(!sub && !ntfyTopic){
+      const reason = String(window._lastWebPushError || '');
+      if(/push service|AbortError/i.test(reason)){
+        showToast('⚠️ Brave memblokir Web Push! Buka pakai Google Chrome atau isi App ntfy di bawah lalu Tes ntfy.');
+      } else {
+        showToast('⚠️ Web Push diblokir/belum aktif. Gunakan Google Chrome atau aktifkan App ntfy di bawah.');
+      }
       return;
     }
-    try {
-      const reg = swRegistration || await navigator.serviceWorker.ready;
-      if(reg && reg.pushManager) sub = await reg.pushManager.getSubscription();
-    } catch(e){}
   }
 
   showToast('⏳ Tutup / minimize aplikasi sekarang! Notif push akan masuk dalam ~5 detik...');
@@ -18547,14 +18724,15 @@ async function testAdminBackgroundPush5s(){
         mode: 'test',
         delayMs: 4500,
         directSubscription: directSubJson,
+        ntfyTopic: ntfyTopic,
         deviceId: getClientDeviceId()
       })
     });
     const data = await res.json();
-    if(data && data.sent > 0){
-      console.log('Background test push delivered to', data.sent, 'admin device(s)');
+    if(data && (data.sent > 0 || data.ntfySent)){
+      console.log('Background test push delivered:', data);
     } else {
-      showToast('⚠️ Server tidak menemukan perangkat admin terdaftar. Tekan Aktifkan Notif lagi.');
+      showToast('⚠️ Server tidak menemukan perangkat admin terdaftar. Gunakan Chrome atau App ntfy.');
     }
   } catch(e){
     if(document.visibilityState === 'visible'){
@@ -20369,49 +20547,232 @@ window.addEventListener('DOMContentLoaded', () => {
   registerServiceWorker();
 });
 
-fbDB.ref('norxstore/orders').on('value', snap=>{
-  const incoming = snap.val() || {};
+const RTDB_ORDERS_BASE_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders.json';
 
-  // 1. Sinkronisasi konfigurasi admin & diskon yang tersimpan aman di norxstore/orders/__config_*
-  if(incoming['__config_discount__'] && incoming['__config_discount__'].config){
-    window._discountConfigFromOrders = true;
-    discountConfig = normalizeDiscountConfig(incoming['__config_discount__'].config);
-    discountVal = discountConfig.global;
-    safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
-    renderProducts();
-    if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
-    if(cart.length > 0) renderCart();
-    if(isAdminOpen()) renderDiscountAdminUI();
-  }
-  if(incoming['__config_admin_pass__'] && incoming['__config_admin_pass__'].pass){
-    adminPasswordCache = incoming['__config_admin_pass__'].pass;
-    safeSetItem('norxstore_admin_password', adminPasswordCache);
-  }
-  if(incoming['__config_sales_bank__'] && incoming['__config_sales_bank__'].counts){
-    Object.assign(salesBankState.counts, incoming['__config_sales_bank__'].counts);
-    saveSalesBankLocal();
-  }
-  if(incoming['__config_carousel__'] && incoming['__config_carousel__'].carousel){
-    carouselConfig = incoming['__config_carousel__'].carousel;
-    safeSetItem('norxstore_carousel_cache', JSON.stringify(carouselConfig));
-    renderCarousel();
-    if(isAdminOpen()) renderCarouselAdmin();
-  }
-  if(incoming['__config_settings__'] && incoming['__config_settings__'].data){
-    applyAdminConfigSettings(incoming['__config_settings__'].data);
-  }
-  if(incoming['__config_topup_payment__'] && incoming['__config_topup_payment__'].config){
-    if(typeof applyTopupPaymentConfig === 'function'){
-      applyTopupPaymentConfig(incoming['__config_topup_payment__'].config);
+function saveOrdersLocalCache(ordersObj){
+  try {
+    const lean = {};
+    for(const k in ordersObj){
+      if(k.startsWith('ord_') && ordersObj[k] && typeof ordersObj[k] === 'object'){
+        lean[k] = ordersObj[k];
+      }
+    }
+    safeSetItem('norxstore_orders_cache', JSON.stringify(lean));
+  } catch(e){}
+}
+
+function applyIncomingOrdersMap(incomingMap, isAuthoritative = true){
+  if(!incomingMap || typeof incomingMap !== 'object') return;
+  const nextOrders = {};
+  const localCreated = window._localSessionCreatedOrderIds || new Set();
+
+  // Pertahankan rating rat_* dan order baru yang baru saja dibuat di sesi lokal (<15 dtk)
+  for(const k in allOrders){
+    const existing = allOrders[k];
+    if(!existing) continue;
+    if(k.startsWith('rat_') || k.startsWith('RAT-')){
+      nextOrders[k] = existing;
+    } else if(!isAuthoritative){
+      nextOrders[k] = existing;
+    } else if(localCreated.has(k) && !incomingMap[k] && (Date.now() - Number(existing.createdAt || 0) < 15000)){
+      nextOrders[k] = existing;
     }
   }
-  if(incoming['__config_topup_game_icons__'] && incoming['__config_topup_game_icons__'].icons){
-    if(typeof applyTopupGameIconsConfig === 'function'){
-      applyTopupGameIconsConfig(incoming['__config_topup_game_icons__'].icons);
+
+  for(const k in incomingMap){
+    if(k.startsWith('__config_')) continue;
+    const val = incomingMap[k];
+    if(val && typeof val === 'object'){
+      if(allOrders[k] && allOrders[k].adminReply && !val.adminReply){
+        val.adminReply = allOrders[k].adminReply;
+      }
+      nextOrders[k] = val;
     }
   }
-  if(incoming['__config_images__'] && incoming['__config_images__'].images){
-    const cloudCustomImgs = incoming['__config_images__'].images;
+
+  allOrders = nextOrders;
+  saveOrdersLocalCache(allOrders);
+
+  try { if(typeof syncSalesBankFromOrders === 'function') syncSalesBankFromOrders(allOrders); } catch(e){}
+  try { checkOrderNotifications(allOrders); } catch(e){}
+  try { if(typeof checkAdminIncomingOrderNotification === 'function') checkAdminIncomingOrderNotification(allOrders); } catch(e){}
+  try { renderMyOrders(); } catch(e){}
+  try { renderProducts(); } catch(e){}
+  try { if(typeof renderLiveHomepageOrderBanner === 'function') renderLiveHomepageOrderBanner(); } catch(e){}
+  try { if(cart && cart.length > 0) renderCart(); } catch(e){}
+  try {
+    const invOv = document.getElementById('topupInvoiceOverlay');
+    if(invOv && invOv.classList.contains('open') && typeof renderTopupInvoiceContent === 'function'){
+      renderTopupInvoiceContent();
+    }
+  } catch(e){}
+  try { updateOrderNotifDot(); } catch(e){}
+  try { if(typeof updateAdminDualBadges === 'function') updateAdminDualBadges(); } catch(e){}
+  if(isAdminOpen()){
+    try { renderAdminOrders(); } catch(e){}
+    try { if(typeof renderAdminTopupOrders === 'function') renderAdminTopupOrders(); } catch(e){}
+  }
+}
+
+let ordersRestFetchInFlight = null;
+async function syncOrdersFromCloudRest(showFeedback = false){
+  if(ordersRestFetchInFlight) return ordersRestFetchInFlight;
+  ordersRestFetchInFlight = (async () => {
+    try {
+      const url = RTDB_ORDERS_BASE_URL + '?orderBy=%22%24key%22&startAt=%22ord_%22&endAt=%22ord_%EF%A3%BF%22';
+      const res = await fetch(url, { cache: 'no-store' });
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if(data && typeof data === 'object'){
+        applyIncomingOrdersMap(data, true);
+        if(showFeedback){
+          const totalOrd = Object.keys(data).filter(k => k.startsWith('ord_')).length;
+          showToast('✅ Daftar pesanan disinkronkan (' + totalOrd + ' order dari cloud).');
+        }
+      } else if(showFeedback){
+        showToast('ℹ️ Belum ada pesanan di server.');
+      }
+    } catch(err){
+      console.warn('syncOrdersFromCloudRest notice:', err);
+      if(showFeedback) showToast('⚠️ Gagal muat ulang pesanan: ' + (err.message || 'Cek koneksi'));
+    } finally {
+      ordersRestFetchInFlight = null;
+    }
+  })();
+  return ordersRestFetchInFlight;
+}
+
+// 1. Listener REALTIME khusus pesanan (ord_* saja, ~12KB bukan 12MB!) -> muncul seketika
+try {
+  fbDB.ref('norxstore/orders').orderByKey().startAt('ord_').endAt('ord_\uf8ff').on('value', snap => {
+    const val = snap.val();
+    if(val && typeof val === 'object'){
+      applyIncomingOrdersMap(val, true);
+    }
+  }, err => {
+    console.warn('Orders query listener fallback:', err);
+    syncOrdersFromCloudRest(false);
+  });
+} catch(e){
+  syncOrdersFromCloudRest(false);
+}
+
+// 2. Listener ringan terpisah untuk rating yang tersimpan di norxstore/orders (rat_* & RAT-*)
+['rat_', 'RAT-'].forEach(prefix => {
+  try {
+    fbDB.ref('norxstore/orders').orderByKey().startAt(prefix).endAt(prefix + '\uf8ff').on('value', snap => {
+      const val = snap.val();
+      if(val && typeof val === 'object'){
+        let changed = false;
+        for(const k in val){
+          if(val[k] && typeof val[k] === 'object'){
+            if(allOrders[k] && allOrders[k].adminReply && !val[k].adminReply){
+              val[k].adminReply = allOrders[k].adminReply;
+            }
+            allOrders[k] = val[k];
+            changed = true;
+          }
+        }
+        if(changed){
+          customerRatingsCache = null;
+          updateRatingStatsUI();
+          renderCustomerReviews();
+          if(isAdminOpen()) renderAdminRatingsList();
+        }
+      }
+    });
+  } catch(e){}
+});
+
+// 3. Listener terpisah & non-blocking untuk masing-masing node konfigurasi kecil (__config_*)
+fbDB.ref('norxstore/orders/__config_discount__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && val.config){
+      window._discountConfigFromOrders = true;
+      discountConfig = normalizeDiscountConfig(val.config);
+      discountVal = discountConfig.global;
+      safeSetItem('norxstore_discount_config_cache', JSON.stringify(discountConfig));
+      renderProducts();
+      if(typeof updateCategoryChipsUI === 'function') updateCategoryChipsUI();
+      if(cart.length > 0) renderCart();
+      if(isAdminOpen()) renderDiscountAdminUI();
+    }
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_admin_pass__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && val.pass){
+      adminPasswordCache = val.pass;
+      safeSetItem('norxstore_admin_password', adminPasswordCache);
+    }
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_sales_bank__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && val.counts){
+      Object.assign(salesBankState.counts, val.counts);
+      saveSalesBankLocal();
+    }
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_carousel__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && val.carousel){
+      carouselConfig = val.carousel;
+      safeSetItem('norxstore_carousel_cache', JSON.stringify(carouselConfig));
+      renderCarousel();
+      if(isAdminOpen()) renderCarouselAdmin();
+    }
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_settings__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && val.data) applyAdminConfigSettings(val.data);
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_topup_payment__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && val.config && typeof applyTopupPaymentConfig === 'function'){
+      applyTopupPaymentConfig(val.config);
+    }
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_topup_game_icons__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && val.icons && typeof applyTopupGameIconsConfig === 'function'){
+      applyTopupGameIconsConfig(val.icons);
+    }
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_ntfy__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && typeof val.topic === 'string'){
+      const cleanNtfy = String(val.topic || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+      safeSetItem('norxstore_admin_ntfy_topic', cleanNtfy);
+      if(typeof renderAdminNtfyUI === 'function') renderAdminNtfyUI();
+    }
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_images__').on('value', snap => {
+  try {
+    const val = snap.val();
+    const cloudCustomImgs = val && val.images;
     if(cloudCustomImgs && typeof cloudCustomImgs === 'object'){
       let hasImgChange = false;
       for(const k in cloudCustomImgs){
@@ -20430,88 +20791,20 @@ fbDB.ref('norxstore/orders').on('value', snap=>{
         if(isAdminOpen()){
           if(typeof renderAdminImgList === 'function') renderAdminImgList();
           if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+          if(typeof renderAdminTopupProductList === 'function') renderAdminTopupProductList();
         }
       }
     }
-  }
-
-  if(incoming['__config_products__'] && Array.isArray(incoming['__config_products__'].products)){
-    const cloudCfg = incoming['__config_products__'];
-    if(Array.isArray(cloudCfg.deletedIds)){
-      cloudCfg.deletedIds.forEach(id => deletedProductIds.add(Number(id)));
-      safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
-    }
-    if(Array.isArray(cloudCfg.customProducts)){
-      customProductsCache = cloudCfg.customProducts.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
-      const leanCp = customProductsCache.map(p => {
-        if(p && Array.isArray(p.images) && p.images.some(img => typeof img === 'string' && img.startsWith('data:'))){
-          return { ...p, images: p.images.filter(img => typeof img === 'string' && !img.startsWith('data:')) };
-        }
-        return p;
-      });
-      safeSetItem('norxstore_custom_products', JSON.stringify(leanCp));
-    }
-    products = mergeProductsData(cloudCfg.products);
-    const leanProds = products.map(p => {
-      if(p && Array.isArray(p.images) && p.images.some(img => typeof img === 'string' && img.startsWith('data:'))){
-        return { ...p, images: p.images.filter(img => typeof img === 'string' && !img.startsWith('data:')) };
-      }
-      return p;
-    });
-    safeSetItem('norxstore_products_cache', JSON.stringify(leanProds));
-    productsDataReady = true;
-    renderProducts();
-    if(isAdminOpen()){
-      renderAdminProductList();
-      if(typeof renderAdminTopupProductList === 'function') renderAdminTopupProductList();
-      refreshSubgroupFormUI();
-    }
-  }
-
-  // 2. Pisahkan data konfigurasi internal agar tidak tercampur ke pesanan pelanggan
-  const cleanOrders = {};
-  for(const k in incoming){
-    if(!k.startsWith('__config_')){
-      cleanOrders[k] = incoming[k];
-    }
-  }
-
-  // Pastikan ulasan rat_* lokal yang ada di memori tidak terhapus saat snapshot orders diperbarui
-  for(const k in allOrders){
-    if(k.startsWith('rat_') && !cleanOrders[k]){
-      cleanOrders[k] = allOrders[k];
-    } else if(cleanOrders[k] && allOrders[k] && allOrders[k].adminReply && !cleanOrders[k].adminReply){
-      cleanOrders[k].adminReply = allOrders[k].adminReply;
-    }
-  }
-  allOrders = cleanOrders;
-  if(typeof syncSalesBankFromOrders === 'function'){
-    syncSalesBankFromOrders(allOrders);
-  }
-  customerRatingsCache = null;
-  checkOrderNotifications(allOrders);
-  if(typeof checkAdminIncomingOrderNotification === 'function') checkAdminIncomingOrderNotification(allOrders);
-  renderMyOrders();
-  renderProducts();
-  if(typeof renderLiveHomepageOrderBanner === 'function') renderLiveHomepageOrderBanner();
-  if(cart && cart.length > 0) renderCart();
-  const invOv = document.getElementById('topupInvoiceOverlay');
-  if(invOv && invOv.classList.contains('open') && typeof renderTopupInvoiceContent === 'function'){
-    renderTopupInvoiceContent();
-  }
-  if(isAdminOpen()){
-    renderAdminOrders();
-    if(typeof renderAdminTopupOrders === 'function') renderAdminTopupOrders();
-    if(typeof updateAdminDualBadges === 'function') updateAdminDualBadges();
-    renderAdminProductList();
-    if(typeof renderAdminTopupProductList === 'function') renderAdminTopupProductList();
-    renderDiscountAdminUI();
-  }
-  updateOrderNotifDot();
-  updateRatingStatsUI();
-  renderCustomerReviews();
-  if(isAdminOpen()) renderAdminRatingsList();
+  } catch(e){}
 });
+
+// Sinkronisasi awal instan via HTTPS REST agar pesanan terbaca dalam <200ms
+syncOrdersFromCloudRest(false);
+setInterval(() => {
+  if(document.visibilityState === 'visible' && typeof isAdminOpen === 'function' && isAdminOpen()){
+    syncOrdersFromCloudRest(false);
+  }
+}, 8000);
 
 if(window.fbAvailable && fbDB && fbDB.ref){
   // Sinkronisasi realtime ulasan pelanggan mandiri di norxstore/ratings
@@ -22445,8 +22738,10 @@ function openAdmin(){
   }
   if(typeof updatePwaInstallButtonsUI === 'function') updatePwaInstallButtonsUI();
   if(typeof updateAdminNotifUiState === 'function') updateAdminNotifUiState();
+  if(typeof renderAdminNtfyUI === 'function') renderAdminNtfyUI();
   updateOnlineCountersUI(currentOnlineCount);
   document.getElementById('adminOverlay').classList.add('open');
+  if(typeof syncOrdersFromCloudRest === 'function') syncOrdersFromCloudRest(false);
 
   // Hydrate panel non-aktif & daftar berat secara asinkron di frame berikutnya
   requestAnimationFrame(() => {
@@ -25289,6 +25584,7 @@ function confirmTopupCustomerPayment(orderId){
         serviceType: 'topup',
         topupUid: ord.topupUid || '',
         topupServer: ord.topupServer || '',
+        ntfyTopic: (typeof getAdminNtfyTopicLocal === 'function') ? getAdminNtfyTopicLocal() : '',
         mode: 'paid'
       })
     }).catch(()=>{});
