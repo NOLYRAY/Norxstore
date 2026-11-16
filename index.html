@@ -5741,13 +5741,14 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
     <span class="admin-pwa-status-pill" id="adminAudioNotifStatusPill">⏳ Belum Aktif</span>
   </div>
   <p class="admin-pwa-notif-desc" id="adminAudioNotifDesc">
-    Aktifkan agar setiap pesanan baru atau konfirmasi bayar pelanggan langsung <b>bunyi dering, bergetar, muncul popup di aplikasi, &amp; tampil di bar notifikasi HP</b> (walaupun Panel Admin sedang tertutup).
+    Aktifkan agar setiap pesanan baru atau konfirmasi bayar pelanggan langsung <b>masuk ke notifikasi HP walaupun aplikasi sedang ditutup</b>, serta berbunyi &amp; muncul popup saat aplikasi terbuka.
   </p>
   <div class="admin-pwa-actions">
     <button type="button" class="admin-pwa-btn primary" id="adminPwaInstallBtn" onclick="promptInstallPWA()">📲 Pasang Sebagai Aplikasi</button>
-    <button type="button" class="admin-pwa-btn success" id="adminNotifEnableBtn" onclick="enableAdminOrderNotifications()">🔔 Aktifkan Notif Aplikasi</button>
+    <button type="button" class="admin-pwa-btn success" id="adminNotifEnableBtn" onclick="enableAdminOrderNotifications()">🔔 Aktifkan Notif Latar Belakang</button>
+    <button type="button" class="admin-pwa-btn sound" onclick="testAdminBackgroundPush5s()">📡 Tes Push (App Tutup 5dtk)</button>
     <button type="button" class="admin-pwa-btn sound" onclick="testAdminNotificationSound()">🔊 Tes Suara</button>
-    <button type="button" class="admin-pwa-btn sound" onclick="simulateAdminAppOrderNotif()">🛎️ Tes Notif Order</button>
+    <button type="button" class="admin-pwa-btn sound" onclick="simulateAdminAppOrderNotif()">🛎️ Tes Popup Order</button>
   </div>
 </div>
 
@@ -17757,7 +17758,9 @@ function createOrder(items, total, paymentMethod, adminName, extraMeta = null){
         total: total,
         paymentMethod: paymentMethod,
         serviceType: inferredServiceType,
-        topupUid: order.topupUid || ''
+        topupUid: order.topupUid || '',
+        topupServer: order.topupServer || '',
+        mode: 'new'
       })
     }).catch(()=>{});
   } catch(e){}
@@ -18246,17 +18249,22 @@ function closePwaInstallGuide(event){
   if(ov) ov.classList.remove('open');
 }
 
+let realWebPushSubscribed = safeGetItem('norxstore_admin_push_sub_ok', '') === '1';
+
 function updateAdminNotifUiState(){
   const pill = document.getElementById('adminAudioNotifStatusPill');
   const btn = document.getElementById('adminNotifEnableBtn');
   const isPermGranted = ('Notification' in window) && Notification.permission === 'granted';
   const adminAudioEnabled = safeGetItem('norxstore_admin_audio_enabled', '') === '1';
   if(pill){
-    if(isPermGranted && adminAudioEnabled){
-      pill.textContent = '🟢 Aktif & Siap Bunyi';
+    if(isPermGranted && realWebPushSubscribed){
+      pill.textContent = '🟢 Push Latar Belakang Aktif';
+      pill.classList.add('active');
+    } else if(isPermGranted && adminAudioEnabled){
+      pill.textContent = '🟡 Siap (Perlu Daftar Push)';
       pill.classList.add('active');
     } else if(adminAudioEnabled){
-      pill.textContent = '🔊 Notif Aplikasi Aktif';
+      pill.textContent = '🔊 Popup Dalam App Aktif';
       pill.classList.add('active');
     } else {
       pill.textContent = '⏳ Belum Aktif';
@@ -18264,7 +18272,7 @@ function updateAdminNotifUiState(){
     }
   }
   if(btn){
-    btn.textContent = (isPermGranted && adminAudioEnabled) ? '✅ Notif Aplikasi Aktif' : '🔔 Aktifkan Notif Aplikasi';
+    btn.textContent = (isPermGranted && realWebPushSubscribed) ? '✅ Push Latar Belakang Aktif' : '🔔 Aktifkan Notif Latar Belakang';
   }
 }
 
@@ -18381,67 +18389,125 @@ function testAdminNotificationSound(){
   showToast('🔊 Suara notifikasi dites! Pastikan volume media & dering HP menyala.');
 }
 
-async function enableAdminOrderNotifications(){
+async function syncAdminWebPushSubscription(){
+  if(!('serviceWorker' in navigator) || !('Notification' in window) || Notification.permission !== 'granted'){
+    return false;
+  }
+  try {
+    const reg = swRegistration || await navigator.serviceWorker.ready;
+    if(!reg || !reg.pushManager) return false;
+    const res = await fetch('/api/push-public-key');
+    if(!res.ok) return false;
+    const { publicKey } = await res.json();
+    if(!publicKey) return false;
+
+    let sub = await reg.pushManager.getSubscription();
+    if(!sub){
+      sub = await reg.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(publicKey)
+      });
+    }
+    const subRes = await fetch('/api/push-subscribe', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        subscription: sub,
+        orderIds: getMyOrderIds(),
+        deviceId: getClientDeviceId(),
+        isAdmin: true
+      })
+    });
+    if(subRes.ok){
+      realWebPushSubscribed = true;
+      safeSetItem('norxstore_admin_push_sub_ok', '1');
+      updateAdminNotifUiState();
+      return true;
+    }
+    return false;
+  } catch(err){
+    console.warn('syncAdminWebPushSubscription warning:', err);
+    return false;
+  }
+}
+
+async function enableAdminOrderNotifications(silent = false){
   safeSetItem('norxstore_admin_audio_enabled', '1');
   unlockStoreAudioOnce();
-  playNotificationChime(false);
+  if(!silent) playNotificationChime(false);
   try {
     if(!('Notification' in window)){
       updateAdminNotifUiState();
-      showToast('🔊 Notif popup & suara dalam aplikasi aktif!');
-      return true;
-    }
-    const perm = await Notification.requestPermission();
-    if(perm !== 'granted'){
-      updateAdminNotifUiState();
-      showToast('🔊 Popup dalam aplikasi aktif! Untuk notif bar HP saat layar mati, izinkan Notifikasi di setelan aplikasi/browser.');
+      if(!silent) showToast('🔊 Notif popup & suara dalam aplikasi aktif (perangkat tidak mendukung Web Push latar belakang).');
       return false;
     }
-    if('serviceWorker' in navigator){
-      try {
-        const reg = swRegistration || await navigator.serviceWorker.ready;
-        if(reg && reg.pushManager){
-          const res = await fetch('/api/push-public-key');
-          if(res.ok){
-            const { publicKey } = await res.json();
-            if(publicKey){
-              let sub = await reg.pushManager.getSubscription();
-              if(!sub){
-                sub = await reg.pushManager.subscribe({
-                  userVisibleOnly: true,
-                  applicationServerKey: urlBase64ToUint8Array(publicKey)
-                });
-              }
-              await fetch('/api/push-subscribe', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  subscription: sub,
-                  orderIds: getMyOrderIds(),
-                  deviceId: getClientDeviceId(),
-                  isAdmin: true
-                })
-              });
-            }
-          }
-        }
-      } catch(pushErr){
-        console.warn('Web push server optional skip:', pushErr);
-      }
+    const perm = (Notification.permission === 'granted') ? 'granted' : await Notification.requestPermission();
+    if(perm !== 'granted'){
+      realWebPushSubscribed = false;
+      safeSetItem('norxstore_admin_push_sub_ok', '0');
+      updateAdminNotifUiState();
+      if(!silent) showToast('⚠️ Izin Notifikasi belum diberikan. Buka Setelan HP -> Aplikasi -> Izin Notifikasi -> Aktifkan.');
+      return false;
     }
+
+    const pushOk = await syncAdminWebPushSubscription();
     updateAdminNotifUiState();
-    sendBrowserNotification('🛎️ Notif Aplikasi Admin Aktif!', 'HP ini akan langsung berdering setiap ada pesanan atau pembayaran masuk.', {
-      tag: 'admin-ready',
-      targetAction: 'openAdminOrders',
-      serviceType: 'topup'
-    });
-    showToast('✅ Notifikasi & Suara Pesanan Aplikasi berhasil diaktifkan!');
-    return true;
+
+    if(pushOk){
+      if(!silent){
+        sendBrowserNotification('🛎️ Notif Latar Belakang Aktif!', 'HP ini siap menerima notifikasi pesanan masuk meskipun aplikasi sedang ditutup.', {
+          tag: 'admin-ready',
+          targetAction: 'openAdminOrders',
+          serviceType: 'topup'
+        });
+        showToast('✅ Push Latar Belakang Aktif! Notif tetap masuk walau aplikasi ditutup.');
+      }
+      return true;
+    } else {
+      if(!silent){
+        showToast('⚠️ Izin aktif, tapi koneksi server Push gagal. Pastikan akses via HTTPS & sudah deploy terbaru.');
+      }
+      return false;
+    }
   } catch(e){
     console.warn('enableAdminOrderNotifications warning:', e);
     updateAdminNotifUiState();
-    showToast('🔊 Suara & popup notif dalam aplikasi aktif!');
+    if(!silent) showToast('⚠️ Gagal mengaktifkan Push Latar Belakang: ' + (e.message || ''));
     return false;
+  }
+}
+
+async function testAdminBackgroundPush5s(){
+  const ok = await enableAdminOrderNotifications(true);
+  if(!ok){
+    showToast('⚠️ Aktifkan dulu izin Notifikasi Latar Belakang di HP/Browser ini!');
+    return;
+  }
+  showToast('⏳ Tutup / minimize aplikasi sekarang! Notif push akan masuk dalam 5 detik...');
+  try {
+    const res = await fetch('/api/send-admin-order-push', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: 'TEST_' + Date.now(),
+        itemName: 'BLESSING WELKIN MOON (TES PUSH)',
+        total: 75500,
+        paymentMethod: 'QRIS All Payment',
+        serviceType: 'topup',
+        topupUid: '812345678',
+        topupServer: 'Asia',
+        mode: 'test',
+        delayMs: 4500
+      })
+    });
+    const data = await res.json();
+    if(data && data.sent > 0){
+      console.log('Background test push delivered to', data.sent, 'admin device(s)');
+    } else {
+      showToast('⚠️ Server tidak menemukan perangkat admin terdaftar. Tekan Aktifkan Notif lagi.');
+    }
+  } catch(e){
+    showToast('⚠️ Gagal mengirim tes push: ' + (e.message || ''));
   }
 }
 
@@ -22341,6 +22407,9 @@ function openAdmin(){
   }
   if(typeof updatePwaInstallButtonsUI === 'function') updatePwaInstallButtonsUI();
   if(typeof updateAdminNotifUiState === 'function') updateAdminNotifUiState();
+  if(typeof syncAdminWebPushSubscription === 'function' && ('Notification' in window) && Notification.permission === 'granted'){
+    syncAdminWebPushSubscription();
+  }
   document.getElementById('adminOverlay').classList.add('open');
 }
 function closeAdmin(e){
@@ -25078,6 +25147,23 @@ function confirmTopupCustomerPayment(orderId){
     if(typeof renderAdminTopupOrders === 'function') renderAdminTopupOrders();
     if(typeof updateAdminDualBadges === 'function') updateAdminDualBadges();
   }
+  try {
+    const itemsText = Array.isArray(ord.items) ? ord.items.map(it => (it.name || 'Top-Up') + (it.qty > 1 ? ' x' + it.qty : '')).join(', ') : 'Top-Up Game';
+    fetch('/api/send-admin-order-push', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: orderId,
+        itemName: itemsText,
+        total: ord.total || 0,
+        paymentMethod: ord.paymentMethod || '',
+        serviceType: 'topup',
+        topupUid: ord.topupUid || '',
+        topupServer: ord.topupServer || '',
+        mode: 'paid'
+      })
+    }).catch(()=>{});
+  } catch(e){}
 }
 
 function renderTopupInvoiceContent(){

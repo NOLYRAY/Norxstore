@@ -1,9 +1,11 @@
 import express from 'express';
 import compression from 'compression';
 import path from 'path';
-import fs from 'fs';
 import { fileURLToPath } from 'url';
-import webpush from 'web-push';
+import pushPublicKeyHandler from './api/push-public-key.js';
+import pushSubscribeHandler from './api/push-subscribe.js';
+import sendAdminOrderPushHandler from './api/send-admin-order-push.js';
+import sendOrderPushHandler from './api/send-order-push.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -18,45 +20,6 @@ app.use(compression({
 }));
 
 app.use(express.json());
-
-// Load or generate VAPID keys
-let vapid = {
-  publicKey: 'BLffVdmZ4HwgMMKNL9w8vNY3uatXjCeraP4TiEtlHKQRrEE6D00Ff7yDvICWMfNZAmho0EjqaPBVOLbvNtETG8Y',
-  privateKey: 'EcGmKricXU-QMgfcZ04XcfN682OZGm4wHqRKAFqq7j0'
-};
-try {
-  const vPath = path.join(__dirname, 'vapid.json');
-  if (fs.existsSync(vPath)) {
-    vapid = JSON.parse(fs.readFileSync(vPath, 'utf8'));
-  }
-} catch (e) {
-  console.error('Error reading vapid.json:', e);
-}
-
-webpush.setVapidDetails(
-  'mailto:norxstore.support@gmail.com',
-  vapid.publicKey,
-  vapid.privateKey
-);
-
-// File persistence for push subscriptions
-const SUBS_FILE = path.join(__dirname, 'push_subscriptions.json');
-let subscriptions = [];
-try {
-  if (fs.existsSync(SUBS_FILE)) {
-    subscriptions = JSON.parse(fs.readFileSync(SUBS_FILE, 'utf8'));
-  }
-} catch (e) {
-  subscriptions = [];
-}
-
-function saveSubscriptions() {
-  try {
-    fs.writeFileSync(SUBS_FILE, JSON.stringify(subscriptions, null, 2));
-  } catch (e) {
-    console.error('Error saving subscriptions:', e);
-  }
-}
 
 // Special headers for Service Worker and Manifest
 app.get('/sw.js', (req, res) => {
@@ -85,146 +48,11 @@ app.use(express.static(__dirname, {
   }
 }));
 
-// Public key endpoint for front-end push registration
-app.get('/api/push-public-key', (req, res) => {
-  res.json({ publicKey: vapid.publicKey });
-});
-
-// Register a push subscription from client (customer or admin)
-app.post('/api/push-subscribe', (req, res) => {
-  const { subscription, orderIds, deviceId, isAdmin } = req.body;
-  if (!subscription || !subscription.endpoint) {
-    return res.status(400).json({ error: 'Invalid subscription' });
-  }
-
-  const existingIdx = subscriptions.findIndex(s => s.subscription && s.subscription.endpoint === subscription.endpoint);
-  const incomingIds = Array.isArray(orderIds) ? orderIds : [];
-  
-  if (existingIdx > -1) {
-    const mergedIds = Array.from(new Set([...(subscriptions[existingIdx].orderIds || []), ...incomingIds]));
-    subscriptions[existingIdx].orderIds = mergedIds;
-    if (isAdmin === true) subscriptions[existingIdx].isAdmin = true;
-    subscriptions[existingIdx].updatedAt = Date.now();
-  } else {
-    subscriptions.push({
-      subscription,
-      orderIds: incomingIds,
-      deviceId: deviceId || 'anonymous',
-      isAdmin: isAdmin === true,
-      createdAt: Date.now()
-    });
-  }
-
-  if (subscriptions.length > 2000) subscriptions = subscriptions.slice(-2000);
-  saveSubscriptions();
-
-  res.json({ success: true, count: subscriptions.length });
-});
-
-// Trigger push notification to Admin devices when a new customer order arrives
-app.post('/api/send-admin-order-push', async (req, res) => {
-  const { orderId, itemName, total, paymentMethod, serviceType, topupUid } = req.body || {};
-  if (!orderId && !itemName) {
-    return res.status(400).json({ error: 'Missing orderId or itemName' });
-  }
-
-  const priceStr = total ? ('Rp' + Math.round(Number(total) || 0).toLocaleString('id-ID')) : '';
-  const typeLabel = serviceType === 'topup'
-    ? (`Top-Up${topupUid ? ' (UID: ' + topupUid + ')' : ''}`)
-    : 'Joki / Akun';
-  const notifTitle = '🛎️ Pesanan Baru Masuk! - NORXSTORE';
-  const notifBody = `${typeLabel}: ${itemName || 'Pesanan'} · ${priceStr}${paymentMethod ? ' (' + paymentMethod + ')' : ''}`;
-
-  const payload = JSON.stringify({
-    title: notifTitle,
-    body: notifBody,
-    url: '/',
-    tag: 'admin-new-order-' + (orderId || Date.now())
-  });
-
-  const adminTargets = subscriptions.filter(s => s.isAdmin === true);
-  const staleEndpoints = new Set();
-  let sentCount = 0;
-
-  for (const target of adminTargets) {
-    try {
-      await webpush.sendNotification(target.subscription, payload);
-      sentCount++;
-    } catch (err) {
-      if (err.statusCode === 404 || err.statusCode === 410) {
-        staleEndpoints.add(target.subscription.endpoint);
-      } else {
-        console.error('Admin push error:', err.message);
-      }
-    }
-  }
-
-  if (staleEndpoints.size > 0) {
-    subscriptions = subscriptions.filter(s => !staleEndpoints.has(s.subscription.endpoint));
-    saveSubscriptions();
-  }
-
-  res.json({ success: true, sent: sentCount, targetCount: adminTargets.length });
-});
-
-// Trigger push notification from admin or backend
-app.post('/api/send-order-push', async (req, res) => {
-  const { orderId, status, estimate, itemName, title, body } = req.body;
-  if (!orderId && !title) {
-    return res.status(400).json({ error: 'Missing orderId or title' });
-  }
-
-  let notifTitle = title;
-  let notifBody = body;
-
-  if (!notifTitle) {
-    if (status === 'done') {
-      notifTitle = '🎉 Pesanan Selesai - Norxstore';
-      notifBody = `Layanan "${itemName || 'Pesanan Anda'}" telah selesai dikerjakan! Silakan cek keranjang.`;
-    } else if (status === 'processing') {
-      notifTitle = '⚡ Pesanan Diproses - Norxstore';
-      notifBody = `Layanan "${itemName || 'Pesanan Anda'}" sedang diproses.${estimate ? ' Estimasi: ' + estimate : ''}`;
-    } else {
-      notifTitle = '📦 Update Pesanan - Norxstore';
-      notifBody = `Status pesanan Anda telah diperbarui: ${status}`;
-    }
-  }
-
-  const payload = JSON.stringify({
-    title: notifTitle,
-    body: notifBody,
-    url: '/',
-    tag: 'order-' + (orderId || 'update')
-  });
-
-  const targets = subscriptions.filter(s => {
-    if (!orderId) return true;
-    return s.orderIds && s.orderIds.includes(orderId);
-  });
-
-  const staleEndpoints = new Set();
-  let sentCount = 0;
-
-  for (const target of targets) {
-    try {
-      await webpush.sendNotification(target.subscription, payload);
-      sentCount++;
-    } catch (err) {
-      if (err.statusCode === 404 || err.statusCode === 410) {
-        staleEndpoints.add(target.subscription.endpoint);
-      } else {
-        console.error('Push error for target:', err.message);
-      }
-    }
-  }
-
-  if (staleEndpoints.size > 0) {
-    subscriptions = subscriptions.filter(s => !staleEndpoints.has(s.subscription.endpoint));
-    saveSubscriptions();
-  }
-
-  res.json({ success: true, sent: sentCount, targetCount: targets.length });
-});
+// Shared Web Push endpoints (identical on localhost and Vercel Serverless)
+app.all('/api/push-public-key', (req, res) => pushPublicKeyHandler(req, res));
+app.all('/api/push-subscribe', (req, res) => pushSubscribeHandler(req, res));
+app.all('/api/send-admin-order-push', (req, res) => sendAdminOrderPushHandler(req, res));
+app.all('/api/send-order-push', (req, res) => sendOrderPushHandler(req, res));
 
 // WhatsApp Channel Info & Follower Count Resolver
 app.get('/api/whatsapp-channel-info', async (req, res) => {
