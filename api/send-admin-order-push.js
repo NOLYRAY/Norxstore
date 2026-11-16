@@ -1,4 +1,4 @@
-import { getAllSubscriptionsMap, sendWebPushToTargets, applyCorsHeaders, readJsonBody } from './_pushStore.js';
+import { getAllSubscriptionsMap, getSubKey, sendWebPushToTargets, applyCorsHeaders, readJsonBody } from './_pushStore.js';
 
 export default async function handler(req, res) {
   applyCorsHeaders(res);
@@ -7,15 +7,32 @@ export default async function handler(req, res) {
 
   try {
     const body = await readJsonBody(req);
-    const { orderId, itemName, total, paymentMethod, serviceType, topupUid, topupServer, mode, delayMs } = body || {};
+    const {
+      orderId,
+      itemName,
+      total,
+      paymentMethod,
+      serviceType,
+      topupUid,
+      topupServer,
+      mode,
+      delayMs,
+      directSubscription,
+      deviceId
+    } = body || {};
     if (!orderId && !itemName) {
       return res.status(400).json({ error: 'Missing orderId or itemName' });
     }
 
-    const waitMs = Math.min(Math.max(Number(delayMs) || 0, 0), 6000);
-    if (waitMs > 0) {
-      await new Promise((r) => setTimeout(r, waitMs));
-    }
+    const waitMs = Math.min(Math.max(Number(delayMs) || 0, 0), 5000);
+    const subsPromise = (mode === 'test' && directSubscription && directSubscription.endpoint)
+      ? Promise.resolve({})
+      : getAllSubscriptionsMap();
+
+    const [allMap] = await Promise.all([
+      subsPromise,
+      waitMs > 0 ? new Promise((r) => setTimeout(r, waitMs)) : Promise.resolve()
+    ]);
 
     const priceStr = total ? ('Rp' + Math.round(Number(total) || 0).toLocaleString('id-ID')) : '';
     const srvStr = topupServer ? ` (${topupServer})` : '';
@@ -40,8 +57,17 @@ export default async function handler(req, res) {
       tag: 'admin-new-order-' + (orderId || Date.now())
     };
 
-    const allMap = await getAllSubscriptionsMap();
-    const adminTargets = Object.values(allMap).filter((s) => s && s.isAdmin === true);
+    const adminTargets = Object.values(allMap || {}).filter((s) => s && s.isAdmin === true);
+    if (directSubscription && directSubscription.endpoint) {
+      adminTargets.unshift({
+        key: getSubKey(directSubscription.endpoint),
+        subscription: directSubscription,
+        deviceId: deviceId || 'direct',
+        isAdmin: true,
+        updatedAt: Date.now()
+      });
+    }
+
     const result = await sendWebPushToTargets(adminTargets, payload);
 
     return res.status(200).json({ success: true, ...result });

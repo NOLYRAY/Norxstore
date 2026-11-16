@@ -75,7 +75,9 @@ function writeLocalSubscriptionRecord(key, record) {
 export async function getAllSubscriptionsMap() {
   const merged = readLocalSubscriptionsMap();
   try {
-    const res = await fetch(`${RTDB_PUSH_BASE}.json`);
+    const res = await fetch(`${RTDB_PUSH_BASE}.json`, {
+      signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined
+    });
     if (res.ok) {
       const data = await res.json();
       if (data && typeof data === 'object') {
@@ -99,7 +101,9 @@ export async function upsertSubscription({ subscription, orderIds, deviceId, isA
 
   let existing = null;
   try {
-    const res = await fetch(`${RTDB_PUSH_BASE}/${key}.json`);
+    const res = await fetch(`${RTDB_PUSH_BASE}/${key}.json`, {
+      signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(3000) : undefined
+    });
     if (res.ok) {
       existing = await res.json();
     }
@@ -130,7 +134,8 @@ export async function upsertSubscription({ subscription, orderIds, deviceId, isA
     await fetch(`${RTDB_PUSH_BASE}/${key}.json`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(record)
+      body: JSON.stringify(record),
+      signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined
     });
   } catch (e) {}
 
@@ -141,22 +146,53 @@ export async function deleteSubscription(key) {
   if (!key) return;
   writeLocalSubscriptionRecord(key, null);
   try {
-    await fetch(`${RTDB_PUSH_BASE}/${key}.json`, { method: 'DELETE' });
+    await fetch(`${RTDB_PUSH_BASE}/${key}.json`, {
+      method: 'DELETE',
+      signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(3000) : undefined
+    });
   } catch (e) {}
 }
 
+export function deduplicatePushTargets(targets) {
+  const byEndpoint = new Map();
+  const byDevice = new Map();
+  for (const t of (Array.isArray(targets) ? targets : [])) {
+    if (!t || !t.subscription || !t.subscription.endpoint) continue;
+    const ep = String(t.subscription.endpoint);
+    const prevEp = byEndpoint.get(ep);
+    if (!prevEp || (Number(t.updatedAt || 0) >= Number(prevEp.updatedAt || 0))) {
+      byEndpoint.set(ep, t);
+    }
+  }
+  const uniqueList = [];
+  for (const t of byEndpoint.values()) {
+    const dev = t.deviceId && t.deviceId !== 'anonymous' ? String(t.deviceId) : null;
+    if (!dev) {
+      uniqueList.push(t);
+      continue;
+    }
+    const prevDev = byDevice.get(dev);
+    if (!prevDev || (Number(t.updatedAt || 0) >= Number(prevDev.updatedAt || 0))) {
+      byDevice.set(dev, t);
+    }
+  }
+  return [...uniqueList, ...byDevice.values()];
+}
+
 export async function sendWebPushToTargets(targets, payloadObj) {
+  const uniqueTargets = deduplicatePushTargets(targets);
   const payloadStr = JSON.stringify(payloadObj);
   let sent = 0;
   const staleKeys = [];
 
   await Promise.allSettled(
-    targets.map(async (target) => {
+    uniqueTargets.map(async (target) => {
       if (!target || !target.subscription || !target.subscription.endpoint) return;
       const key = target.key || getSubKey(target.subscription.endpoint);
       try {
         await webpush.sendNotification(target.subscription, payloadStr, {
           TTL: 86400,
+          timeout: 6000,
           headers: { Urgency: 'high' }
         });
         sent++;
@@ -174,7 +210,7 @@ export async function sendWebPushToTargets(targets, payloadObj) {
     await Promise.allSettled(staleKeys.map((k) => deleteSubscription(k)));
   }
 
-  return { sent, targetCount: targets.length, removedStale: staleKeys.length };
+  return { sent, targetCount: uniqueTargets.length, removedStale: staleKeys.length };
 }
 
 export function applyCorsHeaders(res) {
