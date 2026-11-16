@@ -90,9 +90,9 @@ app.get('/api/push-public-key', (req, res) => {
   res.json({ publicKey: vapid.publicKey });
 });
 
-// Register a push subscription from client
+// Register a push subscription from client (customer or admin)
 app.post('/api/push-subscribe', (req, res) => {
-  const { subscription, orderIds, deviceId } = req.body;
+  const { subscription, orderIds, deviceId, isAdmin } = req.body;
   if (!subscription || !subscription.endpoint) {
     return res.status(400).json({ error: 'Invalid subscription' });
   }
@@ -101,14 +101,16 @@ app.post('/api/push-subscribe', (req, res) => {
   const incomingIds = Array.isArray(orderIds) ? orderIds : [];
   
   if (existingIdx > -1) {
-    const mergedIds = Array.from(new Set([...subscriptions[existingIdx].orderIds, ...incomingIds]));
+    const mergedIds = Array.from(new Set([...(subscriptions[existingIdx].orderIds || []), ...incomingIds]));
     subscriptions[existingIdx].orderIds = mergedIds;
+    if (isAdmin === true) subscriptions[existingIdx].isAdmin = true;
     subscriptions[existingIdx].updatedAt = Date.now();
   } else {
     subscriptions.push({
       subscription,
       orderIds: incomingIds,
       deviceId: deviceId || 'anonymous',
+      isAdmin: isAdmin === true,
       createdAt: Date.now()
     });
   }
@@ -117,6 +119,52 @@ app.post('/api/push-subscribe', (req, res) => {
   saveSubscriptions();
 
   res.json({ success: true, count: subscriptions.length });
+});
+
+// Trigger push notification to Admin devices when a new customer order arrives
+app.post('/api/send-admin-order-push', async (req, res) => {
+  const { orderId, itemName, total, paymentMethod, serviceType, topupUid } = req.body || {};
+  if (!orderId && !itemName) {
+    return res.status(400).json({ error: 'Missing orderId or itemName' });
+  }
+
+  const priceStr = total ? ('Rp' + Math.round(Number(total) || 0).toLocaleString('id-ID')) : '';
+  const typeLabel = serviceType === 'topup'
+    ? (`Top-Up${topupUid ? ' (UID: ' + topupUid + ')' : ''}`)
+    : 'Joki / Akun';
+  const notifTitle = '🛎️ Pesanan Baru Masuk! - NORXSTORE';
+  const notifBody = `${typeLabel}: ${itemName || 'Pesanan'} · ${priceStr}${paymentMethod ? ' (' + paymentMethod + ')' : ''}`;
+
+  const payload = JSON.stringify({
+    title: notifTitle,
+    body: notifBody,
+    url: '/',
+    tag: 'admin-new-order-' + (orderId || Date.now())
+  });
+
+  const adminTargets = subscriptions.filter(s => s.isAdmin === true);
+  const staleEndpoints = new Set();
+  let sentCount = 0;
+
+  for (const target of adminTargets) {
+    try {
+      await webpush.sendNotification(target.subscription, payload);
+      sentCount++;
+    } catch (err) {
+      if (err.statusCode === 404 || err.statusCode === 410) {
+        staleEndpoints.add(target.subscription.endpoint);
+      } else {
+        console.error('Admin push error:', err.message);
+      }
+    }
+  }
+
+  if (staleEndpoints.size > 0) {
+    subscriptions = subscriptions.filter(s => !staleEndpoints.has(s.subscription.endpoint));
+    saveSubscriptions();
+  }
+
+  res.json({ success: true, sent: sentCount, targetCount: adminTargets.length });
 });
 
 // Trigger push notification from admin or backend

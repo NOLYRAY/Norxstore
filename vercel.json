@@ -1,5 +1,5 @@
 {
-  "buildCommand": "mkdir -p public && cp index.html public/",
+  "buildCommand": "mkdir -p public && cp -f index.html manifest.json sw.js notification.wav icon-192.png icon-512.png icon.svg apple-touch-icon.png favicon.ico prod_*.jpg rev_*.jpg public/ 2>/dev/null || true",
   "outputDirectory": "public",
   "cleanUrls": true
 }
