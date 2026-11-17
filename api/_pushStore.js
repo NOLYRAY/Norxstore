@@ -236,27 +236,58 @@ export async function readJsonBody(req) {
 
 const RTDB_NTFY_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_ntfy__.json';
 
-export async function getAdminNtfyTopic() {
-  if (process.env.NTFY_TOPIC && String(process.env.NTFY_TOPIC).trim()) {
-    return String(process.env.NTFY_TOPIC).trim();
-  }
+export function sanitizeNtfyTopic(raw) {
+  return String(raw || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
+export async function getAdminNtfyConfig() {
+  const cfg = {
+    topic: sanitizeNtfyTopic(process.env.NTFY_TOPIC || ''),
+    jokiTopic: sanitizeNtfyTopic(process.env.NTFY_TOPIC_JOKI || ''),
+    topupTopic: sanitizeNtfyTopic(process.env.NTFY_TOPIC_TOPUP || '')
+  };
   try {
     const res = await fetch(RTDB_NTFY_URL, {
       signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(3500) : undefined
     });
     if (res.ok) {
       const data = await res.json();
-      if (data && data.topic && String(data.topic).trim()) {
-        return String(data.topic).trim();
+      if (data && typeof data === 'object') {
+        if (!cfg.topic && data.topic) cfg.topic = sanitizeNtfyTopic(data.topic);
+        if (!cfg.jokiTopic && data.jokiTopic) cfg.jokiTopic = sanitizeNtfyTopic(data.jokiTopic);
+        if (!cfg.topupTopic && data.topupTopic) cfg.topupTopic = sanitizeNtfyTopic(data.topupTopic);
       }
     }
   } catch (e) {}
-  return '';
+  return cfg;
 }
 
-export async function sendNtfyPush({ topic, title, body, url, priority }) {
-  const cleanTopic = String(topic || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+export async function getAdminNtfyTopic() {
+  const cfg = await getAdminNtfyConfig();
+  return cfg.topic || cfg.topupTopic || cfg.jokiTopic || '';
+}
+
+export function resolveNtfyTopicsForService(cfg, serviceType) {
+  const c = cfg || {};
+  const list = [];
+  if (serviceType === 'joki') {
+    if (c.jokiTopic) list.push(sanitizeNtfyTopic(c.jokiTopic));
+    if (c.topic) list.push(sanitizeNtfyTopic(c.topic));
+  } else if (serviceType === 'topup') {
+    if (c.topupTopic) list.push(sanitizeNtfyTopic(c.topupTopic));
+    if (c.topic) list.push(sanitizeNtfyTopic(c.topic));
+  } else {
+    if (c.topic) list.push(sanitizeNtfyTopic(c.topic));
+    if (c.jokiTopic) list.push(sanitizeNtfyTopic(c.jokiTopic));
+    if (c.topupTopic) list.push(sanitizeNtfyTopic(c.topupTopic));
+  }
+  return Array.from(new Set(list.filter(Boolean)));
+}
+
+export async function sendNtfyPush({ topic, title, body, url, priority, tags }) {
+  const cleanTopic = sanitizeNtfyTopic(topic);
   if (!cleanTopic) return { ntfySent: false, reason: 'no-topic' };
+  const safeTags = Array.isArray(tags) && tags.length > 0 ? tags : ['bell', 'moneybag'];
   try {
     const res = await fetch('https://ntfy.sh/', {
       method: 'POST',
@@ -266,14 +297,14 @@ export async function sendNtfyPush({ topic, title, body, url, priority }) {
         title: title || 'NORXSTORE - Pesanan Baru',
         message: body || 'Ada pesanan baru masuk!',
         priority: priority || 5,
-        tags: ['bell', 'moneybag'],
+        tags: safeTags,
         click: url || 'https://norxstore.vercel.app/'
       }),
       signal: typeof AbortSignal !== 'undefined' && AbortSignal.timeout ? AbortSignal.timeout(5000) : undefined
     });
-    return { ntfySent: res.ok, ntfyStatus: res.status };
+    return { ntfySent: res.ok, ntfyStatus: res.status, topic: cleanTopic };
   } catch (e) {
-    return { ntfySent: false, reason: e && e.message ? e.message : 'ntfy-error' };
+    return { ntfySent: false, reason: e && e.message ? e.message : 'ntfy-error', topic: cleanTopic };
   }
 }
 

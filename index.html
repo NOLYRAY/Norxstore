@@ -5751,21 +5751,45 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
     <button type="button" class="admin-pwa-btn sound" onclick="simulateAdminAppOrderNotif()">🛎️ Tes Popup Order</button>
   </div>
   <div id="adminNtfyBackupBox" style="margin-top:10px;padding:10px;border-radius:11px;background:#fff;border:1.5px solid #bae6fd">
-    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:4px">
-      <span style="font-size:11.5px;font-weight:800;color:#0369a1">📲 Anti-Gagal (Brave / Xiaomi / App Tutup Total): App ntfy</span>
-      <span id="adminNtfyStatusBadge" style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#f1f5f9;color:#475569">Belum Diatur</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:5px">
+      <span style="font-size:11.5px;font-weight:800;color:#0369a1">📲 Notif ntfy Sesuai Jasa Toko (Anti-Gagal Brave/App Tutup)</span>
+      <span id="adminNtfyStatusBadge" style="font-size:10px;font-weight:800;padding:2px 7px;border-radius:8px;background:#f1f5f9;color:#475569">Belum Diatur</span>
     </div>
-    <div style="font-size:10.5px;color:#475569;line-height:1.45;margin-bottom:7px">
-      Brave sering memblokir Web Push bawaan. Pakai app gratis <b>ntfy</b> (Play Store, tanpa login): <b>1)</b> Buat &amp; Simpan Topik → <b>2)</b> Subscribe topik tersebut di app ntfy → <b>3)</b> Klik Tes. Notif langsung masuk walau HP dikunci!
+    <div style="font-size:10.5px;color:#475569;line-height:1.45;margin-bottom:8px">
+      Pisahkan topik <b>ntfy</b> sesuai jasa yang tersedia di Norxstore: <b>⚔️ Jasa Joki &amp; Akun</b> dan <b>💎 Jasa Top Up</b>. Klik <b>🎲 Buat Sesuai Jasa</b> lalu Subscribe topik tersebut di aplikasi <b>ntfy</b> HP Anda.
     </div>
-    <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">
-      <input type="text" id="adminNtfyTopicInput" placeholder="cth: norxstore-adm-9281" style="flex:1;min-width:140px;height:34px;border:1.5px solid #cbd5e1;border-radius:8px;padding:0 10px;font-size:12px;font-weight:700;color:#0f172a;outline:none">
-      <button type="button" onclick="generateAdminNtfyTopic()" style="height:34px;padding:0 9px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#334155;font-size:11px;font-weight:700;cursor:pointer">🎲 Acak</button>
-      <button type="button" onclick="saveAdminNtfyTopic()" style="height:34px;padding:0 10px;border-radius:8px;border:none;background:#0284c7;color:#fff;font-size:11px;font-weight:800;cursor:pointer">💾 Simpan</button>
+    <div style="display:flex;flex-direction:column;gap:7px">
+      <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:9px;padding:7px 8px">
+        <div style="font-size:10.5px;font-weight:800;color:#4c1d95;margin-bottom:4px">⚔️ Topik Jasa Joki &amp; Akun</div>
+        <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+          <input type="text" id="adminNtfyJokiInput" placeholder="cth: norxstore-joki-9281" style="flex:1;min-width:120px;height:32px;border:1.5px solid #cbd5e1;border-radius:8px;padding:0 9px;font-size:11.5px;font-weight:700;color:#0f172a;outline:none;background:#fff">
+          <button type="button" onclick="copyAdminNtfyTopicText('joki')" style="height:32px;padding:0 8px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#334155;font-size:11px;font-weight:800;cursor:pointer" title="Salin nama topik Joki">📋</button>
+          <button type="button" onclick="openAdminNtfySubscribeLink('joki')" style="height:32px;padding:0 9px;border-radius:8px;border:1px solid #7c3aed;background:#f5f3ff;color:#6d28d9;font-size:11px;font-weight:800;cursor:pointer" title="Salin & Buka Topik Joki di ntfy">🔗 Buka</button>
+          <button type="button" onclick="testAdminNtfyPushNow('joki')" style="height:32px;padding:0 9px;border-radius:8px;border:none;background:#7c3aed;color:#fff;font-size:11px;font-weight:800;cursor:pointer">🚀 Tes</button>
+        </div>
+      </div>
+      <div style="background:#f0f9ff;border:1px solid #bae6fd;border-radius:9px;padding:7px 8px">
+        <div style="font-size:10.5px;font-weight:800;color:#0369a1;margin-bottom:4px">💎 Topik Jasa Top Up (UID &amp; Server)</div>
+        <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+          <input type="text" id="adminNtfyTopupInput" placeholder="cth: norxstore-topup-9281" style="flex:1;min-width:120px;height:32px;border:1.5px solid #bae6fd;border-radius:8px;padding:0 9px;font-size:11.5px;font-weight:700;color:#0f172a;outline:none;background:#fff">
+          <button type="button" onclick="copyAdminNtfyTopicText('topup')" style="height:32px;padding:0 8px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#334155;font-size:11px;font-weight:800;cursor:pointer" title="Salin nama topik Top Up">📋</button>
+          <button type="button" onclick="openAdminNtfySubscribeLink('topup')" style="height:32px;padding:0 9px;border-radius:8px;border:1px solid #0284c7;background:#fff;color:#0369a1;font-size:11px;font-weight:800;cursor:pointer" title="Salin & Buka Topik Top Up di ntfy">🔗 Buka</button>
+          <button type="button" onclick="testAdminNtfyPushNow('topup')" style="height:32px;padding:0 9px;border-radius:8px;border:none;background:#0284c7;color:#fff;font-size:11px;font-weight:800;cursor:pointer">🚀 Tes</button>
+        </div>
+      </div>
+      <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:9px;padding:7px 8px">
+        <div style="font-size:10.5px;font-weight:800;color:#166534;margin-bottom:4px">🔔 Topik Gabungan Semua Jasa (Joki + Top Up)</div>
+        <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
+          <input type="text" id="adminNtfyTopicInput" placeholder="cth: norxstore-semua-9281 (terima semua)" style="flex:1;min-width:120px;height:32px;border:1.5px solid #86efac;border-radius:8px;padding:0 9px;font-size:11.5px;font-weight:700;color:#0f172a;outline:none;background:#fff">
+          <button type="button" onclick="copyAdminNtfyTopicText('all')" style="height:32px;padding:0 8px;border-radius:8px;border:1px solid #cbd5e1;background:#fff;color:#334155;font-size:11px;font-weight:800;cursor:pointer" title="Salin nama topik Gabungan">📋</button>
+          <button type="button" onclick="openAdminNtfySubscribeLink('all')" style="height:32px;padding:0 9px;border-radius:8px;border:1px solid #16a34a;background:#fff;color:#15803d;font-size:11px;font-weight:800;cursor:pointer" title="Salin & Buka Topik Gabungan di ntfy">🔗 Buka</button>
+          <button type="button" onclick="testAdminNtfyPushNow('all')" style="height:32px;padding:0 9px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-size:11px;font-weight:800;cursor:pointer">🚀 Tes</button>
+        </div>
+      </div>
     </div>
-    <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap">
-      <button type="button" onclick="openAdminNtfySubscribeLink()" style="flex:1;min-width:120px;height:32px;border-radius:8px;border:1px solid #0284c7;background:#f0f9ff;color:#0369a1;font-size:11px;font-weight:800;cursor:pointer">🔗 Buka Topik di ntfy</button>
-      <button type="button" onclick="testAdminNtfyPushNow()" style="flex:1;min-width:120px;height:32px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-size:11px;font-weight:800;cursor:pointer">🚀 Tes Kirim ke ntfy</button>
+    <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+      <button type="button" onclick="generateAdminNtfyTopic()" style="flex:1;min-width:120px;height:33px;border-radius:8px;border:1px solid #cbd5e1;background:#f8fafc;color:#334155;font-size:11px;font-weight:800;cursor:pointer">🎲 Buat Otomatis Semua</button>
+      <button type="button" onclick="saveAdminNtfyTopic()" style="flex:1;min-width:120px;height:33px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-size:11px;font-weight:800;cursor:pointer">💾 Simpan Semua Topik</button>
     </div>
   </div>
 </div>
@@ -17958,6 +17982,7 @@ function createOrder(items, total, paymentMethod, adminName, extraMeta = null){
   if(typeof renderLiveHomepageOrderBanner === 'function') renderLiveHomepageOrderBanner();
   try {
     const itemSummary = (Array.isArray(items) ? items : []).map(it => (it.name || 'Pesanan') + (it.qty > 1 ? ' x' + it.qty : '')).join(', ');
+    const ntfyCfg = (typeof getAdminNtfyConfigLocal === 'function') ? getAdminNtfyConfigLocal() : { topic: '', jokiTopic: '', topupTopic: '' };
     fetch('/api/send-admin-order-push', {
       method: 'POST',
       keepalive: true,
@@ -17970,7 +17995,9 @@ function createOrder(items, total, paymentMethod, adminName, extraMeta = null){
         serviceType: inferredServiceType,
         topupUid: order.topupUid || '',
         topupServer: order.topupServer || '',
-        ntfyTopic: (typeof getAdminNtfyTopicLocal === 'function') ? getAdminNtfyTopicLocal() : '',
+        ntfyTopic: ntfyCfg.topic || '',
+        ntfyJokiTopic: ntfyCfg.jokiTopic || '',
+        ntfyTopupTopic: ntfyCfg.topupTopic || '',
         mode: 'new'
       })
     }).catch(()=>{});
@@ -18600,18 +18627,50 @@ function testAdminNotificationSound(){
   showToast('🔊 Suara notifikasi dites! Pastikan volume media & dering HP menyala.');
 }
 
+function sanitizeNtfyTopicLocal(raw){
+  return String(raw || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+}
+
+function getAdminNtfyConfigLocal(){
+  let cfg = { topic: '', jokiTopic: '', topupTopic: '' };
+  try {
+    const raw = safeGetItem('norxstore_admin_ntfy_config', '');
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === 'object'){
+        cfg.topic = sanitizeNtfyTopicLocal(parsed.topic || '');
+        cfg.jokiTopic = sanitizeNtfyTopicLocal(parsed.jokiTopic || '');
+        cfg.topupTopic = sanitizeNtfyTopicLocal(parsed.topupTopic || '');
+      }
+    }
+  } catch(e){}
+  if(!cfg.topic){
+    cfg.topic = sanitizeNtfyTopicLocal(safeGetItem('norxstore_admin_ntfy_topic', ''));
+  }
+  return cfg;
+}
+
 function getAdminNtfyTopicLocal(){
-  return String(safeGetItem('norxstore_admin_ntfy_topic', '') || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
+  const cfg = getAdminNtfyConfigLocal();
+  return cfg.topic || cfg.topupTopic || cfg.jokiTopic || '';
 }
 
 function renderAdminNtfyUI(){
-  const inp = document.getElementById('adminNtfyTopicInput');
+  const inpAll = document.getElementById('adminNtfyTopicInput');
+  const inpJoki = document.getElementById('adminNtfyJokiInput');
+  const inpTopup = document.getElementById('adminNtfyTopupInput');
   const badge = document.getElementById('adminNtfyStatusBadge');
-  const topic = getAdminNtfyTopicLocal();
-  if(inp && document.activeElement !== inp) inp.value = topic;
+  const cfg = getAdminNtfyConfigLocal();
+  if(inpAll && document.activeElement !== inpAll) inpAll.value = cfg.topic;
+  if(inpJoki && document.activeElement !== inpJoki) inpJoki.value = cfg.jokiTopic;
+  if(inpTopup && document.activeElement !== inpTopup) inpTopup.value = cfg.topupTopic;
   if(badge){
-    if(topic){
-      badge.textContent = '🟢 Aktif (' + topic + ')';
+    const activeParts = [];
+    if(cfg.jokiTopic) activeParts.push('⚔️ Joki');
+    if(cfg.topupTopic) activeParts.push('💎 Top Up');
+    if(cfg.topic) activeParts.push('🔔 Semua');
+    if(activeParts.length > 0){
+      badge.textContent = '🟢 Aktif (' + activeParts.join(' · ') + ')';
       badge.style.background = '#dcfce7';
       badge.style.color = '#15803d';
     } else {
@@ -18623,54 +18682,142 @@ function renderAdminNtfyUI(){
 }
 
 function generateAdminNtfyTopic(){
-  const rnd = 'norxstore-adm-' + Math.floor(100000 + Math.random() * 900000);
-  const inp = document.getElementById('adminNtfyTopicInput');
-  if(inp) inp.value = rnd;
+  const code = String(Math.floor(100000 + Math.random() * 900000));
+  const inpAll = document.getElementById('adminNtfyTopicInput');
+  const inpJoki = document.getElementById('adminNtfyJokiInput');
+  const inpTopup = document.getElementById('adminNtfyTopupInput');
+  if(inpAll) inpAll.value = 'norxstore-semua-' + code;
+  if(inpJoki) inpJoki.value = 'norxstore-joki-' + code;
+  if(inpTopup) inpTopup.value = 'norxstore-topup-' + code;
   saveAdminNtfyTopic();
 }
 
-function saveAdminNtfyTopic(){
-  const inp = document.getElementById('adminNtfyTopicInput');
-  const clean = String(inp ? inp.value : '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
-  if(inp) inp.value = clean;
-  safeSetItem('norxstore_admin_ntfy_topic', clean);
-  if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/orders/__config_ntfy__').set({
-      topic: clean,
-      updatedAt: Date.now()
+function copyAdminNtfyTopicText(serviceKind){
+  const kind = serviceKind === 'joki' ? 'joki' : (serviceKind === 'topup' ? 'topup' : 'all');
+  const inpAll = document.getElementById('adminNtfyTopicInput');
+  const inpJoki = document.getElementById('adminNtfyJokiInput');
+  const inpTopup = document.getElementById('adminNtfyTopupInput');
+  const cfg = getAdminNtfyConfigLocal();
+  let txt = kind === 'joki'
+    ? sanitizeNtfyTopicLocal((inpJoki && inpJoki.value) || cfg.jokiTopic)
+    : (kind === 'topup'
+        ? sanitizeNtfyTopicLocal((inpTopup && inpTopup.value) || cfg.topupTopic)
+        : sanitizeNtfyTopicLocal((inpAll && inpAll.value) || cfg.topic));
+  if(!txt){
+    generateAdminNtfyTopic();
+    const fresh = getAdminNtfyConfigLocal();
+    txt = kind === 'joki' ? fresh.jokiTopic : (kind === 'topup' ? fresh.topupTopic : fresh.topic);
+  }
+  try {
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).catch(()=>{});
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = txt;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  } catch(e){}
+  showToast('📋 Teks topik "' + txt + '" disalin! Tinggal tempel di aplikasi ntfy.');
+}
+
+function saveAdminNtfyTopic(overrideTs){
+  const inpAll = document.getElementById('adminNtfyTopicInput');
+  const inpJoki = document.getElementById('adminNtfyJokiInput');
+  const inpTopup = document.getElementById('adminNtfyTopupInput');
+  const cur = getAdminNtfyConfigLocal();
+  const cleanAll = inpAll ? sanitizeNtfyTopicLocal(inpAll.value) : cur.topic;
+  const cleanJoki = inpJoki ? sanitizeNtfyTopicLocal(inpJoki.value) : cur.jokiTopic;
+  const cleanTopup = inpTopup ? sanitizeNtfyTopicLocal(inpTopup.value) : cur.topupTopic;
+  if(inpAll) inpAll.value = cleanAll;
+  if(inpJoki) inpJoki.value = cleanJoki;
+  if(inpTopup) inpTopup.value = cleanTopup;
+
+  const ts = Number(overrideTs) || Date.now();
+  const cfgPayload = {
+    topic: cleanAll,
+    jokiTopic: cleanJoki,
+    topupTopic: cleanTopup,
+    updatedAt: ts
+  };
+  safeSetItem('norxstore_admin_ntfy_config', JSON.stringify(cfgPayload));
+  safeSetItem('norxstore_admin_ntfy_topic', cleanAll);
+  safeSetItem('norxstore_ntfy_updated_at', String(ts));
+
+  try {
+    fetch('https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_ntfy__.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(cfgPayload),
+      keepalive: true
     }).catch(()=>{});
+  } catch(e){}
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_ntfy__').set(cfgPayload).catch(()=>{});
   }
   renderAdminNtfyUI();
-  if(clean){
-    showToast('✅ Topik ntfy "' + clean + '" disimpan! Pastikan Anda Subscribe topik ini di aplikasi ntfy.');
+  const countSet = [cleanJoki, cleanTopup, cleanAll].filter(Boolean).length;
+  if(countSet > 0){
+    showToast('✅ Topik ntfy disimpan! Subscribe topik tersebut di aplikasi ntfy HP Anda.');
   } else {
-    showToast('ℹ️ Topik ntfy dikosongkan.');
+    showToast('ℹ️ Semua topik ntfy dikosongkan.');
   }
 }
 
-function openAdminNtfySubscribeLink(){
-  let topic = getAdminNtfyTopicLocal();
-  if(!topic){
+function openAdminNtfySubscribeLink(serviceKind){
+  const kind = serviceKind === 'joki' ? 'joki' : (serviceKind === 'topup' ? 'topup' : 'all');
+  let cfg = getAdminNtfyConfigLocal();
+  let targetTopic = kind === 'joki'
+    ? (cfg.jokiTopic || cfg.topic)
+    : (kind === 'topup' ? (cfg.topupTopic || cfg.topic) : (cfg.topic || cfg.jokiTopic || cfg.topupTopic));
+  if(!targetTopic){
     generateAdminNtfyTopic();
-    topic = getAdminNtfyTopicLocal();
+    cfg = getAdminNtfyConfigLocal();
+    targetTopic = kind === 'joki' ? cfg.jokiTopic : (kind === 'topup' ? cfg.topupTopic : (cfg.topic || cfg.jokiTopic));
   }
-  const url = 'https://ntfy.sh/' + encodeURIComponent(topic);
+  const url = 'https://ntfy.sh/' + encodeURIComponent(targetTopic);
   try {
-    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(topic).catch(()=>{});
+    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(targetTopic).catch(()=>{});
   } catch(e){}
   window.open(url, '_blank', 'noopener');
-  showToast('📋 Topik "' + topic + '" disalin! Buka di aplikasi ntfy lalu tekan Subscribe.');
+  showToast('📋 Topik "' + targetTopic + '" disalin! Buka di aplikasi ntfy lalu tekan Subscribe.');
 }
 
-async function testAdminNtfyPushNow(){
-  const inp = document.getElementById('adminNtfyTopicInput');
-  const clean = String(inp ? inp.value : getAdminNtfyTopicLocal()).trim().replace(/[^a-zA-Z0-9_-]/g, '');
-  if(!clean){
-    showToast('⚠️ Klik 🎲 Acak & 💾 Simpan topik ntfy dulu!');
+async function testAdminNtfyPushNow(serviceKind){
+  const kind = serviceKind === 'joki' ? 'joki' : (serviceKind === 'all' ? 'all' : 'topup');
+  const cfg = getAdminNtfyConfigLocal();
+  const inpAll = document.getElementById('adminNtfyTopicInput');
+  const inpJoki = document.getElementById('adminNtfyJokiInput');
+  const inpTopup = document.getElementById('adminNtfyTopupInput');
+
+  const cleanAll = inpAll ? sanitizeNtfyTopicLocal(inpAll.value) : cfg.topic;
+  const cleanJoki = inpJoki ? sanitizeNtfyTopicLocal(inpJoki.value) : cfg.jokiTopic;
+  const cleanTopup = inpTopup ? sanitizeNtfyTopicLocal(inpTopup.value) : cfg.topupTopic;
+  const targetTopic = kind === 'joki'
+    ? (cleanJoki || cleanAll)
+    : (kind === 'all' ? (cleanAll || cleanTopup || cleanJoki) : (cleanTopup || cleanAll));
+
+  if(!targetTopic){
+    showToast('⚠️ Klik 🎲 Buat Otomatis Semua atau isi topik ntfy terlebih dahulu!');
     return;
   }
-  if(clean !== getAdminNtfyTopicLocal()) saveAdminNtfyTopic();
-  showToast('⏳ Mengirim tes notif ke aplikasi ntfy...');
+  if(cleanAll !== cfg.topic || cleanJoki !== cfg.jokiTopic || cleanTopup !== cfg.topupTopic){
+    saveAdminNtfyTopic();
+  }
+
+  const allProds = Array.isArray(products) ? products : [];
+  const sampleProd = allProds.find(p => kind === 'all' ? true : getProductSideMode(p) === kind);
+  const sampleName = kind === 'all'
+    ? 'Order Joki & Top Up Gabungan (TES)'
+    : (sampleProd
+        ? (sampleProd.name + ' (TES)')
+        : (kind === 'joki' ? '10 IF / EKSPLORE MONDSTADT (TES)' : 'BLESSING WELKIN MOON (TES)'));
+  const samplePrice = (sampleProd && Number(sampleProd.price) > 0) ? Number(sampleProd.price) : (kind === 'joki' ? 25000 : 75000);
+
+  const labelStr = kind === 'joki' ? '⚔️ Jasa Joki' : (kind === 'all' ? '🔔 Notif Gabungan' : '💎 Jasa Top Up');
+  showToast(`⏳ Mengirim tes ${labelStr} ke ntfy...`);
   try {
     const res = await fetch('/api/send-admin-order-push', {
       method: 'POST',
@@ -18678,19 +18825,22 @@ async function testAdminNtfyPushNow(){
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         orderId: 'NTFY_TEST_' + Date.now(),
-        itemName: 'TES NOTIFIKASI NTFY NORXSTORE',
-        total: 75000,
+        itemName: sampleName,
+        total: samplePrice,
         paymentMethod: 'QRIS All Payment',
-        serviceType: 'topup',
-        topupUid: '812345678',
-        topupServer: 'Asia',
-        ntfyTopic: clean,
+        serviceType: kind,
+        topupUid: kind === 'topup' ? '812345678' : '',
+        topupServer: kind === 'topup' ? 'Asia' : '',
+        ntfyTopic: cleanAll,
+        ntfyJokiTopic: kind === 'all' ? '' : cleanJoki,
+        ntfyTopupTopic: kind === 'all' ? '' : cleanTopup,
         mode: 'ntfy_test'
       })
     });
     const data = await res.json();
     if(data && data.ntfySent){
-      showToast('✅ Terkirim ke topik ntfy "' + clean + '"! Cek notif di aplikasi ntfy HP Anda.');
+      const sentList = Array.isArray(data.ntfyTopics) && data.ntfyTopics.length > 0 ? data.ntfyTopics.join(', ') : targetTopic;
+      showToast('✅ Terkirim ke topik ntfy: ' + sentList + '! Cek notif di aplikasi ntfy HP Anda.');
     } else {
       showToast('⚠️ Gagal mengirim ke ntfy. Pastikan nama topik valid.');
     }
@@ -18836,6 +18986,7 @@ async function testAdminBackgroundPush5s(){
   showToast('⏳ Tutup / minimize aplikasi sekarang! Notif push akan masuk dalam ~5 detik...');
   try {
     const directSubJson = (sub && typeof sub.toJSON === 'function') ? sub.toJSON() : (sub || null);
+    const ntfyCfg = getAdminNtfyConfigLocal();
     const res = await fetch('/api/send-admin-order-push', {
       method: 'POST',
       keepalive: true,
@@ -18851,7 +19002,9 @@ async function testAdminBackgroundPush5s(){
         mode: 'test',
         delayMs: 4500,
         directSubscription: directSubJson,
-        ntfyTopic: ntfyTopic,
+        ntfyTopic: ntfyCfg.topic,
+        ntfyJokiTopic: ntfyCfg.jokiTopic,
+        ntfyTopupTopic: ntfyCfg.topupTopic,
         deviceId: getClientDeviceId()
       })
     });
@@ -20900,11 +21053,20 @@ fbDB.ref('norxstore/orders/__config_topup_game_icons__').on('value', snap => {
 fbDB.ref('norxstore/orders/__config_ntfy__').on('value', snap => {
   try {
     const val = snap.val();
-    if(val && typeof val.topic === 'string'){
-      const cleanNtfy = String(val.topic || '').trim().replace(/[^a-zA-Z0-9_-]/g, '');
-      safeSetItem('norxstore_admin_ntfy_topic', cleanNtfy);
-      if(typeof renderAdminNtfyUI === 'function') renderAdminNtfyUI();
-    }
+    if(!val || typeof val !== 'object') return;
+    const cloudTs = Number(val.updatedAt || 0);
+    const localTs = Number(safeGetItem('norxstore_ntfy_updated_at', '0')) || 0;
+    if(localTs > 0 && cloudTs < localTs - 1500) return;
+    const cfgObj = {
+      topic: sanitizeNtfyTopicLocal(val.topic || ''),
+      jokiTopic: sanitizeNtfyTopicLocal(val.jokiTopic || ''),
+      topupTopic: sanitizeNtfyTopicLocal(val.topupTopic || ''),
+      updatedAt: cloudTs || Date.now()
+    };
+    safeSetItem('norxstore_admin_ntfy_config', JSON.stringify(cfgObj));
+    safeSetItem('norxstore_admin_ntfy_topic', cfgObj.topic);
+    if(cloudTs) safeSetItem('norxstore_ntfy_updated_at', String(cloudTs));
+    if(typeof renderAdminNtfyUI === 'function') renderAdminNtfyUI();
   } catch(e){}
 });
 
@@ -25742,6 +25904,7 @@ function confirmTopupCustomerPayment(orderId){
   }
   try {
     const itemsText = Array.isArray(ord.items) ? ord.items.map(it => (it.name || 'Top-Up') + (it.qty > 1 ? ' x' + it.qty : '')).join(', ') : 'Top-Up Game';
+    const ntfyCfg = (typeof getAdminNtfyConfigLocal === 'function') ? getAdminNtfyConfigLocal() : { topic: '', jokiTopic: '', topupTopic: '' };
     fetch('/api/send-admin-order-push', {
       method: 'POST',
       keepalive: true,
@@ -25754,7 +25917,9 @@ function confirmTopupCustomerPayment(orderId){
         serviceType: 'topup',
         topupUid: ord.topupUid || '',
         topupServer: ord.topupServer || '',
-        ntfyTopic: (typeof getAdminNtfyTopicLocal === 'function') ? getAdminNtfyTopicLocal() : '',
+        ntfyTopic: ntfyCfg.topic || '',
+        ntfyJokiTopic: ntfyCfg.jokiTopic || '',
+        ntfyTopupTopic: ntfyCfg.topupTopic || '',
         mode: 'paid'
       })
     }).catch(()=>{});

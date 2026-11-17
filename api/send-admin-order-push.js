@@ -2,7 +2,9 @@ import {
   getAllSubscriptionsMap,
   getSubKey,
   sendWebPushToTargets,
-  getAdminNtfyTopic,
+  getAdminNtfyConfig,
+  sanitizeNtfyTopic,
+  resolveNtfyTopicsForService,
   sendNtfyPush,
   sendTelegramAdminAlert,
   applyCorsHeaders,
@@ -28,7 +30,9 @@ export default async function handler(req, res) {
       delayMs,
       directSubscription,
       deviceId,
-      ntfyTopic
+      ntfyTopic,
+      ntfyJokiTopic,
+      ntfyTopupTopic
     } = body || {};
     if (!orderId && !itemName) {
       return res.status(400).json({ error: 'Missing orderId or itemName' });
@@ -38,36 +42,54 @@ export default async function handler(req, res) {
     const subsPromise = (mode === 'test' && directSubscription && directSubscription.endpoint)
       ? Promise.resolve({})
       : (mode === 'ntfy_test' ? Promise.resolve({}) : getAllSubscriptionsMap());
-    const ntfyTopicPromise = (ntfyTopic && String(ntfyTopic).trim())
-      ? Promise.resolve(String(ntfyTopic).trim())
-      : getAdminNtfyTopic();
 
-    const [allMap, resolvedNtfyTopic] = await Promise.all([
+    const needsCloudNtfy = !ntfyTopic && !ntfyJokiTopic && !ntfyTopupTopic;
+    const ntfyCfgPromise = needsCloudNtfy
+      ? getAdminNtfyConfig()
+      : Promise.resolve({
+          topic: sanitizeNtfyTopic(ntfyTopic),
+          jokiTopic: sanitizeNtfyTopic(ntfyJokiTopic),
+          topupTopic: sanitizeNtfyTopic(ntfyTopupTopic)
+        });
+
+    const [allMap, resolvedNtfyCfg] = await Promise.all([
       subsPromise,
-      ntfyTopicPromise,
+      ntfyCfgPromise,
       waitMs > 0 ? new Promise((r) => setTimeout(r, waitMs)) : Promise.resolve()
     ]);
 
+    const normalizedSide = (serviceType === 'joki') ? 'joki' : ((serviceType === 'topup') ? 'topup' : ((serviceType === 'all') ? 'all' : ''));
     const priceStr = total ? ('Rp' + Math.round(Number(total) || 0).toLocaleString('id-ID')) : '';
     const srvStr = topupServer ? ` (${topupServer})` : '';
-    const typeLabel = serviceType === 'topup'
-      ? (`Top-Up${topupUid ? ' UID: ' + topupUid + srvStr : ''}`)
-      : 'Joki / Akun';
+    const typeLabel = normalizedSide === 'topup'
+      ? (`Jasa Top Up${topupUid ? ' · UID: ' + topupUid + srvStr : ''}`)
+      : (normalizedSide === 'all' ? 'Semua Jasa (Joki & Top Up)' : 'Jasa Joki & Akun');
 
-    let notifTitle = '🛎️ Pesanan Baru Masuk! - NORXSTORE';
+    let notifTitle = normalizedSide === 'joki'
+      ? '⚔️ Order Jasa Joki/Akun Baru! - NORXSTORE'
+      : (normalizedSide === 'all' ? '🔔 Order Baru Masuk! - NORXSTORE' : '💎 Order Jasa Top Up Baru! - NORXSTORE');
     if (mode === 'paid') {
-      notifTitle = '💳 Pelanggan Sudah Transfer! - NORXSTORE';
+      notifTitle = normalizedSide === 'joki'
+        ? '💳 Pembayaran Jasa Joki Masuk! - NORXSTORE'
+        : '💳 Pembayaran Top Up Masuk! - NORXSTORE';
     } else if (mode === 'test' || mode === 'ntfy_test') {
-      notifTitle = '🛎️ Tes Push Masuk (App Ditutup) - NORXSTORE';
+      notifTitle = normalizedSide === 'joki'
+        ? '⚔️ Tes Notif Jasa Joki & Akun - NORXSTORE'
+        : (normalizedSide === 'all' ? '🔔 Tes Notif Gabungan (Semua Jasa) - NORXSTORE' : '💎 Tes Notif Jasa Top Up - NORXSTORE');
     }
 
-    const notifBody = `${typeLabel}: ${itemName || 'Pesanan'} · ${priceStr}${paymentMethod ? ' (' + paymentMethod + ')' : ''}`;
+    const notifBody = `${typeLabel} → ${itemName || 'Pesanan'} · ${priceStr}${paymentMethod ? ' (' + paymentMethod + ')' : ''}`;
+    const ntfyTags = normalizedSide === 'joki'
+      ? ['crossed_swords', 'moneybag']
+      : (normalizedSide === 'all' ? ['bell', 'moneybag'] : ['gem', 'zap']);
+
+    const targetNtfyTopics = resolveNtfyTopicsForService(resolvedNtfyCfg, normalizedSide);
 
     const payload = {
       title: notifTitle,
       body: notifBody,
       url: 'https://norxstore.vercel.app/',
-      serviceType: serviceType || 'topup',
+      serviceType: normalizedSide === 'joki' ? 'joki' : 'topup',
       tag: 'admin-new-order-' + (orderId || Date.now())
     };
 
@@ -82,13 +104,30 @@ export default async function handler(req, res) {
       });
     }
 
+    const ntfySendPromise = targetNtfyTopics.length > 0
+      ? Promise.all(
+          targetNtfyTopics.map((t) =>
+            sendNtfyPush({
+              topic: t,
+              title: notifTitle,
+              body: notifBody,
+              url: payload.url,
+              priority: 5,
+              tags: ntfyTags
+            })
+          )
+        ).then((results) => ({
+          ntfySent: results.some((r) => r && r.ntfySent),
+          ntfyTopics: targetNtfyTopics,
+          ntfyResults: results
+        }))
+      : Promise.resolve({ ntfySent: false, ntfyTopics: [] });
+
     const [webRes, ntfyRes, tgRes] = await Promise.all([
       (mode === 'ntfy_test' || adminTargets.length === 0)
         ? Promise.resolve({ sent: 0, targetCount: 0, removedStale: 0 })
         : sendWebPushToTargets(adminTargets, payload),
-      resolvedNtfyTopic
-        ? sendNtfyPush({ topic: resolvedNtfyTopic, title: notifTitle, body: notifBody, url: payload.url, priority: 5 })
-        : Promise.resolve({ ntfySent: false }),
+      ntfySendPromise,
       (mode === 'ntfy_test')
         ? Promise.resolve({ tgSent: false })
         : sendTelegramAdminAlert({ title: notifTitle, body: notifBody })
@@ -98,6 +137,7 @@ export default async function handler(req, res) {
       success: true,
       ...webRes,
       ntfySent: !!ntfyRes.ntfySent,
+      ntfyTopics: ntfyRes.ntfyTopics || [],
       tgSent: !!tgRes.tgSent,
       totalDelivered: (webRes.sent || 0) + (ntfyRes.ntfySent ? 1 : 0) + (tgRes.tgSent ? 1 : 0)
     });
