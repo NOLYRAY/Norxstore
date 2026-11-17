@@ -8033,6 +8033,12 @@ let DEFAULT_PRODUCTS = [
   {id:116,serviceType:"topup",name:"NTE MONTHLY PASS",price:75000,badge:"NEW",icon:"\ud83d\udd2e",desc:"Top-up via UID & Server resmi cepat & aman",cat:"nte",subgroup:"TOP-UP PASS",images:[]}
 ];
 
+const INITIAL_DEFAULT_PRODUCT_IDS = new Set(DEFAULT_PRODUCTS.map(d => Number(d.id)));
+const RTDB_CONFIG_PRODUCTS_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_products__.json';
+const RTDB_CONFIG_IMAGES_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_images__.json';
+const RTDB_CONFIG_IMAGES_BASE_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_images__/images';
+const RTDB_CONFIG_TOPUP_ICONS_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_topup_game_icons__.json';
+
 // ==================== DUAL-SIDE STORE MODE ENGINE (JOKI vs TOP UP) ====================
 let currentStoreSide = (function(){
   try {
@@ -8739,43 +8745,83 @@ let deletedProductIds = (function(){
   return new Set();
 })();
 
-// Restore custom products & deleted IDs from IndexedDB asynchronously for offline & crash recovery
+// Restore cached products, custom products & deleted IDs from IndexedDB asynchronously for offline & crash recovery
 (function initProductsIDB(){
   openNorxIDB().then(db => {
     if(!db) return;
     try {
       const tx = db.transaction(NORX_IDB_STORE, 'readonly');
       const store = tx.objectStore(NORX_IDB_STORE);
+      const reqDel = store.get('deletedProductIds');
       const reqCp = store.get('customProducts');
-      reqCp.onsuccess = () => {
-        if(Array.isArray(reqCp.result) && reqCp.result.length > 0){
+      const reqCached = store.get('cachedProducts');
+      const reqTs = store.get('productsUpdatedAt');
+
+      let delLoaded = null;
+      let cpLoaded = null;
+      let cachedLoaded = null;
+      let idbTs = 0;
+      let doneCount = 0;
+
+      const finish = () => {
+        doneCount++;
+        if(doneCount < 4) return;
+        let changed = false;
+
+        if(Array.isArray(delLoaded)){
+          delLoaded.forEach(id => {
+            const nid = Number(id);
+            if(!deletedProductIds.has(nid)){
+              deletedProductIds.add(nid);
+              changed = true;
+            }
+          });
+          safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
+        }
+
+        if(Array.isArray(cpLoaded) && cpLoaded.length > 0){
           const map = new Map(customProductsCache.map(p => [Number(p.id), p]));
-          let changed = false;
-          reqCp.result.forEach(p => {
+          cpLoaded.forEach(p => {
             const pid = Number(p && p.id);
-            if(!isNaN(pid) && pid > 0 && !map.has(pid)){
-              // Jangan pulihkan snapshot duplikat usang yang bertuliskan '(Salinan)'
-              if(!p.name || !p.name.includes('(Salinan)')){
+            if(!isNaN(pid) && pid > 0 && !deletedProductIds.has(pid) && (!p.name || !p.name.includes('(Salinan)'))){
+              const existing = map.get(pid);
+              if(!existing){
                 customProductsCache.push(p);
+                map.set(pid, p);
                 changed = true;
               }
             }
           });
-          if(changed){
-            safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
-            products = mergeProductsData(products);
-            renderProducts();
-            if(isAdminOpen()) renderAdminProductList();
+          safeSetItem('norxstore_custom_products', JSON.stringify(customProductsCache));
+        }
+
+        const localTs = Number(safeGetItem('norxstore_products_updated_at', '0')) || 0;
+        if(Array.isArray(cachedLoaded) && cachedLoaded.length > 0 && (idbTs >= localTs || localTs === 0)){
+          const cleaned = cachedLoaded.filter(p => p && p.id && !deletedProductIds.has(Number(p.id)) && (!p.name || !p.name.includes('(Salinan)')));
+          products = mergeProductsData(cleaned);
+          if(idbTs > localTs) safeSetItem('norxstore_products_updated_at', String(idbTs));
+          changed = true;
+        } else if(changed){
+          products = mergeProductsData(products);
+        }
+
+        if(changed){
+          renderProducts();
+          if(isAdminOpen()){
+            renderAdminProductList();
+            if(typeof renderAdminTopupProductList === 'function') renderAdminTopupProductList();
           }
         }
       };
-      const reqDel = store.get('deletedProductIds');
-      reqDel.onsuccess = () => {
-        if(Array.isArray(reqDel.result)){
-          reqDel.result.forEach(id => deletedProductIds.add(Number(id)));
-          safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
-        }
-      };
+
+      reqDel.onsuccess = () => { delLoaded = reqDel.result; finish(); };
+      reqDel.onerror = finish;
+      reqCp.onsuccess = () => { cpLoaded = reqCp.result; finish(); };
+      reqCp.onerror = finish;
+      reqCached.onsuccess = () => { cachedLoaded = reqCached.result; finish(); };
+      reqCached.onerror = finish;
+      reqTs.onsuccess = () => { idbTs = Number(reqTs.result || 0) || 0; finish(); };
+      reqTs.onerror = finish;
     } catch(e){}
   });
 })();
@@ -8806,10 +8852,15 @@ function mergeProductsData(parsed){
     if(seenIds.has(pid)) return;
 
     const dp = DEFAULT_PRODUCTS.find(d => Number(d.id) === pid);
-    let pImgs = (typeof customProductImages === 'object' && customProductImages && (customProductImages[pid] || customProductImages[String(pid)]) && Array.isArray(customProductImages[pid] || customProductImages[String(pid)]) && (customProductImages[pid] || customProductImages[String(pid)]).length > 0)
-      ? [...(customProductImages[pid] || customProductImages[String(pid)])]
-      : ((typeof productImagesCache === 'object' && productImagesCache && (productImagesCache[pid] || productImagesCache[String(pid)]) && Array.isArray(productImagesCache[pid] || productImagesCache[String(pid)]) && (productImagesCache[pid] || productImagesCache[String(pid)]).length > 0)
-          ? [...(productImagesCache[pid] || productImagesCache[String(pid)])]
+    const hasCustomImgs = typeof customProductImages === 'object' && customProductImages && (Array.isArray(customProductImages[pid]) || Array.isArray(customProductImages[String(pid)]));
+    const customImgArr = hasCustomImgs ? (Array.isArray(customProductImages[pid]) ? customProductImages[pid] : customProductImages[String(pid)]) : null;
+    const hasCachedImgs = typeof productImagesCache === 'object' && productImagesCache && (Array.isArray(productImagesCache[pid]) || Array.isArray(productImagesCache[String(pid)]));
+    const cachedImgArr = hasCachedImgs ? (Array.isArray(productImagesCache[pid]) ? productImagesCache[pid] : productImagesCache[String(pid)]) : null;
+
+    let pImgs = hasCustomImgs
+      ? [...customImgArr.filter(Boolean)]
+      : (hasCachedImgs && cachedImgArr.length > 0
+          ? [...cachedImgArr.filter(Boolean)]
           : (Array.isArray(p.images) && p.images.length > 0
               ? p.images
               : (dp && Array.isArray(dp.images) && dp.images.length > 0
@@ -8856,12 +8907,32 @@ function getProducts(){
   return products;
 }
 
-function setProducts(data){
+function pushProductsPayloadToCloudRest(cloudPayload){
+  try {
+    const payloadStr = JSON.stringify(cloudPayload);
+    fetch(RTDB_CONFIG_PRODUCTS_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: payloadStr,
+      keepalive: payloadStr.length < 60000
+    }).then(res => {
+      if(!res.ok && typeof showToast === 'function'){
+        showToast('⚠️ Perubahan produk tersimpan lokal, tetapi gagal sinkron ke cloud (HTTP ' + res.status + ').');
+      }
+    }).catch(e => {
+      console.warn('REST sync __config_products__ error:', e);
+    });
+  } catch(e){
+    console.warn('Serialize __config_products__ error:', e);
+  }
+}
+
+function setProducts(data, opts){
   if(!Array.isArray(data)) return;
+  const options = (opts && typeof opts === 'object') ? opts : {};
   products = data;
 
-  // Bersihkan data gambar base64 besar dari cache localStorage agar TIDAK PERNAH melebihi kuota 5MB browser!
-  // Gambar tetap utuh di objek memori, Firebase, dan IndexedDB.
+  // Bersihkan data gambar base64 besar dari cache localStorage & cloud agar tidak pernah melebihi kuota 5MB / payload RTDB!
   const leanForLocalStorage = (arr) => {
     if(!Array.isArray(arr)) return [];
     return arr.map(p => {
@@ -8876,53 +8947,61 @@ function setProducts(data){
 
   // Pastikan gambar kustom base64 tersimpan terpisah di customProductImages (bukan di __config_products__)
   let syncedCustomImgNeeded = false;
+  const defaultIds = (typeof INITIAL_DEFAULT_PRODUCT_IDS !== 'undefined') ? INITIAL_DEFAULT_PRODUCT_IDS : new Set();
   data.forEach(p => {
     if(!p || p.id === undefined || !Array.isArray(p.images)) return;
     const dataImgs = p.images.filter(img => typeof img === 'string' && img.startsWith('data:'));
     if(dataImgs.length > 0 && (!defaultIds.has(Number(p.id)) || p.isCustom)){
       const pidKey = String(p.id);
-      if(!Array.isArray(customProductImages[pidKey]) || customProductImages[pidKey].length === 0){
+      if(customProductImages[pidKey] === undefined){
         customProductImages[p.id] = [...dataImgs];
         customProductImages[pidKey] = [...dataImgs];
         syncedCustomImgNeeded = true;
       }
     }
   });
-  if(syncedCustomImgNeeded){
+  if(syncedCustomImgNeeded && !options.skipCloud){
     saveCustomImagesLocal();
     if(typeof syncCustomImagesToCloud === 'function') syncCustomImagesToCloud();
   }
 
+  const nowTs = Number(options.updatedAt) || Date.now();
   const leanAll = leanForLocalStorage(data);
-  const leanCustom = leanForLocalStorage(customProductsCache);
+  customProductsCache = leanAll.filter(p => p && p.id !== undefined && (!defaultIds.has(Number(p.id)) || p.isCustom));
+  const leanCustom = customProductsCache;
 
   safeSetItem('norxstore_products_cache', JSON.stringify(leanAll));
   safeSetItem('norxstore_custom_products', JSON.stringify(leanCustom));
   safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
+  safeSetItem('norxstore_products_updated_at', String(nowTs));
 
   // Simpan ke IndexedDB untuk ketahanan maksimal
   openNorxIDB().then(db => {
     if(!db) return;
     try {
       const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
-      tx.objectStore(NORX_IDB_STORE).put(data, 'cachedProducts');
-      tx.objectStore(NORX_IDB_STORE).put(customProductsCache, 'customProducts');
+      tx.objectStore(NORX_IDB_STORE).put(leanAll, 'cachedProducts');
+      tx.objectStore(NORX_IDB_STORE).put(leanCustom, 'customProducts');
       tx.objectStore(NORX_IDB_STORE).put(Array.from(deletedProductIds), 'deletedProductIds');
+      tx.objectStore(NORX_IDB_STORE).put(nowTs, 'productsUpdatedAt');
     } catch(e){}
   });
 
-  // Sinkronisasi versi ringan (~25KB tanpa base64) ke __config_products__ agar RTDB orders tetap super cepat
-  if(window.fbAvailable && fbDB && fbDB.ref){
-    try {
-      fbDB.ref('norxstore/orders/__config_products__').set({
-        products: leanAll,
-        customProducts: leanCustom,
-        deletedIds: Array.from(deletedProductIds),
-        updatedAt: Date.now()
-      }).catch(e => console.warn('Notice sync __config_products__:', e));
-
-      fbDB.ref('norxstore/products').set(leanAll).catch(()=>{});
-    } catch(e){}
+  // Sinkronisasi versi ringan (~25KB tanpa base64) ke __config_products__ via WebSocket SDK + HTTPS REST keepalive
+  if(!options.skipCloud){
+    const cloudPayload = {
+      products: leanAll,
+      customProducts: leanCustom,
+      deletedIds: Array.from(deletedProductIds),
+      updatedAt: nowTs
+    };
+    pushProductsPayloadToCloudRest(cloudPayload);
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      try {
+        fbDB.ref('norxstore/orders/__config_products__').set(cloudPayload).catch(e => console.warn('Notice sync __config_products__:', e));
+        fbDB.ref('norxstore/products').set(leanAll).catch(()=>{});
+      } catch(e){}
+    }
   }
 }
 
@@ -16705,27 +16784,67 @@ let customProductImages = (function(){
   return {};
 })();
 
-function saveCustomImagesLocal(){
+function saveCustomImagesLocal(preserveTs){
+  const nowTs = preserveTs ? (Number(safeGetItem('norxstore_images_updated_at', '0')) || Date.now()) : Date.now();
   try {
     safeSetItem('norxstore_custom_images', JSON.stringify(customProductImages));
+    if(!preserveTs) safeSetItem('norxstore_images_updated_at', String(nowTs));
   } catch(e){}
   openNorxIDB().then(db => {
     if(!db) return;
     try {
       const tx = db.transaction(NORX_IDB_STORE, 'readwrite');
       tx.objectStore(NORX_IDB_STORE).put(customProductImages, 'customProductImages');
+      tx.objectStore(NORX_IDB_STORE).put(nowTs, 'customImagesUpdatedAt');
     } catch(e){}
   });
 }
 
-function syncCustomImagesToCloud(){
+function syncCustomImagesToCloud(targetProdId){
+  const nowTs = Number(safeGetItem('norxstore_images_updated_at', '0')) || Date.now();
+  safeSetItem('norxstore_images_updated_at', String(nowTs));
+  const emptyIds = Object.keys(customProductImages || {}).filter(k => Array.isArray(customProductImages[k]) && customProductImages[k].length === 0);
+  const fullPayload = {
+    images: customProductImages,
+    emptyIds,
+    updatedAt: nowTs
+  };
+
+  // Targeted REST PUT per produk (super cepat & aman dengan keepalive <60KB saat langsung refresh)
+  if(targetProdId !== undefined && targetProdId !== null){
+    const pidKey = String(targetProdId);
+    const valForPid = Array.isArray(customProductImages[pidKey]) ? customProductImages[pidKey] : [];
+    try {
+      const itemJson = JSON.stringify(valForPid);
+      fetch(`${RTDB_CONFIG_IMAGES_BASE_URL}/${encodeURIComponent(pidKey)}.json`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: itemJson,
+        keepalive: itemJson.length < 60000
+      }).catch(()=>{});
+      fetch('https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_images__/updatedAt.json', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(nowTs),
+        keepalive: true
+      }).catch(()=>{});
+    } catch(e){}
+  }
+
+  try {
+    const fullStr = JSON.stringify(fullPayload);
+    fetch(RTDB_CONFIG_IMAGES_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: fullStr,
+      keepalive: fullStr.length < 60000
+    }).catch(()=>{});
+  } catch(e){}
+
   if(window.fbAvailable && fbDB && fbDB.ref){
     try {
       // Node norxstore/orders/__config_images__ memiliki izin tulis di Firebase RTDB
-      fbDB.ref('norxstore/orders/__config_images__').set({
-        images: customProductImages,
-        updatedAt: Date.now()
-      }).catch(e=>console.warn('Sync notice config_images:', e));
+      fbDB.ref('norxstore/orders/__config_images__').set(fullPayload).catch(e=>console.warn('Sync notice config_images:', e));
       fbDB.ref('norxstore/images').set(productImagesCache).catch(()=>{});
     } catch(e){}
   }
@@ -16836,7 +16955,7 @@ function addImageToProduct(id, url){
   
   saveCustomImagesLocal();
   setProductImages(all);
-  syncCustomImagesToCloud();
+  syncCustomImagesToCloud(targetId);
 
   const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
   if(prod){
@@ -16870,7 +16989,7 @@ function replaceImageInProduct(id, idx, url){
   
   saveCustomImagesLocal();
   setProductImages(all);
-  syncCustomImagesToCloud();
+  syncCustomImagesToCloud(targetId);
 
   const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
   if(prod){
@@ -16903,7 +17022,7 @@ function removeImageFromProduct(id, idx){
   
   saveCustomImagesLocal();
   setProductImages(all);
-  syncCustomImagesToCloud();
+  syncCustomImagesToCloud(targetId);
 
   const prod = products.find(p => p.id === targetId || (numId && p.id === numId));
   if(prod){
@@ -16935,7 +17054,7 @@ function resetProductImageToDefault(id){
     setProducts(products);
   }
   
-  syncCustomImagesToCloud();
+  syncCustomImagesToCloud(targetId);
   renderAdminImgList();
   renderFormProductImagesUI();
   renderProducts();
@@ -17287,7 +17406,7 @@ function idlePreloadRemainingImages(){
         const customData = reqCustom.result;
         if(customData && typeof customData === 'object' && Object.keys(customData).length > 0){
           for(const k in customData){
-            if(Array.isArray(customData[k]) && customData[k].length > 0){
+            if(Array.isArray(customData[k])){
               customProductImages[k] = [...customData[k]];
               productImagesCache[k] = [...customData[k]];
             }
@@ -17306,7 +17425,7 @@ function idlePreloadRemainingImages(){
         const idbData = req.result;
         if(idbData && typeof idbData === 'object' && Object.keys(idbData).length > 0){
           for(const k in idbData){
-            if(customProductImages && (customProductImages[k] || customProductImages[String(k)])) continue;
+            if(customProductImages && (Array.isArray(customProductImages[k]) || Array.isArray(customProductImages[String(k)]))) continue;
             if(Array.isArray(idbData[k]) && idbData[k].length > 0){
               productImagesCache[k] = idbData[k];
             }
@@ -17368,20 +17487,28 @@ fbDB.ref('norxstore/orders/__config_products__').on('value', snap=>{
   try {
     const cloudCfg = snap.val();
     if(cloudCfg && Array.isArray(cloudCfg.products)){
-      const stripDataForStorage = (arr) => (Array.isArray(arr) ? arr.map(p => {
-        if(!p || typeof p !== 'object' || !Array.isArray(p.images)) return p;
-        return { ...p, images: p.images.filter(img => typeof img === 'string' && !img.startsWith('data:')) };
-      }) : []);
+      const cloudTs = Number(cloudCfg.updatedAt || 0);
+      const localTs = Number(safeGetItem('norxstore_products_updated_at', '0')) || 0;
+
+      // Jangan biarkan snapshot cloud yang lebih lama menimpa perubahan lokal terbaru!
+      if(localTs > 0 && cloudTs < localTs - 1500){
+        if(!window._norxAutoRepushedProducts){
+          window._norxAutoRepushedProducts = true;
+          setProducts(products, { updatedAt: localTs });
+        }
+        productsDataReady = true;
+        tryHideSplash();
+        return;
+      }
+
       if(Array.isArray(cloudCfg.deletedIds)){
         cloudCfg.deletedIds.forEach(id => deletedProductIds.add(Number(id)));
-        safeSetItem('norxstore_deleted_product_ids', JSON.stringify(Array.from(deletedProductIds)));
       }
       if(Array.isArray(cloudCfg.customProducts)){
-        customProductsCache = cloudCfg.customProducts.filter(p => p && p.id && (!p.name || !p.name.includes('(Salinan)')));
-        safeSetItem('norxstore_custom_products', JSON.stringify(stripDataForStorage(customProductsCache)));
+        customProductsCache = cloudCfg.customProducts.filter(p => p && p.id && !deletedProductIds.has(Number(p.id)) && (!p.name || !p.name.includes('(Salinan)')));
       }
-      products = mergeProductsData(cloudCfg.products);
-      safeSetItem('norxstore_products_cache', JSON.stringify(stripDataForStorage(products)));
+      const nextProducts = mergeProductsData(cloudCfg.products);
+      setProducts(nextProducts, { skipCloud: true, updatedAt: cloudTs || Date.now() });
       productsDataReady = true;
       renderProducts();
       tryHideSplash();
@@ -17441,8 +17568,8 @@ fbDB.ref('norxstore/images').on('value', snap=>{
   const val = snap.val();
   if(val && typeof val === 'object' && Object.keys(val).length > 0){
     for(const k in val){
-      // JANGAN timpa foto custom produk yang telah diunggah admin
-      if(customProductImages && (customProductImages[k] || customProductImages[String(k)]) && Array.isArray(customProductImages[k] || customProductImages[String(k)])){
+      // JANGAN timpa foto custom produk yang telah diunggah/dihapus admin
+      if(customProductImages && (Array.isArray(customProductImages[k]) || Array.isArray(customProductImages[String(k)]))){
         continue;
       }
       if(Array.isArray(val[k])){
@@ -20752,8 +20879,20 @@ fbDB.ref('norxstore/orders/__config_topup_payment__').on('value', snap => {
 fbDB.ref('norxstore/orders/__config_topup_game_icons__').on('value', snap => {
   try {
     const val = snap.val();
-    if(val && val.icons && typeof applyTopupGameIconsConfig === 'function'){
-      applyTopupGameIconsConfig(val.icons);
+    if(val && typeof val === 'object'){
+      const cloudIconTs = Number(val.updatedAt || 0);
+      const localIconTs = Number(safeGetItem('norxstore_topup_icons_updated_at', '0')) || 0;
+      if(localIconTs > 0 && cloudIconTs < localIconTs - 1500){
+        if(!window._norxAutoRepushedTopupIcons){
+          window._norxAutoRepushedTopupIcons = true;
+          if(typeof syncTopupGameIconsToCloud === 'function') syncTopupGameIconsToCloud(localIconTs);
+        }
+        return;
+      }
+      if(typeof applyTopupGameIconsConfig === 'function'){
+        if(cloudIconTs) safeSetItem('norxstore_topup_icons_updated_at', String(cloudIconTs));
+        applyTopupGameIconsConfig(val.icons || {});
+      }
     }
   } catch(e){}
 });
@@ -20772,9 +20911,21 @@ fbDB.ref('norxstore/orders/__config_ntfy__').on('value', snap => {
 fbDB.ref('norxstore/orders/__config_images__').on('value', snap => {
   try {
     const val = snap.val();
-    const cloudCustomImgs = val && val.images;
+    if(!val || typeof val !== 'object') return;
+    const cloudImgTs = Number(val.updatedAt || 0);
+    const localImgTs = Number(safeGetItem('norxstore_images_updated_at', '0')) || 0;
+    if(localImgTs > 0 && cloudImgTs < localImgTs - 1500){
+      if(!window._norxAutoRepushedImages){
+        window._norxAutoRepushedImages = true;
+        if(typeof syncCustomImagesToCloud === 'function') syncCustomImagesToCloud();
+      }
+      return;
+    }
+
+    const cloudCustomImgs = val.images;
+    const emptyIds = Array.isArray(val.emptyIds) ? val.emptyIds : [];
+    let hasImgChange = false;
     if(cloudCustomImgs && typeof cloudCustomImgs === 'object'){
-      let hasImgChange = false;
       for(const k in cloudCustomImgs){
         if(Array.isArray(cloudCustomImgs[k])){
           customProductImages[k] = [...cloudCustomImgs[k]];
@@ -20784,15 +20935,23 @@ fbDB.ref('norxstore/orders/__config_images__').on('value', snap => {
           hasImgChange = true;
         }
       }
-      if(hasImgChange){
-        saveCustomImagesLocal();
-        saveImagesCache(productImagesCache);
-        renderProducts();
-        if(isAdminOpen()){
-          if(typeof renderAdminImgList === 'function') renderAdminImgList();
-          if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
-          if(typeof renderAdminTopupProductList === 'function') renderAdminTopupProductList();
-        }
+    }
+    emptyIds.forEach(k => {
+      customProductImages[k] = [];
+      productImagesCache[k] = [];
+      const p = products.find(p => p.id == k);
+      if(p) p.images = [];
+      hasImgChange = true;
+    });
+    if(hasImgChange){
+      if(cloudImgTs) safeSetItem('norxstore_images_updated_at', String(cloudImgTs));
+      saveCustomImagesLocal(true);
+      saveImagesCache(productImagesCache);
+      renderProducts();
+      if(isAdminOpen()){
+        if(typeof renderAdminImgList === 'function') renderAdminImgList();
+        if(typeof renderFormProductImagesUI === 'function') renderFormProductImagesUI();
+        if(typeof renderAdminTopupProductList === 'function') renderAdminTopupProductList();
       }
     }
   } catch(e){}
@@ -23430,8 +23589,19 @@ function applyTopupGameIconsConfig(incoming){
   if(typeof renderAdminTopupGameIconsUI === 'function') renderAdminTopupGameIconsUI();
 }
 
-function syncTopupGameIconsToCloud(){
-  const payload = { icons: getTopupGameIconsConfig(), updatedAt: Date.now() };
+function syncTopupGameIconsToCloud(overrideTs){
+  const ts = Number(overrideTs) || Date.now();
+  safeSetItem('norxstore_topup_icons_updated_at', String(ts));
+  const payload = { icons: getTopupGameIconsConfig(), updatedAt: ts };
+  try {
+    const bodyStr = JSON.stringify(payload);
+    fetch(RTDB_CONFIG_TOPUP_ICONS_URL, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: bodyStr,
+      keepalive: bodyStr.length < 60000
+    }).catch(()=>{});
+  } catch(e){}
   if(window.fbAvailable && fbDB && fbDB.ref){
     fbDB.ref('norxstore/orders/__config_topup_game_icons__').set(payload).catch(()=>{});
   }
@@ -26098,7 +26268,7 @@ function applyBulkSubcategory(){
   products = products.map(p => {
     if(bulkSelectedProdIds.has(p.id)){
       updatedCount++;
-      return { ...p, subgroup: targetSubgroup };
+      return { ...p, subgroup: targetSubgroup, isCustom: true };
     }
     return p;
   });
@@ -26313,7 +26483,7 @@ function addNewProduct(){
       customProductImages[String(newId)] = [...stagedNewProductImages];
       saveCustomImagesLocal();
       setProductImages(all);
-      syncCustomImagesToCloud();
+      syncCustomImagesToCloud(newId);
       stagedNewProductImages = [];
     }
 
@@ -26454,7 +26624,7 @@ function deleteProduct(id){
   delete customProductImages[String(prodId)];
   saveCustomImagesLocal();
   setProductImages(imgs);
-  syncCustomImagesToCloud();
+  syncCustomImagesToCloud(prodId);
 
   cart = cart.filter(item => Number(item.id) !== prodId);
   saveCart();
@@ -26689,7 +26859,6 @@ function reorderProduct(fromIndex, toIndex){
   products.splice(toIndex, 0, itemToMove);
   
   setProducts([...products]);
-  safeSetItem('norxstore_products_cache', JSON.stringify(products));
   renderAdminProductList();
   renderProducts();
   showToast('✅ Urutan produk berhasil dipindahkan');
@@ -27366,7 +27535,7 @@ function saveTopupProductFromAdmin(){
       customProductImages[String(newId)] = [...stagedTopupProductImages];
       saveCustomImagesLocal();
       setProductImages(all);
-      syncCustomImagesToCloud();
+      syncCustomImagesToCloud(newId);
       stagedTopupProductImages = [];
     }
     const initSold = (!isNaN(soldVal) && soldVal >= 0) ? soldVal : 0;
@@ -27440,12 +27609,27 @@ function quickSaveProductPrice(prodId, inputId){
     price: parsed.price,
     maxPrice: parsed.maxPrice || 0,
     priceRaw: parsed.isRange ? raw : '',
+    isCustom: true,
     basePrice: parsed.price,
     baseMaxPrice: parsed.maxPrice || 0,
     countryPrice: {},
     countryMaxPrice: {},
     countryMarkup: {}
   };
+  try {
+    const rawAdj = safeGetItem('norxstore_price_adjustments', '');
+    if(rawAdj){
+      const adjMap = JSON.parse(rawAdj) || {};
+      if(adjMap[idNum] || adjMap[String(idNum)]){
+        delete adjMap[idNum];
+        delete adjMap[String(idNum)];
+        safeSetItem('norxstore_price_adjustments', JSON.stringify(adjMap));
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/priceAdjustments/' + idNum).remove().catch(()=>{});
+        }
+      }
+    }
+  } catch(e){}
   setProducts(products);
   renderProducts();
   renderAdminProductList();
@@ -27571,7 +27755,7 @@ function handleTopupQuickProdIconUpload(event){
       customProductImages[pidStr] = [dataUrl];
       saveCustomImagesLocal();
       setProductImages(all);
-      syncCustomImagesToCloud();
+      syncCustomImagesToCloud(prodId);
       const idx = products.findIndex(p => Number(p.id) === prodId);
       if(idx !== -1){
         products[idx].images = [dataUrl];
