@@ -3858,9 +3858,96 @@ body.dark-mode .topup-wb-status{
   border:1.5px solid #e2e8f0;
   background:#f8fafc;
   color:#334155;
-  font-size:11.5px;
+  font-size:12px;
   font-weight:700;
   cursor:pointer;
+}
+.checkout-pay-target-card{
+  background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);
+  border:1.5px solid #7dd3fc;
+  border-radius:14px;
+  padding:12px 13px;
+  text-align:center;
+}
+.checkout-pay-target-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  background:#ffffff;
+  color:#0369a1;
+  border:1px solid #bae6fd;
+  border-radius:999px;
+  padding:3px 10px;
+  font-size:10.5px;
+  font-weight:800;
+  margin-bottom:8px;
+}
+.checkout-pay-target-num{
+  font-family:'JetBrains Mono',monospace;
+  font-size:16px;
+  font-weight:800;
+  color:#0c4a6e;
+  letter-spacing:.3px;
+}
+.topup-qris-actions{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-top:8px;
+}
+.topup-qris-action-btn{
+  border:1px solid #bae6fd;
+  background:#ffffff;
+  color:#0369a1;
+  border-radius:8px;
+  padding:6px 11px;
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+  transition:background .15s ease,transform .12s ease;
+}
+.topup-qris-action-btn:hover{background:#e0f2fe}
+.topup-qris-action-btn.primary{
+  background:#0284c7;
+  border-color:#0284c7;
+  color:#ffffff;
+}
+.topup-qris-action-btn.primary:hover{background:#0369a1}
+.topup-app-launch-btn{
+  width:100%;
+  min-height:46px;
+  border:none;
+  border-radius:12px;
+  color:#ffffff;
+  font-size:13px;
+  font-weight:800;
+  padding:11px 14px;
+  margin-top:10px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:0 6px 16px rgba(2,132,199,.24);
+  transition:transform .14s ease,filter .14s ease;
+}
+.topup-app-launch-btn:hover{filter:brightness(1.06);transform:translateY(-1px)}
+.topup-app-launch-btn:active{transform:scale(.98)}
+.topup-ewallet-steps{
+  text-align:left;
+  background:#ffffff;
+  border:1px dashed #93c5fd;
+  border-radius:10px;
+  padding:9px 11px;
+  margin-top:10px;
+  font-size:11px;
+  color:#334155;
+  line-height:1.5;
 }
 .topup-inv-sec-btn:hover{background:#f1f5f9;border-color:#cbd5e1}
 
@@ -5362,6 +5449,7 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
 <div class="pay-option" data-method="ShopeePay" onclick="selectPay(this,'ShopeePay')"><div class="pay-left"><span class="pay-icon">🧡</span><div class="pay-info"><span class="pay-name">ShopeePay</span><span class="pay-fee-sub">Proses Instan</span></div></div><div class="pay-right"><span class="pay-price">-</span><span class="pay-check">✓</span></div></div>
 <div class="pay-option" data-method="SeaBank" onclick="selectPay(this,'SeaBank')"><div class="pay-left"><span class="pay-icon">🏦</span><div class="pay-info"><span class="pay-name">SeaBank</span><span class="pay-fee-sub">Proses Instan</span></div></div><div class="pay-right"><span class="pay-price">-</span><span class="pay-check">✓</span></div></div>
 </div>
+<div id="modalTopupPayTargetPreview" style="display:none;margin-top:12px"></div>
 <div class="modal-label" id="modalChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridModal"></div>
 
@@ -5501,6 +5589,7 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
 <div class="pay-option" data-method="ShopeePay" onclick="selectCartPay(this,'ShopeePay')"><div class="pay-left"><span class="pay-icon">🧡</span><div class="pay-info"><span class="pay-name">ShopeePay</span><span class="pay-fee-sub">Proses Instan</span></div></div><div class="pay-right"><span class="pay-price">-</span><span class="pay-check">✓</span></div></div>
 <div class="pay-option" data-method="SeaBank" onclick="selectCartPay(this,'SeaBank')"><div class="pay-left"><span class="pay-icon">🏦</span><div class="pay-info"><span class="pay-name">SeaBank</span><span class="pay-fee-sub">Proses Instan</span></div></div><div class="pay-right"><span class="pay-price">-</span><span class="pay-check">✓</span></div></div>
 </div>
+<div id="cartTopupPayTargetPreview" style="display:none;margin-top:10px"></div>
 <div class="modal-label" id="cartStepChatAdminLabel" style="margin-top:12px">Chat ke Admin</div>
 <div class="admin-grid" id="adminGridCart"></div>
 
@@ -8062,6 +8151,7 @@ const RTDB_CONFIG_PRODUCTS_URL = 'https://norxstore-id-default-rtdb.asia-southea
 const RTDB_CONFIG_IMAGES_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_images__.json';
 const RTDB_CONFIG_IMAGES_BASE_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_images__/images';
 const RTDB_CONFIG_TOPUP_ICONS_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_topup_game_icons__.json';
+const RTDB_CONFIG_TOPUP_PAYMENT_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_topup_payment__.json';
 
 // ==================== DUAL-SIDE STORE MODE ENGINE (JOKI vs TOP UP) ====================
 let currentStoreSide = (function(){
@@ -8406,13 +8496,277 @@ function resolveTopupPaymentTarget(methodName, cfgObj = null){
   };
 }
 
+function getPaymentAppMeta(target){
+  const key = (target && target.key) ? String(target.key).toLowerCase() : 'custom';
+  const map = {
+    dana: {
+      label: 'DANA',
+      icon: '💙',
+      gradient: 'linear-gradient(135deg,#008ce3,#0284c7)',
+      androidIntent: 'intent://#Intent;scheme=dana;package=id.dana;S.browser_fallback_url=https%3A%2F%2Flink.dana.id%2F;end',
+      iosScheme: 'dana://',
+      webUrl: 'https://link.dana.id/'
+    },
+    gopay: {
+      label: 'GoPay / Gojek',
+      icon: '💚',
+      gradient: 'linear-gradient(135deg,#00aa13,#059669)',
+      androidIntent: 'intent://gopay#Intent;scheme=gojek;package=com.gojek.app;S.browser_fallback_url=https%3A%2F%2Fgopay.co.id%2F;end',
+      iosScheme: 'gojek://gopay',
+      webUrl: 'https://gopay.co.id/'
+    },
+    ovo: {
+      label: 'OVO',
+      icon: '🟣',
+      gradient: 'linear-gradient(135deg,#4c3494,#6d28d9)',
+      androidIntent: 'intent://#Intent;scheme=ovo;package=ovo.id;S.browser_fallback_url=https%3A%2F%2Fwww.ovo.id%2F;end',
+      iosScheme: 'ovo://',
+      webUrl: 'https://www.ovo.id/'
+    },
+    shopeepay: {
+      label: 'ShopeePay',
+      icon: '🧡',
+      gradient: 'linear-gradient(135deg,#ee4d2d,#ea580c)',
+      androidIntent: 'intent://#Intent;scheme=shopeeid;package=com.shopee.id;S.browser_fallback_url=https%3A%2F%2Fshopee.co.id%2F;end',
+      iosScheme: 'shopeeid://',
+      webUrl: 'https://shopee.co.id/'
+    },
+    seabank: {
+      label: 'SeaBank',
+      icon: '🏦',
+      gradient: 'linear-gradient(135deg,#f97316,#ea580c)',
+      androidIntent: 'intent://#Intent;scheme=seabank;package=id.co.seabank.banking;S.browser_fallback_url=https%3A%2F%2Fwww.seabank.co.id%2F;end',
+      iosScheme: 'seabank://',
+      webUrl: 'https://www.seabank.co.id/'
+    }
+  };
+  return map[key] || {
+    label: (target && target.label) ? target.label : 'E-Wallet',
+    icon: (target && target.icon) ? target.icon : '💳',
+    gradient: 'linear-gradient(135deg,#0284c7,#0ea5e9)',
+    androidIntent: '',
+    iosScheme: '',
+    webUrl: ''
+  };
+}
+
+function silentCopyText(str){
+  const clean = String(str || '').trim();
+  if(!clean) return;
+  try {
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(clean).catch(()=>{});
+      return;
+    }
+  } catch(e){}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = clean;
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  } catch(e){}
+}
+
+function launchPaymentAppUrl(meta){
+  if(!meta) return false;
+  const ua = navigator.userAgent || '';
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua);
+  if(isAndroid && meta.androidIntent){
+    try {
+      const a = document.createElement('a');
+      a.href = meta.androidIntent;
+      a.rel = 'noopener noreferrer';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(()=>{ try { a.remove(); } catch(e){} }, 100);
+      return true;
+    } catch(e){
+      try { window.location.href = meta.androidIntent; return true; } catch(err){}
+    }
+  }
+  if(isIOS && meta.iosScheme){
+    try {
+      window.location.href = meta.iosScheme;
+      return true;
+    } catch(e){}
+  }
+  return false;
+}
+
+function launchPaymentAppForOrder(orderId, opts = {}){
+  const ord = (typeof allOrders !== 'undefined' && orderId) ? allOrders[orderId] : null;
+  if(!ord) return;
+  const cfg = getTopupPaymentConfig();
+  const target = resolveTopupPaymentTarget(ord.paymentMethod || 'DANA', cfg);
+  if(target.type === 'qris') return;
+  const meta = getPaymentAppMeta(target);
+  const destNum = String(target.number || '').trim();
+  const totalIdr = Math.max(0, Math.round(Number(ord.total) || 0));
+  if(destNum){
+    silentCopyText(destNum);
+  } else {
+    silentCopyText(String(totalIdr));
+  }
+  const launched = launchPaymentAppUrl(meta);
+  if(launched){
+    showToast(destNum
+      ? `🚀 Membuka ${meta.label}! Nomor ${destNum} otomatis tersalin — transfer Rp${totalIdr.toLocaleString('id-ID')}.`
+      : `🚀 Membuka aplikasi ${meta.label}...`);
+  } else {
+    showToast(destNum
+      ? `📋 Nomor ${meta.label} (${destNum}) tersalin! Buka app di HP & transfer Rp${totalIdr.toLocaleString('id-ID')}.`
+      : `💡 Silakan selesaikan pembayaran ${meta.label} sebesar Rp${totalIdr.toLocaleString('id-ID')}.`);
+  }
+}
+
+function downloadTopupQrisImage(){
+  const cfg = getTopupPaymentConfig();
+  const qris = String(cfg.qrisImage || '').trim();
+  if(!qris){
+    showToast('⚠️ Foto QRIS belum diatur Admin');
+    return;
+  }
+  try {
+    if(qris.startsWith('data:')){
+      const a = document.createElement('a');
+      a.href = qris;
+      a.download = 'QRIS-NORXSTORE.jpg';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      showToast('✅ Foto QRIS disimpan! Buka DANA / GoPay / OVO / Bank lalu scan dari Galeri.');
+      return;
+    }
+    fetch(qris).then(r => r.blob()).then(blob => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'QRIS-NORXSTORE.jpg';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 4000);
+      showToast('✅ Foto QRIS disimpan! Buka DANA / GoPay / OVO / Bank lalu scan dari Galeri.');
+    }).catch(()=>{
+      openImageViewer(qris);
+      showToast('💡 Tekan & tahan gambar QRIS untuk menyimpan ke Galeri');
+    });
+  } catch(e){
+    openImageViewer(qris);
+  }
+}
+
 function renderCheckoutPayTargetPreview(mode){
-  // Tidak menampilkan preview kotak salin & deskripsi nomor/merchant di modal checkout sesuai preferensi toko
   const isModal = (mode === 'modal');
   const box = document.getElementById(isModal ? 'modalTopupPayTargetPreview' : 'cartTopupPayTargetPreview');
-  if(box){
+  const directBtnText = document.getElementById('modalTopupDirectBtnText');
+  const directSubnote = document.getElementById('modalTopupDirectSubnote');
+  if(!box) return;
+
+  let isTopupMode = false;
+  let methodName = 'QRIS All Payment';
+  let priceText = '';
+
+  if(isModal){
+    isTopupMode = !!(typeof selectedProduct !== 'undefined' && selectedProduct && typeof getProductSideMode === 'function' && getProductSideMode(selectedProduct) === 'topup');
+    methodName = (typeof selectedPayment !== 'undefined' && selectedPayment) ? selectedPayment : 'QRIS All Payment';
+    if(isTopupMode && selectedProduct){
+      const baseDisc = getDiscountedPrice(selectedProduct.price, selectedProduct);
+      const info = formatMethodCheckoutDisplay(baseDisc, 0, methodName, selectedProduct);
+      priceText = info.priceText;
+    }
+  } else {
+    isTopupMode = Array.isArray(cart) && cart.some(it => {
+      const prod = (typeof products !== 'undefined' && Array.isArray(products)) ? (products.find(p => p.id === it.id) || it) : it;
+      return typeof getProductSideMode === 'function' && getProductSideMode(prod) === 'topup';
+    });
+    methodName = (typeof selectedCartPayment !== 'undefined' && selectedCartPayment) ? selectedCartPayment : 'QRIS All Payment';
+    if(isTopupMode){
+      const totals = getCartBaseTotalsIdr();
+      const info = formatMethodCheckoutDisplay(totals.total, 0, methodName, null);
+      priceText = info.priceText;
+    }
+  }
+
+  if(!isTopupMode){
     box.style.display = 'none';
     box.innerHTML = '';
+    return;
+  }
+
+  const cfg = getTopupPaymentConfig();
+  const target = resolveTopupPaymentTarget(methodName, cfg);
+  const qrisImg = String(target.qrisImage || cfg.qrisImage || '').trim();
+
+  if(target.type === 'qris'){
+    if(isModal){
+      if(directBtnText) directBtnText.textContent = (typeof t === 'function' && t('topupDirectBtn')) || 'Bayar & Proses Top-Up Sekarang';
+      if(directSubnote) directSubnote.textContent = 'Scan QRIS di atas atau buat Invoice resmi untuk konfirmasi pembayaran.';
+    }
+    const qrisContent = qrisImg
+      ? `
+        <div class="topup-qris-frame" style="margin:6px auto;cursor:zoom-in" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)" title="Klik untuk perbesar QRIS">
+          <img src="${escapeHtml(qrisImg)}" alt="QRIS ${escapeHtml(cfg.merchantName || 'NORXSTORE')}">
+        </div>
+        <div class="topup-qris-actions">
+          <button type="button" class="topup-qris-action-btn primary" onclick="downloadTopupQrisImage()">⬇️ Simpan Foto QRIS</button>
+          <button type="button" class="topup-qris-action-btn" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)">🔍 Perbesar QR</button>
+        </div>
+        <p style="font-size:10.5px;color:#475569;margin:7px 0 0;line-height:1.4">Scan langsung dengan <b>DANA, GoPay, OVO, ShopeePay, BCA, SeaBank</b> atau simpan QR untuk scan dari Galeri.</p>
+      `
+      : `
+        <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:10px;font-size:11px;font-weight:700;color:#92400e">
+          ⚠️ Foto QRIS belum diunggah Admin. Pilih DANA / GoPay / OVO atau hubungi Admin.
+        </div>
+      `;
+    box.style.display = 'block';
+    box.innerHTML = `
+      <div class="checkout-pay-target-card">
+        <div class="checkout-pay-target-badge">📱 QRIS RESMI · ${escapeHtml(cfg.merchantName || 'NORXSTORE OFFICIAL')}</div>
+        ${priceText ? `<div style="font-size:11px;color:#334155;font-weight:700;margin-bottom:4px">Total Bayar: <strong style="color:#0284c7;font-size:13px">${escapeHtml(priceText)}</strong></div>` : ''}
+        ${qrisContent}
+      </div>
+    `;
+  } else {
+    const meta = getPaymentAppMeta(target);
+    const destNum = String(target.number || '').trim();
+    if(isModal){
+      if(directBtnText){
+        directBtnText.textContent = destNum
+          ? `Bayar & Buka Aplikasi ${target.label}`
+          : ((typeof t === 'function' && t('topupDirectBtn')) || 'Bayar & Proses Top-Up Sekarang');
+      }
+      if(directSubnote){
+        directSubnote.textContent = destNum
+          ? `Nomor ${target.label} (${destNum}) otomatis tersalin & aplikasi ${target.label} langsung terbuka.`
+          : 'Invoice & detail transfer langsung muncul otomatis di web.';
+      }
+    }
+    box.style.display = 'block';
+    box.innerHTML = `
+      <div class="checkout-pay-target-card">
+        <div class="checkout-pay-target-badge">🔗 Jalur Langsung Aplikasi ${escapeHtml(target.label)}</div>
+        ${destNum ? `
+          <div style="font-size:10.5px;color:#475569;font-weight:700">${escapeHtml(target.numberLabel)} · a.n. <b>${escapeHtml(target.holder)}</b></div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0">
+            <span class="checkout-pay-target-num">${escapeHtml(destNum)}</span>
+            <button type="button" class="topup-copy-btn" onclick="copyTopupInvoiceText('${escapeHtml(destNum)}')">📋 Salin</button>
+          </div>
+          ${priceText ? `<div style="font-size:11.5px;color:#0f172a;font-weight:700">Nominal Total: <strong style="color:#0284c7">${escapeHtml(priceText)}</strong></div>` : ''}
+          <div style="font-size:10.5px;color:#0369a1;font-weight:600;margin-top:5px;line-height:1.4">⚡ Klik <b>Bayar</b> di bawah → nomor admin otomatis disalin &amp; langsung diarahkan masuk ke aplikasi <b>${escapeHtml(meta.label)}</b>.</div>
+        ` : `
+          <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:9px;font-size:11px;font-weight:700;color:#92400e">
+            ⚠️ Nomor ${escapeHtml(target.label)} belum diatur Admin. Silakan pilih metode lain atau QRIS.
+          </div>
+        `}
+      </div>
+    `;
   }
 }
 
@@ -8537,14 +8891,44 @@ function applyTopupPaymentConfig(cfg){
 
 function saveTopupPaymentConfig(cfg){
   const merged = normalizeTopupPaymentConfig(cfg);
+  const nowTs = Date.now();
   topupPaymentConfigCache = merged;
   safeSetItem('norxstore_topup_payment_config', JSON.stringify(merged));
+  safeSetItem('norxstore_topup_payment_updated_at', String(nowTs));
+  const payload = {
+    config: merged,
+    updatedAt: nowTs
+  };
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/orders/__config_topup_payment__').set({
-      config: merged,
-      updatedAt: Date.now()
-    }).catch(e => console.error('Save topup payment config error:', e));
+    fbDB.ref('norxstore/orders/__config_topup_payment__').set(payload)
+      .catch(e => console.error('Save topup payment config error:', e));
   }
+  try {
+    const payloadStr = JSON.stringify(payload);
+    fetch(RTDB_CONFIG_TOPUP_PAYMENT_URL, {
+      method: 'PUT',
+      keepalive: payloadStr.length < 60000,
+      headers: { 'Content-Type': 'application/json' },
+      body: payloadStr
+    }).catch(()=>{});
+  } catch(e){}
+}
+
+function syncTopupPaymentConfigFromCloudRest(){
+  try {
+    fetch(RTDB_CONFIG_TOPUP_PAYMENT_URL + '?t=' + Date.now(), { cache: 'no-store' })
+      .then(res => res.ok ? res.json() : null)
+      .then(val => {
+        if(!val || !val.config || typeof val.config !== 'object') return;
+        const cloudTs = Number(val.updatedAt || 0);
+        const localTs = Number(safeGetItem('norxstore_topup_payment_updated_at', '0')) || 0;
+        if(localTs > 0 && cloudTs < localTs - 1500){
+          return;
+        }
+        if(cloudTs > 0) safeSetItem('norxstore_topup_payment_updated_at', String(cloudTs));
+        applyTopupPaymentConfig(val.config);
+      }).catch(()=>{});
+  } catch(e){}
 }
 
 function refreshQuickTopupStatusText(){
@@ -21024,6 +21408,16 @@ fbDB.ref('norxstore/orders/__config_topup_payment__').on('value', snap => {
   try {
     const val = snap.val();
     if(val && val.config && typeof applyTopupPaymentConfig === 'function'){
+      const cloudTs = Number(val.updatedAt || 0);
+      const localTs = Number(safeGetItem('norxstore_topup_payment_updated_at', '0')) || 0;
+      if(localTs > 0 && cloudTs < localTs - 1500){
+        if(!window._norxAutoRepushedTopupPayment){
+          window._norxAutoRepushedTopupPayment = true;
+          saveTopupPaymentConfig(getTopupPaymentConfig());
+        }
+        return;
+      }
+      if(cloudTs > 0) safeSetItem('norxstore_topup_payment_updated_at', String(cloudTs));
       applyTopupPaymentConfig(val.config);
     }
   } catch(e){}
@@ -22865,10 +23259,11 @@ function checkoutCart(){
   });
 
   if(isPureTopup){
+    const chosenCartPay = selectedCartPayment;
     const createdOrderId = createOrder(
       mappedItems,
       total,
-      selectedCartPayment,
+      chosenCartPay,
       'In-Web Auto Top-Up',
       {
         serviceType: 'topup',
@@ -22889,6 +23284,12 @@ function checkoutCart(){
     closeCart();
     showToast(t('invOrderCreatedToast'));
     openTopupInvoiceModal(createdOrderId);
+    try {
+      const payTarget = resolveTopupPaymentTarget(chosenCartPay, getTopupPaymentConfig());
+      if(payTarget.type !== 'qris' && payTarget.number){
+        launchPaymentAppForOrder(createdOrderId, { autoFromCheckout: true });
+      }
+    } catch(e){}
     return;
   }
 
@@ -25748,11 +26149,18 @@ function submitDirectTopupOrder(){
       displayPriceText: displayPriceText
     }
   );
+  const chosenModalPay = selectedPayment;
   renderMyOrders();
   renderProducts();
   closeModal();
   showToast(t('invOrderCreatedToast'));
   openTopupInvoiceModal(createdOrderId);
+  try {
+    const payTarget = resolveTopupPaymentTarget(chosenModalPay, getTopupPaymentConfig());
+    if(payTarget.type !== 'qris' && payTarget.number){
+      launchPaymentAppForOrder(createdOrderId, { autoFromCheckout: true });
+    }
+  } catch(e){}
 }
 
 function sendWA(){
@@ -25964,30 +26372,54 @@ function renderTopupInvoiceContent(){
     : `Rp${Number(ord.total || 0).toLocaleString('id-ID')}`;
 
   const target = resolveTopupPaymentTarget(payMethod, cfg);
+  const rawTotalInt = Math.max(0, Math.round(Number(ord.total) || 0));
   let payInstructionHtml = '';
   if(target.type === 'qris'){
-    const qrisBlock = target.qrisImage
-      ? `<div class="topup-qris-frame"><img src="${escapeHtml(target.qrisImage)}" alt="QRIS"></div>`
+    const qrisSrc = String(target.qrisImage || cfg.qrisImage || '').trim();
+    const qrisBlock = qrisSrc
+      ? `<div class="topup-qris-frame" style="cursor:zoom-in" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)" title="Klik untuk perbesar QRIS"><img src="${escapeHtml(qrisSrc)}" alt="QRIS"></div>
+         <div class="topup-qris-actions">
+           <button type="button" class="topup-qris-action-btn primary" onclick="downloadTopupQrisImage()">⬇️ Simpan Foto QRIS</button>
+           <button type="button" class="topup-qris-action-btn" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)">🔍 Perbesar QR</button>
+         </div>`
       : `<div class="topup-qris-q-fallback topup-inv-qris-fallback">📱 QRIS<br><span style="font-size:10px;color:#64748b">QRIS belum diunggah Admin</span></div>`;
     payInstructionHtml = `
       <div class="topup-pay-instruction-card">
         <div style="font-size:11.5px;font-weight:800;color:#0c4a6e">${t('invPayToLabel') || 'Pembayaran'} · ${escapeHtml(payMethod)}</div>
         <div style="background:#fff;border:1px solid #bae6fd;border-radius:9px;padding:8px 10px;margin:8px 0 4px;text-align:center">
           <div style="font-size:10px;color:#64748b;font-weight:700">${t('invExactAmountWarn') || 'Bayar sesuai total harga:'}</div>
-          <div style="font-size:16px;font-weight:800;color:#0284c7">${priceMain}</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px">
+            <span style="font-size:16px;font-weight:800;color:#0284c7">${priceMain}</span>
+            <button type="button" class="topup-copy-btn" onclick="copyTopupInvoiceText('${rawTotalInt}')">📋 Salin</button>
+          </div>
         </div>
         ${qrisBlock}
-        <p style="font-size:11px;color:#475569;margin:6px 0 0;line-height:1.45">${t('invScanQrisHint')}</p>
+        <p style="font-size:11px;color:#475569;margin:8px 0 0;line-height:1.45">${t('invScanQrisHint')}</p>
       </div>
     `;
   } else {
     const destNumber = target.number || '';
+    const appMeta = getPaymentAppMeta(target);
     const numberBoxHtml = destNumber
       ? `
         <div class="topup-ewallet-box">
           <div style="font-size:10.5px;color:#64748b;font-weight:700">${escapeHtml(target.numberLabel)}</div>
-          <div class="topup-ewallet-num" style="margin:4px 0">${escapeHtml(destNumber)}</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0">
+            <span class="topup-ewallet-num">${escapeHtml(destNumber)}</span>
+            <button type="button" class="topup-copy-btn" onclick="copyTopupInvoiceText('${escapeHtml(destNumber)}')">📋 Salin Nomor</button>
+          </div>
           <div style="font-size:11px;color:#334155;font-weight:700">${t('invAccountHolderLabel') || 'Atas Nama'}: ${escapeHtml(target.holder)}</div>
+        </div>
+        <button type="button" class="topup-app-launch-btn" style="background:${appMeta.gradient}" onclick="launchPaymentAppForOrder('${ord.id}')">
+          <span>${appMeta.icon}</span>
+          <span>Buka Aplikasi ${escapeHtml(appMeta.label)} Sekarang</span>
+          <span>➔</span>
+        </button>
+        <div class="topup-ewallet-steps">
+          <b>Cara Bayar Cepat:</b><br>
+          1. Klik tombol <b>Buka Aplikasi ${escapeHtml(appMeta.label)}</b> di atas (nomor admin otomatis tersalin).<br>
+          2. Pilih <b>Kirim / Transfer</b> ke <b>${escapeHtml(destNumber)}</b> sejumlah tepat <b>Rp${rawTotalInt.toLocaleString('id-ID')}</b>.<br>
+          3. Kembali ke halaman ini lalu klik <b>Saya Sudah Bayar</b>.
         </div>
       `
       : `
@@ -26000,10 +26432,13 @@ function renderTopupInvoiceContent(){
         <div style="font-size:11.5px;font-weight:800;color:#0c4a6e">${target.icon || '💳'} ${t('invPayToLabel') || 'Pembayaran'} · ${escapeHtml(target.label)}</div>
         <div style="background:#fff;border:1px solid #bae6fd;border-radius:9px;padding:8px 10px;margin:8px 0 4px;text-align:center">
           <div style="font-size:10px;color:#64748b;font-weight:700">${t('invExactAmountWarn') || 'Bayar sesuai total harga:'}</div>
-          <div style="font-size:16px;font-weight:800;color:#0284c7">${priceMain}</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px">
+            <span style="font-size:16px;font-weight:800;color:#0284c7">${priceMain}</span>
+            <button type="button" class="topup-copy-btn" onclick="copyTopupInvoiceText('${rawTotalInt}')">📋 Salin Nominal</button>
+          </div>
         </div>
         ${numberBoxHtml}
-        ${cfg.qrisImage ? `<details style="margin-top:6px;text-align:center"><summary style="font-size:11px;font-weight:700;color:#0284c7;cursor:pointer">📱 Atau Scan QRIS</summary><div class="topup-qris-frame" style="margin-top:8px"><img src="${escapeHtml(cfg.qrisImage)}" alt="QRIS"></div></details>` : ''}
+        ${cfg.qrisImage ? `<details style="margin-top:10px;text-align:center"><summary style="font-size:11.5px;font-weight:800;color:#0284c7;cursor:pointer">📱 Atau Scan QRIS Toko</summary><div class="topup-qris-frame" style="margin-top:8px;cursor:zoom-in" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)"><img src="${escapeHtml(cfg.qrisImage)}" alt="QRIS"></div><div class="topup-qris-actions"><button type="button" class="topup-qris-action-btn primary" onclick="downloadTopupQrisImage()">⬇️ Simpan Foto QRIS</button><button type="button" class="topup-qris-action-btn" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)">🔍 Perbesar QR</button></div></details>` : ''}
       </div>
     `;
   }
@@ -28166,6 +28601,7 @@ updateNavCountryBtn();
 updateLanguageUI();
 switchStoreSide(currentStoreSide, true);
 initQuickTopupFromStorage();
+if(typeof syncTopupPaymentConfigFromCloudRest === 'function') syncTopupPaymentConfigFromCloudRest();
 renderModalPaymentMethods();
 renderCartPaymentMethods();
 renderCarousel();
@@ -28206,6 +28642,9 @@ setInterval(()=>{
 (function initImageProtection(){
   document.addEventListener('contextmenu', function(e){
     const target = e.target;
+    if(target && target.closest && target.closest('.topup-qris-frame')){
+      return true;
+    }
     if(target && (
       target.tagName === 'IMG' || 
       target.closest('img') || 
