@@ -46,24 +46,26 @@ html,body{width:100%;min-height:100dvh;overflow-x:hidden;font-family:'Plus Jakar
 body{transition:background-color 0.4s ease,color 0.4s ease}
 .logo,.section-title,.side-mode-btn,.product-name,.product-price,.product-price-discount,.topup-wb-title,.topup-inv-title{font-family:'Outfit','Plus Jakarta Sans',sans-serif}
 .product-price,.product-price-discount,.topup-inv-amount,.topup-inv-timer,.topup-uid-mono{font-variant-numeric:tabular-nums}
-.navbar{display:flex;align-items:center;justify-content:space-between;gap:10px 12px;padding:12px 16px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06);flex-wrap:wrap}
-.logo{font-size:19px;font-weight:800;letter-spacing:-0.5px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:4px;flex-shrink:0;order:1}
-.logo::before{content:'💠';font-size:16px}
+.navbar{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:10px 12px;background:rgba(255,255,255,.98);width:100%;position:sticky;top:0;z-index:50;transition:background-color 0.5s ease;box-shadow:0 2px 14px rgba(124,58,237,.06);flex-wrap:wrap}
+.logo{font-size:16.5px;font-weight:800;letter-spacing:-0.4px;white-space:nowrap;user-select:none;-webkit-user-select:none;cursor:pointer;display:flex;align-items:center;gap:3px;flex-shrink:0;order:1}
+.logo::before{content:'💠';font-size:14px}
 .logo span{background:linear-gradient(135deg,#7c3aed,#c026d3);-webkit-background-clip:text;background-clip:text;color:transparent}
-.nav-actions{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto;order:2}
+.nav-actions{display:flex;align-items:center;gap:5px;flex-shrink:0;margin-left:auto;order:2}
 .search-bar-wrap{width:100%;flex-basis:100%;display:flex;align-items:center;position:relative;min-width:0;order:3}
-.search-bar-icon{position:absolute;left:12px;font-size:13px;color:#9ca3af;pointer-events:none;z-index:2;line-height:1}
-.search-bar{width:100%;height:38px;border:1.5px solid #ece9f7;border-radius:12px;background:#f5f4fa;padding:0 34px 0 34px;font-size:13px;color:#1a1a1a;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease,box-shadow 0.3s ease}
+.search-bar-icon{position:absolute;left:11px;font-size:12.5px;color:#9ca3af;pointer-events:none;z-index:2;line-height:1}
+.search-bar{width:100%;height:36px;border:1.5px solid #ece9f7;border-radius:11px;background:#f5f4fa;padding:0 32px 0 32px;font-size:12.5px;color:#1a1a1a;outline:none;min-width:0;transition:border-color 0.3s ease,background 0.3s ease,box-shadow 0.3s ease}
 .search-bar:focus{border-color:#a855f7;background:#fff;box-shadow:0 0 0 3px rgba(168,85,247,0.15)}
 .search-clear-btn{position:absolute;right:8px;width:22px;height:22px;border-radius:50%;background:#e2e8f0;border:none;color:#64748b;font-size:11px;font-weight:800;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:4;transition:all .15s ease}
 .search-clear-btn:hover{background:#cbd5e1;color:#1e293b}
 .search-clear-btn.show{display:flex}
-.nav-icon{width:38px;height:38px;border-radius:12px;background:#f5f4fa;border:1.5px solid #ece9f7;display:flex;align-items:center;justify-content:center;font-size:16px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease}
+.nav-icon{width:32px;height:32px;border-radius:10px;background:#f5f4fa;border:1.5px solid #ece9f7;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease}
 .nav-icon:active{background:#e5e5e5}
 .nav-icon-wrap{position:relative;flex-shrink:0}
-.cart-badge{position:absolute;top:-4px;right:-4px;min-width:18px;height:18px;border-radius:9px;background:#ef4444;color:#fff;font-size:10px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 5px;z-index:2}
+.cart-badge{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:9px;background:#ef4444;color:#fff;font-size:9.5px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 4px;z-index:2}
 .cart-badge.show{display:flex}
-.order-notif-dot{position:absolute;top:-2px;left:-2px;width:11px;height:11px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:none;box-shadow:0 0 8px rgba(34,197,94,0.9);animation:pulseNotifGreen 1.4s infinite;z-index:4}
+.order-notif-dot{position:absolute;top:-2px;left:-2px;width:9px;height:9px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:none;box-shadow:0 0 8px rgba(34,197,94,0.9);animation:pulseNotifGreen 1.4s infinite;z-index:4}
+.nav-bell-dot{position:absolute;top:-2px;right:-2px;width:8px;height:8px;border-radius:50%;background:#f59e0b;border:1.5px solid #fff;box-shadow:0 0 6px rgba(245,158,11,0.75);z-index:4;transition:background .2s ease}
+.nav-bell-dot.active{background:#22c55e;box-shadow:0 0 6px rgba(34,197,94,0.75)}
 @keyframes pulseNotifGreen{0%{transform:scale(0.9);box-shadow:0 0 0 0 rgba(34,197,94,0.8)}70%{transform:scale(1.25);box-shadow:0 0 0 7px rgba(34,197,94,0)}100%{transform:scale(0.9);box-shadow:0 0 0 0 rgba(34,197,94,0)}}
 
 .order-notif-overlay{position:fixed;inset:0;background:rgba(10,10,20,0.88);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;z-index:350;padding:12px;overflow-y:auto;box-sizing:border-box;animation:fadeIn .2s ease}
@@ -93,11 +95,11 @@ body{transition:background-color 0.4s ease,color 0.4s ease}
 .phone-notif-btn.active{background:#10b981;box-shadow:0 3px 10px rgba(16,185,129,0.25)}
 
 /* ============ MULTI-CURRENCY & NEGARA ============ */
-.country-currency-btn{height:36px;padding:0 9px;border-radius:11px;background:#f5f4fa;border:1.5px solid #ece9f7;display:inline-flex;align-items:center;gap:4px;cursor:pointer;font-family:inherit;font-size:11.5px;font-weight:700;color:#1e1b4b;transition:all .2s ease;user-select:none;flex-shrink:0}
+.country-currency-btn{height:32px;padding:0 7px;border-radius:10px;background:#f5f4fa;border:1.5px solid #ece9f7;display:inline-flex;align-items:center;gap:3px;cursor:pointer;font-family:inherit;font-size:10.5px;font-weight:700;color:#1e1b4b;transition:all .2s ease;user-select:none;flex-shrink:0}
 .country-currency-btn:hover{background:#ede9fe;border-color:#c4b5fd;color:#7c3aed;transform:translateY(-1px);box-shadow:0 3px 8px rgba(124,58,237,.1)}
-.country-flag-icon{font-size:15px;line-height:1}
-.country-code-text{font-size:11px;font-weight:800;letter-spacing:.3px}
-.country-arrow{font-size:8.5px;color:#7c3aed;margin-left:1px}
+.country-flag-icon{font-size:13px;line-height:1}
+.country-code-text{font-size:10px;font-weight:800;letter-spacing:.2px}
+.country-arrow{font-size:8px;color:#7c3aed;margin-left:0}
 body.dark-mode .country-currency-btn{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.18);color:#f1f5f9}
 body.dark-mode .country-currency-btn:hover{background:rgba(124,58,237,0.25);border-color:#8b5cf6;color:#fff}
 
@@ -2222,12 +2224,16 @@ button{cursor:pointer;font-family:inherit}
 @media (min-width:900px){
   body{background:#f1f1f5}
   .navbar{max-width:1200px;width:calc(100% - 32px);margin:16px auto 0;padding:12px 24px;border-radius:16px;position:sticky;top:16px;z-index:60;display:flex;align-items:center;gap:16px;box-shadow:0 4px 20px rgba(124,58,237,.08);flex-wrap:nowrap}
-  .logo{font-size:22px;flex-shrink:0;order:1}
+  .logo{font-size:22px;flex-shrink:0;order:1;gap:4px}
+  .logo::before{font-size:16px}
   .search-bar-wrap{flex:1;max-width:none;margin:0;width:auto;flex-basis:auto;order:2}
   .search-bar{height:42px;font-size:13.5px;padding:0 16px 0 38px;border-radius:14px}
   .search-bar-icon{left:14px;font-size:14px}
   .nav-actions{gap:12px;margin-left:auto;order:3}
   .nav-icon{width:42px;height:42px;font-size:18px;border-radius:12px}
+  .country-currency-btn{height:42px;padding:0 11px;border-radius:12px;gap:5px;font-size:12px}
+  .country-flag-icon{font-size:15px}
+  .country-code-text{font-size:11px}
   .nav-icon:hover{background:#ede9fe;border-color:#c4b5fd;transform:translateY(-1px);box-shadow:0 3px 8px rgba(124,58,237,.1)}
 
   .carousel-wrap{max-width:1200px;width:calc(100% - 32px);margin:20px auto 0;border-radius:18px;left:auto;transform:none}
@@ -4526,17 +4532,167 @@ body.dark-mode .topup-wb-status{
 .pwa-guide-steps{
   display:flex;
   flex-direction:column;
-  gap:9px;
-  margin-top:10px;
+  gap:10px;
+  margin-top:8px;
 }
 .pwa-guide-step{
   background:#f8fafc;
-  border:1px solid #e2e8f0;
-  border-radius:10px;
-  padding:9px 11px;
+  border:1.5px solid #e2e8f0;
+  border-radius:12px;
+  padding:11px 12px;
   font-size:12px;
   color:#1e293b;
+  line-height:1.5;
+}
+#pwaInstallGuideOverlay .pw-box{
+  max-width:430px;
+  max-height:90vh;
+  max-height:90dvh;
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+#pwaInstallGuideOverlay .pw-header{
+  position:sticky;
+  top:0;
+  z-index:5;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:10px;
+  text-align:left;
+}
+.pwa-modal-close-btn{
+  width:30px;
+  height:30px;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.35);
+  background:rgba(255,255,255,.18);
+  color:#fff;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+  flex-shrink:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.cust-guide-card{
+  background:linear-gradient(135deg,#f0f9ff 0%,#e0f2fe 100%);
+  border:1.5px solid #7dd3fc;
+  border-radius:13px;
+  padding:12px;
+}
+.cust-guide-card.violet{
+  background:linear-gradient(135deg,#faf5ff 0%,#f3e8ff 100%);
+  border-color:#c4b5fd;
+}
+.cust-guide-card.emerald{
+  background:linear-gradient(135deg,#f0fdf4 0%,#dcfce7 100%);
+  border-color:#86efac;
+}
+.cust-guide-card-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
+  margin-bottom:7px;
+}
+.cust-guide-card-title{
+  font-size:12.5px;
+  font-weight:800;
+  color:#0f172a;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.cust-guide-status-pill{
+  font-size:10px;
+  font-weight:800;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#fef3c7;
+  color:#92400e;
+  border:1px solid #fcd34d;
+  white-space:nowrap;
+}
+.cust-guide-status-pill.active{
+  background:#dcfce7;
+  color:#166534;
+  border-color:#86efac;
+}
+.cust-guide-action-row{
+  display:flex;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:9px;
+}
+.cust-guide-btn{
+  border:none;
+  border-radius:10px;
+  padding:9px 12px;
+  font-size:11.5px;
+  font-weight:800;
+  cursor:pointer;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  text-decoration:none;
+  transition:transform .12s ease,opacity .15s ease;
+}
+.cust-guide-btn:active{transform:scale(.97)}
+.cust-guide-btn.sky{background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;flex:1}
+.cust-guide-btn.violet{background:linear-gradient(135deg,#7c3aed,#9333ea);color:#fff;flex:1}
+.cust-guide-btn.emerald{background:linear-gradient(135deg,#16a34a,#22c55e);color:#fff;flex:1}
+.cust-guide-btn.outline{background:#fff;color:#0f172a;border:1.5px solid #cbd5e1}
+.cust-ntfy-steps{
+  margin:8px 0 10px;
+  padding-left:0;
+  list-style:none;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+.cust-ntfy-steps li{
+  background:#fff;
+  border:1px solid #bbf7d0;
+  border-radius:9px;
+  padding:7px 9px;
+  font-size:11.5px;
+  color:#1e293b;
   line-height:1.45;
+}
+.cust-ntfy-topic-box{
+  background:#fff;
+  border:1.5px solid #86efac;
+  border-radius:11px;
+  padding:9px 10px;
+}
+.cust-ntfy-input-row{
+  display:flex;
+  gap:5px;
+  align-items:center;
+  margin-top:5px;
+}
+.cust-ntfy-input{
+  flex:1;
+  min-width:0;
+  height:35px;
+  border:1.5px solid #cbd5e1;
+  border-radius:8px;
+  padding:0 9px;
+  font-size:12px;
+  font-weight:700;
+  color:#0f172a;
+  background:#f8fafc;
+  font-family:'JetBrains Mono',monospace;
+}
+.cust-ntfy-input:focus{
+  outline:none;
+  border-color:#16a34a;
+  background:#fff;
 }
 .app-order-alert-popup{
   position:fixed;
@@ -5015,6 +5171,10 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
     <span class="country-code-text" id="navCountryCode">IDR</span>
     <span class="country-arrow">▾</span>
   </button>
+  <div class="nav-icon-wrap" id="navNotifBellWrap" onclick="openCustomerNotifInstallModal()" title="Install Aplikasi & Notifikasi Pesanan">
+    <div class="nav-icon" id="navNotifBellBtn">🔔</div>
+    <span class="nav-bell-dot" id="navBellStatusDot"></span>
+  </div>
   <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
   <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang">
     <div class="nav-icon">🛒</div>
@@ -5415,7 +5575,7 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
 
         <div class="footer-pay-subhead" style="margin-top:16px" id="footerSocialTitle">Komunitas & Media Sosial:</div>
         <div class="footer-social-quick-links" id="footerSocialQuickLinks"></div>
-        <button type="button" class="footer-pwa-install-btn" id="footerPwaInstallBtn" onclick="promptInstallPWA()">📲 Install Aplikasi NORXSTORE (Suara Notif Aktif)</button>
+        <button type="button" class="footer-pwa-install-btn" id="footerPwaInstallBtn" onclick="openCustomerNotifInstallModal()">📲 Install Aplikasi &amp; Aktifkan Notif (PWA / ntfy)</button>
       </div>
     </div>
 
@@ -5810,29 +5970,19 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
 </div>
 </div>
 
-<!-- MODAL PANDUAN INSTALL APLIKASI & SUARA NOTIFIKASI -->
+<!-- MODAL PANDUAN INSTALL APLIKASI, TOMBOL LONCENG & NOTIFIKASI NTFY -->
 <div class="pw-overlay" id="pwaInstallGuideOverlay" onclick="closePwaInstallGuide(event)" style="z-index:360">
-<div class="pw-box" style="max-width:410px" onclick="event.stopPropagation()">
-  <div class="pw-header" style="background:linear-gradient(135deg,#0284c7,#0ea5e9)">
-    <h4>📲 Jadikan Aplikasi (PWA) & Suara Notif</h4>
-    <p>Pasang ke Layar Utama agar notifikasi pesanan berbunyi seperti aplikasi</p>
+<div class="pw-box" onclick="event.stopPropagation()">
+  <div class="pw-header" style="background:linear-gradient(135deg,#0284c7,#7c3aed)">
+    <div>
+      <h4 id="pwaGuideHeaderTitle">🔔 Notifikasi &amp; Install Aplikasi</h4>
+      <p id="pwaGuideHeaderDesc">Aktifkan tombol lonceng, install app NORXSTORE, &amp; panduan notif ntfy</p>
+    </div>
+    <button type="button" class="pwa-modal-close-btn" onclick="closePwaInstallGuide()" title="Tutup">✕</button>
   </div>
   <div class="pw-body">
-    <div class="pwa-guide-steps" id="pwaInstallGuideBody">
-      <div class="pwa-guide-step">
-        <strong>📱 Android (Chrome / Brave / Edge):</strong><br>
-        Ketuk ikon titik tiga (<strong>⋮</strong>) di pojok kanan atas browser ➔ Pilih <strong>"Tambahkan ke Layar Utama"</strong> / <strong>"Install App"</strong> ➔ Tekan <strong>Install</strong>.
-      </div>
-      <div class="pwa-guide-step">
-        <strong>🍏 iPhone / iPad (Safari):</strong><br>
-        Ketuk tombol <strong>Bagikan / Share (↑)</strong> di bawah layar ➔ Pilih <strong>"Tambah ke Layar Utama"</strong> / <strong>"Add to Home Screen"</strong> ➔ Tekan <strong>Tambah</strong>.
-      </div>
-      <div class="pwa-guide-step">
-        <strong>🔔 Agar Suara Notif Terdengar:</strong><br>
-        Buka aplikasi dari ikon di Layar Utama, masuk <strong>Panel Admin</strong>, lalu tekan <strong>"🔔 Aktifkan Notif & Suara Order Baru"</strong> &amp; pastikan volume Dering/Media HP tidak di-mute.
-      </div>
-    </div>
-    <button type="button" class="pw-btn" style="margin-top:12px;background:#0284c7" onclick="closePwaInstallGuide()">Oke, Mengerti</button>
+    <div class="pwa-guide-steps" id="pwaInstallGuideBody"></div>
+    <button type="button" class="pw-btn" style="margin-top:12px;background:#0f172a" onclick="closePwaInstallGuide()">Oke, Mengerti</button>
   </div>
 </div>
 </div>
@@ -18564,7 +18714,8 @@ function createOrder(items, total, paymentMethod, adminName, extraMeta = null){
     customerUid: isLoggedIn ? currentUser.uid : ('guest_' + (currentUser ? currentUser.uid : 'anon')),
     customerName: isLoggedIn ? (currentUser.displayName || null) : null,
     customerEmail: isLoggedIn ? (currentUser.email || null) : null,
-    isGuestOrder: !isLoggedIn
+    isGuestOrder: !isLoggedIn,
+    customerNtfyTopic: (typeof getCustomerNtfyTopic === 'function') ? getCustomerNtfyTopic() : ''
   };
   allOrders[orderId] = order;
   if(!window._localSessionCreatedOrderIds) window._localSessionCreatedOrderIds = new Set();
@@ -18762,16 +18913,17 @@ function renderMyOrders(){
 
   const isDismissed = sessionStorage.getItem('norx_dismiss_phone_notif') === '1';
   const bannerHtml = isDismissed ? '' : `
-    <div class="phone-notif-banner" id="phoneNotifBanner" style="position:relative">
-      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:0">
-        <span style="font-size:22px;flex-shrink:0">📲</span>
+    <div class="phone-notif-banner" id="phoneNotifBanner" style="position:relative;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:10px;flex:1;min-width:190px">
+        <span style="font-size:22px;flex-shrink:0">🔔</span>
         <div style="flex:1;min-width:0">
           <div style="font-size:12px;font-weight:700;color:#1e1b4b">${t('phoneNotifTitle')}</div>
           <div style="font-size:10px;color:#6b7280;line-height:1.35;margin-top:2px">${descText}</div>
         </div>
       </div>
-      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;flex-wrap:wrap">
         <button type="button" class="${btnClass}" onclick="enablePhonePushNotifications()">${btnLabel}</button>
+        <button type="button" class="phone-notif-btn" style="background:linear-gradient(135deg,#0284c7,#0ea5e9)" onclick="openCustomerNotifInstallModal()">📲 App &amp; ntfy</button>
         <button type="button" onclick="dismissPhoneNotifBanner(event)" title="${t('closeBtn')}" style="background:none;border:none;color:#94a3b8;font-size:15px;cursor:pointer;padding:2px 4px;line-height:1">✕</button>
       </div>
     </div>
@@ -18899,7 +19051,7 @@ function unlockStoreAudioOnce(){
 
 ['pointerdown', 'touchstart', 'keydown'].forEach(evtName => {
   window.addEventListener(evtName, () => {
-    if(safeGetItem('norxstore_admin_audio_enabled', '') === '1'){
+    if(safeGetItem('norxstore_admin_audio_enabled', '') === '1' || safeGetItem('norxstore_customer_audio_enabled', '') === '1'){
       unlockStoreAudioOnce();
     }
   }, { passive: true });
@@ -19024,6 +19176,113 @@ function isStandalonePwa(){
   }
 }
 
+function sanitizeCustomerNtfyTopic(raw){
+  return String(raw || '').trim().replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 64);
+}
+
+function getCustomerNtfyTopic(){
+  let topic = sanitizeCustomerNtfyTopic(safeGetItem('norxstore_customer_ntfy_topic', ''));
+  if(!topic){
+    const seed = Math.random().toString(36).slice(2, 8);
+    topic = 'norxstore-order-' + seed;
+    safeSetItem('norxstore_customer_ntfy_topic', topic);
+  }
+  return topic;
+}
+
+function saveCustomerNtfyTopic(explicitTopic, silent = false){
+  const inp = document.getElementById('customerNtfyTopicInput');
+  const raw = explicitTopic !== undefined ? explicitTopic : (inp ? inp.value : getCustomerNtfyTopic());
+  let clean = sanitizeCustomerNtfyTopic(raw);
+  if(!clean){
+    clean = 'norxstore-order-' + Math.random().toString(36).slice(2, 8);
+  }
+  if(inp) inp.value = clean;
+  safeSetItem('norxstore_customer_ntfy_topic', clean);
+  safeSetItem('norxstore_customer_ntfy_configured', '1');
+
+  const linkEl = document.getElementById('customerNtfyOpenLink');
+  if(linkEl) linkEl.href = 'ntfy://ntfy.sh/' + encodeURIComponent(clean);
+
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    if(currentUser && !currentUser.isAnonymous){
+      fbDB.ref('norxstore/users/' + currentUser.uid + '/ntfyTopic').set(clean).catch(()=>{});
+    }
+    const myIds = (typeof getMyOrderIds === 'function') ? getMyOrderIds() : [];
+    myIds.forEach(oid => {
+      if(allOrders && allOrders[oid]){
+        allOrders[oid].customerNtfyTopic = clean;
+      }
+      fbDB.ref('norxstore/orders/' + oid + '/customerNtfyTopic').set(clean).catch(()=>{});
+    });
+  }
+  updateNavBellStatusUI();
+  if(!silent){
+    showToast('✅ Topik ntfy "' + clean + '" disimpan & ditautkan ke pesanan Anda!');
+  }
+  return clean;
+}
+
+function generateNewCustomerNtfyTopic(){
+  const clean = 'norxstore-order-' + Math.random().toString(36).slice(2, 8);
+  return saveCustomerNtfyTopic(clean, false);
+}
+
+function copyCustomerNtfyTopic(){
+  const topic = saveCustomerNtfyTopic(undefined, true);
+  try {
+    if(navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(topic).catch(()=>{});
+    } else {
+      const ta = document.createElement('textarea');
+      ta.value = topic;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+  } catch(e){}
+  showToast('📋 Topik "' + topic + '" disalin! Tempel di aplikasi ntfy lalu tekan Subscribe.');
+}
+
+async function testCustomerNtfyPushNow(){
+  const topic = saveCustomerNtfyTopic(undefined, true);
+  showToast('⏳ Mengirim tes notifikasi ke topik ntfy Anda...');
+  try {
+    const res = await fetch('/api/send-order-push', {
+      method: 'POST',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: 'ntfy_test',
+        customerNtfyTopic: topic
+      })
+    });
+    const data = await res.json();
+    if(data && data.ntfySent){
+      showToast('✅ Notif tes terkirim ke ntfy "' + topic + '"! Cek HP Anda.');
+    } else {
+      showToast('⚠️ Gagal mengirim tes ntfy. Pastikan nama topik valid.');
+    }
+  } catch(e){
+    showToast('⚠️ Error tes ntfy: ' + (e.message || ''));
+  }
+}
+
+function updateNavBellStatusUI(){
+  const dot = document.getElementById('navBellStatusDot');
+  const wrap = document.getElementById('navNotifBellWrap');
+  const isPermGranted = ('Notification' in window) && Notification.permission === 'granted';
+  const isNtfyReady = safeGetItem('norxstore_customer_ntfy_configured', '') === '1';
+  if(dot){
+    dot.classList.toggle('active', !!(isPermGranted || isNtfyReady));
+  }
+  if(wrap){
+    const isAdmin = (typeof isAuthorizedAdmin === 'function') && isAuthorizedAdmin();
+    wrap.style.display = isAdmin ? 'none' : '';
+  }
+}
+
 function updatePwaInstallButtonsUI(){
   const standalone = isStandalonePwa();
   const adminBtn = document.getElementById('adminPwaInstallBtn');
@@ -19041,8 +19300,12 @@ function updatePwaInstallButtonsUI(){
     }
   }
   if(footerBtn){
-    footerBtn.style.display = standalone ? 'none' : 'inline-flex';
+    footerBtn.style.display = 'inline-flex';
+    footerBtn.textContent = standalone
+      ? '🔔 Pengaturan Notifikasi Pesanan (PWA & ntfy)'
+      : '📲 Install Aplikasi & Aktifkan Notif (PWA / ntfy)';
   }
+  updateNavBellStatusUI();
 }
 
 window.addEventListener('beforeinstallprompt', (e) => {
@@ -19054,7 +19317,8 @@ window.addEventListener('beforeinstallprompt', (e) => {
 window.addEventListener('appinstalled', () => {
   deferredPwaPrompt = null;
   updatePwaInstallButtonsUI();
-  showToast('🎉 Aplikasi NORXSTORE berhasil terpasang! Buka dari Layar Utama agar suara notif lancar.');
+  renderPwaInstallGuideModal();
+  showToast('🎉 Aplikasi NORXSTORE berhasil terpasang! Buka dari Layar Utama agar notif & suara lancar.');
 });
 
 if('serviceWorker' in navigator){
@@ -19068,9 +19332,186 @@ if('serviceWorker' in navigator){
   });
 }
 
+async function enableCustomerBellFromModal(){
+  safeSetItem('norxstore_customer_audio_enabled', '1');
+  unlockStoreAudioOnce();
+  playNotificationChime(false);
+  const ok = await enablePhonePushNotifications(true);
+  renderPwaInstallGuideModal();
+  updateNavBellStatusUI();
+  if(ok){
+    showToast('🔔 Notif & Suara Pesanan Pelanggan Aktif! Anda akan mendapat kabar saat pesanan diproses/selesai.');
+  } else {
+    showToast('🔔 Suara dalam app aktif! Untuk notif saat web ditutup (misal di Brave), ikuti tutorial ntfy di bawah.');
+  }
+}
+
+function testCustomerNotifSound(){
+  unlockStoreAudioOnce();
+  playNotificationChime(false);
+  showToast('🔊 Suara notifikasi berhasil diputar!');
+}
+
+async function triggerCustomerAppInstall(){
+  if(isStandalonePwa()){
+    showToast('✅ Aplikasi NORXSTORE sudah terpasang di HP Anda!');
+    return;
+  }
+  if(deferredPwaPrompt){
+    try {
+      deferredPwaPrompt.prompt();
+      const choice = await deferredPwaPrompt.userChoice;
+      deferredPwaPrompt = null;
+      updatePwaInstallButtonsUI();
+      renderPwaInstallGuideModal();
+      if(choice && choice.outcome === 'accepted'){
+        showToast('🎉 Menginstall Aplikasi NORXSTORE...');
+        return;
+      }
+    } catch(e){}
+  }
+  const stepsEl = document.getElementById('custManualInstallSteps');
+  if(stepsEl){
+    stepsEl.style.borderColor = '#0284c7';
+    stepsEl.style.boxShadow = '0 0 0 3px rgba(2,132,199,.18)';
+    stepsEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  showToast('📲 Browser ini memakai install manual: ikuti panduan 3 langkah Android / iPhone di layar ini.');
+}
+
+function renderPwaInstallGuideModal(){
+  const body = document.getElementById('pwaInstallGuideBody');
+  const titleEl = document.getElementById('pwaGuideHeaderTitle');
+  const descEl = document.getElementById('pwaGuideHeaderDesc');
+  if(!body) return;
+
+  const isAdmin = (typeof isAuthorizedAdmin === 'function') && isAuthorizedAdmin();
+  const standalone = isStandalonePwa();
+  const isPermGranted = ('Notification' in window) && Notification.permission === 'granted';
+  const custTopic = getCustomerNtfyTopic();
+  const custNtfySaved = safeGetItem('norxstore_customer_ntfy_configured', '') === '1';
+
+  if(isAdmin){
+    if(titleEl) titleEl.textContent = '📲 Jadikan Aplikasi (PWA) & Suara Notif';
+    if(descEl) descEl.textContent = 'Pasang ke Layar Utama & kelola notifikasi perangkat Anda';
+    body.innerHTML = `
+      <div class="pwa-guide-step">
+        <strong>📱 Android (Chrome / Brave / Edge):</strong><br>
+        Ketuk ikon titik tiga (<strong>⋮</strong>) di pojok kanan atas browser ➔ Pilih <strong>"Tambahkan ke Layar Utama"</strong> / <strong>"Install App"</strong> ➔ Tekan <strong>Install</strong>.
+      </div>
+      <div class="pwa-guide-step">
+        <strong>🍏 iPhone / iPad (Safari):</strong><br>
+        Ketuk tombol <strong>Bagikan / Share (↑)</strong> di bawah layar ➔ Pilih <strong>"Tambah ke Layar Utama"</strong> / <strong>"Add to Home Screen"</strong> ➔ Tekan <strong>Tambah</strong>.
+      </div>
+      <div class="pwa-guide-step">
+        <strong>🔔 Mode Admin Terdeteksi:</strong><br>
+        Anda masuk sebagai Admin. Pengaturan notifikasi order masuk (Web Push &amp; topik ntfy Joki/Top Up) tersedia langsung di <strong>Panel Admin</strong>.
+        <div class="cust-guide-action-row">
+          <button type="button" class="cust-guide-btn sky" onclick="closePwaInstallGuide();openAdmin();">⚙️ Buka Panel Admin</button>
+        </div>
+      </div>
+    `;
+    return;
+  }
+
+  const acctLabel = (currentUser && !currentUser.isAnonymous)
+    ? ('Akun Google: ' + escapeHtml(currentUser.displayName || currentUser.email || 'Pelanggan'))
+    : 'Akun Tamu (Guest)';
+
+  if(titleEl) titleEl.textContent = '🔔 Notifikasi & Install Aplikasi';
+  if(descEl) descEl.textContent = 'Khusus Pelanggan (' + acctLabel + ') — Tanpa perlu Panel Admin';
+
+  body.innerHTML = `
+    <!-- 1. KHUSUS PELANGGAN: INSTALL APLIKASI -->
+    <div class="cust-guide-card">
+      <div class="cust-guide-card-head">
+        <div class="cust-guide-card-title">📲 Install Aplikasi NORXSTORE</div>
+        <span class="cust-guide-status-pill ${standalone ? 'active' : ''}">${standalone ? '✅ Sudah Terpasang' : '📱 Siap Dipasang'}</span>
+      </div>
+      <p style="font-size:11.5px;color:#0c4a6e;line-height:1.45;margin:0">
+        Pasang NORXSTORE ke Layar Utama HP Anda agar belanja lebih cepat, ringan, dan terasa seperti aplikasi asli.
+      </p>
+      <div class="cust-guide-action-row">
+        <button type="button" class="cust-guide-btn sky" onclick="triggerCustomerAppInstall()">
+          ${standalone ? '✅ Aplikasi Sudah Terpasang' : (deferredPwaPrompt ? '📲 Install Aplikasi Sekarang' : '📲 Pasang ke Layar Utama')}
+        </button>
+      </div>
+    </div>
+
+    <div class="pwa-guide-step" id="custManualInstallSteps">
+      <strong>📱 Cara Pasang di Android (Chrome / Brave / Edge):</strong><br>
+      Ketuk ikon titik tiga (<strong>⋮</strong>) di pojok kanan atas browser ➔ Pilih <strong>"Tambahkan ke Layar Utama"</strong> / <strong>"Install App"</strong> ➔ Tekan <strong>Install</strong>.<br><br>
+      <strong>🍏 Cara Pasang di iPhone / iPad (Safari):</strong><br>
+      Ketuk tombol <strong>Bagikan / Share (↑)</strong> di bawah layar ➔ Pilih <strong>"Tambah ke Layar Utama"</strong> ➔ Tekan <strong>Tambah</strong>.
+    </div>
+
+    <!-- 2. TOMBOL LONCENG LANGSUNG DI UI INI (PENGGANTI ATURAN PANEL ADMIN) -->
+    <div class="cust-guide-card violet">
+      <div class="cust-guide-card-head">
+        <div class="cust-guide-card-title">🔔 Tombol Lonceng Notif &amp; Suara Pesanan</div>
+        <span class="cust-guide-status-pill ${isPermGranted ? 'active' : ''}">${isPermGranted ? '🔔 Notif Aktif' : '⏳ Belum Aktif'}</span>
+      </div>
+      <p style="font-size:11.5px;color:#3b0764;line-height:1.5;margin:0">
+        Khusus untuk <strong>Akun Tamu maupun Akun Google Pelanggan</strong> (selain admin): Anda <strong>tidak perlu masuk Panel Admin</strong>. Cukup tekan tombol lonceng di bawah ini &amp; pastikan volume Dering/Media HP tidak di-mute agar HP berdering saat pesanan <strong>Diproses</strong> atau <strong>Selesai</strong>.
+      </p>
+      <div class="cust-guide-action-row">
+        <button type="button" class="cust-guide-btn violet" id="custBellEnableBtn" onclick="enableCustomerBellFromModal()">
+          ${isPermGranted ? '🔔 Notif Lonceng Aktif (Aktifkan Ulang)' : '🔔 Aktifkan Notif & Suara Pesanan'}
+        </button>
+        <button type="button" class="cust-guide-btn outline" onclick="testCustomerNotifSound()">🔊 Tes Suara</button>
+      </div>
+    </div>
+
+    <!-- 3. TUTORIAL MEMUNCULKAN NOTIF MENGGUNAKAN NTFY -->
+    <div class="cust-guide-card emerald">
+      <div class="cust-guide-card-head">
+        <div class="cust-guide-card-title">📡 Tutorial Notifikasi via Aplikasi ntfy</div>
+        <span class="cust-guide-status-pill ${custNtfySaved ? 'active' : ''}">${custNtfySaved ? '🟢 Topik Siap' : '⭐ Anti-Gagal Tutup App'}</span>
+      </div>
+      <p style="font-size:11px;color:#14532d;line-height:1.45;margin:0">
+        Jika memakai browser seperti <b>Brave</b> atau ingin notifikasi pesanan <b>tetap masuk &amp; berbunyi keras meski aplikasi/browser ditutup</b>, pakai <b>aplikasi ntfy</b> di HP (bukan cuma web ntfy.sh):
+      </p>
+      <ol class="cust-ntfy-steps">
+        <li>
+          <strong>1. Pasang Aplikasi ntfy di HP:</strong> Download gratis di toko aplikasi HP Anda:<br>
+          <span style="display:inline-flex;gap:6px;flex-wrap:wrap;margin-top:5px">
+            <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:7px;background:#ecfdf5;border:1px solid #86efac;color:#166534;font-size:10.5px;font-weight:800;text-decoration:none">🤖 Play Store (Android)</a>
+            <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:7px;background:#eff6ff;border:1px solid #93c5fd;color:#1d4ed8;font-size:10.5px;font-weight:800;text-decoration:none">🍏 App Store (iPhone)</a>
+          </span>
+        </li>
+        <li><strong>2. Salin / Buka Topik di App ntfy:</strong> Tekan <strong>📋 Salin</strong> lalu tekan <strong>📲 Buka App ntfy</strong> (akan langsung membuka aplikasi ntfy ke halaman Subscribe topik Anda).</li>
+        <li><strong>3. Jika Subscribe Manual di Aplikasi ntfy:</strong> Buka app <strong>ntfy</strong> ➔ tekan tombol <strong>+</strong> ➔ tempel nama topik di bawah ➔ tekan <strong>Subscribe / Berlangganan</strong>.</li>
+        <li><strong>4. Nyalakan Pengiriman Instan:</strong> Ketuk menu <strong>⋮</strong> di topik Anda ➔ aktifkan <strong>Instant Delivery</strong>, lalu klik <strong>🚀 Tes Notif</strong> di bawah.</li>
+      </ol>
+      <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:9px;padding:7px 9px;font-size:10.5px;color:#78350f;line-height:1.45;margin-bottom:8px">
+        ⚠️ <b>Info Penting:</b> Jika hanya buka lewat web <code>ntfy.sh</code> di browser, notif hanya muncul saat tab masih terbuka (dan sering diblokir Brave / saat browser ditutup). Agar notif <b>selalu tembus saat aplikasi ditutup</b>, wajib Subscribe lewat <b>aplikasi ntfy</b> di HP.
+      </div>
+      <div class="cust-ntfy-topic-box">
+        <div style="font-size:10.5px;font-weight:800;color:#166534">🔑 Topik ntfy Pesanan Anda (${acctLabel}):</div>
+        <div class="cust-ntfy-input-row">
+          <input type="text" id="customerNtfyTopicInput" class="cust-ntfy-input" value="${escapeHtml(custTopic)}" placeholder="norxstore-order-xxxxxx">
+          <button type="button" class="cust-guide-btn outline" style="height:35px;padding:0 9px;font-size:11px" onclick="generateNewCustomerNtfyTopic()" title="Buat topik baru">🎲</button>
+        </div>
+        <div class="cust-guide-action-row" style="margin-top:8px">
+          <button type="button" class="cust-guide-btn emerald" style="padding:8px 9px;font-size:11px" onclick="saveCustomerNtfyTopic()">💾 Simpan</button>
+          <button type="button" class="cust-guide-btn outline" style="padding:8px 9px;font-size:11px" onclick="copyCustomerNtfyTopic()">📋 Salin</button>
+          <a id="customerNtfyOpenLink" href="ntfy://ntfy.sh/${encodeURIComponent(custTopic)}" class="cust-guide-btn outline" style="padding:8px 9px;font-size:11px;border-color:#16a34a;color:#15803d" onclick="saveCustomerNtfyTopic(undefined,true);showToast('📲 Membuka aplikasi ntfy... Jika belum punya app-nya, pasang dulu lewat Langkah 1.')">📲 Buka App ntfy</a>
+          <button type="button" class="cust-guide-btn sky" style="padding:8px 9px;font-size:11px" onclick="testCustomerNtfyPushNow()">🚀 Tes Notif</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function openCustomerNotifInstallModal(){
+  renderPwaInstallGuideModal();
+  const ov = document.getElementById('pwaInstallGuideOverlay');
+  if(ov) ov.classList.add('open');
+}
+
 async function promptInstallPWA(){
   if(isStandalonePwa()){
-    showToast('✅ NORXSTORE sudah berjalan sebagai Aplikasi!');
+    openCustomerNotifInstallModal();
     return;
   }
   if(deferredPwaPrompt){
@@ -19085,8 +19526,7 @@ async function promptInstallPWA(){
       }
     } catch(e){}
   }
-  const ov = document.getElementById('pwaInstallGuideOverlay');
-  if(ov) ov.classList.add('open');
+  openCustomerNotifInstallModal();
 }
 
 function closePwaInstallGuide(event){
@@ -21962,6 +22402,7 @@ function updateLoginIcon(){
     icon.style.background = '#f5f4fa';
     icon.style.borderColor = '#ece9f7';
   }
+  if(typeof updateNavBellStatusUI === 'function') updateNavBellStatusUI();
 }
 
 function updateAccountModalProfileUI(){
@@ -22352,6 +22793,17 @@ function loadUserDataFromCloud(uid){
     renderMyOrders();
     renderProducts();
   }).catch(e=>console.error(e));
+
+  fbDB.ref('norxstore/users/' + uid + '/ntfyTopic').once('value').then(snap=>{
+    const cloudTopic = sanitizeCustomerNtfyTopic(snap.val());
+    if(cloudTopic){
+      safeSetItem('norxstore_customer_ntfy_topic', cloudTopic);
+      safeSetItem('norxstore_customer_ntfy_configured', '1');
+      if(typeof updateNavBellStatusUI === 'function') updateNavBellStatusUI();
+    } else if(safeGetItem('norxstore_customer_ntfy_topic', '')){
+      fbDB.ref('norxstore/users/' + uid + '/ntfyTopic').set(getCustomerNtfyTopic()).catch(()=>{});
+    }
+  }).catch(()=>{});
 }
 function syncCartToCloud(){
   if(currentUser && !currentUser.isAnonymous){
@@ -22629,7 +23081,7 @@ function saveOrderDurationFromModal(){
 
   const itemsText = o.items ? o.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
 
-  // Kirim Web Push HP secara background
+  // Kirim Web Push & ntfy HP Pelanggan secara background
   fetch('/api/send-order-push', {
     method: 'POST',
     keepalive: true,
@@ -22638,7 +23090,8 @@ function saveOrderDurationFromModal(){
       orderId: orderId,
       status: 'processing',
       estimate: finalEst,
-      itemName: itemsText
+      itemName: itemsText,
+      customerNtfyTopic: (o && o.customerNtfyTopic) ? o.customerNtfyTopic : ''
     })
   }).catch(e=>console.warn('Push error:', e));
 
@@ -22688,7 +23141,7 @@ function completeOrderStatus(id, silent = false){
   // Update persistent counter completed orders agar statistik jokian selesai tidak pernah reset ke 0
   if(typeof incrementCompletedOrdersCount === 'function') incrementCompletedOrdersCount();
 
-  // 2. Kirim Web Push HP secara background (HP bergetar & bersuara meski web tertutup)
+  // 2. Kirim Web Push & ntfy HP Pelanggan secara background (HP bergetar & bersuara meski web tertutup)
   fetch('/api/send-order-push', {
     method: 'POST',
     keepalive: true,
@@ -22696,7 +23149,8 @@ function completeOrderStatus(id, silent = false){
     body: JSON.stringify({
       orderId: id,
       status: 'done',
-      itemName: itemsText
+      itemName: itemsText,
+      customerNtfyTopic: (order && order.customerNtfyTopic) ? order.customerNtfyTopic : ''
     })
   }).catch(e=>console.warn('Push error:', e));
 
