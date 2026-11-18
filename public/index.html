@@ -58,9 +58,9 @@ body{transition:background-color 0.4s ease,color 0.4s ease}
 .search-clear-btn{position:absolute;right:8px;width:22px;height:22px;border-radius:50%;background:#e2e8f0;border:none;color:#64748b;font-size:11px;font-weight:800;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:4;transition:all .15s ease}
 .search-clear-btn:hover{background:#cbd5e1;color:#1e293b}
 .search-clear-btn.show{display:flex}
-.nav-icon{width:32px;height:32px;border-radius:10px;background:#f5f4fa;border:1.5px solid #ece9f7;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease}
+.nav-icon{width:32px;height:32px;border-radius:10px;background:#f5f4fa;border:1.5px solid #ece9f7;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:pointer;position:relative;flex-shrink:0;transition:background 0.3s ease,border-color 0.3s ease;touch-action:manipulation}
 .nav-icon:active{background:#e5e5e5}
-.nav-icon-wrap{position:relative;flex-shrink:0}
+.nav-icon-wrap{position:relative;flex-shrink:0;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;touch-action:manipulation}
 .cart-badge{position:absolute;top:-4px;right:-4px;min-width:16px;height:16px;border-radius:9px;background:#ef4444;color:#fff;font-size:9.5px;font-weight:700;display:none;align-items:center;justify-content:center;padding:0 4px;z-index:2}
 .cart-badge.show{display:flex}
 .order-notif-dot{position:absolute;top:-2px;left:-2px;width:9px;height:9px;border-radius:50%;background:#22c55e;border:2px solid #fff;display:none;box-shadow:0 0 8px rgba(34,197,94,0.9);animation:pulseNotifGreen 1.4s infinite;z-index:4}
@@ -5176,8 +5176,8 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
     <span class="nav-bell-dot" id="navBellStatusDot"></span>
   </div>
   <div class="nav-icon" id="loginIcon" onclick="handleLoginIconClick()" title="Akun">👤</div>
-  <div class="nav-icon-wrap" onclick="openCart()" title="Keranjang">
-    <div class="nav-icon">🛒</div>
+  <div class="nav-icon-wrap" id="navCartWrap" onclick="openCart()" title="Keranjang">
+    <div class="nav-icon" id="navCartBtn">🛒</div>
     <span class="order-notif-dot" id="orderNotifDot" title="Ada pesanan selesai!"></span>
     <span class="cart-badge" id="cartBadge">0</span>
   </div>
@@ -5816,7 +5816,6 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
 
 <button class="cart-checkout" id="cartConfirmCheckoutBtn" style="margin-top:12px" onclick="checkoutCart()">✅ Konfirmasi & Kirim</button>
 <p class="cart-clear" id="cartBackToCartBtn" onclick="closeCartCheckoutStep()">← Kembali ke Keranjang</p>
-</div>
 </div>
 </div>
 
@@ -14126,7 +14125,7 @@ function updateLanguageUI(){
   if(countryBtn) countryBtn.title = t('countryBtnTitle');
   const loginIcon = document.getElementById('loginIcon');
   if(loginIcon) loginIcon.title = t('accountIconTitle');
-  const cartIconWrap = document.querySelector('.nav-icon-wrap');
+  const cartIconWrap = document.getElementById('navCartWrap');
   if(cartIconWrap) cartIconWrap.title = t('cartIconTitle');
   const liveVisitorsBadge = document.getElementById('liveVisitorsBadge');
   if(liveVisitorsBadge) liveVisitorsBadge.title = t('liveVisitorsTitle');
@@ -18930,56 +18929,64 @@ function renderMyOrders(){
   `;
 
   section.innerHTML = bannerHtml + myOrders.map(o => {
-    const itemsText = o.items.map(it => (getProductName(it) || it.name) + ' x' + it.qty).join(', ');
-    let statusBadge = '';
-    let cancelAction = '';
-    if(o.status === 'pending'){
-      statusBadge = `<span class="order-status-badge" style="background:#fef3c7;color:#92400e">${t('orderStatusPending')}</span>`;
-      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnCancel')}">${t('orderBtnCancel')}</button>`;
-    }
-    else if(o.status === 'processing'){
-      const estLabel = o.estimate ? ((currentSelectedCountry === 'SG') ? ' · Est. ' : ((currentSelectedCountry === 'MY') ? ' · Anggaran ' : ' · Estimasi ')) + o.estimate : '';
-      statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">${t('orderStatusProcessing')}${estLabel}</span>`;
-      cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnCancel')}">${t('orderBtnCancel')}</button>`;
-    }
-    else if(o.status === 'cancelled'){
-      statusBadge = `<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">${t('orderStatusCancelled')}</span>`;
-      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
-    }
-    else if(o.status === 'refunded'){
-      statusBadge = `<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">${t('orderStatusRefunded') || '↩️ Di-Refund'}</span>`;
-      cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
-    }
-    else {
-      statusBadge = `<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">${t('orderStatusDone')}</span>`;
-      if(isOrderRated(o.id)){
-        cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;display:inline-flex;align-items:center;gap:3px">${t('orderAlreadyRated')}</span><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
-      } else {
-        cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;box-shadow:0 2px 6px rgba(217,119,6,0.3);cursor:pointer" title="${t('orderBtnRate')}">${t('orderBtnRate')}</button><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
+    try {
+      const ordItems = Array.isArray(o.items)
+        ? o.items.filter(Boolean)
+        : (o.items && typeof o.items === 'object' ? Object.values(o.items).filter(Boolean) : []);
+      const itemsText = ordItems.map(it => (getProductName(it) || it.name || 'Pesanan') + ' x' + (it.qty || 1)).join(', ') || 'Pesanan Anda';
+      let statusBadge = '';
+      let cancelAction = '';
+      if(o.status === 'pending'){
+        statusBadge = `<span class="order-status-badge" style="background:#fef3c7;color:#92400e">${t('orderStatusPending')}</span>`;
+        cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnCancel')}">${t('orderBtnCancel')}</button>`;
       }
-    }
-    const isTopupOrder = o.serviceType === 'topup' || (Array.isArray(o.items) && o.items.some(it => it && it.serviceType === 'topup')) || !!o.topupUid;
-    const topupMetaLine = (o.topupUid)
-      ? `<div style="font-size:11px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:4px 8px;border-radius:7px;margin-top:4px;display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap"><span>🎮 UID: ${escapeHtml(o.topupUid)}${o.topupServer ? ' (' + escapeHtml(o.topupServer) + ')' : ''}</span>${o.customerPaidConfirmed ? '<span style="color:#15803d;font-weight:800">· ✅ Paid</span>' : ''}</div>`
-      : '';
-    const invBtn = isTopupOrder
-      ? `<button type="button" onclick="openTopupInvoiceModal('${o.id}', true)" class="admin-btn-sm" style="background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer">${t('invViewBtnCard') || '🧾 Lihat Invoice / Bayar'}</button>`
-      : '';
-    return `
-    <div class="my-order-card" style="${isTopupOrder ? 'border-color:#bae6fd;' : ''}">
-      <div style="margin-bottom:6px">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:2px">
-          <p class="my-order-items" style="font-weight:700;font-size:13.5px;color:#1e1b4b;margin:0">${itemsText}</p>
-          ${isTopupOrder ? `<span style="font-size:9.5px;font-weight:800;color:#0369a1;background:#e0f2fe;padding:2px 7px;border-radius:6px;border:1px solid #7dd3fc">${t('badgeTopupLabel') || '💎 TOP UP'}</span>` : ''}
+      else if(o.status === 'processing'){
+        const estLabel = o.estimate ? ((currentSelectedCountry === 'SG') ? ' · Est. ' : ((currentSelectedCountry === 'MY') ? ' · Anggaran ' : ' · Estimasi ')) + o.estimate : '';
+        statusBadge = `<span class="order-status-badge" style="background:#dbeafe;color:#1e40af">${t('orderStatusProcessing')}${estLabel}</span>`;
+        cancelAction = `<button onclick="cancelMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#ef4444;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnCancel')}">${t('orderBtnCancel')}</button>`;
+      }
+      else if(o.status === 'cancelled'){
+        statusBadge = `<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">${t('orderStatusCancelled')}</span>`;
+        cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
+      }
+      else if(o.status === 'refunded'){
+        statusBadge = `<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">${t('orderStatusRefunded') || '↩️ Di-Refund'}</span>`;
+        cancelAction = `<button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
+      }
+      else {
+        statusBadge = `<span class="order-status-badge" style="background:#dcfce7;color:#166534;font-weight:700">${t('orderStatusDone')}</span>`;
+        if(isOrderRated(o.id)){
+          cancelAction = `<span style="font-size:10px;font-weight:700;color:#f59e0b;display:inline-flex;align-items:center;gap:3px">${t('orderAlreadyRated')}</span><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
+        } else {
+          cancelAction = `<button onclick="closeCart();openGiveRatingModal('${o.id}');" class="admin-btn-sm" style="background:linear-gradient(135deg,#f59e0b,#d97706);color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;box-shadow:0 2px 6px rgba(217,119,6,0.3);cursor:pointer" title="${t('orderBtnRate')}">${t('orderBtnRate')}</button><button onclick="removeMyOrder('${o.id}', event)" class="admin-btn-sm" style="background:#64748b;color:#fff;padding:4px 8px;font-size:10px;font-weight:700;border-radius:6px;margin-left:6px;cursor:pointer" title="${t('orderBtnDelete')}">${t('orderBtnDelete')}</button>`;
+        }
+      }
+      const isTopupOrder = o.serviceType === 'topup' || ordItems.some(it => it && it.serviceType === 'topup') || !!o.topupUid;
+      const topupMetaLine = (o.topupUid)
+        ? `<div style="font-size:11px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:4px 8px;border-radius:7px;margin-top:4px;display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap"><span>🎮 UID: ${escapeHtml(o.topupUid)}${o.topupServer ? ' (' + escapeHtml(o.topupServer) + ')' : ''}</span>${o.customerPaidConfirmed ? '<span style="color:#15803d;font-weight:800">· ✅ Paid</span>' : ''}</div>`
+        : '';
+      const invBtn = isTopupOrder
+        ? `<button type="button" onclick="openTopupInvoiceModal('${o.id}', true)" class="admin-btn-sm" style="background:linear-gradient(135deg,#0284c7,#0ea5e9);color:#fff;padding:4px 10px;font-size:11px;font-weight:700;border-radius:6px;cursor:pointer">${t('invViewBtnCard') || '🧾 Lihat Invoice / Bayar'}</button>`
+        : '';
+      return `
+      <div class="my-order-card" style="${isTopupOrder ? 'border-color:#bae6fd;' : ''}">
+        <div style="margin-bottom:6px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:2px">
+            <p class="my-order-items" style="font-weight:700;font-size:13.5px;color:#1e1b4b;margin:0">${itemsText}</p>
+            ${isTopupOrder ? `<span style="font-size:9.5px;font-weight:800;color:#0369a1;background:#e0f2fe;padding:2px 7px;border-radius:6px;border:1px solid #7dd3fc">${t('badgeTopupLabel') || '💎 TOP UP'}</span>` : ''}
+          </div>
+          <p class="my-order-total" style="font-size:14px;font-weight:800;color:${isTopupOrder ? '#0284c7' : '#7c3aed'};margin:0">${formatPrice(o.total)}</p>
+          ${topupMetaLine}
         </div>
-        <p class="my-order-total" style="font-size:14px;font-weight:800;color:${isTopupOrder ? '#0284c7' : '#7c3aed'};margin:0">${formatPrice(o.total)}</p>
-        ${topupMetaLine}
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding-top:6px;border-top:1px dashed ${isTopupOrder ? '#bae6fd' : '#e9d5ff'}">
-        <div>${statusBadge}</div>
-        <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">${invBtn}${cancelAction}</div>
-      </div>
-    </div>`;
+        <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:6px;padding-top:6px;border-top:1px dashed ${isTopupOrder ? '#bae6fd' : '#e9d5ff'}">
+          <div>${statusBadge}</div>
+          <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">${invBtn}${cancelAction}</div>
+        </div>
+      </div>`;
+    } catch(err){
+      console.warn('Order card render skipped:', err);
+      return '';
+    }
   }).join('');
 }
 
@@ -19201,9 +19208,6 @@ function saveCustomerNtfyTopic(explicitTopic, silent = false){
   safeSetItem('norxstore_customer_ntfy_topic', clean);
   safeSetItem('norxstore_customer_ntfy_configured', '1');
 
-  const linkEl = document.getElementById('customerNtfyOpenLink');
-  if(linkEl) linkEl.href = 'ntfy://ntfy.sh/' + encodeURIComponent(clean);
-
   if(window.fbAvailable && fbDB && fbDB.ref){
     if(currentUser && !currentUser.isAnonymous){
       fbDB.ref('norxstore/users/' + currentUser.uid + '/ntfyTopic').set(clean).catch(()=>{});
@@ -19228,20 +19232,90 @@ function generateNewCustomerNtfyTopic(){
   return saveCustomerNtfyTopic(clean, false);
 }
 
-function copyCustomerNtfyTopic(){
-  const topic = saveCustomerNtfyTopic(undefined, true);
+function copyTextSilently(text){
   try {
     if(navigator.clipboard && navigator.clipboard.writeText){
-      navigator.clipboard.writeText(topic).catch(()=>{});
-    } else {
-      const ta = document.createElement('textarea');
-      ta.value = topic;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
+      navigator.clipboard.writeText(text).catch(()=>{});
+      return;
     }
   } catch(e){}
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  } catch(e){}
+}
+
+function launchNtfyAppSmart(topic, opts){
+  const clean = String(topic || '').trim();
+  if(!clean) return;
+  copyTextSilently(clean);
+
+  const ua = navigator.userAgent || '';
+  const isAndroid = /android/i.test(ua);
+  const isIOS = /iphone|ipad|ipod/i.test(ua);
+  const playStoreUrl = 'https://play.google.com/store/apps/details?id=io.heckel.ntfy';
+  const appStoreUrl = 'https://apps.apple.com/app/ntfy/id1625396347';
+  const fallbackRow = document.getElementById('custNtfyFallbackStoreRow');
+
+  if(isAndroid){
+    showToast('📲 Membuka App ntfy... Jika belum terpasang, otomatis diarahkan ke Play Store (topik sudah disalin).');
+    const intentUrl = 'intent://ntfy.sh/' + encodeURIComponent(clean)
+      + '#Intent;scheme=ntfy;package=io.heckel.ntfy;S.browser_fallback_url='
+      + encodeURIComponent(playStoreUrl) + ';end';
+    if(fallbackRow) fallbackRow.style.display = 'flex';
+    try {
+      window.location.href = intentUrl;
+    } catch(e){
+      window.location.href = playStoreUrl;
+    }
+    return;
+  }
+
+  if(isIOS){
+    showToast('📲 Membuka App ntfy... Jika belum terpasang, otomatis diarahkan ke App Store (topik sudah disalin).');
+    if(fallbackRow) fallbackRow.style.display = 'flex';
+    let didLeave = false;
+    const onHide = () => {
+      if(document.hidden){
+        didLeave = true;
+        cleanup();
+      }
+    };
+    const cleanup = () => {
+      document.removeEventListener('visibilitychange', onHide);
+      window.removeEventListener('pagehide', onHide);
+    };
+    document.addEventListener('visibilitychange', onHide);
+    window.addEventListener('pagehide', onHide);
+    setTimeout(() => {
+      cleanup();
+      if(!didLeave && !document.hidden){
+        window.location.href = appStoreUrl;
+      }
+    }, 1400);
+    window.location.href = 'ntfy://ntfy.sh/' + encodeURIComponent(clean);
+    return;
+  }
+
+  if(fallbackRow) fallbackRow.style.display = 'flex';
+  showToast('📋 Topik "' + clean + '" disalin! Buka di aplikasi ntfy HP (atau pasang lewat tombol Play Store / App Store).');
+}
+
+function openCustomerNtfyAppSmart(){
+  const topic = saveCustomerNtfyTopic(undefined, true);
+  launchNtfyAppSmart(topic);
+}
+
+function copyCustomerNtfyTopic(){
+  const topic = saveCustomerNtfyTopic(undefined, true);
+  copyTextSilently(topic);
   showToast('📋 Topik "' + topic + '" disalin! Tempel di aplikasi ntfy lalu tekan Subscribe.');
 }
 
@@ -19479,7 +19553,7 @@ function renderPwaInstallGuideModal(){
             <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:7px;background:#eff6ff;border:1px solid #93c5fd;color:#1d4ed8;font-size:10.5px;font-weight:800;text-decoration:none">🍏 App Store (iPhone)</a>
           </span>
         </li>
-        <li><strong>2. Salin / Buka Topik di App ntfy:</strong> Tekan <strong>📋 Salin</strong> lalu tekan <strong>📲 Buka App ntfy</strong> (akan langsung membuka aplikasi ntfy ke halaman Subscribe topik Anda).</li>
+        <li><strong>2. Buka atau Pasang Otomatis App ntfy:</strong> Tekan <strong>📲 Buka App ntfy</strong>. Jika app ntfy sudah terpasang, topik langsung terbuka. Jika <b>belum punya aplikasi ntfy</b>, HP otomatis diarahkan ke <b>Play Store / App Store</b> (topik sudah otomatis disalin!).</li>
         <li><strong>3. Jika Subscribe Manual di Aplikasi ntfy:</strong> Buka app <strong>ntfy</strong> ➔ tekan tombol <strong>+</strong> ➔ tempel nama topik di bawah ➔ tekan <strong>Subscribe / Berlangganan</strong>.</li>
         <li><strong>4. Nyalakan Pengiriman Instan:</strong> Ketuk menu <strong>⋮</strong> di topik Anda ➔ aktifkan <strong>Instant Delivery</strong>, lalu klik <strong>🚀 Tes Notif</strong> di bawah.</li>
       </ol>
@@ -19495,8 +19569,13 @@ function renderPwaInstallGuideModal(){
         <div class="cust-guide-action-row" style="margin-top:8px">
           <button type="button" class="cust-guide-btn emerald" style="padding:8px 9px;font-size:11px" onclick="saveCustomerNtfyTopic()">💾 Simpan</button>
           <button type="button" class="cust-guide-btn outline" style="padding:8px 9px;font-size:11px" onclick="copyCustomerNtfyTopic()">📋 Salin</button>
-          <a id="customerNtfyOpenLink" href="ntfy://ntfy.sh/${encodeURIComponent(custTopic)}" class="cust-guide-btn outline" style="padding:8px 9px;font-size:11px;border-color:#16a34a;color:#15803d" onclick="saveCustomerNtfyTopic(undefined,true);showToast('📲 Membuka aplikasi ntfy... Jika belum punya app-nya, pasang dulu lewat Langkah 1.')">📲 Buka App ntfy</a>
+          <button type="button" id="customerNtfyOpenBtn" class="cust-guide-btn outline" style="padding:8px 9px;font-size:11px;border-color:#16a34a;color:#15803d" onclick="openCustomerNtfyAppSmart()">📲 Buka App ntfy</button>
           <button type="button" class="cust-guide-btn sky" style="padding:8px 9px;font-size:11px" onclick="testCustomerNtfyPushNow()">🚀 Tes Notif</button>
+        </div>
+        <div id="custNtfyFallbackStoreRow" style="display:none;gap:6px;flex-wrap:wrap;margin-top:8px;padding-top:8px;border-top:1px dashed #bbf7d0;align-items:center">
+          <span style="font-size:10px;color:#166534;font-weight:700">Belum punya aplikasi ntfy?</span>
+          <a href="https://play.google.com/store/apps/details?id=io.heckel.ntfy" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:7px;background:#ecfdf5;border:1px solid #86efac;color:#166534;font-size:10.5px;font-weight:800;text-decoration:none">🤖 Buka Play Store</a>
+          <a href="https://apps.apple.com/app/ntfy/id1625396347" target="_blank" rel="noopener noreferrer" style="display:inline-flex;align-items:center;gap:4px;padding:4px 8px;border-radius:7px;background:#eff6ff;border:1px solid #93c5fd;color:#1d4ed8;font-size:10.5px;font-weight:800;text-decoration:none">🍏 Buka App Store</a>
         </div>
       </div>
     </div>
@@ -19825,12 +19904,7 @@ function openAdminNtfySubscribeLink(serviceKind){
     cfg = getAdminNtfyConfigLocal();
     targetTopic = kind === 'joki' ? cfg.jokiTopic : (kind === 'topup' ? cfg.topupTopic : (cfg.topic || cfg.jokiTopic));
   }
-  const url = 'https://ntfy.sh/' + encodeURIComponent(targetTopic);
-  try {
-    if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(targetTopic).catch(()=>{});
-  } catch(e){}
-  window.open(url, '_blank', 'noopener');
-  showToast('📋 Topik "' + targetTopic + '" disalin! Buka di aplikasi ntfy lalu tekan Subscribe.');
+  launchNtfyAppSmart(targetTopic, { isAdmin: true });
 }
 
 async function testAdminNtfyPushNow(serviceKind){
@@ -20255,8 +20329,10 @@ function checkOrderNotifications(newOrders){
 }
 
 function triggerOrderFinishedNotification(order){
+  if(!order) return;
   playNotificationChime();
-  const itemsText = order.items.map(i => `${getProductName(i) || i.name} (x${i.qty})`).join(', ');
+  const safeItems = Array.isArray(order.items) ? order.items.filter(Boolean) : (order.items && typeof order.items === 'object' ? Object.values(order.items).filter(Boolean) : []);
+  const itemsText = safeItems.map(i => `${getProductName(i) || i.name || 'Pesanan'} (x${i.qty || 1})`).join(', ') || 'Pesanan Anda';
   const notifTitle = (currentSelectedCountry === 'SG') ? '🎉 Order Completed! - Norxstore' : ((currentSelectedCountry === 'MY') ? '🎉 Pesanan Anda Siap! - Norxstore' : '🎉 Pesanan Anda Selesai! - Norxstore');
   const notifBody = (currentSelectedCountry === 'SG') ? `Service "${itemsText}" has been completed.` : ((currentSelectedCountry === 'MY') ? `Perkhidmatan "${itemsText}" telah siap dilaksanakan.` : `Layanan "${itemsText}" telah selesai dikerjakan.`);
   sendBrowserNotification(notifTitle, notifBody);
@@ -20306,9 +20382,11 @@ function triggerOrderFinishedNotification(order){
 }
 
 function triggerOrderProcessingNotification(order){
+  if(!order) return;
   playNotificationChime();
   const estText = order.estimate ? ((currentSelectedCountry === 'SG') ? `Est: ${order.estimate}` : ((currentSelectedCountry === 'MY') ? `Anggaran: ${order.estimate}` : `Estimasi: ${order.estimate}`)) : t('orderStatusProcessing');
-  const itemsText = order.items.map(i => getProductName(i) || i.name).join(', ');
+  const safeItems = Array.isArray(order.items) ? order.items.filter(Boolean) : (order.items && typeof order.items === 'object' ? Object.values(order.items).filter(Boolean) : []);
+  const itemsText = safeItems.map(i => getProductName(i) || i.name || 'Pesanan').join(', ') || 'Pesanan Anda';
   const notifTitle = (currentSelectedCountry === 'SG') ? '⚡ Order In Progress - Norxstore' : ((currentSelectedCountry === 'MY') ? '⚡ Pesanan Sedang Diproses - Norxstore' : '⚡ Pesanan Sedang Diproses - Norxstore');
   const notifBody = (currentSelectedCountry === 'SG') ? `Service "${itemsText}" is now in progress (${estText})` : ((currentSelectedCountry === 'MY') ? `Perkhidmatan "${itemsText}" sedang diproses (${estText})` : `Layanan "${itemsText}" sedang diproses (${estText})`);
   sendBrowserNotification(notifTitle, notifBody);
@@ -21350,7 +21428,8 @@ function submitNotifRating(){
   const customerName = (nameInput && nameInput.value) ? nameInput.value.trim() : (currentFinishedOrderToRate.customerName || (currentUser && !currentUser.isAnonymous ? currentUser.displayName : ''));
   const comment = commentInput ? commentInput.value.trim() : '';
   const defServiceName = (currentSelectedCountry === 'SG') ? 'Boosting Service' : ((currentSelectedCountry === 'MY') ? 'Servis Joki' : 'Layanan Joki');
-  const serviceName = currentFinishedOrderToRate.items.map(i => getProductName(i) || i.name).join(', ') || defServiceName;
+  const rateItems = Array.isArray(currentFinishedOrderToRate.items) ? currentFinishedOrderToRate.items.filter(Boolean) : (currentFinishedOrderToRate.items && typeof currentFinishedOrderToRate.items === 'object' ? Object.values(currentFinishedOrderToRate.items).filter(Boolean) : []);
+  const serviceName = rateItems.map(i => getProductName(i) || i.name || 'Layanan').join(', ') || defServiceName;
   
   submitCustomerRating({
     orderId: currentFinishedOrderToRate.id,
@@ -23747,26 +23826,35 @@ function renderCart(){
 }
 
 function openCart(preferredTab){
-  markFinishedOrdersAsSeenInCart();
-  updateOrderNotifDot();
-  renderCart();
-  renderMyOrders();
-  closeCartCheckoutStep();
-
-  const myIds = getMyOrderIds();
-  const myOrders = myIds.map(id => allOrders[id]).filter(Boolean);
-
-  if(preferredTab){
-    switchCartPanelTab(preferredTab);
-  } else if(cart.length === 0 && myOrders.length > 0){
-    switchCartPanelTab('orders');
-  } else {
-    switchCartPanelTab('cart');
-  }
-
-  document.getElementById('cartOverlay').classList.add('open');
-  document.getElementById('cartPanel').classList.add('open');
+  const ov = document.getElementById('cartOverlay');
+  const panel = document.getElementById('cartPanel');
+  if(ov) ov.classList.add('open');
+  if(panel) panel.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  try { markFinishedOrdersAsSeenInCart(); } catch(e){ console.warn('markFinishedOrdersAsSeenInCart notice:', e); }
+  try { updateOrderNotifDot(); } catch(e){ console.warn('updateOrderNotifDot notice:', e); }
+  try { renderCart(); } catch(e){ console.error('renderCart error:', e); }
+  try { renderMyOrders(); } catch(e){ console.error('renderMyOrders error:', e); }
+  try { closeCartCheckoutStep(); } catch(e){ console.warn('closeCartCheckoutStep notice:', e); }
+
+  let myOrders = [];
+  try {
+    const myIds = getMyOrderIds();
+    myOrders = myIds.map(id => allOrders[id]).filter(Boolean);
+  } catch(e){ console.warn('getMyOrderIds notice:', e); }
+
+  try {
+    if(preferredTab){
+      switchCartPanelTab(preferredTab);
+    } else if(cart.length === 0 && myOrders.length > 0){
+      switchCartPanelTab('orders');
+    } else {
+      switchCartPanelTab('cart');
+    }
+  } catch(e){
+    console.error('switchCartPanelTab error:', e);
+  }
 }
 
 function updateCartCheckoutTopupUI(){
