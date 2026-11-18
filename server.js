@@ -6,6 +6,10 @@ import pushPublicKeyHandler from './api/push-public-key.js';
 import pushSubscribeHandler from './api/push-subscribe.js';
 import sendAdminOrderPushHandler from './api/send-admin-order-push.js';
 import sendOrderPushHandler from './api/send-order-push.js';
+import paymentConfigHandler from './api/payment-config.js';
+import createPaymentHandler from './api/create-payment.js';
+import paymentStatusHandler from './api/payment-status.js';
+import paymentWebhookHandler from './api/payment-webhook.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -53,6 +57,12 @@ app.all('/api/push-public-key', (req, res) => pushPublicKeyHandler(req, res));
 app.all('/api/push-subscribe', (req, res) => pushSubscribeHandler(req, res));
 app.all('/api/send-admin-order-push', (req, res) => sendAdminOrderPushHandler(req, res));
 app.all('/api/send-order-push', (req, res) => sendOrderPushHandler(req, res));
+
+// Shared Payment Gateway API endpoints (Xendit & Midtrans)
+app.all('/api/payment-config', (req, res) => paymentConfigHandler(req, res));
+app.all('/api/create-payment', (req, res) => createPaymentHandler(req, res));
+app.all('/api/payment-status', (req, res) => paymentStatusHandler(req, res));
+app.all('/api/payment-webhook', (req, res) => paymentWebhookHandler(req, res));
 
 // WhatsApp Channel Info & Follower Count Resolver
 app.get('/api/whatsapp-channel-info', async (req, res) => {

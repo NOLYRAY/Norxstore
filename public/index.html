@@ -1405,9 +1405,10 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .admin-btn-sm{padding:8px 14px;border-radius:8px;border:none;background:#ef4444;color:#fff;font-size:12px;font-weight:700;cursor:pointer}
 .admin-btn-sm:active{background:#dc2626}
 .admin-btn-secondary{padding:8px 14px;border-radius:8px;border:1px solid #e5e5e5;background:#f5f5f5;color:#555;font-size:12px;font-weight:600;cursor:pointer}
-.admin-orders-nav{display:flex;gap:6px;background:#f1f5f9;padding:4px;border-radius:12px;margin-bottom:12px;box-sizing:border-box;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.admin-orders-nav{display:flex;gap:6px;background:#f1f5f9;padding:4px;border-radius:12px;margin-bottom:12px;box-sizing:border-box;width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y !important;overscroll-behavior-x:contain;cursor:grab;scrollbar-width:none}
 .admin-orders-nav::-webkit-scrollbar{display:none}
-.admin-orders-tab{flex:1;min-width:max-content;padding:8px 10px;font-size:11.5px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#64748b;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;white-space:nowrap}
+.admin-orders-nav *{touch-action:pan-x pan-y !important}
+.admin-orders-tab{flex:1;min-width:max-content;padding:8px 10px;font-size:11.5px;font-weight:700;border:none;border-radius:9px;background:transparent;color:#64748b;cursor:pointer;transition:all .2s ease;text-align:center;display:flex;align-items:center;justify-content:center;gap:6px;box-sizing:border-box;white-space:nowrap;flex-shrink:0}
 .admin-orders-tab.active{background:#fff;color:#7c3aed;box-shadow:0 2px 8px rgba(124,58,237,.14)}
 .admin-tab-count{display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;padding:2px 7px;border-radius:999px;background:#e2e8f0;color:#475569;line-height:1.2}
 .admin-orders-tab.active .admin-tab-count{background:#ede9fe;color:#7c3aed}
@@ -1505,16 +1506,24 @@ body.dark-mode .modal-sold-pill{background:rgba(245,158,11,0.14);border-color:rg
 .upload-zone-text{font-size:12px;color:#888}
 .upload-zone-icon{font-size:20px;margin-bottom:2px}
 
-.admin-product-list{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:440px;overflow-y:auto;padding-right:2px}
-.admin-product-item{display:flex;align-items:center;gap:8px;padding:10px;border:1.5px solid #e5e5e5;border-radius:10px;background:#fafafa;transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;position:relative}
+.admin-product-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;max-height:520px;overflow-y:auto;padding:2px}
+.admin-product-item{display:flex;flex-direction:column;align-items:stretch;gap:10px;padding:12px;border:1.5px solid #e2e8f0;border-radius:14px;background:#ffffff;box-shadow:0 2px 8px rgba(15,23,42,.04);transition:transform .15s ease, border-color .15s ease, box-shadow .15s ease, opacity .15s ease;position:relative}
 .admin-product-item.dragging{opacity:0.45;border:2px dashed #7c3aed;background:#f5f3ff}
 .admin-product-item.drag-over-top{border-top:3px solid #7c3aed !important}
 .admin-product-item.drag-over-bottom{border-bottom:3px solid #7c3aed !important}
-.admin-product-item .p-icon{width:36px;height:36px;border-radius:8px;background:#f0f0f0;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-.admin-product-item .p-info{flex:1;min-width:0}
-.admin-product-item .p-name{font-size:12px;font-weight:600;color:#1a1a1a;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.admin-product-item .p-cat{font-size:10px;color:#888;margin-top:1px}
-.admin-product-item .p-price{font-size:12px;font-weight:700;color:#7c3aed;margin-top:2px}
+.admin-prod-top-row{display:flex;align-items:flex-start;gap:10px;width:100%;min-width:0}
+.admin-product-item .p-icon{width:46px;height:46px;border-radius:11px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;overflow:hidden}
+.admin-product-item .p-info{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.admin-product-item .p-name{font-size:13px;font-weight:800;color:#0f172a;margin:0;line-height:1.35;white-space:normal;overflow:visible;word-break:break-word;display:flex;flex-wrap:wrap;align-items:center;gap:5px}
+.admin-product-item .p-name .admin-prod-side-pill{margin-left:0}
+.admin-product-item .p-cat{font-size:10.5px;font-weight:700;color:#64748b;margin:0;line-height:1.35;word-break:break-word}
+.admin-product-item .p-price{font-size:13px;font-weight:800;color:#7c3aed;margin:2px 0 0;display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.admin-prod-sold-pill{display:inline-flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:1px 7px;border-radius:6px;white-space:nowrap}
+.admin-prod-actions-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;width:100%}
+.admin-prod-actions-row.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+.admin-prod-actions-row .admin-btn-sm{width:100%;height:34px;padding:0 8px;border-radius:9px;font-size:11px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.admin-prod-status-row{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+.admin-prod-status-row .admin-btn-sm{flex:1;min-width:110px;height:32px;padding:0 10px;border-radius:9px;font-size:10.5px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:4px}
 
 .p-drag-handle{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:34px;height:48px;padding:4px;border-radius:8px;background:#f8fafc;border:1.5px solid #e2e8f0;cursor:grab;touch-action:none !important;-webkit-user-select:none;user-select:none;flex-shrink:0;transition:all .15s ease}
 .p-drag-handle:active{cursor:grabbing;background:#ede9fe;border-color:#a78bfa;box-shadow:0 2px 8px rgba(124,58,237,.2)}
@@ -4003,19 +4012,35 @@ body.dark-mode .topup-wb-status{
 }
 .admin-subnav-bar{
   display:flex;
-  gap:6px;
+  align-items:center;
+  flex-wrap:nowrap;
+  gap:7px;
   overflow-x:auto;
-  padding-bottom:8px;
+  overflow-y:hidden;
+  padding:2px 4px 10px;
   margin-bottom:14px;
   border-bottom:1.5px solid #f1f5f9;
   -webkit-overflow-scrolling:touch;
-  scrollbar-width:none;
+  touch-action:pan-x pan-y !important;
+  overscroll-behavior-x:contain;
+  scroll-snap-type:x proximity;
+  cursor:grab;
+  scrollbar-width:thin;
+  scrollbar-color:#cbd5e1 transparent;
 }
-.admin-subnav-bar::-webkit-scrollbar{display:none}
+.admin-subnav-bar *{
+  touch-action:pan-x pan-y !important;
+}
+.admin-subnav-bar > *{
+  flex-shrink:0;
+}
+.admin-subnav-bar::-webkit-scrollbar{height:4px}
+.admin-subnav-bar::-webkit-scrollbar-track{background:transparent}
+.admin-subnav-bar::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:999px}
 .admin-subnav-btn{
-  min-height:36px;
-  padding:6px 12px;
-  border-radius:9px;
+  min-height:38px;
+  padding:7px 13px;
+  border-radius:10px;
   border:1.5px solid #e2e8f0;
   background:#ffffff;
   color:#475569;
@@ -4023,7 +4048,11 @@ body.dark-mode .topup-wb-status{
   font-weight:700;
   white-space:nowrap;
   cursor:pointer;
+  flex:0 0 auto;
   flex-shrink:0;
+  scroll-snap-align:start;
+  user-select:none;
+  -webkit-user-select:none;
   transition:all .15s ease;
 }
 .admin-subnav-btn.active{
@@ -4087,9 +4116,17 @@ body.dark-mode .topup-wb-status{
   display:flex;
   gap:6px;
   overflow-x:auto;
-  padding-bottom:6px;
+  overflow-y:hidden;
+  padding-bottom:8px;
   margin-bottom:10px;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-x pan-y !important;
+  overscroll-behavior-x:contain;
+  cursor:grab;
+  scrollbar-width:none;
 }
+.admin-topup-orders-nav::-webkit-scrollbar{display:none}
+.admin-topup-orders-nav *{touch-action:pan-x pan-y !important}
 .admin-topup-orders-tab{
   padding:6px 10px;
   border-radius:8px;
@@ -4100,6 +4137,7 @@ body.dark-mode .topup-wb-status{
   font-weight:700;
   cursor:pointer;
   white-space:nowrap;
+  flex-shrink:0;
   display:inline-flex;
   align-items:center;
   gap:5px;
@@ -4389,44 +4427,47 @@ body.dark-mode .topup-wb-status{
   width:100%;
   display:flex;
   align-items:center;
-  gap:6px;
-  margin-top:8px;
-  padding-top:7px;
+  gap:7px;
+  margin-top:0;
+  padding-top:9px;
   border-top:1px dashed #e2e8f0;
 }
 .admin-quick-price-label{
-  font-size:10.5px;
+  font-size:11px;
   font-weight:800;
   color:#475569;
   white-space:nowrap;
+  flex-shrink:0;
 }
 .admin-quick-price-input{
   flex:1;
-  min-width:90px;
-  height:32px;
-  padding:4px 9px;
+  min-width:0;
+  height:36px;
+  padding:4px 10px;
   border:1.5px solid #cbd5e1;
-  border-radius:8px;
-  font-size:12px;
+  border-radius:9px;
+  font-size:12.5px;
   font-weight:700;
   color:#0f172a;
-  background:#ffffff;
+  background:#f8fafc;
 }
 .admin-quick-price-input:focus{
   outline:none;
   border-color:#0284c7;
+  background:#ffffff;
 }
 .admin-quick-price-btn{
-  height:32px;
-  padding:0 11px;
+  height:36px;
+  padding:0 13px;
   border:none;
-  border-radius:8px;
+  border-radius:9px;
   background:#0284c7;
   color:#fff;
-  font-size:11px;
+  font-size:11.5px;
   font-weight:800;
   cursor:pointer;
   white-space:nowrap;
+  flex-shrink:0;
 }
 .admin-quick-price-btn:hover{background:#0369a1}
 .admin-fee-preview-box{
@@ -6598,8 +6639,8 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
   </p>
 
   <!-- Sub Navigation Tabs di Panel Admin -->
-  <div style="display:flex;gap:6px;overflow-x:auto;padding-bottom:8px;margin-bottom:12px;-webkit-overflow-scrolling:touch" id="adminSocialSubNav">
-    <button type="button" class="admin-tab-chip active" id="tabAdminSocialBtn" onclick="switchAdminSocialSubTab('social')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #d946ef;background:#fae8ff;color:#86198f;cursor:pointer;white-space:nowrap">📱 Akun Medsos</button>
+  <div class="admin-subnav-bar" style="margin-bottom:12px" id="adminSocialSubNav">
+    <button type="button" class="admin-tab-chip active" id="tabAdminSocialBtn" onclick="switchAdminSocialSubTab('social')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #d946ef;background:#fae8ff;color:#86198f;cursor:pointer;white-space:nowrap;flex-shrink:0">📱 Akun Medsos</button>
     <button type="button" class="admin-tab-chip" id="tabAdminWachannelBtn" onclick="switchAdminSocialSubTab('wachannel')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">📢 Saluran WhatsApp</button>
     <button type="button" class="admin-tab-chip" id="tabAdminJokirulesBtn" onclick="switchAdminSocialSubTab('jokirules')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">📋 Peraturan Joki</button>
     <button type="button" class="admin-tab-chip" id="tabAdminScamBtn" onclick="switchAdminSocialSubTab('scam')" style="padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;border:1.5px solid #e2e8f0;background:#fff;color:#475569;cursor:pointer;white-space:nowrap">🛡️ Header & Anti-Scam</button>
@@ -7234,6 +7275,20 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
 
   <!-- TOPUP PANE 3: PENGATURAN NOMOR & REKENING TUJUAN PEMBAYARAN ADMIN -->
   <div class="admin-topup-pane" id="adminTopupPane_payment" style="display:none">
+    <div id="adminTopupGatewayStatusCard" style="background:linear-gradient(135deg,#f8fafc,#eff6ff);border:1.5px solid #93c5fd;border-radius:14px;padding:12px 13px;margin-bottom:12px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+        <div style="font-size:12px;font-weight:800;color:#0c4a6e">🔌 Status API Payment Gateway Otomatis</div>
+        <span id="adminGatewayBadge" style="font-size:10px;font-weight:800;padding:3px 9px;border-radius:999px;background:#fef3c7;color:#92400e">Memeriksa server...</span>
+      </div>
+      <div id="adminGatewayDesc" style="font-size:11px;color:#475569;margin-top:6px;line-height:1.45">
+        Saat <b>XENDIT_SECRET_KEY</b> atau <b>MIDTRANS_SERVER_KEY</b> aktif di Environment Variables Vercel, checkout otomatis membuat link bayar langsung masuk ke aplikasi DANA / GoPay / ShopeePay / OVO dengan nominal terkunci &amp; verifikasi lunas otomatis lewat Webhook.
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;margin-top:8px;flex-wrap:wrap">
+        <code id="adminGatewayWebhookUrl" style="flex:1;min-width:180px;font-size:10.5px;background:#fff;border:1px solid #cbd5e1;padding:5px 8px;border-radius:8px;color:#0f172a;overflow-x:auto">https://norxstore.vercel.app/api/payment-webhook</code>
+        <button type="button" class="topup-copy-btn" style="padding:6px 10px;font-size:11px" onclick="copyTopupInvoiceText(document.getElementById('adminGatewayWebhookUrl').textContent)">📋 Salin Webhook</button>
+      </div>
+    </div>
+
     <div class="admin-topup-card">
       <div class="admin-topup-section-h">
         <span>🏦 Setting Nomor, Rekening &amp; Biaya per Metode Pembayaran</span>
@@ -8748,11 +8803,15 @@ function renderCheckoutPayTargetPreview(mode){
           : 'Invoice & detail transfer langsung muncul otomatis di web.';
       }
     }
+    const isGwActive = !!(typeof paymentGatewayRuntime !== 'undefined' && paymentGatewayRuntime.configured);
     box.style.display = 'block';
     box.innerHTML = `
       <div class="checkout-pay-target-card">
-        <div class="checkout-pay-target-badge">🔗 Jalur Langsung Aplikasi ${escapeHtml(target.label)}</div>
-        ${destNum ? `
+        <div class="checkout-pay-target-badge">${isGwActive ? `⚡ Gateway Otomatis · ${escapeHtml(target.label)}` : `🔗 Jalur Langsung Aplikasi ${escapeHtml(target.label)}`}</div>
+        ${isGwActive ? `
+          ${priceText ? `<div style="font-size:11.5px;color:#0f172a;font-weight:700">Nominal Otomatis Terkunci: <strong style="color:#0284c7">${escapeHtml(priceText)}</strong></div>` : ''}
+          <div style="font-size:10.5px;color:#0369a1;font-weight:600;margin-top:5px;line-height:1.4">⚡ Klik <b>Bayar</b> di bawah → langsung masuk ke aplikasi <b>${escapeHtml(meta.label)}</b> dengan nominal ${priceText ? escapeHtml(priceText) + ' ' : ''}otomatis terisi &amp; verifikasi lunas otomatis!</div>
+        ` : (destNum ? `
           <div style="font-size:10.5px;color:#475569;font-weight:700">${escapeHtml(target.numberLabel)} · a.n. <b>${escapeHtml(target.holder)}</b></div>
           <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin:4px 0">
             <span class="checkout-pay-target-num">${escapeHtml(destNum)}</span>
@@ -8764,7 +8823,7 @@ function renderCheckoutPayTargetPreview(mode){
           <div style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;padding:9px;font-size:11px;font-weight:700;color:#92400e">
             ⚠️ Nomor ${escapeHtml(target.label)} belum diatur Admin. Silakan pilih metode lain atau QRIS.
           </div>
-        `}
+        `)}
       </div>
     `;
   }
@@ -8929,6 +8988,162 @@ function syncTopupPaymentConfigFromCloudRest(){
         applyTopupPaymentConfig(val.config);
       }).catch(()=>{});
   } catch(e){}
+}
+
+let paymentGatewayRuntime = {
+  loaded: false,
+  configured: false,
+  provider: null,
+  sandbox: true,
+  webhookPath: '/api/payment-webhook'
+};
+
+function renderAdminTopupGatewayStatus(){
+  const badgeEl = document.getElementById('adminGatewayBadge');
+  const descEl = document.getElementById('adminGatewayDesc');
+  const webhookEl = document.getElementById('adminGatewayWebhookUrl');
+  if(webhookEl && typeof window !== 'undefined' && window.location && window.location.origin){
+    const originUrl = window.location.origin.includes('localhost')
+      ? 'https://norxstore.vercel.app'
+      : window.location.origin;
+    webhookEl.textContent = originUrl + '/api/payment-webhook';
+  }
+  if(!badgeEl || !descEl) return;
+  if(!paymentGatewayRuntime.loaded){
+    badgeEl.textContent = 'Memeriksa server...';
+    badgeEl.style.background = '#e2e8f0';
+    badgeEl.style.color = '#475569';
+    return;
+  }
+  if(paymentGatewayRuntime.configured){
+    const provName = String(paymentGatewayRuntime.provider || 'GATEWAY').toUpperCase();
+    const envLabel = paymentGatewayRuntime.sandbox ? 'SANDBOX' : 'PRODUCTION';
+    badgeEl.textContent = `🟢 AKTIF · ${provName} (${envLabel})`;
+    badgeEl.style.background = '#dcfce7';
+    badgeEl.style.color = '#15803d';
+    descEl.innerHTML = `API Payment Gateway <b>${provName}</b> aktif! Pelanggan otomatis diarahkan masuk aplikasi dengan nominal terkunci &amp; status pesanan otomatis berubah lunas via Webhook.`;
+  } else {
+    badgeEl.textContent = '🟡 Mode Langsung Manual (Gateway API Siap)';
+    badgeEl.style.background = '#fef3c7';
+    badgeEl.style.color = '#92400e';
+    descEl.innerHTML = `Endpoint <code>/api/create-payment</code> &amp; <code>/api/payment-webhook</code> sudah terpasang. Untuk mengaktifkan bayar otomatis ber-nominal terkunci (tanpa salin nomor), isi Env Var <b>XENDIT_SECRET_KEY</b> (+ <b>XENDIT_CALLBACK_TOKEN</b>) atau <b>MIDTRANS_SERVER_KEY</b> di Vercel Dashboard lalu Redeploy.`;
+  }
+}
+
+async function fetchPaymentGatewayConfig(){
+  try {
+    const res = await fetch('/api/payment-config?t=' + Date.now(), { cache: 'no-store' });
+    if(res.ok){
+      const data = await res.json();
+      if(data && data.ok){
+        paymentGatewayRuntime = {
+          loaded: true,
+          configured: !!data.configured,
+          provider: data.provider || null,
+          sandbox: data.sandbox !== false,
+          webhookPath: data.webhookPath || '/api/payment-webhook'
+        };
+      }
+    }
+  } catch(e){
+    paymentGatewayRuntime.loaded = true;
+  }
+  renderAdminTopupGatewayStatus();
+  if(typeof renderCheckoutPayTargetPreview === 'function'){
+    const modalOv = document.getElementById('modalOverlay');
+    if(modalOv && modalOv.classList.contains('open')) renderCheckoutPayTargetPreview('modal');
+  }
+}
+
+function launchGatewayPaymentUrl(targetUrl){
+  const url = String(targetUrl || '').trim();
+  if(!url) return false;
+  try {
+    const a = document.createElement('a');
+    a.href = url;
+    a.rel = 'noopener noreferrer';
+    a.style.display = 'none';
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(()=>{ try { a.remove(); } catch(e){} }, 120);
+    return true;
+  } catch(e){
+    try {
+      window.location.href = url;
+      return true;
+    } catch(err){}
+  }
+  return false;
+}
+
+async function initiateGatewayTopupPayment(orderId, autoLaunch = true){
+  const ord = (typeof allOrders !== 'undefined' && orderId) ? allOrders[orderId] : null;
+  if(!ord || !paymentGatewayRuntime.configured) return false;
+  ord.gatewayLoading = true;
+  if(currentTopupInvoiceOrderId === orderId && typeof renderTopupInvoiceContent === 'function'){
+    renderTopupInvoiceContent();
+  }
+  try {
+    const itemsText = Array.isArray(ord.items)
+      ? ord.items.map(it => (it.name || 'Top-Up') + (it.qty > 1 ? ' x' + it.qty : '')).join(', ')
+      : 'Top-Up Game';
+    const res = await fetch('/api/create-payment', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        orderId: orderId,
+        amount: ord.total || 0,
+        paymentMethod: ord.paymentMethod || 'QRIS All Payment',
+        itemName: itemsText,
+        customerPhone: ord.topupContact || '',
+        returnUrl: window.location.origin
+      })
+    });
+    const data = await res.json().catch(()=>({}));
+    ord.gatewayLoading = false;
+    if(res.ok && data && data.ok){
+      ord.gatewayProvider = data.provider || paymentGatewayRuntime.provider;
+      ord.gatewayExternalId = data.externalId || '';
+      ord.gatewayOrderId = data.gatewayOrderId || orderId;
+      ord.gatewayChannel = data.channel || '';
+      ord.gatewayStatus = String(data.status || 'PENDING').toUpperCase();
+      ord.gatewayDeeplinkUrl = data.deeplinkUrl || '';
+      ord.gatewayCheckoutUrl = data.checkoutUrl || '';
+      ord.gatewayQrUrl = data.qrUrl || '';
+      ord.gatewayQrImageDataUrl = data.qrImageDataUrl || '';
+      ord.gatewayQrString = data.qrString || '';
+      ord.gatewayOvoPushSent = !!data.ovoPushSent;
+
+      if(currentTopupInvoiceOrderId === orderId && typeof renderTopupInvoiceContent === 'function'){
+        renderTopupInvoiceContent();
+      }
+      if(typeof startTopupGatewayStatusPolling === 'function'){
+        startTopupGatewayStatusPolling(orderId);
+      }
+      const launchTarget = ord.gatewayDeeplinkUrl || ord.gatewayCheckoutUrl;
+      if(autoLaunch && launchTarget){
+        showToast(`🚀 Membuka aplikasi pembayaran (${String(ord.gatewayProvider || 'Gateway').toUpperCase()})...`);
+        launchGatewayPaymentUrl(launchTarget);
+      } else if(ord.gatewayOvoPushSent){
+        showToast('📲 Permintaan bayar dikirim langsung ke aplikasi OVO Anda!');
+      }
+      return true;
+    } else {
+      ord.gatewayError = (data && data.error) || 'Gateway sementara tidak merespons';
+      if(currentTopupInvoiceOrderId === orderId && typeof renderTopupInvoiceContent === 'function'){
+        renderTopupInvoiceContent();
+      }
+      showToast('⚠️ ' + ord.gatewayError + ' — gunakan jalur manual di Invoice.');
+      return false;
+    }
+  } catch(e){
+    ord.gatewayLoading = false;
+    ord.gatewayError = 'Gagal terhubung ke server payment';
+    if(currentTopupInvoiceOrderId === orderId && typeof renderTopupInvoiceContent === 'function'){
+      renderTopupInvoiceContent();
+    }
+    return false;
+  }
 }
 
 function refreshQuickTopupStatusText(){
@@ -18355,6 +18570,15 @@ function createOrder(items, total, paymentMethod, adminName, extraMeta = null){
   if(!window._localSessionCreatedOrderIds) window._localSessionCreatedOrderIds = new Set();
   window._localSessionCreatedOrderIds.add(orderId);
   fbDB.ref('norxstore/orders/' + orderId).set(order).catch(e=>console.error(e));
+  try {
+    const ordJson = JSON.stringify(order);
+    fetch('https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/' + encodeURIComponent(orderId) + '.json', {
+      method: 'PUT',
+      keepalive: ordJson.length < 60000,
+      headers: { 'Content-Type': 'application/json' },
+      body: ordJson
+    }).catch(()=>{});
+  } catch(e){}
   if(typeof recordOrderToSalesBank === 'function'){
     recordOrderToSalesBank(order);
   }
@@ -23284,12 +23508,16 @@ function checkoutCart(){
     closeCart();
     showToast(t('invOrderCreatedToast'));
     openTopupInvoiceModal(createdOrderId);
-    try {
-      const payTarget = resolveTopupPaymentTarget(chosenCartPay, getTopupPaymentConfig());
-      if(payTarget.type !== 'qris' && payTarget.number){
-        launchPaymentAppForOrder(createdOrderId, { autoFromCheckout: true });
-      }
-    } catch(e){}
+    if(paymentGatewayRuntime.configured){
+      initiateGatewayTopupPayment(createdOrderId, true);
+    } else {
+      try {
+        const payTarget = resolveTopupPaymentTarget(chosenCartPay, getTopupPaymentConfig());
+        if(payTarget.type !== 'qris' && payTarget.number){
+          launchPaymentAppForOrder(createdOrderId, { autoFromCheckout: true });
+        }
+      } catch(e){}
+    }
     return;
   }
 
@@ -26155,12 +26383,16 @@ function submitDirectTopupOrder(){
   closeModal();
   showToast(t('invOrderCreatedToast'));
   openTopupInvoiceModal(createdOrderId);
-  try {
-    const payTarget = resolveTopupPaymentTarget(chosenModalPay, getTopupPaymentConfig());
-    if(payTarget.type !== 'qris' && payTarget.number){
-      launchPaymentAppForOrder(createdOrderId, { autoFromCheckout: true });
-    }
-  } catch(e){}
+  if(paymentGatewayRuntime.configured){
+    initiateGatewayTopupPayment(createdOrderId, true);
+  } else {
+    try {
+      const payTarget = resolveTopupPaymentTarget(chosenModalPay, getTopupPaymentConfig());
+      if(payTarget.type !== 'qris' && payTarget.number){
+        launchPaymentAppForOrder(createdOrderId, { autoFromCheckout: true });
+      }
+    } catch(e){}
+  }
 }
 
 function sendWA(){
@@ -26224,6 +26456,91 @@ function sendWA(){
 // ==================== IN-WEB LIVE TOP-UP INVOICE MODAL ENGINE ====================
 let currentTopupInvoiceOrderId = null;
 let topupInvoiceTimerInterval = null;
+let topupGatewayPollInterval = null;
+
+function stopTopupGatewayStatusPolling(){
+  if(topupGatewayPollInterval){
+    clearInterval(topupGatewayPollInterval);
+    topupGatewayPollInterval = null;
+  }
+}
+
+function resolveOrderInvoiceQrisSrc(orderId){
+  const ord = (typeof allOrders !== 'undefined' && orderId) ? allOrders[orderId] : null;
+  if(ord && (ord.gatewayQrImageDataUrl || ord.gatewayQrUrl)){
+    return String(ord.gatewayQrImageDataUrl || ord.gatewayQrUrl).trim();
+  }
+  const cfg = getTopupPaymentConfig();
+  return String(cfg.qrisImage || '').trim();
+}
+
+function viewOrderInvoiceQris(orderId){
+  const src = resolveOrderInvoiceQrisSrc(orderId);
+  if(src) openImageViewer(src);
+}
+
+function downloadOrderInvoiceQris(orderId){
+  const ord = (typeof allOrders !== 'undefined' && orderId) ? allOrders[orderId] : null;
+  const src = resolveOrderInvoiceQrisSrc(orderId);
+  if(!src){
+    showToast('⚠️ Foto QRIS belum diatur Admin');
+    return;
+  }
+  const suffix = (ord && ord.invoiceCode) ? ord.invoiceCode : 'NORXSTORE';
+  if(src.startsWith('data:')){
+    const a = document.createElement('a');
+    a.href = src;
+    a.download = `QRIS-${suffix}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    showToast('✅ Foto QRIS disimpan! Buka DANA / GoPay / OVO / Bank lalu scan dari Galeri.');
+    return;
+  }
+  fetch(src).then(r => r.blob()).then(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `QRIS-${suffix}.png`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    setTimeout(()=>URL.revokeObjectURL(url), 4000);
+    showToast('✅ Foto QRIS disimpan! Buka DANA / GoPay / OVO / Bank lalu scan dari Galeri.');
+  }).catch(()=>{
+    openImageViewer(src);
+  });
+}
+
+function startTopupGatewayStatusPolling(orderId){
+  stopTopupGatewayStatusPolling();
+  if(!orderId) return;
+  topupGatewayPollInterval = setInterval(async () => {
+    const ov = document.getElementById('topupInvoiceOverlay');
+    const ord = allOrders[orderId];
+    if(!ov || !ov.classList.contains('open') || !ord || ord.gatewayPaid || ord.status === 'done' || ord.status === 'cancelled'){
+      stopTopupGatewayStatusPolling();
+      return;
+    }
+    try {
+      const res = await fetch('/api/payment-status?orderId=' + encodeURIComponent(orderId) + '&t=' + Date.now(), { cache: 'no-store' });
+      if(!res.ok) return;
+      const data = await res.json();
+      if(data && data.paid){
+        ord.gatewayPaid = true;
+        ord.gatewayStatus = 'PAID';
+        ord.customerPaidConfirmed = true;
+        ord.customerPaidAt = ord.customerPaidAt || Date.now();
+        if(ord.status === 'pending') ord.status = 'processing';
+        stopTopupGatewayStatusPolling();
+        showToast('✅ Pembayaran terverifikasi otomatis oleh Payment Gateway!');
+        renderTopupInvoiceContent();
+        renderMyOrders();
+        if(typeof renderLiveHomepageOrderBanner === 'function') renderLiveHomepageOrderBanner();
+      }
+    } catch(e){}
+  }, 4000);
+}
 
 function openTopupInvoiceModal(orderId, fromCart = false){
   if(fromCart && typeof closeCart === 'function') closeCart();
@@ -26248,6 +26565,10 @@ function openTopupInvoiceModal(orderId, fromCart = false){
     const secs = Math.floor((diff % 60000) / 1000);
     el.textContent = String(mins).padStart(2, '0') + ':' + String(secs).padStart(2, '0');
   }, 1000);
+  const activeOrd = allOrders[orderId];
+  if(activeOrd && activeOrd.gatewayProvider && !activeOrd.gatewayPaid){
+    startTopupGatewayStatusPolling(orderId);
+  }
 }
 
 function closeTopupInvoiceModal(e){
@@ -26259,6 +26580,7 @@ function closeTopupInvoiceModal(e){
     clearInterval(topupInvoiceTimerInterval);
     topupInvoiceTimerInterval = null;
   }
+  stopTopupGatewayStatusPolling();
   if(typeof renderLiveHomepageOrderBanner === 'function') renderLiveHomepageOrderBanner();
 }
 
@@ -26373,19 +26695,32 @@ function renderTopupInvoiceContent(){
 
   const target = resolveTopupPaymentTarget(payMethod, cfg);
   const rawTotalInt = Math.max(0, Math.round(Number(ord.total) || 0));
+  const hasGatewayLink = !!(ord.gatewayDeeplinkUrl || ord.gatewayCheckoutUrl);
+  const hasGatewayQr = !!(ord.gatewayQrImageDataUrl || ord.gatewayQrUrl);
+  const gatewayProvLabel = ord.gatewayProvider ? String(ord.gatewayProvider).toUpperCase() : '';
   let payInstructionHtml = '';
-  if(target.type === 'qris'){
-    const qrisSrc = String(target.qrisImage || cfg.qrisImage || '').trim();
+
+  if(ord.gatewayLoading){
+    payInstructionHtml = `
+      <div class="topup-pay-instruction-card">
+        <div style="font-size:13px;font-weight:800;color:#0284c7;padding:18px 8px">⏳ Menghubungkan ke Payment Gateway Otomatis...</div>
+        <div style="font-size:11px;color:#475569">Membuat tautan pembayaran langsung ke aplikasi dengan nominal Rp${rawTotalInt.toLocaleString('id-ID')}.</div>
+      </div>
+    `;
+  } else if(hasGatewayQr || target.type === 'qris'){
+    const qrisSrc = String(ord.gatewayQrImageDataUrl || ord.gatewayQrUrl || target.qrisImage || cfg.qrisImage || '').trim();
+    const isDynamicGwQr = !!hasGatewayQr;
+    const safeOrderIdAttr = escapeHtml(ord.id || '');
     const qrisBlock = qrisSrc
-      ? `<div class="topup-qris-frame" style="cursor:zoom-in" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)" title="Klik untuk perbesar QRIS"><img src="${escapeHtml(qrisSrc)}" alt="QRIS"></div>
+      ? `<div class="topup-qris-frame" style="cursor:zoom-in" onclick="viewOrderInvoiceQris('${safeOrderIdAttr}')" title="Klik untuk perbesar QRIS"><img src="${escapeHtml(qrisSrc)}" alt="QRIS"></div>
          <div class="topup-qris-actions">
-           <button type="button" class="topup-qris-action-btn primary" onclick="downloadTopupQrisImage()">⬇️ Simpan Foto QRIS</button>
-           <button type="button" class="topup-qris-action-btn" onclick="openImageViewer(getTopupPaymentConfig().qrisImage)">🔍 Perbesar QR</button>
+           <button type="button" class="topup-qris-action-btn primary" onclick="downloadOrderInvoiceQris('${safeOrderIdAttr}')">⬇️ Simpan Foto QRIS</button>
+           <button type="button" class="topup-qris-action-btn" onclick="viewOrderInvoiceQris('${safeOrderIdAttr}')">🔍 Perbesar QR</button>
          </div>`
       : `<div class="topup-qris-q-fallback topup-inv-qris-fallback">📱 QRIS<br><span style="font-size:10px;color:#64748b">QRIS belum diunggah Admin</span></div>`;
     payInstructionHtml = `
       <div class="topup-pay-instruction-card">
-        <div style="font-size:11.5px;font-weight:800;color:#0c4a6e">${t('invPayToLabel') || 'Pembayaran'} · ${escapeHtml(payMethod)}</div>
+        <div style="font-size:11.5px;font-weight:800;color:#0c4a6e">${isDynamicGwQr ? `⚡ QRIS Dinamis Otomatis (${escapeHtml(gatewayProvLabel)})` : ((t('invPayToLabel') || 'Pembayaran') + ' · ' + escapeHtml(payMethod))}</div>
         <div style="background:#fff;border:1px solid #bae6fd;border-radius:9px;padding:8px 10px;margin:8px 0 4px;text-align:center">
           <div style="font-size:10px;color:#64748b;font-weight:700">${t('invExactAmountWarn') || 'Bayar sesuai total harga:'}</div>
           <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:2px">
@@ -26394,7 +26729,28 @@ function renderTopupInvoiceContent(){
           </div>
         </div>
         ${qrisBlock}
-        <p style="font-size:11px;color:#475569;margin:8px 0 0;line-height:1.45">${t('invScanQrisHint')}</p>
+        <p style="font-size:11px;color:#475569;margin:8px 0 0;line-height:1.45">${isDynamicGwQr ? '🔒 Nominal sudah terkunci otomatis di QRIS. Setelah scan &amp; bayar, status lunas terdeteksi otomatis!' : t('invScanQrisHint')}</p>
+      </div>
+    `;
+  } else if(hasGatewayLink || ord.gatewayOvoPushSent){
+    const appMeta = getPaymentAppMeta(target);
+    const gwUrl = ord.gatewayDeeplinkUrl || ord.gatewayCheckoutUrl;
+    payInstructionHtml = `
+      <div class="topup-pay-instruction-card">
+        <div style="font-size:11.5px;font-weight:800;color:#0c4a6e">${appMeta.icon} Bayar Otomatis · ${escapeHtml(target.label)} (${escapeHtml(gatewayProvLabel)})</div>
+        <div style="background:#fff;border:1px solid #bae6fd;border-radius:9px;padding:8px 10px;margin:8px 0 4px;text-align:center">
+          <div style="font-size:10px;color:#64748b;font-weight:700">Nominal Terkunci Otomatis:</div>
+          <div style="font-size:17px;font-weight:800;color:#0284c7;margin-top:2px">${priceMain}</div>
+        </div>
+        ${ord.gatewayOvoPushSent
+          ? `<div class="topup-ewallet-box" style="border-color:#7c3aed;background:#f5f3ff"><div style="font-size:12px;font-weight:800;color:#5b21b6">📲 Cek Notifikasi Aplikasi OVO Anda!</div><div style="font-size:11px;color:#4c1d95;margin-top:4px">Tagihan Rp${rawTotalInt.toLocaleString('id-ID')} sudah dikirim langsung ke aplikasi OVO Anda.</div></div>`
+          : `<button type="button" class="topup-app-launch-btn" style="background:${appMeta.gradient}" onclick="launchGatewayPaymentUrl('${escapeHtml(gwUrl)}')">
+               <span>${appMeta.icon}</span>
+               <span>Bayar Langsung via ${escapeHtml(appMeta.label)} (Otomatis)</span>
+               <span>➔</span>
+             </button>`
+        }
+        <div style="font-size:11px;color:#0369a1;font-weight:700;margin-top:8px">🔄 Menunggu konfirmasi otomatis dari ${escapeHtml(gatewayProvLabel)}... Status berubah Lunas otomatis setelah PIN berhasil.</div>
       </div>
     `;
   } else {
@@ -27407,6 +27763,7 @@ function renderAdminProductList(){
       statusLine += `<p style="font-size:10px;font-weight:700;margin-top:2px">⏳ Pesanan Aktif Toko: ${ordStBadge}</p>`;
     }
 
+    const actionColsClass = isProtectedDefault ? 'cols-2' : '';
     return `
     <div class="admin-product-item"
          id="adminProdItem_${p.id}"
@@ -27417,37 +27774,36 @@ function renderAdminProductList(){
          ondragover="handleAdminProdDragOver(event, ${origIdx})"
          ondragleave="handleAdminProdDragLeave(event)"
          ondrop="handleAdminProdDrop(event, ${origIdx})"
-         ondragend="handleAdminProdDragEnd(event)"
-         style="flex-wrap:wrap">
-      
-      <div class="p-drag-handle"
-           ontouchstart="handleAdminProdTouchStart(event, ${origIdx})"
-           ontouchmove="handleAdminProdTouchMove(event)"
-           ontouchend="handleAdminProdTouchEnd(event)"
-           ontouchcancel="handleAdminProdTouchEnd(event)"
-           title="Tahan & geser untuk memindahkan posisi">
-        <span class="p-order-num">#${origIdx + 1}</span>
-        <span class="p-drag-dots">⠿</span>
+         ondragend="handleAdminProdDragEnd(event)">
+      <div class="admin-prod-top-row">
+        <div class="p-drag-handle"
+             ontouchstart="handleAdminProdTouchStart(event, ${origIdx})"
+             ontouchmove="handleAdminProdTouchMove(event)"
+             ontouchend="handleAdminProdTouchEnd(event)"
+             ontouchcancel="handleAdminProdTouchEnd(event)"
+             title="Tahan & geser untuk memindahkan posisi">
+          <span class="p-order-num">#${origIdx + 1}</span>
+          <span class="p-drag-dots">⠿</span>
+        </div>
+        <div class="p-icon">${p.icon}</div>
+        <div class="p-info">
+          <p class="p-name"><span>${p.name}${p.isAccount ? ' 🔑' : ''}</span><span class="admin-prod-side-pill ${isTopup ? 'topup' : 'joki'}">${isTopup ? '💎 TOP UP' : '⚔️ JOKI'}</span></p>
+          <p class="p-cat">${p.cat.toUpperCase()}${p.subgroup ? ` • <span class="bulk-sub-tag">${p.subgroup}</span>` : ''}</p>
+          <p class="p-price"><span>${formatProductPrice(p, false)}</span><span class="admin-prod-sold-pill">🔥 Terjual: ${getProductSoldCount(p)}</span></p>
+          ${statusLine}
+        </div>
       </div>
-
-      <div class="p-icon">${p.icon}</div>
-      <div class="p-info">
-        <p class="p-name">${p.name}${p.isAccount ? ' 🔑' : ''}<span class="admin-prod-side-pill ${isTopup ? 'topup' : 'joki'}">${isTopup ? '💎 TOP UP' : '⚔️ JOKI'}</span></p>
-        <p class="p-cat">${p.cat.toUpperCase()}${p.subgroup ? ` • <span class="bulk-sub-tag">${p.subgroup}</span>` : ''}</p>
-        <p class="p-price">${formatProductPrice(p, false)} <span style="display:inline-flex;align-items:center;gap:3px;margin-left:6px;font-size:10px;font-weight:700;color:#b45309;background:#fffbeb;border:1px solid #fde68a;padding:1px 6px;border-radius:6px;vertical-align:middle">🔥 Terjual: ${getProductSoldCount(p)}</span></p>
-        ${statusLine}
-      </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-shrink:0">
-        <button class="admin-btn-sm" style="background:#7c3aed;padding:8px 10px" onclick="editProduct(${p.id})" title="Edit Produk">✏️</button>
-        <button class="admin-btn-sm" style="background:#0284c7;padding:8px 10px" onclick="duplicateProduct(${p.id})" title="Gandakan Produk">📋</button>
-        ${isProtectedDefault ? '' : `<button class="admin-btn-sm" style="padding:8px 10px" onclick="deleteProduct(${p.id})" title="Hapus Produk">🗑</button>`}
+      <div class="admin-prod-actions-row ${actionColsClass}">
+        <button type="button" class="admin-btn-sm" style="background:#7c3aed" onclick="editProduct(${p.id})" title="Edit Produk">✏️ Edit</button>
+        <button type="button" class="admin-btn-sm" style="background:#0284c7" onclick="duplicateProduct(${p.id})" title="Gandakan Produk">📋 Salin</button>
+        ${isProtectedDefault ? '' : `<button type="button" class="admin-btn-sm" onclick="deleteProduct(${p.id})" title="Hapus Produk">🗑 Hapus</button>`}
       </div>
       <div class="admin-quick-price-row">
         <span class="admin-quick-price-label">💰 Atur Harga:</span>
         <input type="text" class="admin-quick-price-input" id="quickPriceProd_${p.id}" value="${escapeHtml(p.priceRaw ? p.priceRaw : String(p.price || 0))}" placeholder="cth: 85k / 85000">
         <button type="button" class="admin-quick-price-btn" onclick="quickSaveProductPrice(${p.id}, 'quickPriceProd_${p.id}')">💾 Simpan</button>
       </div>
-      ${statusButtons ? `<div style="width:100%;display:flex;gap:6px;margin-top:6px">${statusButtons}</div>` : ''}
+      ${statusButtons ? `<div class="admin-prod-status-row">${statusButtons}</div>` : ''}
     </div>
   `; }).join('');
 }
@@ -27813,7 +28169,11 @@ function switchAdminPanelMode(panel){
 function switchAdminJokiSubTab(subtab){
   currentAdminJokiSubTab = subtab || 'orders';
   document.querySelectorAll('#adminJokiSubnav .admin-subnav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.subtab === currentAdminJokiSubTab);
+    const isAct = btn.dataset.subtab === currentAdminJokiSubTab;
+    btn.classList.toggle('active', isAct);
+    if(isAct && typeof btn.scrollIntoView === 'function'){
+      try{ btn.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' }); }catch(e){}
+    }
   });
   ['orders', 'products', 'pricing', 'store'].forEach(pane => {
     const el = document.getElementById('adminJokiPane_' + pane);
@@ -27826,7 +28186,11 @@ function switchAdminJokiSubTab(subtab){
 function switchAdminTopupSubTab(subtab){
   currentAdminTopupSubTab = subtab || 'orders';
   document.querySelectorAll('#adminTopupSubnav .admin-subnav-btn').forEach(btn => {
-    btn.classList.toggle('active', btn.dataset.subtab === currentAdminTopupSubTab);
+    const isAct = btn.dataset.subtab === currentAdminTopupSubTab;
+    btn.classList.toggle('active', isAct);
+    if(isAct && typeof btn.scrollIntoView === 'function'){
+      try{ btn.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' }); }catch(e){}
+    }
   });
   ['orders', 'products', 'payment'].forEach(pane => {
     const el = document.getElementById('adminTopupPane_' + pane);
@@ -28389,17 +28753,19 @@ function renderAdminTopupProductList(){
       ? `<img src="${escapeHtml(imgs[0])}" alt="${escapeHtml(p.name)}" style="width:100%;height:100%;object-fit:cover;border-radius:10px;display:block">`
       : `${p.icon || '💎'}`;
     return `
-    <div class="admin-product-item" style="border-color:#bae6fd;flex-wrap:wrap">
-      <div class="p-icon" style="background:#e0f2fe;border-radius:10px;width:42px;height:42px;display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0">${thumbHtml}</div>
-      <div class="p-info">
-        <p class="p-name">${escapeHtml(p.name)} <span class="admin-prod-side-pill topup">💎 TOP UP</span></p>
-        <p class="p-cat">${String(p.cat || '').toUpperCase()}${p.subgroup ? ' · ' + escapeHtml(p.subgroup) : ''}</p>
-        <p class="p-price" style="color:#0284c7">${formatProductPrice(p, false)} <span style="font-size:10px;color:#64748b;font-weight:600">· Terjual ${getProductSoldCount(p)}</span></p>
+    <div class="admin-product-item" style="border-color:#bae6fd">
+      <div class="admin-prod-top-row">
+        <div class="p-icon" style="background:#e0f2fe">${thumbHtml}</div>
+        <div class="p-info">
+          <p class="p-name"><span>${escapeHtml(p.name)}</span><span class="admin-prod-side-pill topup">💎 TOP UP</span></p>
+          <p class="p-cat">${String(p.cat || '').toUpperCase()}${p.subgroup ? ' · ' + escapeHtml(p.subgroup) : ''}</p>
+          <p class="p-price" style="color:#0284c7"><span>${formatProductPrice(p, false)}</span><span class="admin-prod-sold-pill">🔥 Terjual: ${getProductSoldCount(p)}</span></p>
+        </div>
       </div>
-      <div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap">
-        <button type="button" class="admin-btn-sm" style="background:#0f766e;padding:7px 9px;font-size:11px" onclick="quickUploadTopupProductIcon(${p.id})" title="Ganti Icon Gambar Produk">🖼 Icon</button>
-        <button type="button" class="admin-btn-sm" style="background:#0284c7;padding:7px 9px;font-size:11px" onclick="editTopupProduct(${p.id})" title="Setting / Edit Produk">✏️ Setting</button>
-        <button type="button" class="admin-btn-sm" style="padding:7px 9px;font-size:11px" onclick="deleteProduct(${p.id})" title="Hapus Produk">🗑 Hapus</button>
+      <div class="admin-prod-actions-row">
+        <button type="button" class="admin-btn-sm" style="background:#0f766e" onclick="quickUploadTopupProductIcon(${p.id})" title="Ganti Icon Gambar Produk">🖼 Icon</button>
+        <button type="button" class="admin-btn-sm" style="background:#0284c7" onclick="editTopupProduct(${p.id})" title="Setting / Edit Produk">✏️ Setting</button>
+        <button type="button" class="admin-btn-sm" onclick="deleteProduct(${p.id})" title="Hapus Produk">🗑 Hapus</button>
       </div>
       <div class="admin-quick-price-row">
         <span class="admin-quick-price-label">💰 Atur Harga:</span>
@@ -28470,6 +28836,7 @@ function renderAdminTopupPaymentForm(){
 
   previewAdminTopupQrisUrl(cfg.qrisImage);
   updateAdminTopupMethodFeePreview();
+  if(typeof renderAdminTopupGatewayStatus === 'function') renderAdminTopupGatewayStatus();
 }
 
 function previewAdminTopupQrisUrl(url){
@@ -28602,6 +28969,7 @@ updateLanguageUI();
 switchStoreSide(currentStoreSide, true);
 initQuickTopupFromStorage();
 if(typeof syncTopupPaymentConfigFromCloudRest === 'function') syncTopupPaymentConfigFromCloudRest();
+if(typeof fetchPaymentGatewayConfig === 'function') fetchPaymentGatewayConfig();
 renderModalPaymentMethods();
 renderCartPaymentMethods();
 renderCarousel();
@@ -28714,6 +29082,50 @@ setInterval(()=>{
       }
     }, { passive: true });
   }
+  // Drag-to-scroll support for horizontal admin subnav bars (mouse & touch)
+  (function initAdminHorizontalDragScroll(){
+    const selectors = '.admin-subnav-bar, .admin-orders-nav, .admin-topup-orders-nav';
+    document.querySelectorAll(selectors).forEach(bar => {
+      if(bar.dataset.hDragReady) return;
+      bar.dataset.hDragReady = '1';
+      let isDown = false;
+      let startX = 0;
+      let startScroll = 0;
+      let moved = false;
+
+      bar.addEventListener('mousedown', (e) => {
+        if(e.button !== 0) return;
+        isDown = true;
+        moved = false;
+        startX = e.pageX - bar.offsetLeft;
+        startScroll = bar.scrollLeft;
+        bar.style.cursor = 'grabbing';
+      });
+      window.addEventListener('mouseup', () => {
+        if(!isDown) return;
+        isDown = false;
+        bar.style.cursor = 'grab';
+        setTimeout(() => { moved = false; }, 0);
+      });
+      bar.addEventListener('mousemove', (e) => {
+        if(!isDown) return;
+        const x = e.pageX - bar.offsetLeft;
+        const delta = x - startX;
+        if(Math.abs(delta) > 4) moved = true;
+        if(moved){
+          e.preventDefault();
+          bar.scrollLeft = startScroll - delta;
+        }
+      });
+      bar.addEventListener('click', (e) => {
+        if(moved){
+          e.preventDefault();
+          e.stopPropagation();
+          moved = false;
+        }
+      }, true);
+    });
+  })();
 })();
 </script>
 </body>
