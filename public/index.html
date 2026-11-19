@@ -5058,6 +5058,136 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
   border-color:rgba(56,189,248,.35);
   color:#bae6fd;
 }
+.game-hub-card.region-locked{
+  border-color:#fecaca;
+  background:linear-gradient(180deg,#fffbfb,#fff5f5);
+}
+body.dark-mode .game-hub-card.region-locked,
+body.dark-mode.topup-side-active .game-hub-card.region-locked{
+  border-color:#7f1d1d;
+  background:linear-gradient(180deg,#1f1315,#111827);
+}
+.game-hub-card.region-locked .game-hub-icon-box{
+  filter:saturate(.78);
+}
+.game-hub-region-badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  font-size:9.5px;
+  font-weight:800;
+  color:#fff;
+  background:linear-gradient(135deg,#dc2626,#b91c1c);
+  padding:2px 7px;
+  border-radius:8px;
+  letter-spacing:.2px;
+  box-shadow:0 2px 6px rgba(220,38,38,.28);
+  z-index:2;
+}
+.game-hub-card.region-locked .game-hub-cta{
+  background:#fee2e2;
+  color:#b91c1c;
+}
+body.dark-mode .game-hub-card.region-locked .game-hub-cta{
+  background:rgba(220,38,38,.2);
+  color:#fca5a5;
+}
+.genshin-region-banner{
+  margin:0 16px 12px;
+  padding:12px 14px;
+  border-radius:14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  box-shadow:0 4px 14px rgba(15,23,42,.05);
+}
+@media (min-width:600px){
+  .genshin-region-banner{margin:0 24px 14px;padding:13px 16px}
+}
+@media (min-width:900px){
+  .genshin-region-banner{margin:0 32px 16px}
+}
+.genshin-region-banner.locked{
+  background:linear-gradient(135deg,#fff7ed,#fef2f2);
+  border:1.5px solid #fca5a5;
+  color:#7f1d1d;
+}
+body.dark-mode .genshin-region-banner.locked{
+  background:linear-gradient(135deg,rgba(127,29,29,.35),rgba(124,45,18,.28));
+  border-color:#991b1b;
+  color:#fecaca;
+}
+.genshin-region-banner.info{
+  background:linear-gradient(135deg,#ecfdf5,#f0f9ff);
+  border:1.5px solid #86efac;
+  color:#065f46;
+}
+body.dark-mode .genshin-region-banner.info{
+  background:linear-gradient(135deg,rgba(6,78,59,.35),rgba(12,74,110,.32));
+  border-color:#047857;
+  color:#a7f3d0;
+}
+.genshin-region-banner-body{
+  display:flex;
+  align-items:flex-start;
+  gap:10px;
+  flex:1;
+  min-width:220px;
+}
+.genshin-region-banner-icon{
+  font-size:20px;
+  line-height:1.1;
+  flex-shrink:0;
+}
+.genshin-region-banner-title{
+  font-size:12.5px;
+  font-weight:800;
+  line-height:1.3;
+  margin-bottom:2px;
+}
+.genshin-region-banner-desc{
+  font-size:11px;
+  font-weight:600;
+  line-height:1.45;
+  opacity:.92;
+}
+.genshin-region-switch-btn{
+  border:none;
+  background:linear-gradient(135deg,#dc2626,#ea580c);
+  color:#fff;
+  border-radius:10px;
+  padding:8px 13px;
+  font-size:11.5px;
+  font-weight:800;
+  cursor:pointer;
+  white-space:nowrap;
+  box-shadow:0 4px 12px rgba(220,38,38,.25);
+  transition:transform .15s ease;
+}
+.genshin-region-switch-btn:active{transform:scale(.97)}
+.genshin-inline-hint{
+  font-size:11px;
+  font-weight:700;
+  line-height:1.4;
+  padding:7px 10px;
+  border-radius:9px;
+  background:#ecfdf5;
+  border:1px solid #86efac;
+  color:#065f46;
+}
+.country-genshin-note{
+  margin-top:10px;
+  padding:9px 11px;
+  border-radius:11px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  font-size:11px;
+  font-weight:600;
+  line-height:1.45;
+}
 </style>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js" crossorigin="anonymous"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js" crossorigin="anonymous"></script>
@@ -5297,6 +5427,7 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
   </button>
 </div>
 <div id="selectedGameFocusBanner" class="game-focus-banner" style="display:none"></div>
+<div id="genshinRegionPolicyBanner" style="display:none"></div>
 <div id="catalogSubFilterBar" class="catalog-subfilter-bar" style="display:none"></div>
 <div class="product-grid" id="productGrid">
   <div class="skel-card"><div class="skel skel-img"></div><div class="skel-body"><div class="skel skel-line" style="width:80%"></div><div class="skel-line" style="width:50%"></div><div class="skel skel-line" style="width:100%;height:28px;margin-top:4px"></div></div></div>
@@ -5650,6 +5781,7 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
     <label for="modalTopupContact" id="modalTopupContactLabel">No. WA / Email untuk Resi (Opsional)</label>
     <input type="text" id="modalTopupContact" placeholder="Opsional — untuk catatan struk pesanan">
   </div>
+  <div id="modalGenshinRegionHint" class="genshin-inline-hint" style="display:none;margin-top:8px"></div>
 </div>
 
 <div class="modal-label" id="modalPayMethodLabel">Metode Pembayaran</div>
@@ -5791,6 +5923,7 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
       </select>
     </div>
   </div>
+  <div id="cartGenshinRegionHint" class="genshin-inline-hint" style="display:none;margin-top:8px"></div>
 </div>
 <div class="modal-label" id="cartStepPayMethodLabel" style="margin-top:12px">Metode Pembayaran</div>
 <div class="pay-grid" id="cartPayGrid">
@@ -7867,6 +8000,7 @@ body.dark-mode.topup-side-active .game-focus-back-btn{
     </div>
 
     <div class="country-currency-grid" id="countryCurrencyList"></div>
+    <div class="country-genshin-note" id="countryCurrencyGenshinNote"></div>
 
     <div style="margin-top:14px">
       <button type="button" class="admin-btn" id="countryCurrencyModalCloseBtn" style="background:#f1f5f9;color:#475569;border:none;padding:10px;font-size:12px;border-radius:10px;font-weight:700;width:100%;cursor:pointer" onclick="closeCountryCurrencyModal('force')">Tutup</button>
@@ -8386,6 +8520,93 @@ function getProductSideMode(p){
 
 function isProductTopup(p){
   return getProductSideMode(p) === 'topup';
+}
+
+function isGenshinTopupItem(prodOrCat, sideOverride = null){
+  if(!prodOrCat) return false;
+  if(typeof prodOrCat === 'string'){
+    const side = sideOverride || ((typeof currentStoreSide !== 'undefined') ? currentStoreSide : 'joki');
+    return side === 'topup' && prodOrCat === 'genshin';
+  }
+  const side = sideOverride || getProductSideMode(prodOrCat);
+  return side === 'topup' && prodOrCat.cat === 'genshin';
+}
+
+function isGenshinTopupRegionLocked(prodOrCat, sideOverride = null){
+  const cCode = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry)
+    ? String(currentSelectedCountry).toUpperCase()
+    : 'ID';
+  if(cCode === 'ID') return false;
+  return isGenshinTopupItem(prodOrCat, sideOverride);
+}
+
+function getGenshinRegionPolicyMessage(isLocked = null, langCode = null){
+  const lang = String(langCode || (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) || 'ID').toUpperCase();
+  const locked = (isLocked !== null && isLocked !== undefined) ? Boolean(isLocked) : (lang !== 'ID');
+  if(lang === 'SG'){
+    return locked ? {
+      badge: '🇮🇩 ID Region Only',
+      shortTag: 'Indonesia (ID) Region Only',
+      title: 'Genshin Impact Top-Up Only Available in Indonesia (ID) Region',
+      desc: 'Per official HoYoverse policy, Genshin Impact top-ups must match each country/region and cannot be purchased under Singapore (SG). Switch to Indonesia (ID) region to purchase Genshin Top-Up.',
+      toast: '🇮🇩 Genshin Impact Top-Up is restricted to Indonesia (ID) region per official HoYoverse policy.',
+      switchBtn: 'Switch to Region ID',
+      cartLockBtn: '🔒 Genshin Top-Up: Indonesia (ID) Only'
+    } : {
+      badge: '🇮🇩 Indonesia (ID) Region',
+      shortTag: 'Indonesia (ID) Region Only',
+      title: 'Official HoYoverse Policy: Indonesia (ID) Region Only',
+      desc: 'Genshin Impact Top-Up here strictly supports Indonesia (ID) region per official HoYoverse regional rules.',
+      toast: '',
+      switchBtn: '',
+      cartLockBtn: ''
+    };
+  }
+  if(lang === 'MY'){
+    return locked ? {
+      badge: '🇮🇩 Wilayah ID Sahaja',
+      shortTag: 'Khusus Wilayah Indonesia (ID)',
+      title: 'Top-Up Genshin Impact Hanya Tersedia untuk Wilayah Indonesia (ID)',
+      desc: 'Mengikut peraturan rasmi HoYoverse, tambah nilai (Top-Up) Genshin Impact mesti sepadan dengan wilayah masing-masing dan tidak boleh diproses melalui Malaysia (MY). Sila tukar ke Wilayah Indonesia (ID).',
+      toast: '🇮🇩 Top-Up Genshin Impact hanya dibenarkan untuk Wilayah Indonesia (ID) mengikut peraturan rasmi HoYoverse.',
+      switchBtn: 'Tukar ke Wilayah ID',
+      cartLockBtn: '🔒 Top-Up Genshin Khusus Wilayah ID'
+    } : {
+      badge: '🇮🇩 Wilayah Indonesia (ID)',
+      shortTag: 'Khusus Wilayah Indonesia (ID)',
+      title: 'Peraturan Rasmi HoYoverse: Khusus Wilayah Indonesia (ID)',
+      desc: 'Top-Up Genshin Impact di halaman ini hanya menyokong wilayah Indonesia (ID) mengikut peraturan rasmi HoYoverse.',
+      toast: '',
+      switchBtn: '',
+      cartLockBtn: ''
+    };
+  }
+  return locked ? {
+    badge: '🇮🇩 Khusus Region ID',
+    shortTag: 'Khusus Region Indonesia (ID)',
+    title: 'Top-Up Genshin Impact Hanya Tersedia di Region Indonesia (ID)',
+    desc: 'Sesuai kebijakan resmi HoYoverse, Top-Up Genshin Impact wajib sesuai region masing-masing dan tidak dapat dibeli dari region lain. Pindah ke Region Indonesia (ID) untuk memesan.',
+    toast: '🇮🇩 Khusus Top-Up Genshin Impact hanya bisa dipesan di Region Indonesia (ID) sesuai aturan resmi HoYoverse!',
+    switchBtn: 'Pindah ke Region ID',
+    cartLockBtn: '🔒 Top-Up Genshin Khusus Region ID'
+  } : {
+    badge: '🇮🇩 Khusus Region Indonesia (ID)',
+    shortTag: 'Khusus Region Indonesia (ID)',
+    title: 'Kebijakan Resmi HoYoverse: Khusus Region Indonesia (ID)',
+    desc: 'Top-Up Genshin Impact di halaman ini hanya melayani akun Region Indonesia (ID) sesuai kebijakan resmi HoYoverse (harus sesuai region masing-masing).',
+    toast: '',
+    switchBtn: '',
+    cartLockBtn: ''
+  };
+}
+
+function switchToIndonesiaForGenshin(){
+  if(typeof selectCountry === 'function'){
+    selectCountry('ID');
+  }
+  if(typeof updateCartCheckoutTopupUI === 'function'){
+    updateCartCheckoutTopupUI();
+  }
 }
 
 function updateSideModeVisuals(){
@@ -14892,6 +15113,8 @@ function selectCountry(countryCode){
   if(typeof renderCart === 'function') renderCart();
   if(typeof renderMyOrders === 'function') renderMyOrders();
   if(typeof renderCheckoutJokiRulesBoxes === 'function') renderCheckoutJokiRulesBoxes();
+  if(typeof renderCountryCurrencyList === 'function') renderCountryCurrencyList();
+  if(typeof updateCartCheckoutTopupUI === 'function') updateCartCheckoutTopupUI();
   closeCountryCurrencyModal('force');
   const cInfo = cfg.countries[countryCode];
   const cName = (countryCode === 'SG') ? 'Singapore' : cInfo.name;
@@ -14953,6 +15176,17 @@ function renderCountryCurrencyList(){
       </div>
     `;
   }).join('');
+
+  const noteEl = document.getElementById('countryCurrencyGenshinNote');
+  if(noteEl){
+    if(currentSelectedCountry === 'SG'){
+      noteEl.innerHTML = '🇮🇩 <strong>HoYoverse Region Rule:</strong> <strong>Genshin Impact Top-Up</strong> is only available for the <strong>Indonesia (ID)</strong> region (must match each account\'s region).';
+    } else if(currentSelectedCountry === 'MY'){
+      noteEl.innerHTML = '🇮🇩 <strong>Peraturan Rasmi HoYoverse:</strong> <strong>Top-Up Genshin Impact</strong> hanya tersedia untuk wilayah <strong>Indonesia (ID)</strong> sahaja (mesti sepadan dengan wilayah masing-masing).';
+    } else {
+      noteEl.innerHTML = '🇮🇩 <strong>Kebijakan Resmi HoYoverse:</strong> Khusus <strong>Top-Up Genshin Impact</strong> hanya tersedia untuk region <strong>Indonesia (ID)</strong> (region lain tidak didukung karena harus sesuai region masing-masing).';
+    }
+  }
 }
 
 function getActivePaymentMethods(){
@@ -17114,6 +17348,13 @@ function openInfoModal(type, extraLang = null){
               <div class="info-step-desc">Currency is credited directly to your UID in minutes via official channels with full anti-minus guarantee & live status tracking.</div>
             </div>
           </div>
+          <div class="info-step-card" style="border-color:#fed7aa;background:#fff7ed">
+            <div class="info-step-num" style="background:#ea580c">🇮🇩</div>
+            <div class="info-step-body">
+              <div class="info-step-title" style="color:#9a3412">Genshin Impact Regional Policy (Indonesia Only)</div>
+              <div class="info-step-desc" style="color:#7c2d12">Per official HoYoverse rules, <strong>Genshin Impact Top-Up</strong> only supports the <strong>Indonesia (ID)</strong> region (purchases must match each region).</div>
+            </div>
+          </div>
         </div>
       `;
     } else if(lang === 'MY'){
@@ -17147,6 +17388,13 @@ function openInfoModal(type, extraLang = null){
               <div class="info-step-desc">Kredit masuk terus ke UID anda dalam beberapa minit dan status pesanan boleh dipantau secara langsung di halaman invois.</div>
             </div>
           </div>
+          <div class="info-step-card" style="border-color:#fed7aa;background:#fff7ed">
+            <div class="info-step-num" style="background:#ea580c">🇮🇩</div>
+            <div class="info-step-body">
+              <div class="info-step-title" style="color:#9a3412">Peraturan Wilayah Genshin Impact (Indonesia Sahaja)</div>
+              <div class="info-step-desc" style="color:#7c2d12">Mengikut peraturan rasmi HoYoverse, <strong>Top-Up Genshin Impact</strong> hanya tersedia untuk wilayah <strong>Indonesia (ID)</strong> sahaja (mesti mengikut wilayah masing-masing).</div>
+            </div>
+          </div>
         </div>
       `;
     } else {
@@ -17178,6 +17426,13 @@ function openInfoModal(type, extraLang = null){
             <div class="info-step-body">
               <div class="info-step-title">Proses Kilat & Status Real-Time</div>
               <div class="info-step-desc">Pesanan langsung masuk antrian top-up dan statusnya terupdate live di website, cepat &amp; anti-minus!</div>
+            </div>
+          </div>
+          <div class="info-step-card" style="border-color:#fed7aa;background:#fff7ed">
+            <div class="info-step-num" style="background:#ea580c">🇮🇩</div>
+            <div class="info-step-body">
+              <div class="info-step-title" style="color:#9a3412">Khusus Genshin Impact Hanya Region Indonesia (ID)</div>
+              <div class="info-step-desc" style="color:#7c2d12">Sesuai ketentuan resmi HoYoverse, <strong>Top-Up Genshin Impact</strong> hanya berlaku untuk <strong>Region Indonesia (ID)</strong> dan tidak dapat dipesan dari region lain karena wajib sesuai region masing-masing.</div>
             </div>
           </div>
         </div>
@@ -23652,6 +23907,11 @@ function addToCart(id, event){
     showToast(toastRemoved);
     return;
   }
+  if(typeof isGenshinTopupRegionLocked === 'function' && isGenshinTopupRegionLocked(product)){
+    const msg = getGenshinRegionPolicyMessage(true);
+    showToast(msg.toast);
+    return;
+  }
   // Cegah jika produk masih dalam pesanan aktif yang belum selesai
   const activeOrder = getActiveOrderForProduct(product.id);
   if(activeOrder){
@@ -23761,18 +24021,24 @@ function renderCart(){
 
     const imgs = getImagesForProduct(item.id);
     const thumb = imgs.length > 0 ? `<img src="${imgs[0]}" alt="">` : `<span style="font-size:20px">${item.icon}</span>`;
+    const isItemRegionLocked = (typeof isGenshinTopupRegionLocked === 'function') && isGenshinTopupRegionLocked(prod);
     const activeOrd = getActiveOrderForProduct(item.id);
     const isBusy = !!activeOrd;
-    const busyWarning = isBusy ? `
+    const busyWarning = isItemRegionLocked ? `
+      <div style="font-size:10px;color:#991b1b;background:#fef2f2;border:1px solid #fecaca;padding:6px 8px;border-radius:7px;margin-top:5px;font-weight:700;display:flex;flex-direction:column;gap:5px">
+        <span>🇮🇩 ${escapeHtml(getGenshinRegionPolicyMessage(true).title)}</span>
+        <button type="button" onclick="switchToIndonesiaForGenshin()" style="align-self:flex-start;border:none;background:#dc2626;color:#fff;font-size:10px;font-weight:800;padding:4px 9px;border-radius:6px;cursor:pointer">🇮🇩 ${escapeHtml(getGenshinRegionPolicyMessage(true).switchBtn)}</button>
+      </div>
+    ` : (isBusy ? `
       <div style="font-size:10px;color:#1e40af;background:#eff6ff;border:1px solid #bfdbfe;padding:4px 7px;border-radius:6px;margin-top:5px;font-weight:600;display:flex;align-items:center;gap:4px">
         <span>🔵</span> <span>${currentSelectedCountry === 'SG' ? ('Currently in progress for your order' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Please wait until completed or remove from cart.') : (currentSelectedCountry === 'MY' ? ('Sedang diproses dalam pesanan anda' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Sila tunggu sehingga selesai atau keluarkan dari troli.') : ('Sedang dalam proses pesanan Anda' + (activeOrd.estimate ? ' (' + activeOrd.estimate + ')' : '') + '. Harap tunggu sampai selesai atau hapus dari keranjang.'))}</span>
       </div>
-    ` : '';
+    ` : '');
     const oldPriceDisplay = formatProductPrice(prod, false);
     const finalPriceDisplay = formatProductPrice(prod, hasDisc);
 
     return `
-    <div class="cart-item" style="${isBusy ? 'background:#f8fafc;border:1px solid #bfdbfe;' : ''}">
+    <div class="cart-item" style="${isItemRegionLocked ? 'background:#fff5f5;border:1px solid #fca5a5;' : (isBusy ? 'background:#f8fafc;border:1px solid #bfdbfe;' : '')}">
       <div class="cart-item-thumb">${thumb}</div>
       <div class="cart-item-info">
         <p class="cart-item-name">${getProductName(item)}</p>
@@ -23813,10 +24079,17 @@ function renderCart(){
     discRow.style.display = 'none';
   }
 
+  const lockedRegionItems = cart.filter(it => (typeof isGenshinTopupRegionLocked === 'function') && isGenshinTopupRegionLocked(products.find(p => p.id === it.id) || it));
   const busyItems = cart.filter(it => isProductInUnfinishedOrder(it.id));
   const checkoutBtn = document.getElementById('cartCheckoutBtn');
   if(checkoutBtn){
-    if(busyItems.length > 0){
+    if(lockedRegionItems.length > 0){
+      const msg = getGenshinRegionPolicyMessage(true);
+      checkoutBtn.style.background = '#dc2626';
+      checkoutBtn.style.cursor = 'not-allowed';
+      checkoutBtn.title = msg.toast;
+      checkoutBtn.innerHTML = msg.cartLockBtn;
+    } else if(busyItems.length > 0){
       checkoutBtn.style.background = '#9ca3af';
       checkoutBtn.style.cursor = 'not-allowed';
       checkoutBtn.title = (currentSelectedCountry === 'SG') ? 'Remove processing items to checkout' : ((currentSelectedCountry === 'MY') ? 'Keluarkan item yang sedang diproses untuk checkout' : 'Hapus item yang sedang diproses untuk checkout');
@@ -23890,9 +24163,29 @@ function updateCartCheckoutTopupUI(){
   if(chatLbl) chatLbl.style.display = isPureTopup ? 'none' : 'block';
   if(adminGrid) adminGrid.style.display = isPureTopup ? 'none' : 'grid';
 
+  const lockedRegionItems = cart.filter(item => (typeof isGenshinTopupRegionLocked === 'function') && isGenshinTopupRegionLocked(products.find(p => p.id === item.id) || item));
+  const hasGenshinTopupInCart = cart.some(item => (typeof isGenshinTopupItem === 'function') && isGenshinTopupItem(products.find(p => p.id === item.id) || item));
+
   if(checkoutMainBtn){
-    checkoutMainBtn.innerHTML = isPureTopup ? t('cartTopupCheckoutBtn') : t('cartCheckoutBtn');
-    checkoutMainBtn.style.background = isPureTopup ? 'linear-gradient(135deg,#0284c7,#0ea5e9)' : '';
+    if(lockedRegionItems.length > 0){
+      const msg = getGenshinRegionPolicyMessage(true);
+      checkoutMainBtn.innerHTML = msg.cartLockBtn;
+      checkoutMainBtn.style.background = '#dc2626';
+    } else {
+      checkoutMainBtn.innerHTML = isPureTopup ? t('cartTopupCheckoutBtn') : t('cartCheckoutBtn');
+      checkoutMainBtn.style.background = isPureTopup ? 'linear-gradient(135deg,#0284c7,#0ea5e9)' : '';
+    }
+  }
+  const cartGenshinHint = document.getElementById('cartGenshinRegionHint');
+  if(cartGenshinHint){
+    if(hasGenshinTopupInCart){
+      const infoMsg = getGenshinRegionPolicyMessage(false);
+      cartGenshinHint.style.display = 'block';
+      cartGenshinHint.textContent = `🇮🇩 ${infoMsg.title} — ${infoMsg.desc}`;
+    } else {
+      cartGenshinHint.style.display = 'none';
+      cartGenshinHint.textContent = '';
+    }
   }
   if(confirmBtn){
     confirmBtn.innerHTML = isPureTopup ? t('cartTopupDirectConfirm') : t('cartConfirmOrder');
@@ -23902,6 +24195,11 @@ function updateCartCheckoutTopupUI(){
 }
 
 function openCartCheckoutStep(){
+  const lockedRegionItems = cart.filter(item => (typeof isGenshinTopupRegionLocked === 'function') && isGenshinTopupRegionLocked(products.find(p => p.id === item.id) || item));
+  if(lockedRegionItems.length > 0){
+    showToast(getGenshinRegionPolicyMessage(true).toast);
+    return;
+  }
   const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
   if(busyItems.length > 0){
     showToast(t('orderWaitFinishedNotice'));
@@ -23953,6 +24251,11 @@ function openWhatsApp(url){
 function checkoutCart(){
   normalizeCartItems();
   if(cart.length===0) return;
+  const lockedRegionItems = cart.filter(item => (typeof isGenshinTopupRegionLocked === 'function') && isGenshinTopupRegionLocked(products.find(p => p.id === item.id) || item));
+  if(lockedRegionItems.length > 0){
+    showToast(getGenshinRegionPolicyMessage(true).toast);
+    return;
+  }
   const busyItems = cart.filter(item => isProductInUnfinishedOrder(item.id));
   if(busyItems.length > 0){
     showToast(t('orderWaitFinishedNotice'));
@@ -25131,6 +25434,8 @@ function renderGameSelectorHub(sideProducts, activeSide, grid){
 
     const vis = getGameHubVisual(cat);
     const title = getCategoryName(cat, lang);
+    const isRegionLocked = (typeof isGenshinTopupRegionLocked === 'function') && isGenshinTopupRegionLocked(cat, activeSide);
+    const regMsg = (typeof getGenshinRegionPolicyMessage === 'function') ? getGenshinRegionPolicyMessage(isRegionLocked, lang) : null;
     const minPrice = items.reduce((min, item) => {
       const p = Number(item.price) || 0;
       return (p > 0 && (min === 0 || p < min)) ? p : min;
@@ -25139,17 +25444,22 @@ function renderGameSelectorHub(sideProducts, activeSide, grid){
     const countLabel = isTopup
       ? (lang === 'SG' ? `${items.length} packs` : (lang === 'MY' ? `${items.length} pakej` : `${items.length} paket`))
       : (lang === 'SG' ? `${items.length} services` : `${items.length} layanan`);
-    const priceLabel = minPrice > 0
-      ? ((lang === 'SG' ? 'From ' : 'Mulai ') + (typeof formatCurrency === 'function' ? formatCurrency(minPrice) : ('Rp' + minPrice.toLocaleString('id-ID'))))
-      : '';
+    const priceLabel = isRegionLocked
+      ? (regMsg ? regMsg.shortTag : 'Indonesia (ID) Only')
+      : (minPrice > 0
+        ? ((lang === 'SG' ? 'From ' : 'Mulai ') + (typeof formatCurrency === 'function' ? formatCurrency(minPrice) : ('Rp' + minPrice.toLocaleString('id-ID'))))
+        : '');
     const metaLine = priceLabel ? `${countLabel} · ${priceLabel}` : countLabel;
-    const ctaLabel = isTopup
-      ? (lang === 'SG' ? 'Select Top-Up →' : 'Pilih Top-Up →')
-      : (lang === 'SG' ? 'Open Services →' : 'Pilih Game →');
+    const ctaLabel = isRegionLocked
+      ? `🔒 ${regMsg ? regMsg.badge : '🇮🇩 ID Only'}`
+      : (isTopup
+        ? (lang === 'SG' ? 'Select Top-Up →' : 'Pilih Top-Up →')
+        : (lang === 'SG' ? 'Open Services →' : 'Pilih Game →'));
 
     cards.push(`
-      <div class="game-hub-card" role="button" tabindex="0" onclick="selectGameFromHub('${cat}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectGameFromHub('${cat}')}">
-        ${maxDisc > 0 ? `<span class="game-hub-disc">🔥 -${maxDisc}%</span>` : ''}
+      <div class="game-hub-card ${isRegionLocked ? 'region-locked' : ''}" role="button" tabindex="0" onclick="selectGameFromHub('${cat}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();selectGameFromHub('${cat}')}">
+        ${isRegionLocked ? `<span class="game-hub-region-badge">🇮🇩 ID ONLY</span>` : ''}
+        ${!isRegionLocked && maxDisc > 0 ? `<span class="game-hub-disc">🔥 -${maxDisc}%</span>` : ''}
         <div class="game-hub-icon-box" style="background:${vis.bg}">
           ${getGameIconInnerHtml(cat, title)}
         </div>
@@ -25994,7 +26304,9 @@ function renderProductCard(p, discount, idx){
   const isReserved = acctStatus === 'reserved';
   const activeOrder = getActiveOrderForProduct(p.id);
   const isOrderProcessing = !!activeOrder;
-  const isLocked = isSold || isReserved || isOrderProcessing;
+  const isRegionLocked = (typeof isGenshinTopupRegionLocked === 'function') && isGenshinTopupRegionLocked(p);
+  const regPolicy = isRegionLocked ? getGenshinRegionPolicyMessage(true) : null;
+  const isLocked = isSold || isReserved || isOrderProcessing || isRegionLocked;
 
   const soldCount = getProductSoldCount(p);
   const soldText = formatProductSoldText(soldCount);
@@ -26006,6 +26318,8 @@ function renderProductCard(p, discount, idx){
     busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#f59e0b,#d97706);left:8px;right:auto">${t('reservedBadge')} · ${getReserveMinutesLeft(p)} ${currentSelectedCountry === 'SG' ? 'mins' : 'mnt'}</span>`;
   } else if(isOrderProcessing){
     busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);left:8px;right:auto">${t('processingBadge')}${activeOrder.estimate ? ' · ' + activeOrder.estimate : ''}</span>`;
+  } else if(isRegionLocked && regPolicy){
+    busyBadge = `<span class="discount-badge" style="background:linear-gradient(135deg,#dc2626,#b91c1c);left:8px;right:auto">${escapeHtml(regPolicy.badge)}</span>`;
   } else if(p.isAccount){
     busyBadge = `<span class="product-badge" style="background:linear-gradient(135deg,#16a34a,#15803d)">${t('stock1Badge')}</span>`;
   }
@@ -26019,10 +26333,13 @@ function renderProductCard(p, discount, idx){
   } else if(isOrderProcessing){
     lockedBtnText = t('processingBtn');
     lockedBtnBg = 'linear-gradient(135deg,#2563eb,#1d4ed8)';
+  } else if(isRegionLocked && regPolicy){
+    lockedBtnText = `🇮🇩 ${regPolicy.switchBtn}`;
+    lockedBtnBg = 'linear-gradient(135deg,#dc2626,#ea580c)';
   }
 
   return `
-  <div class="product-card ${hasDisc ? 'has-discount' : ''}" id="prodCard_${p.id}" style="${isLocked ? 'opacity:.82' : ''}">
+  <div class="product-card ${hasDisc ? 'has-discount' : ''}" id="prodCard_${p.id}" style="${isLocked ? 'opacity:.85' : ''}">
     <div class="product-img-wrap" id="prodImgWrap_${p.id}">
       ${!isLocked && p.badge ? `<span class="product-badge">${localizeProductBadge(p.badge)}</span>` : ''}
       ${!isLocked && hasDisc ? `<span class="discount-badge">🔥 -${disc}%</span>` : ''}
@@ -26033,7 +26350,7 @@ function renderProductCard(p, discount, idx){
       </div>
       ${imgDots}
     </div>
-    <div class="product-info" onclick="${isLocked ? (isSold ? `showToast('${t('soldBadge')} - ${t('soldBtn')}')` : (isReserved ? `showToast(t('accountReservedToast'))` : `showToast(t('orderProcessingNotice'))`)) : `openModal(${p.id})`}" style="cursor:${isLocked ? 'default' : 'pointer'}">
+    <div class="product-info" onclick="${isRegionLocked ? `showToast(getGenshinRegionPolicyMessage(true).toast)` : (isLocked ? (isSold ? `showToast('${t('soldBadge')} - ${t('soldBtn')}')` : (isReserved ? `showToast(t('accountReservedToast'))` : `showToast(t('orderProcessingNotice'))`)) : `openModal(${p.id})`)}" style="cursor:${isLocked ? 'default' : 'pointer'}">
       <p class="product-name">${getProductName(p)}</p>
       <div class="price-row">
         ${hasDisc ? `<span class="product-price-old">${formatProductPrice(p, false)}</span>` : ''}
@@ -26048,18 +26365,49 @@ function renderProductCard(p, discount, idx){
       </div>
       <p class="product-meta">${getProductDesc(p)}</p>
       <div class="product-btn-row" onclick="event.stopPropagation()">
-        ${isLocked
-          ? `<button class="buy-now-btn" style="background:${lockedBtnBg};cursor:not-allowed;color:#fff;font-weight:700;opacity:.95" disabled>${lockedBtnText}</button>`
-          : `<button class="buy-now-btn" onclick="openModal(${p.id})">${t('btnBuy')}</button>
-             ${p.isAccount ? '' : (
-                cart.some(item => item.id === p.id)
-                  ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="${t('btnInCart')}" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>${t('btnInCart')}</button>`
-                  : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>${t('btnAddCart')}</button>`
-             )}`
+        ${isRegionLocked
+          ? `<button type="button" class="buy-now-btn" style="background:${lockedBtnBg};color:#fff;font-weight:800;cursor:pointer" onclick="switchToIndonesiaForGenshin()">${escapeHtml(lockedBtnText)}</button>`
+          : (isLocked
+            ? `<button class="buy-now-btn" style="background:${lockedBtnBg};cursor:not-allowed;color:#fff;font-weight:700;opacity:.95" disabled>${lockedBtnText}</button>`
+            : `<button class="buy-now-btn" onclick="openModal(${p.id})">${t('btnBuy')}</button>
+               ${p.isAccount ? '' : (
+                  cart.some(item => item.id === p.id)
+                    ? `<button class="add-cart-btn added" onclick="addToCart(${p.id}, event)" title="${t('btnInCart')}" style="background:#f3f4f6;color:#374151;border-color:#d1d5db"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:3px">✓</span>${t('btnInCart')}</button>`
+                    : `<button class="add-cart-btn" onclick="addToCart(${p.id}, event)"><span style="font-size:12px;font-weight:800;line-height:1;margin-right:2px">+</span>${t('btnAddCart')}</button>`
+               )}`)
         }
       </div>
     </div>
   </div>
+  `;
+}
+
+function renderGenshinRegionPolicyBanner(filteredItems, activeSide){
+  const el = document.getElementById('genshinRegionPolicyBanner');
+  if(!el) return;
+  const isTopup = activeSide === 'topup';
+  const cCode = (typeof currentSelectedCountry !== 'undefined' && currentSelectedCountry) ? String(currentSelectedCountry).toUpperCase() : 'ID';
+  const isLockedRegion = cCode !== 'ID';
+  const hasGenshinFiltered = Array.isArray(filteredItems) && filteredItems.some(p => p && p.cat === 'genshin');
+  const shouldShow = isTopup && !isCatalogGameHubActive() && (currentCatFilter === 'genshin' || (isLockedRegion && hasGenshinFiltered));
+  if(!shouldShow){
+    el.style.display = 'none';
+    el.innerHTML = '';
+    return;
+  }
+  const msg = getGenshinRegionPolicyMessage(isLockedRegion, cCode);
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div class="genshin-region-banner ${isLockedRegion ? 'locked' : 'info'}">
+      <div class="genshin-region-banner-body">
+        <div class="genshin-region-banner-icon">${isLockedRegion ? '🔒' : '🇮🇩'}</div>
+        <div>
+          <div class="genshin-region-banner-title">${escapeHtml(msg.title)}</div>
+          <div class="genshin-region-banner-desc">${escapeHtml(msg.desc)}</div>
+        </div>
+      </div>
+      ${isLockedRegion ? `<button type="button" class="genshin-region-switch-btn" onclick="switchToIndonesiaForGenshin()">🇮🇩 ${escapeHtml(msg.switchBtn)}</button>` : ''}
+    </div>
   `;
 }
 
@@ -26080,6 +26428,7 @@ function renderProducts(filter, subFilter){
   if(typeof initCatalogSwipeNavigation === 'function') initCatalogSwipeNavigation();
 
   if(activeSide === 'topup' && currentCatFilter === 'all' && !query && !isExplicitAllCatalogView){
+    renderGenshinRegionPolicyBanner([], activeSide);
     renderGameSelectorHub(sideProducts, activeSide, grid);
     return;
   }
@@ -26104,6 +26453,7 @@ function renderProducts(filter, subFilter){
       (p.subgroup||'').toLowerCase().includes(query)
     );
   }
+  renderGenshinRegionPolicyBanner(filtered, activeSide);
 
   if(filtered.length === 0){
     const emptyMsg = (currentSelectedCountry === 'SG')
@@ -26744,6 +27094,10 @@ function buyFromProductImageViewer(){
 function openModal(id){
   selectedProduct=products.find(p=>p.id===id);selectedPayment=null;
   if(!selectedProduct) return;
+  if(typeof isGenshinTopupRegionLocked === 'function' && isGenshinTopupRegionLocked(selectedProduct)){
+    showToast(getGenshinRegionPolicyMessage(true).toast);
+    return;
+  }
   const eff = getEffectiveAccountStatus(selectedProduct);
   const isProdSold = eff === 'sold' || (reservationsCache[selectedProduct.id] && reservationsCache[selectedProduct.id].status === 'sold');
   if(isProdSold){
@@ -26794,6 +27148,7 @@ function openModal(id){
   const mUidInput = document.getElementById('modalTopupUid');
   const mSrvSelect = document.getElementById('modalTopupServer');
   const mContactInput = document.getElementById('modalTopupContact');
+  const mGenshinHint = document.getElementById('modalGenshinRegionHint');
   const mJokiBox = document.getElementById('modalJokiRulesBox');
   const mChatLabel = document.getElementById('modalChatAdminLabel');
   const mAdminGrid = document.getElementById('adminGridModal');
@@ -26808,6 +27163,16 @@ function openModal(id){
   }
   if(mContactInput){
     mContactInput.value = isTopup ? safeGetItem('norxstore_quick_topup_contact', '') : '';
+  }
+  if(mGenshinHint){
+    if(isTopup && selectedProduct.cat === 'genshin'){
+      const gInfo = getGenshinRegionPolicyMessage(false);
+      mGenshinHint.style.display = 'block';
+      mGenshinHint.textContent = `🇮🇩 ${gInfo.title} — ${gInfo.desc}`;
+    } else {
+      mGenshinHint.style.display = 'none';
+      mGenshinHint.textContent = '';
+    }
   }
   if(mJokiBox) mJokiBox.style.display = isTopup ? 'none' : 'block';
   if(mDirectWrap) mDirectWrap.style.display = isTopup ? 'block' : 'none';
@@ -26872,6 +27237,10 @@ function updateWA(){
 }
 function submitDirectTopupOrder(){
   if(!selectedProduct) return;
+  if(typeof isGenshinTopupRegionLocked === 'function' && isGenshinTopupRegionLocked(selectedProduct)){
+    showToast(getGenshinRegionPolicyMessage(true).toast);
+    return;
+  }
   const activeOrder = getActiveOrderForProduct(selectedProduct.id);
   if(activeOrder){
     showToast(t('orderWaitFinishedNotice'));
@@ -26957,6 +27326,10 @@ function submitDirectTopupOrder(){
 }
 
 function sendWA(){
+  if(selectedProduct && typeof isGenshinTopupRegionLocked === 'function' && isGenshinTopupRegionLocked(selectedProduct)){
+    showToast(getGenshinRegionPolicyMessage(true).toast);
+    return;
+  }
   const isTopup = selectedProduct && getProductSideMode(selectedProduct) === 'topup';
   if(isTopup){
     submitDirectTopupOrder();
