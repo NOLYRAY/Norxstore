@@ -4440,6 +4440,174 @@ body.dark-mode .topup-wb-status{
   color:#0c4a6e;
   border:1.5px solid #7dd3fc;
 }
+.admin-notif-history-section{
+  margin-top:10px;
+  border-top:1.5px dashed #bae6fd;
+  padding-top:10px;
+}
+.admin-notif-history-toggle{
+  width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  background:#ffffff;
+  border:1.5px solid #7dd3fc;
+  border-radius:11px;
+  padding:8px 11px;
+  font-size:12px;
+  font-weight:800;
+  color:#0c4a6e;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.admin-notif-history-toggle:hover{
+  background:#f0f9ff;
+}
+.admin-notif-history-toggle-left{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  min-width:0;
+}
+.admin-notif-unread-pill{
+  font-size:10px;
+  font-weight:800;
+  padding:2px 8px;
+  border-radius:999px;
+  background:#e2e8f0;
+  color:#475569;
+}
+.admin-notif-unread-pill.has-unread{
+  background:linear-gradient(135deg,#ef4444,#dc2626);
+  color:#fff;
+  box-shadow:0 2px 8px rgba(220,38,38,.3);
+}
+.admin-notif-history-chevron{
+  font-size:11px;
+  font-weight:800;
+  color:#0284c7;
+  white-space:nowrap;
+}
+.admin-notif-history-drawer{
+  margin-top:8px;
+  background:#ffffff;
+  border:1.5px solid #cbd5e1;
+  border-radius:12px;
+  padding:10px;
+  max-width:100%;
+  box-sizing:border-box;
+}
+.admin-notif-filter-row{
+  display:flex;
+  gap:5px;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+}
+.admin-notif-filter-btn{
+  border:1px solid #cbd5e1;
+  background:#f8fafc;
+  color:#334155;
+  border-radius:999px;
+  padding:4px 9px;
+  font-size:10.5px;
+  font-weight:800;
+  cursor:pointer;
+}
+.admin-notif-filter-btn.active{
+  background:#0284c7;
+  color:#fff;
+  border-color:#0284c7;
+}
+.admin-notif-bulk-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-bottom:8px;
+  padding-bottom:7px;
+  border-bottom:1px solid #e2e8f0;
+}
+.admin-notif-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+  max-height:330px;
+  overflow-y:auto;
+  padding-right:2px;
+}
+.admin-notif-item{
+  background:#f8fafc;
+  border:1.5px solid #e2e8f0;
+  border-radius:11px;
+  padding:9px 10px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  transition:border-color .15s,background .15s;
+}
+.admin-notif-item.unread{
+  background:#f0f9ff;
+  border-color:#38bdf8;
+  box-shadow:0 2px 8px rgba(2,132,199,.1);
+}
+.admin-notif-item-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  flex-wrap:wrap;
+}
+.admin-notif-type-badge{
+  font-size:10px;
+  font-weight:800;
+  padding:2px 7px;
+  border-radius:6px;
+  background:#e0f2fe;
+  color:#0369a1;
+}
+.admin-notif-type-badge.paid{background:#dcfce7;color:#15803d;}
+.admin-notif-type-badge.joki{background:#f3e8ff;color:#6d28d9;}
+.admin-notif-type-badge.test{background:#fef3c7;color:#92400e;}
+.admin-notif-time{
+  font-size:10px;
+  font-weight:700;
+  color:#64748b;
+}
+.admin-notif-item-title{
+  font-size:12px;
+  font-weight:800;
+  color:#0f172a;
+  line-height:1.35;
+  word-break:break-word;
+}
+.admin-notif-item-meta{
+  font-size:11px;
+  font-weight:600;
+  color:#475569;
+  line-height:1.4;
+  word-break:break-word;
+}
+.admin-notif-item-actions{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-top:2px;
+}
+@keyframes adminOrderPulse{
+  0%{box-shadow:0 0 0 0 rgba(2,132,199,.55);border-color:#0284c7;}
+  60%{box-shadow:0 0 0 8px rgba(2,132,199,0);border-color:#0284c7;}
+  100%{box-shadow:0 0 0 0 rgba(2,132,199,0);}
+}
+.admin-order-card-highlight{
+  animation:adminOrderPulse 1.1s ease 2;
+  border-color:#0284c7 !important;
+  background:#f0f9ff !important;
+}
 .admin-quick-price-row{
   width:100%;
   display:flex;
@@ -6361,6 +6529,16 @@ body.dark-mode .genshin-region-banner.unavailable{
       <button type="button" onclick="saveAdminNtfyTopic()" style="flex:1;min-width:120px;height:33px;border-radius:8px;border:none;background:#16a34a;color:#fff;font-size:11px;font-weight:800;cursor:pointer">💾 Simpan Semua Topik</button>
     </div>
   </div>
+  <div class="admin-notif-history-section" id="adminNotifHistorySection">
+    <button type="button" class="admin-notif-history-toggle" id="adminNotifHistoryToggleBtn" onclick="toggleAdminNotifHistoryDrawer()">
+      <span class="admin-notif-history-toggle-left">
+        <span>📜 Riwayat Notif Masuk</span>
+        <span class="admin-notif-unread-pill" id="adminNotifHistoryCountPill">0 Tersimpan</span>
+      </span>
+      <span class="admin-notif-history-chevron" id="adminNotifHistoryChevron">▾ Buka</span>
+    </button>
+    <div class="admin-notif-history-drawer" id="adminNotifHistoryDrawer" style="display:none"></div>
+  </div>
 </div>
 
 <!-- FLOATING POPUP NOTIF PESANAN MASUK UNTUK DI APLIKASI -->
@@ -6373,6 +6551,7 @@ body.dark-mode .genshin-region-banner.unavailable{
   <div class="app-order-alert-meta" id="appOrderAlertMeta">Rp75.500 · QRIS All Payment</div>
   <div class="app-order-alert-actions">
     <button type="button" class="app-order-alert-btn go" id="appOrderAlertActionBtn" onclick="handleAppOrderAlertAction()">⚡ Buka &amp; Proses Sekarang</button>
+    <button type="button" class="app-order-alert-btn ok" onclick="openAdminNotifHistoryFromPopup()">📜 Riwayat</button>
     <button type="button" class="app-order-alert-btn ok" onclick="closeAppOrderAlertPopup()">Tutup</button>
   </div>
 </div>
@@ -8651,6 +8830,7 @@ const RTDB_CONFIG_IMAGES_BASE_URL = 'https://norxstore-id-default-rtdb.asia-sout
 const RTDB_CONFIG_TOPUP_ICONS_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_topup_game_icons__.json';
 const RTDB_CONFIG_TOPUP_PAYMENT_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_topup_payment__.json';
 const RTDB_CONFIG_GAME_RULES_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_game_rules__.json';
+const RTDB_CONFIG_ADMIN_NOTIF_HISTORY_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_admin_notif_history__.json';
 
 // ==================== DUAL-SIDE STORE MODE ENGINE (JOKI vs TOP UP) ====================
 let currentStoreSide = (function(){
@@ -19653,6 +19833,11 @@ function createOrder(items, total, paymentMethod, adminName, extraMeta = null){
       })
     }).catch(()=>{});
   } catch(e){}
+  try {
+    if(typeof recordAdminNotifHistoryFromOrder === 'function'){
+      recordAdminNotifHistoryFromOrder(order, 'new', 'customer', true);
+    }
+  } catch(e){}
   return orderId;
 }
 function removeMyOrder(orderId, event){
@@ -20586,6 +20771,510 @@ function handleAppOrderAlertAction(){
   openAdminAndFocusOrders(currentAlertOrderMeta.serviceType);
 }
 
+// ==================== ADMIN INCOMING NOTIFICATION HISTORY ENGINE ====================
+let adminNotifHistoryDrawerOpen = false;
+let adminNotifHistoryFilter = 'all';
+
+function sanitizeAdminNotifSafeKey(rawKey){
+  return String(rawKey || 'notif_' + Date.now()).replace(/[.#$\[\]\/:\s]/g, '_').slice(0, 110);
+}
+
+function loadAdminNotifHistoryLocal(){
+  try {
+    const raw = safeGetItem('norxstore_admin_notif_history_v1', '');
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch(e){
+    return [];
+  }
+}
+
+let adminNotifHistoryCache = loadAdminNotifHistoryLocal();
+
+function saveAdminNotifHistoryLocal(list){
+  const clean = Array.isArray(list) ? list.slice(0, 120) : [];
+  adminNotifHistoryCache = clean;
+  try { safeSetItem('norxstore_admin_notif_history_v1', JSON.stringify(clean)); } catch(e){}
+}
+
+function getAdminNotifReadMap(){
+  try {
+    const raw = safeGetItem('norxstore_admin_notif_read_v1', '');
+    const parsed = raw ? JSON.parse(raw) : {};
+    return (parsed && typeof parsed === 'object') ? parsed : {};
+  } catch(e){
+    return {};
+  }
+}
+
+function saveAdminNotifReadMap(map){
+  try { safeSetItem('norxstore_admin_notif_read_v1', JSON.stringify(map || {})); } catch(e){}
+}
+
+function getAdminNotifDeletedMap(){
+  try {
+    const raw = safeGetItem('norxstore_admin_notif_deleted_v1', '');
+    const parsed = raw ? JSON.parse(raw) : {};
+    return (parsed && typeof parsed === 'object') ? parsed : {};
+  } catch(e){
+    return {};
+  }
+}
+
+function saveAdminNotifDeletedMap(map){
+  try { safeSetItem('norxstore_admin_notif_deleted_v1', JSON.stringify(map || {})); } catch(e){}
+}
+
+function getAdminNotifClearedBeforeTs(){
+  return Number(safeGetItem('norxstore_admin_notif_cleared_before_v1', '0')) || 0;
+}
+
+function recordAdminNotifHistoryEntry(rawEntry, pushCloud = false){
+  if(!rawEntry || typeof rawEntry !== 'object') return;
+  const createdAt = Number(rawEntry.createdAt) || Date.now();
+  const mode = rawEntry.mode === 'paid' ? 'paid' : (rawEntry.mode === 'test' ? 'test' : 'new');
+  const serviceType = rawEntry.serviceType === 'topup' ? 'topup' : (rawEntry.serviceType === 'all' ? 'all' : 'joki');
+  const orderId = rawEntry.orderId ? String(rawEntry.orderId) : '';
+  const notifKey = rawEntry.notifKey
+    ? String(rawEntry.notifKey)
+    : ((orderId && !orderId.startsWith('sim_') && !orderId.startsWith('TEST_') && !orderId.startsWith('NTFY_TEST_'))
+        ? `${mode}:${orderId}`
+        : `${mode}:${orderId || createdAt}`);
+
+  const entry = {
+    notifKey,
+    orderId,
+    mode,
+    serviceType,
+    badge: String(rawEntry.badge || (mode === 'paid' ? '💳 KONFIRMASI SUDAH BAYAR!' : (serviceType === 'topup' ? '💎 ORDER TOP-UP BARU!' : '⚔️ ORDER JOKI/AKUN BARU!'))),
+    title: String(rawEntry.title || 'Pesanan NORXSTORE'),
+    meta: String(rawEntry.meta || ''),
+    total: Number(rawEntry.total) || 0,
+    paymentMethod: String(rawEntry.paymentMethod || ''),
+    topupUid: String(rawEntry.topupUid || ''),
+    topupServer: String(rawEntry.topupServer || ''),
+    source: String(rawEntry.source || 'live'),
+    createdAt
+  };
+
+  const list = Array.isArray(adminNotifHistoryCache) ? [...adminNotifHistoryCache] : [];
+  const existIdx = list.findIndex(it => it && it.notifKey === notifKey);
+  if(existIdx > -1){
+    list[existIdx] = { ...list[existIdx], ...entry, createdAt: Math.max(Number(list[existIdx].createdAt) || 0, createdAt) };
+  } else {
+    list.unshift(entry);
+  }
+  list.sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+  saveAdminNotifHistoryLocal(list);
+
+  if(pushCloud){
+    const safeKey = sanitizeAdminNotifSafeKey(notifKey);
+    const cloudUrl = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_admin_notif_history__/items/' + encodeURIComponent(safeKey) + '.json';
+    try {
+      fetch(cloudUrl, {
+        method: 'PUT',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry)
+      }).catch(()=>{});
+    } catch(e){}
+    if(window.fbAvailable && fbDB && fbDB.ref){
+      fbDB.ref('norxstore/orders/__config_admin_notif_history__/items/' + safeKey).set(entry).catch(()=>{});
+    }
+  }
+
+  if(typeof renderAdminNotifHistoryUI === 'function') renderAdminNotifHistoryUI();
+}
+
+function recordAdminNotifHistoryFromOrder(order, mode = 'new', source = 'live', pushCloud = false){
+  if(!order || typeof order !== 'object') return;
+  const itemsText = (Array.isArray(order.items) ? order.items : []).map(it => (it.name || 'Produk') + (it.qty > 1 ? ' x' + it.qty : '')).join(', ') || 'Pesanan Baru';
+  const priceStr = 'Rp' + Math.round(Number(order.total) || 0).toLocaleString('id-ID');
+  const isTopup = (typeof isPureTopupOrder === 'function') ? isPureTopupOrder(order) : (order.serviceType === 'topup' || !!order.topupUid);
+  const serviceType = isTopup ? 'topup' : 'joki';
+  const uidInfo = order.topupUid ? ` · UID: ${order.topupUid}${order.topupServer ? ' (' + order.topupServer + ')' : ''}` : '';
+  const payInfo = order.paymentMethod ? ` · 💳 ${order.paymentMethod}` : '';
+  const isPaidConfirm = (mode === 'paid');
+  const badgeTxt = isPaidConfirm ? '💳 KONFIRMASI SUDAH BAYAR!' : (isTopup ? '💎 ORDER TOP-UP BARU!' : '⚔️ ORDER JOKI/AKUN BARU!');
+  const ts = isPaidConfirm
+    ? (Number(order.customerPaidAt) || Number(order.createdAt) || Date.now())
+    : (Number(order.createdAt) || Date.now());
+
+  recordAdminNotifHistoryEntry({
+    notifKey: (order.id && !String(order.id).startsWith('sim_')) ? `${mode}:${order.id}` : `sim:${Date.now()}`,
+    orderId: order.id || '',
+    mode: String(order.id || '').startsWith('sim_') ? 'test' : mode,
+    serviceType,
+    badge: String(order.id || '').startsWith('sim_') ? '🛎️ TES POPUP ORDER' : badgeTxt,
+    title: itemsText,
+    meta: `${priceStr}${payInfo}${uidInfo}`,
+    total: Number(order.total) || 0,
+    paymentMethod: order.paymentMethod || '',
+    topupUid: order.topupUid || '',
+    topupServer: order.topupServer || '',
+    source: source,
+    createdAt: ts
+  }, pushCloud);
+}
+
+function applyCloudAdminNotifHistorySnapshot(val){
+  if(!val || typeof val !== 'object') return;
+  const clearedCloudTs = (val.meta && Number(val.meta.clearedBeforeTs)) ? Number(val.meta.clearedBeforeTs) : 0;
+  const localClearedTs = getAdminNotifClearedBeforeTs();
+  if(clearedCloudTs > localClearedTs){
+    try { safeSetItem('norxstore_admin_notif_cleared_before_v1', String(clearedCloudTs)); } catch(e){}
+  }
+
+  const cloudItemsMap = val.items && typeof val.items === 'object' ? val.items : {};
+  const mergedMap = {};
+  (adminNotifHistoryCache || []).forEach(it => {
+    if(it && it.notifKey) mergedMap[it.notifKey] = it;
+  });
+  Object.values(cloudItemsMap).forEach(it => {
+    if(it && it.notifKey){
+      const ex = mergedMap[it.notifKey];
+      if(!ex || (Number(it.createdAt) || 0) >= (Number(ex.createdAt) || 0)){
+        mergedMap[it.notifKey] = it;
+      }
+    }
+  });
+  const nextList = Object.values(mergedMap).sort((a, b) => (Number(b.createdAt) || 0) - (Number(a.createdAt) || 0));
+  saveAdminNotifHistoryLocal(nextList);
+  if(typeof renderAdminNotifHistoryUI === 'function') renderAdminNotifHistoryUI();
+}
+
+function syncAdminNotifHistoryFromCloudRest(){
+  try {
+    fetch(RTDB_CONFIG_ADMIN_NOTIF_HISTORY_URL + '?t=' + Date.now(), { cache: 'no-store' })
+      .then(res => res.ok ? res.json() : null)
+      .then(val => {
+        if(val && typeof val === 'object') applyCloudAdminNotifHistorySnapshot(val);
+      }).catch(()=>{});
+  } catch(e){}
+}
+
+function getMergedAdminNotifHistory(){
+  const clearedBefore = getAdminNotifClearedBeforeTs();
+  const deletedMap = getAdminNotifDeletedMap();
+  const readMap = getAdminNotifReadMap();
+  const map = new Map();
+
+  (adminNotifHistoryCache || []).forEach(it => {
+    if(!it || !it.notifKey) return;
+    map.set(it.notifKey, { ...it });
+  });
+
+  // Gabungkan otomatis dari order di allOrders agar riwayat order & pembayaran lama tetap terbaca
+  const ordersObj = (typeof allOrders !== 'undefined' && allOrders && typeof allOrders === 'object') ? allOrders : {};
+  Object.values(ordersObj).forEach(o => {
+    if(!o || !o.id || !Array.isArray(o.items) || o.isRating || o.type === 'rating') return;
+    if(!String(o.id).startsWith('ord_')) return;
+    const isTopup = (typeof isPureTopupOrder === 'function') ? isPureTopupOrder(o) : (o.serviceType === 'topup' || !!o.topupUid);
+    const serviceType = isTopup ? 'topup' : 'joki';
+    const itemsText = o.items.map(it => (it.name || 'Produk') + (it.qty > 1 ? ' x' + it.qty : '')).join(', ') || 'Pesanan';
+    const priceStr = 'Rp' + Math.round(Number(o.total) || 0).toLocaleString('id-ID');
+    const uidInfo = o.topupUid ? ` · UID: ${o.topupUid}${o.topupServer ? ' (' + o.topupServer + ')' : ''}` : '';
+    const payInfo = o.paymentMethod ? ` · 💳 ${o.paymentMethod}` : '';
+
+    const newKey = 'new:' + o.id;
+    if(!map.has(newKey)){
+      map.set(newKey, {
+        notifKey: newKey,
+        orderId: o.id,
+        mode: 'new',
+        serviceType,
+        badge: isTopup ? '💎 ORDER TOP-UP BARU!' : '⚔️ ORDER JOKI/AKUN BARU!',
+        title: itemsText,
+        meta: `${priceStr}${payInfo}${uidInfo}`,
+        total: Number(o.total) || 0,
+        paymentMethod: o.paymentMethod || '',
+        topupUid: o.topupUid || '',
+        topupServer: o.topupServer || '',
+        source: 'order_sync',
+        createdAt: Number(o.createdAt) || 0
+      });
+    }
+
+    if(o.customerPaidConfirmed){
+      const paidKey = 'paid:' + o.id;
+      if(!map.has(paidKey)){
+        map.set(paidKey, {
+          notifKey: paidKey,
+          orderId: o.id,
+          mode: 'paid',
+          serviceType,
+          badge: '💳 KONFIRMASI SUDAH BAYAR!',
+          title: itemsText,
+          meta: `${priceStr}${payInfo}${uidInfo}`,
+          total: Number(o.total) || 0,
+          paymentMethod: o.paymentMethod || '',
+          topupUid: o.topupUid || '',
+          topupServer: o.topupServer || '',
+          source: 'order_sync',
+          createdAt: Number(o.customerPaidAt) || ((Number(o.createdAt) || 0) + 1)
+        });
+      }
+    }
+  });
+
+  const out = [];
+  map.forEach(item => {
+    const ts = Number(item.createdAt) || 0;
+    if(deletedMap[item.notifKey]) return;
+    if(clearedBefore > 0 && ts <= clearedBefore) return;
+    out.push({
+      ...item,
+      createdAt: ts,
+      isUnread: !readMap[item.notifKey]
+    });
+  });
+
+  out.sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+  return out.slice(0, 100);
+}
+
+function getAdminNotifUnreadCount(){
+  return getMergedAdminNotifHistory().filter(it => it.isUnread).length;
+}
+
+function formatNotifRelativeTime(ts){
+  const n = Number(ts) || 0;
+  if(!n) return '-';
+  const exact = new Date(n).toLocaleString('id-ID', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+  const diffSec = Math.max(0, Math.floor((Date.now() - n) / 1000));
+  if(diffSec < 60) return `${exact} · Baru saja`;
+  if(diffSec < 3600) return `${exact} · ${Math.floor(diffSec / 60)} mnt lalu`;
+  if(diffSec < 86400) return `${exact} · ${Math.floor(diffSec / 3600)} jam lalu`;
+  return exact;
+}
+
+function markAdminNotifRead(notifKey){
+  if(!notifKey) return;
+  const readMap = getAdminNotifReadMap();
+  readMap[notifKey] = Date.now();
+  saveAdminNotifReadMap(readMap);
+  renderAdminNotifHistoryUI();
+}
+
+function markAllAdminNotifHistoryRead(){
+  const list = getMergedAdminNotifHistory();
+  const readMap = getAdminNotifReadMap();
+  const now = Date.now();
+  list.forEach(it => {
+    if(it && it.notifKey) readMap[it.notifKey] = now;
+  });
+  saveAdminNotifReadMap(readMap);
+  renderAdminNotifHistoryUI();
+  showToast('✅ Semua riwayat notifikasi ditandai sudah dibaca.');
+}
+
+function deleteAdminNotifHistoryItem(notifKey){
+  if(!notifKey) return;
+  const delMap = getAdminNotifDeletedMap();
+  delMap[notifKey] = true;
+  saveAdminNotifDeletedMap(delMap);
+  const nextLocal = (adminNotifHistoryCache || []).filter(it => it && it.notifKey !== notifKey);
+  saveAdminNotifHistoryLocal(nextLocal);
+  const safeKey = sanitizeAdminNotifSafeKey(notifKey);
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_admin_notif_history__/items/' + safeKey).remove().catch(()=>{});
+  }
+  renderAdminNotifHistoryUI();
+}
+
+function clearAdminNotifHistory(){
+  const now = Date.now();
+  try { safeSetItem('norxstore_admin_notif_cleared_before_v1', String(now)); } catch(e){}
+  saveAdminNotifHistoryLocal([]);
+  try {
+    fetch('https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_admin_notif_history__/meta.json', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ clearedBeforeTs: now })
+    }).catch(()=>{});
+  } catch(e){}
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/__config_admin_notif_history__/meta').set({ clearedBeforeTs: now }).catch(()=>{});
+    fbDB.ref('norxstore/orders/__config_admin_notif_history__/items').remove().catch(()=>{});
+  }
+  renderAdminNotifHistoryUI();
+  showToast('🗑️ Riwayat notifikasi masuk dibersihkan.');
+}
+
+function toggleAdminNotifHistoryDrawer(forceOpen){
+  adminNotifHistoryDrawerOpen = (typeof forceOpen === 'boolean') ? forceOpen : !adminNotifHistoryDrawerOpen;
+  const drawer = document.getElementById('adminNotifHistoryDrawer');
+  if(drawer) drawer.style.display = adminNotifHistoryDrawerOpen ? 'block' : 'none';
+  if(adminNotifHistoryDrawerOpen) syncAdminNotifHistoryFromCloudRest();
+  renderAdminNotifHistoryUI();
+}
+
+function setAdminNotifHistoryFilter(filter){
+  adminNotifHistoryFilter = filter || 'all';
+  renderAdminNotifHistoryUI();
+}
+
+function openAdminNotifHistoryFromPopup(){
+  closeAppOrderAlertPopup();
+  const focusDrawer = () => {
+    toggleAdminNotifHistoryDrawer(true);
+    const sec = document.getElementById('adminNotifHistorySection');
+    if(sec && typeof sec.scrollIntoView === 'function'){
+      try { sec.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e){}
+    }
+  };
+  if(typeof isAdminOpen === 'function' && isAdminOpen()){
+    focusDrawer();
+    return;
+  }
+  if((typeof isAuthorizedAdmin === 'function' && isAuthorizedAdmin()) || sessionStorage.getItem('norxstore_admin_unlocked') === '1' || (typeof isPwProtectionEnabled === 'function' && !isPwProtectionEnabled())){
+    openAdmin();
+    setTimeout(focusDrawer, 80);
+  } else {
+    const pwOv = document.getElementById('pwOverlay');
+    if(pwOv) pwOv.classList.add('open');
+    const pwInp = document.getElementById('pwInput');
+    if(pwInp) setTimeout(() => pwInp.focus(), 80);
+  }
+}
+
+function openOrderFromNotifHistory(notifKey, orderId, serviceType){
+  if(notifKey) markAdminNotifRead(notifKey);
+  const ord = (orderId && typeof allOrders !== 'undefined') ? allOrders[orderId] : null;
+  const targetSide = (ord && typeof isPureTopupOrder === 'function')
+    ? (isPureTopupOrder(ord) ? 'topup' : 'joki')
+    : (serviceType === 'topup' ? 'topup' : 'joki');
+
+  if(ord){
+    const st = String(ord.status || 'pending');
+    if(targetSide === 'topup'){
+      if(st === 'done' || st === 'selesai') currentAdminTopupOrderTab = 'done';
+      else if(st === 'cancelled' || st === 'refunded') currentAdminTopupOrderTab = 'all';
+      else currentAdminTopupOrderTab = 'active';
+    } else {
+      if(st === 'done' || st === 'selesai') currentAdminOrderTab = 'done';
+      else if(st === 'cancelled' || st === 'refunded') currentAdminOrderTab = 'other';
+      else currentAdminOrderTab = 'active';
+    }
+  }
+
+  if(typeof switchAdminPanelMode === 'function') switchAdminPanelMode(targetSide);
+  if(targetSide === 'topup' && typeof switchAdminTopupSubTab === 'function') switchAdminTopupSubTab('orders');
+  else if(typeof switchAdminJokiSubTab === 'function') switchAdminJokiSubTab('orders');
+
+  if(orderId){
+    setTimeout(() => {
+      const card = document.querySelector(`[data-order-id="${orderId}"]`);
+      if(card){
+        try { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e){}
+        card.classList.add('admin-order-card-highlight');
+        setTimeout(() => card.classList.remove('admin-order-card-highlight'), 2400);
+      } else {
+        showToast('ℹ️ Pesanan sudah tidak ada di daftar aktif.');
+      }
+    }, 90);
+  }
+}
+
+function renderAdminNotifHistoryUI(){
+  const drawer = document.getElementById('adminNotifHistoryDrawer');
+  const pill = document.getElementById('adminNotifHistoryCountPill');
+  const chevron = document.getElementById('adminNotifHistoryChevron');
+
+  const allItems = getMergedAdminNotifHistory();
+  const unreadCount = allItems.filter(it => it.isUnread).length;
+
+  if(pill){
+    if(unreadCount > 0){
+      pill.textContent = `${unreadCount} Baru`;
+      pill.classList.add('has-unread');
+    } else if(allItems.length > 0){
+      pill.textContent = `${allItems.length} Tersimpan`;
+      pill.classList.remove('has-unread');
+    } else {
+      pill.textContent = 'Kosong';
+      pill.classList.remove('has-unread');
+    }
+  }
+  if(chevron){
+    chevron.textContent = adminNotifHistoryDrawerOpen ? '▴ Tutup' : '▾ Buka';
+  }
+  if(!drawer) return;
+  drawer.style.display = adminNotifHistoryDrawerOpen ? 'block' : 'none';
+  if(!adminNotifHistoryDrawerOpen) return;
+
+  const filtered = allItems.filter(it => {
+    if(adminNotifHistoryFilter === 'unread') return it.isUnread;
+    if(adminNotifHistoryFilter === 'new') return it.mode === 'new';
+    if(adminNotifHistoryFilter === 'paid') return it.mode === 'paid';
+    if(adminNotifHistoryFilter === 'topup') return it.serviceType === 'topup';
+    if(adminNotifHistoryFilter === 'joki') return it.serviceType === 'joki';
+    if(adminNotifHistoryFilter === 'test') return it.mode === 'test';
+    return true;
+  });
+
+  const filtersHtml = [
+    { key: 'all', label: `Semua (${allItems.length})` },
+    { key: 'unread', label: `Belum Dibaca (${unreadCount})` },
+    { key: 'new', label: '🆕 Order Baru' },
+    { key: 'paid', label: '💳 Konfirmasi Bayar' },
+    { key: 'topup', label: '💎 Top Up' },
+    { key: 'joki', label: '⚔️ Joki' },
+    { key: 'test', label: '🛎️ Tes' }
+  ].map(f => `<button type="button" class="admin-notif-filter-btn ${adminNotifHistoryFilter === f.key ? 'active' : ''}" onclick="setAdminNotifHistoryFilter('${f.key}')">${escapeHtml(f.label)}</button>`).join('');
+
+  const bulkHtml = `
+    <div class="admin-notif-bulk-row">
+      <div style="font-size:10.5px;font-weight:700;color:#475569">${filtered.length} notif ditampilkan</div>
+      <div style="display:flex;gap:5px;flex-wrap:wrap">
+        ${unreadCount > 0 ? `<button type="button" onclick="markAllAdminNotifHistoryRead()" style="border:1px solid #86efac;background:#f0fdf4;color:#15803d;border-radius:7px;padding:4px 8px;font-size:10.5px;font-weight:800;cursor:pointer">✓ Tandai Dibaca</button>` : ''}
+        <button type="button" onclick="syncAdminNotifHistoryFromCloudRest()" style="border:1px solid #bae6fd;background:#f0f9ff;color:#0284c7;border-radius:7px;padding:4px 8px;font-size:10.5px;font-weight:800;cursor:pointer">🔄 Muat</button>
+        ${allItems.length > 0 ? `<button type="button" onclick="clearAdminNotifHistory()" style="border:1px solid #fecaca;background:#fef2f2;color:#b91c1c;border-radius:7px;padding:4px 8px;font-size:10.5px;font-weight:800;cursor:pointer">🗑️ Bersihkan</button>` : ''}
+      </div>
+    </div>
+  `;
+
+  const listHtml = filtered.length === 0
+    ? `<div style="text-align:center;padding:22px 12px;color:#64748b;font-size:11.5px;font-weight:700;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:10px">Belum ada riwayat notifikasi masuk di filter ini.</div>`
+    : `<div class="admin-notif-list">${filtered.map(it => {
+        const typeCls = it.mode === 'test' ? 'test' : (it.mode === 'paid' ? 'paid' : (it.serviceType === 'joki' ? 'joki' : ''));
+        const ord = (it.orderId && typeof allOrders !== 'undefined') ? allOrders[it.orderId] : null;
+        let ordStatusTxt = '';
+        if(ord){
+          const st = ord.status;
+          ordStatusTxt = st === 'done' || st === 'selesai'
+            ? '🟢 Selesai'
+            : (st === 'processing' ? '🔵 Diproses' : (st === 'cancelled' || st === 'refunded' ? '🔴 Batal/Refund' : '🟡 Menunggu'));
+        }
+        const canOpenOrder = !!(it.orderId && String(it.orderId).startsWith('ord_'));
+        const safeKeyArg = escapeHtml(it.notifKey).replace(/'/g, "\\'");
+        const safeOrdArg = escapeHtml(it.orderId || '').replace(/'/g, "\\'");
+        return `
+          <div class="admin-notif-item ${it.isUnread ? 'unread' : ''}">
+            <div class="admin-notif-item-head">
+              <div style="display:flex;align-items:center;gap:5px;flex-wrap:wrap">
+                ${it.isUnread ? '<span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:#ef4444"></span>' : ''}
+                <span class="admin-notif-type-badge ${typeCls}">${escapeHtml(it.badge)}</span>
+                ${ordStatusTxt ? `<span style="font-size:10px;font-weight:800;color:#334155">${ordStatusTxt}</span>` : ''}
+              </div>
+              <span class="admin-notif-time">${escapeHtml(formatNotifRelativeTime(it.createdAt))}</span>
+            </div>
+            <div class="admin-notif-item-title">${escapeHtml(it.title)}</div>
+            ${it.meta ? `<div class="admin-notif-item-meta">${escapeHtml(it.meta)}</div>` : ''}
+            <div class="admin-notif-item-actions">
+              <div style="display:flex;gap:5px;flex-wrap:wrap">
+                ${canOpenOrder ? `<button type="button" onclick="openOrderFromNotifHistory('${safeKeyArg}','${safeOrdArg}','${escapeHtml(it.serviceType)}')" style="border:none;background:#0284c7;color:#fff;border-radius:7px;padding:4px 9px;font-size:10.5px;font-weight:800;cursor:pointer">⚡ Buka Pesanan</button>` : ''}
+                ${it.isUnread ? `<button type="button" onclick="markAdminNotifRead('${safeKeyArg}')" style="border:1px solid #cbd5e1;background:#fff;color:#334155;border-radius:7px;padding:4px 8px;font-size:10.5px;font-weight:700;cursor:pointer">✓ Dibaca</button>` : ''}
+              </div>
+              <button type="button" onclick="deleteAdminNotifHistoryItem('${safeKeyArg}')" style="border:none;background:transparent;color:#94a3b8;font-size:12px;cursor:pointer;padding:2px 5px" title="Hapus dari riwayat notif">🗑</button>
+            </div>
+          </div>
+        `;
+      }).join('')}</div>`;
+
+  drawer.innerHTML = `<div class="admin-notif-filter-row">${filtersHtml}</div>${bulkHtml}${listHtml}`;
+}
+
 function triggerAdminAppNotification(order, mode = 'new'){
   const itemsText = (Array.isArray(order.items) ? order.items : []).map(it => (it.name || 'Produk') + (it.qty > 1 ? ' x' + it.qty : '')).join(', ') || 'Pesanan Baru';
   const priceStr = 'Rp' + Math.round(Number(order.total) || 0).toLocaleString('id-ID');
@@ -20594,6 +21283,10 @@ function triggerAdminAppNotification(order, mode = 'new'){
   const uidInfo = order.topupUid ? ` · UID: ${order.topupUid}${order.topupServer ? ' (' + order.topupServer + ')' : ''}` : '';
   const payInfo = order.paymentMethod ? ` · 💳 ${order.paymentMethod}` : '';
   const isPaidConfirm = (mode === 'paid');
+
+  try {
+    recordAdminNotifHistoryFromOrder(order, mode, String(order.id || '').startsWith('sim_') ? 'popup_test' : 'live', false);
+  } catch(e){}
 
   playNotificationChime(true);
 
@@ -20636,6 +21329,16 @@ function testAdminNotificationSound(){
   safeSetItem('norxstore_admin_audio_enabled', '1');
   unlockStoreAudioOnce();
   playNotificationChime(true);
+  recordAdminNotifHistoryEntry({
+    notifKey: 'sound_test:' + Date.now(),
+    mode: 'test',
+    serviceType: 'topup',
+    badge: '🔊 TES SUARA NOTIF',
+    title: 'Tes Suara & Browser Notif Admin',
+    meta: 'Tes lokal perangkat Admin NORXSTORE',
+    source: 'sound_test',
+    createdAt: Date.now()
+  }, false);
   if('Notification' in window && Notification.permission === 'granted'){
     sendBrowserNotification('🛎️ Tes Suara Notif Admin - NORXSTORE', 'Suara & notifikasi aplikasi sudah aktif dan siap menyambut pesanan masuk!', {
       tag: 'admin-test-' + Date.now(),
@@ -20855,6 +21558,16 @@ async function testAdminNtfyPushNow(serviceKind){
     const data = await res.json();
     if(data && data.ntfySent){
       const sentList = Array.isArray(data.ntfyTopics) && data.ntfyTopics.length > 0 ? data.ntfyTopics.join(', ') : targetTopic;
+      recordAdminNotifHistoryEntry({
+        notifKey: 'ntfy_test:' + Date.now(),
+        mode: 'test',
+        serviceType: kind,
+        badge: '📲 TES PUSH NTFY',
+        title: sampleName,
+        meta: `Topik: ${sentList} · Rp${Number(samplePrice).toLocaleString('id-ID')}`,
+        source: 'ntfy_test',
+        createdAt: Date.now()
+      }, false);
       showToast('✅ Terkirim ke topik ntfy: ' + sentList + '! Cek notif di aplikasi ntfy HP Anda.');
     } else {
       showToast('⚠️ Gagal mengirim ke ntfy. Pastikan nama topik valid.');
@@ -21025,6 +21738,16 @@ async function testAdminBackgroundPush5s(){
     });
     const data = await res.json();
     if(data && (data.sent > 0 || data.ntfySent)){
+      recordAdminNotifHistoryEntry({
+        notifKey: 'push_test:' + Date.now(),
+        mode: 'test',
+        serviceType: 'topup',
+        badge: '📡 TES PUSH LATAR BELAKANG',
+        title: 'BLESSING WELKIN MOON (TES PUSH)',
+        meta: 'Rp75.500 · QRIS All Payment · Push Latar Belakang',
+        source: 'push_test',
+        createdAt: Date.now()
+      }, false);
       console.log('Background test push delivered:', data);
     } else {
       showToast('⚠️ Server tidak menemukan perangkat admin terdaftar. Gunakan Chrome atau App ntfy.');
@@ -22911,6 +23634,7 @@ function applyIncomingOrdersMap(incomingMap, isAuthoritative = true){
   if(isAdminOpen()){
     try { renderAdminOrders(); } catch(e){}
     try { if(typeof renderAdminTopupOrders === 'function') renderAdminTopupOrders(); } catch(e){}
+    try { if(typeof renderAdminNotifHistoryUI === 'function') renderAdminNotifHistoryUI(); } catch(e){}
   }
 }
 
@@ -23116,6 +23840,15 @@ fbDB.ref('norxstore/orders/__config_ntfy__').on('value', snap => {
     safeSetItem('norxstore_admin_ntfy_topic', cfgObj.topic);
     if(cloudTs) safeSetItem('norxstore_ntfy_updated_at', String(cloudTs));
     if(typeof renderAdminNtfyUI === 'function') renderAdminNtfyUI();
+  } catch(e){}
+});
+
+fbDB.ref('norxstore/orders/__config_admin_notif_history__').on('value', snap => {
+  try {
+    const val = snap.val();
+    if(val && typeof val === 'object' && typeof applyCloudAdminNotifHistorySnapshot === 'function'){
+      applyCloudAdminNotifHistorySnapshot(val);
+    }
   } catch(e){}
 });
 
@@ -23956,7 +24689,7 @@ function renderAdminOrders(){
       ? `<div style="font-size:11px;font-weight:700;color:#0369a1;background:#e0f2fe;border:1px solid #bae6fd;padding:4px 8px;border-radius:7px;margin:2px 0 6px;display:inline-flex;align-items:center;gap:6px"><span>🎮 UID: ${escapeHtml(o.topupUid)}${o.topupServer ? ' · Server: ' + escapeHtml(o.topupServer) : ''}</span></div>`
       : '';
     return `
-    <div class="my-order-card" style="${o.status === 'done' || o.status === 'selesai' ? 'border-color:#bbf7d0;background:#fafdfb' : (isTopupOrder ? 'border-color:#bae6fd;' : '')}">
+    <div class="my-order-card" data-order-id="${escapeHtml(o.id)}" style="${o.status === 'done' || o.status === 'selesai' ? 'border-color:#bbf7d0;background:#fafdfb' : (isTopupOrder ? 'border-color:#bae6fd;' : '')}">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;gap:6px;flex-wrap:wrap">
         <p style="font-size:11px;color:${isTopupOrder ? '#0284c7' : '#7c3aed'};font-weight:700;margin:0">${customerLine}</p>
         <div style="display:flex;gap:4px;align-items:center;flex-wrap:wrap">
@@ -25208,6 +25941,8 @@ function openAdmin(){
   if(typeof updatePwaInstallButtonsUI === 'function') updatePwaInstallButtonsUI();
   if(typeof updateAdminNotifUiState === 'function') updateAdminNotifUiState();
   if(typeof renderAdminNtfyUI === 'function') renderAdminNtfyUI();
+  if(typeof renderAdminNotifHistoryUI === 'function') renderAdminNotifHistoryUI();
+  if(typeof syncAdminNotifHistoryFromCloudRest === 'function') syncAdminNotifHistoryFromCloudRest();
   updateOnlineCountersUI(currentOnlineCount);
   const adminOv = document.getElementById('adminOverlay');
   if(adminOv){
@@ -28342,6 +29077,11 @@ function confirmTopupCustomerPayment(orderId){
       })
     }).catch(()=>{});
   } catch(e){}
+  try {
+    if(typeof recordAdminNotifHistoryFromOrder === 'function'){
+      recordAdminNotifHistoryFromOrder(ord, 'paid', 'customer', true);
+    }
+  } catch(e){}
 }
 
 function renderTopupInvoiceContent(){
@@ -30004,7 +30744,7 @@ function renderAdminTopupOrders(){
     }
 
     return `
-      <div class="admin-topup-order-card">
+      <div class="admin-topup-order-card" data-order-id="${escapeHtml(o.id)}">
         <div style="display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;margin-bottom:6px">
           <span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:800;color:#0369a1">${escapeHtml(invCode)}</span>
           <span style="font-size:10.5px;color:#64748b">${dateStr}</span>
@@ -30670,6 +31410,7 @@ switchStoreSide(currentStoreSide, true);
 initQuickTopupFromStorage();
 if(typeof syncTopupPaymentConfigFromCloudRest === 'function') syncTopupPaymentConfigFromCloudRest();
 if(typeof syncGameRegionRulesFromCloudRest === 'function') syncGameRegionRulesFromCloudRest();
+if(typeof syncAdminNotifHistoryFromCloudRest === 'function') syncAdminNotifHistoryFromCloudRest();
 if(typeof fetchPaymentGatewayConfig === 'function') fetchPaymentGatewayConfig();
 renderModalPaymentMethods();
 renderCartPaymentMethods();
