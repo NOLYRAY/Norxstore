@@ -19601,6 +19601,11 @@ function markOrderAsDeleted(id){
     safeSetItem('norxstore_deleted_orders', JSON.stringify(arr.slice(-100)));
   }
 }
+function unmarkOrderAsDeleted(id){
+  if(!id) return;
+  const arr = getDeletedOrderIds().filter(x => x !== id);
+  safeSetItem('norxstore_deleted_orders', JSON.stringify(arr));
+}
 
 function getMyOrderStorageKey(){
   if(currentUser && !currentUser.isAnonymous){
@@ -24673,10 +24678,10 @@ function renderAdminOrders(){
       actions = `<button class="admin-btn-sm" style="background:#0284c7" onclick="openOrderDurationModal('${o.id}')" title="Ubah estimasi durasi proses pesanan ini">⏱️ Atur Durasi</button><button class="admin-btn-sm" style="background:#22c55e" onclick="completeOrderStatus('${o.id}')">✅ Selesai</button><button class="admin-btn-sm" style="background:#25d366" onclick="sendWACompletion('${o.id}')" title="Kirim WA Selesai">💬 WA Selesai</button>${refundBtn}<button class="admin-btn-sm" style="background:#ef4444" onclick="cancelOrder('${o.id}')">❌ Batal</button>`;
     } else if(o.status === 'cancelled'){
       statusBadge = '<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>';
-      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
+      actions = `<button type="button" class="admin-btn-sm" style="background:#2563eb;color:#fff" onclick="reopenCancelledOrder('${o.id}','processing')" title="Progres ulang pesanan ini sekarang">🔄 Proses Ulang</button><button type="button" class="admin-btn-sm" style="background:#f59e0b;color:#fff" onclick="reopenCancelledOrder('${o.id}','pending')" title="Kembalikan ke antrian Perlu Dikerjakan">↩️ Kembalikan</button><button type="button" class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     } else if(o.status === 'refunded'){
       statusBadge = '<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">↩️ Di-Refund</span>';
-      actions = `<button class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
+      actions = `<button type="button" class="admin-btn-sm" style="background:#2563eb;color:#fff" onclick="reopenCancelledOrder('${o.id}','processing')" title="Progres ulang pesanan ini sekarang">🔄 Proses Ulang</button><button type="button" class="admin-btn-sm" style="background:#f59e0b;color:#fff" onclick="reopenCancelledOrder('${o.id}','pending')" title="Kembalikan ke antrian Perlu Dikerjakan">↩️ Kembalikan</button><button type="button" class="admin-btn-sm" onclick="deleteOrder('${o.id}')" title="Hapus riwayat">🗑</button>`;
     } else {
       statusBadge = `<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Selesai${completedStr ? ' · '+completedStr : ''}</span>`;
       const refundBtn = isAccountOrder
@@ -25220,6 +25225,139 @@ function cancelOrder(id){
     if(typeof renderAdminTopupOrders === 'function') renderAdminTopupOrders();
     if(typeof updateAdminDualBadges === 'function') updateAdminDualBadges();
     renderAdminProductList();
+  }
+}
+function reopenCancelledOrder(id, targetMode = 'processing'){
+  const o = allOrders && allOrders[id];
+  if(!o) return;
+  const nextStatus = (targetMode === 'pending') ? 'pending' : 'processing';
+  const isTopup = (typeof isPureTopupOrder === 'function') ? isPureTopupOrder(o) : (o.serviceType === 'topup' || !!o.topupUid);
+  const now = Date.now();
+
+  // Cek ketersediaan stok jika pesanan mengandung produk Akun (stok 1)
+  if(!isTopup && typeof orderHasAccountItem === 'function' && orderHasAccountItem(o) && Array.isArray(o.items)){
+    const conflictNames = [];
+    o.items.forEach(it => {
+      const prod = (products || []).find(p =>
+        (it.id !== undefined && it.id !== null && it.id !== '' && Number(p.id) === Number(it.id)) ||
+        (p.name && it.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase())
+      );
+      if(prod && (prod.isAccount || prod.stock === 1)){
+        const resv = (reservationsCache || {})[prod.id];
+        const eff = (typeof getEffectiveAccountStatus === 'function') ? getEffectiveAccountStatus(prod) : null;
+        if(eff === 'sold' && (!resv || resv.soldOrderId !== id)){
+          conflictNames.push(prod.name || ('Produk #' + prod.id));
+        }
+      }
+    });
+    if(conflictNames.length > 0){
+      if(!confirm(`⚠️ Akun "${conflictNames.join(', ')}" terdeteksi sudah berstatus Sold Out / terjual ke pesanan lain.\n\nTetap kembalikan pesanan ini agar diproses ulang?`)) return;
+    }
+    o.items.forEach(it => {
+      const prod = (products || []).find(p =>
+        (it.id !== undefined && it.id !== null && it.id !== '' && Number(p.id) === Number(it.id)) ||
+        (p.name && it.name && p.name.trim().toLowerCase() === it.name.trim().toLowerCase())
+      );
+      if(prod && (prod.isAccount || prod.stock === 1)){
+        const reserveData = { status: 'reserved', reservedAt: now, reservedOrderId: id };
+        if(window.fbAvailable && fbDB && fbDB.ref){
+          fbDB.ref('norxstore/reservations/' + prod.id).set(reserveData).catch(e=>console.error(e));
+        }
+        reservationsCache[prod.id] = reserveData;
+      }
+    });
+  }
+
+  unmarkOrderAsDeleted(id);
+  const defaultEst = isTopup
+    ? ((typeof getTopupPaymentConfig === 'function' ? getTopupPaymentConfig().processTime : '') || '1 - 5 Menit')
+    : (o.estimate || '1-2 Jam');
+
+  const patchData = {
+    status: nextStatus,
+    cancelledAt: null,
+    refundedAt: null,
+    completedAt: null,
+    deletedByCustomer: null,
+    restoredAt: now
+  };
+  if(nextStatus === 'processing'){
+    patchData.estimate = o.estimate || defaultEst;
+    patchData.approvedAt = o.approvedAt || now;
+    patchData.durationUpdatedAt = now;
+  }
+
+  Object.assign(o, patchData);
+
+  if(window.fbAvailable && fbDB && fbDB.ref){
+    fbDB.ref('norxstore/orders/' + id).update(patchData).catch(e=>console.error(e));
+  }
+  try {
+    fetch('https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/' + encodeURIComponent(id) + '.json', {
+      method: 'PATCH',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(patchData)
+    }).catch(()=>{});
+  } catch(e){}
+
+  if(typeof recordOrderNotifState === 'function'){
+    recordOrderNotifState(id, nextStatus);
+  }
+
+  if(nextStatus === 'processing'){
+    const itemsText = Array.isArray(o.items) ? o.items.map(it => it.name).join(', ') : 'Layanan Norxstore';
+    try {
+      fetch('/api/send-order-push', {
+        method: 'POST',
+        keepalive: true,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          orderId: id,
+          status: 'processing',
+          estimate: patchData.estimate,
+          itemName: itemsText,
+          customerNtfyTopic: (o && o.customerNtfyTopic) ? o.customerNtfyTopic : ''
+        })
+      }).catch(()=>{});
+    } catch(e){}
+  }
+
+  if(isTopup){
+    currentAdminTopupOrderTab = 'active';
+  } else {
+    currentAdminOrderTab = 'active';
+  }
+
+  const toastMsg = nextStatus === 'processing'
+    ? '🔄 Pesanan dikembalikan & langsung diproses ulang!'
+    : '↩️ Pesanan dikembalikan ke antrian Perlu Dikerjakan!';
+  showToast(toastMsg);
+
+  renderMyOrders();
+  renderProducts();
+  if(typeof renderLiveHomepageOrderBanner === 'function') renderLiveHomepageOrderBanner();
+  const invOv = document.getElementById('topupInvoiceOverlay');
+  if(invOv && invOv.classList.contains('open') && typeof renderTopupInvoiceContent === 'function'){
+    renderTopupInvoiceContent();
+  }
+  if(isAdminOpen()){
+    renderAdminOrders();
+    if(typeof renderAdminTopupOrders === 'function') renderAdminTopupOrders();
+    if(typeof updateAdminDualBadges === 'function') updateAdminDualBadges();
+    renderAdminProductList();
+    if(typeof renderAdminNotifHistoryUI === 'function') renderAdminNotifHistoryUI();
+    setTimeout(() => {
+      const card = document.querySelector(`[data-order-id="${id}"]`);
+      if(card){
+        try { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch(e){}
+        card.classList.add('admin-order-card-highlight');
+        setTimeout(() => card.classList.remove('admin-order-card-highlight'), 2400);
+      }
+    }, 80);
+  }
+  if(!isTopup && nextStatus === 'processing' && typeof openOrderDurationModal === 'function'){
+    openOrderDurationModal(id);
   }
 }
 function deleteOrder(id){
@@ -30700,15 +30838,22 @@ function renderAdminTopupOrders(){
 
   const active = orders.filter(o => o.status === 'pending' || o.status === 'processing');
   const done = orders.filter(o => o.status === 'done' || o.status === 'selesai');
+  const other = orders.filter(o => o.status === 'cancelled' || o.status === 'refunded');
+  if(currentAdminTopupOrderTab === 'other' && other.length === 0){
+    currentAdminTopupOrderTab = 'active';
+  }
   const navHtml = `
     <div class="admin-topup-orders-nav">
       <button type="button" class="admin-topup-orders-tab ${currentAdminTopupOrderTab === 'active' ? 'active' : ''}" onclick="setAdminTopupOrderTab('active')">⏳ Antrian (${active.length})</button>
       <button type="button" class="admin-topup-orders-tab ${currentAdminTopupOrderTab === 'done' ? 'active' : ''}" onclick="setAdminTopupOrderTab('done')">✅ Sukses (${done.length})</button>
+      ${other.length > 0 ? `<button type="button" class="admin-topup-orders-tab ${currentAdminTopupOrderTab === 'other' ? 'active' : ''}" onclick="setAdminTopupOrderTab('other')">📁 Batal (${other.length})</button>` : ''}
       <button type="button" class="admin-topup-orders-tab ${currentAdminTopupOrderTab === 'all' ? 'active' : ''}" onclick="setAdminTopupOrderTab('all')">🌐 Semua (${orders.length})</button>
     </div>
   `;
 
-  const shown = currentAdminTopupOrderTab === 'active' ? active : (currentAdminTopupOrderTab === 'done' ? done : orders);
+  const shown = currentAdminTopupOrderTab === 'active'
+    ? active
+    : (currentAdminTopupOrderTab === 'done' ? done : (currentAdminTopupOrderTab === 'other' ? other : orders));
   if(shown.length === 0){
     list.innerHTML = navHtml + '<div style="text-align:center;padding:20px;background:#f8fafc;border:1.5px dashed #cbd5e1;border-radius:12px;color:#64748b;font-size:12px">Tidak ada pesanan di tab ini.</div>';
     return;
@@ -30739,8 +30884,14 @@ function renderAdminTopupOrders(){
       statusBadge = `<span class="order-status-badge" style="background:#dcfce7;color:#166534">🟢 Top-Up Terkirim</span>`;
       actions = `<button type="button" class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑 Hapus</button>`;
     } else {
-      statusBadge = `<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>`;
-      actions = `<button type="button" class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑 Hapus</button>`;
+      statusBadge = o.status === 'refunded'
+        ? `<span class="order-status-badge" style="background:#fef3c7;color:#b45309;font-weight:700">↩️ Di-Refund</span>`
+        : `<span class="order-status-badge" style="background:#fee2e2;color:#991b1b">🔴 Dibatalkan</span>`;
+      actions = `
+        <button type="button" class="admin-btn-sm" style="background:#0284c7" onclick="reopenCancelledOrder('${o.id}','processing')" title="Progres ulang top-up ini">🔄 Proses Ulang</button>
+        <button type="button" class="admin-btn-sm" style="background:#f59e0b" onclick="reopenCancelledOrder('${o.id}','pending')" title="Kembalikan ke Antrian agar bisa diproses lagi">↩️ Kembalikan</button>
+        <button type="button" class="admin-btn-sm" onclick="deleteOrder('${o.id}')">🗑 Hapus</button>
+      `;
     }
 
     return `
