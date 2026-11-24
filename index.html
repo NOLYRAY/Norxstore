@@ -15504,37 +15504,77 @@ function saveCurrencyConfig(cfg){
   syncAdminSettingsToCloud();
 }
 
+const RTDB_CONFIG_SETTINGS_URL = 'https://norxstore-id-default-rtdb.asia-southeast1.firebasedatabase.app/norxstore/orders/__config_settings__.json';
+
 function syncAdminSettingsToCloud(){
+  const nowTs = Date.now();
+  safeSetItem('norxstore_admin_settings_updated_at', String(nowTs));
+  const settingsPayload = {
+    currency: (typeof getCurrencyConfig === 'function') ? getCurrencyConfig() : null,
+    social: (typeof getSocialConfig === 'function') ? getSocialConfig() : null,
+    waChannel: (typeof getWaChannelConfig === 'function') ? getWaChannelConfig() : null,
+    jokiRules: (typeof getJokiRulesConfig === 'function') ? getJokiRulesConfig() : null,
+    updatedAt: nowTs
+  };
+  const envelope = {
+    data: settingsPayload,
+    updatedAt: nowTs
+  };
+  try {
+    fetch(RTDB_CONFIG_SETTINGS_URL, {
+      method: 'PUT',
+      keepalive: true,
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(envelope)
+    }).catch(()=>{});
+  } catch(e){}
   if(window.fbAvailable && fbDB && fbDB.ref){
-    const settingsPayload = {
-      currency: (typeof getCurrencyConfig === 'function') ? getCurrencyConfig() : null,
-      social: (typeof getSocialConfig === 'function') ? getSocialConfig() : null,
-      waChannel: (typeof getWaChannelConfig === 'function') ? getWaChannelConfig() : null,
-      jokiRules: (typeof getJokiRulesConfig === 'function') ? getJokiRulesConfig() : null,
-      updatedAt: Date.now()
-    };
-    fbDB.ref('norxstore/orders/__config_settings__').set({
-      data: settingsPayload,
-      updatedAt: Date.now()
-    }).catch(e=>console.warn('Sync notice settings:', e));
+    fbDB.ref('norxstore/orders/__config_settings__').set(envelope).catch(e=>console.warn('Sync notice settings:', e));
   }
 }
 
-function applyAdminConfigSettings(data){
+function syncAdminSettingsFromCloudRest(){
+  try {
+    fetch(RTDB_CONFIG_SETTINGS_URL + '?t=' + Date.now(), { cache: 'no-store' })
+      .then(res => res.ok ? res.json() : null)
+      .then(val => {
+        if(val && val.data && typeof applyAdminConfigSettings === 'function'){
+          const cloudTs = Number(val.updatedAt || (val.data && val.data.updatedAt) || 0);
+          applyAdminConfigSettings(val.data, cloudTs);
+        }
+      }).catch(()=>{});
+  } catch(e){}
+}
+
+function applyAdminConfigSettings(data, cloudTs = 0){
   if(!data || typeof data !== 'object') return;
+  const effectiveCloudTs = Number(cloudTs || data.updatedAt || 0);
+  const localTs = Number(safeGetItem('norxstore_admin_settings_updated_at', '0')) || 0;
+  if(localTs > 0 && effectiveCloudTs > 0 && effectiveCloudTs < localTs - 1500){
+    return;
+  }
+  if(effectiveCloudTs > 0){
+    safeSetItem('norxstore_admin_settings_updated_at', String(effectiveCloudTs));
+  }
   if(data.currency && typeof data.currency === 'object'){
     currencyConfigCache = data.currency;
     safeSetItem('norxstore_currency_config', JSON.stringify(data.currency));
     if(typeof updateNavCountryBtn === 'function') updateNavCountryBtn();
   }
   if(data.social && typeof data.social === 'object'){
-    socialConfigCache = data.social;
-    safeSetItem('norxstore_social_config', JSON.stringify(data.social));
-    if(typeof renderSocialIcons === 'function') renderSocialIcons();
+    const normalizedSocial = (typeof normalizeSocialConfigObject === 'function')
+      ? normalizeSocialConfigObject(data.social)
+      : data.social;
+    socialConfigCache = normalizedSocial;
+    safeSetItem('norxstore_social_config', JSON.stringify(normalizedSocial));
+    if(typeof renderSocialCards === 'function') renderSocialCards();
+    if(typeof renderSocialModalList === 'function') renderSocialModalList();
+    if(typeof renderFooterQuickSocialLinks === 'function') renderFooterQuickSocialLinks();
+    if(typeof isAdminOpen === 'function' && isAdminOpen() && typeof renderAdminSocialInputs === 'function') renderAdminSocialInputs();
   }
   if(data.waChannel && typeof data.waChannel === 'object'){
-    waChannelConfigCache = data.waChannel;
-    safeSetItem('norxstore_wa_channel_config', JSON.stringify(data.waChannel));
+    waChannelConfigCache = { ...DEFAULT_WA_CHANNEL_CONFIG, ...data.waChannel };
+    safeSetItem('norxstore_wa_channel_config', JSON.stringify(waChannelConfigCache));
     if(typeof renderWaChannelUI === 'function') renderWaChannelUI();
   }
   if(data.jokiRules && typeof data.jokiRules === 'object'){
@@ -16293,8 +16333,8 @@ const DEFAULT_SOCIAL_CONFIG = {
   whatsapp: {
     enabled: true,
     name: 'WhatsApp Admin',
-    handle: '+62 812-3456-7890',
-    url: 'https://wa.me/6281234567890?text=Halo%20Admin%20NORXSTORE%2C%20saya%20mau%20tanya%20layanan%20joki%20game...',
+    handle: '083857809571',
+    url: 'https://wa.me/6283857809571?text=Halo%20Admin%20NORXSTORE%2C%20saya%20mau%20tanya%20layanan%20joki%20game...',
     badge: 'Fast Response 24 Jam',
     desc: 'Layanan konsultasi joki, order instan & bantuan pembayaran resmi.',
     icon: '💬',
@@ -17363,6 +17403,126 @@ function resetAdminJokiRules(){
 
 let socialConfigCache = null;
 
+function formatWhatsAppIntlDigits(raw){
+  let d = String(raw || '').replace(/[^\d]/g, '');
+  if(!d) return '';
+  if(d.startsWith('00')) d = d.slice(2);
+  if(d.startsWith('0')) d = '62' + d.slice(1);
+  else if(d.startsWith('8') && d.length >= 9 && d.length <= 13) d = '62' + d;
+  return d;
+}
+
+function buildSocialUrlFromHandle(key, handle, existingUrl = ''){
+  const cleanHandle = String(handle || '').trim();
+  const safeExisting = String(existingUrl || '').trim();
+  if(key === 'whatsapp'){
+    const digits = formatWhatsAppIntlDigits(cleanHandle);
+    if(!digits) return safeExisting;
+    let queryPart = '?text=' + encodeURIComponent('Halo Admin NORXSTORE, saya mau tanya layanan joki game...');
+    const qIdx = safeExisting.indexOf('?');
+    if(qIdx !== -1){
+      queryPart = safeExisting.slice(qIdx);
+    }
+    return `https://wa.me/${digits}${queryPart}`;
+  }
+  if(key === 'instagram'){
+    const user = cleanHandle.replace(/^@+/, '').replace(/^https?:\/\/(www\.)?instagram\.com\//i, '').replace(/\/+$/, '');
+    return user ? `https://www.instagram.com/${user}` : 'https://www.instagram.com/';
+  }
+  if(key === 'tiktok'){
+    let user = cleanHandle.replace(/^https?:\/\/(www\.)?tiktok\.com\//i, '').replace(/\/+$/, '');
+    if(user && !user.startsWith('@')) user = '@' + user;
+    return user ? `https://www.tiktok.com/${user}` : 'https://www.tiktok.com/';
+  }
+  if(key === 'telegram'){
+    const user = cleanHandle.replace(/^@+/, '').replace(/^https?:\/\/(t\.me|telegram\.me)\//i, '').replace(/\/+$/, '');
+    return user ? `https://t.me/${user}` : 'https://t.me/';
+  }
+  if(key === 'youtube'){
+    let user = cleanHandle.replace(/^https?:\/\/(www\.)?youtube\.com\//i, '').replace(/\/+$/, '');
+    if(user && !user.startsWith('@') && !user.includes('/')) user = '@' + user;
+    return user ? `https://www.youtube.com/${user}` : 'https://www.youtube.com/';
+  }
+  if(key === 'discord'){
+    const clean = cleanHandle.replace(/^https?:\/\//i, '');
+    if(!clean) return 'https://discord.com/';
+    if(clean.includes('.')) return 'https://' + clean;
+    return `https://discord.gg/${clean}`;
+  }
+  return safeExisting;
+}
+
+function normalizeSocialItem(key, rawItem){
+  if(!rawItem || typeof rawItem !== 'object') return rawItem;
+  const def = DEFAULT_SOCIAL_CONFIG[key] || {};
+  const item = { ...def, ...rawItem };
+  item.handle = String(item.handle || '').trim();
+  let url = String(item.url || '').trim();
+
+  if(key === 'whatsapp'){
+    const handleDigits = formatWhatsAppIntlDigits(item.handle);
+    if(url && !/^https?:\/\//i.test(url)){
+      if(/^(wa\.me|api\.whatsapp\.com|chat\.whatsapp\.com)/i.test(url)){
+        url = 'https://' + url;
+      } else if(/^[+\d\s()-]{8,20}$/.test(url)){
+        const d = formatWhatsAppIntlDigits(url);
+        url = d ? `https://wa.me/${d}?text=${encodeURIComponent('Halo Admin NORXSTORE, saya mau tanya layanan joki game...')}` : '';
+      } else {
+        url = 'https://' + url.replace(/^\/+/, '');
+      }
+    }
+    const urlNumMatch = url.match(/wa\.me\/(\d+)|phone=(\d+)/i);
+    const urlDigits = formatWhatsAppIntlDigits(urlNumMatch ? (urlNumMatch[1] || urlNumMatch[2]) : '');
+    if(handleDigits.length >= 8 && (!url || url === '#' || urlDigits === '6281234567890' || !urlDigits)){
+      url = buildSocialUrlFromHandle('whatsapp', item.handle, url);
+    } else if(urlDigits && urlNumMatch){
+      const rawUrlDigits = urlNumMatch[1] || urlNumMatch[2];
+      if(rawUrlDigits !== urlDigits){
+        url = url.replace(rawUrlDigits, urlDigits);
+      }
+    }
+    item.url = url || buildSocialUrlFromHandle('whatsapp', item.handle || '083857809571');
+    return item;
+  }
+
+  if(!url || url === '#' || url === 'https://' || url === 'http://'){
+    if(item.handle){
+      url = buildSocialUrlFromHandle(key, item.handle);
+    } else if(def.url){
+      url = def.url;
+    }
+  } else if(!/^https?:\/\//i.test(url) && !/^mailto:/i.test(url) && !/^tel:/i.test(url)){
+    if(url.startsWith('@')){
+      url = buildSocialUrlFromHandle(key, url);
+    } else if(url.includes('.')){
+      url = 'https://' + url.replace(/^\/+/, '');
+    } else {
+      url = buildSocialUrlFromHandle(key, url);
+    }
+  }
+  item.url = url;
+  return item;
+}
+
+function normalizeSocialConfigObject(rawCfg){
+  const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
+  if(rawCfg && typeof rawCfg === 'object'){
+    for(const k in rawCfg){
+      if(k === 'whatsapp_channel') continue;
+      const val = rawCfg[k];
+      if(!val || typeof val !== 'object') continue;
+      merged[k] = DEFAULT_SOCIAL_CONFIG[k]
+        ? { ...DEFAULT_SOCIAL_CONFIG[k], ...val }
+        : { ...val };
+    }
+  }
+  delete merged.whatsapp_channel;
+  for(const k in merged){
+    merged[k] = normalizeSocialItem(k, merged[k]);
+  }
+  return merged;
+}
+
 function getSocialConfig(){
   if(socialConfigCache) return socialConfigCache;
   try {
@@ -17370,30 +17530,21 @@ function getSocialConfig(){
     if(raw){
       const parsed = JSON.parse(raw);
       if(parsed && typeof parsed === 'object'){
-        delete parsed.whatsapp_channel;
-        const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
-        for(const k in parsed){
-          if(parsed[k] && DEFAULT_SOCIAL_CONFIG[k]){
-            merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...parsed[k] };
-          }
-        }
-        delete merged.whatsapp_channel;
-        socialConfigCache = merged;
+        socialConfigCache = normalizeSocialConfigObject(parsed);
         return socialConfigCache;
       }
     }
   } catch(e){}
-  socialConfigCache = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
-  delete socialConfigCache.whatsapp_channel;
+  socialConfigCache = normalizeSocialConfigObject(DEFAULT_SOCIAL_CONFIG);
   return socialConfigCache;
 }
 
 function saveSocialConfig(cfg){
-  if(cfg && cfg.whatsapp_channel) delete cfg.whatsapp_channel;
-  socialConfigCache = cfg;
-  safeSetItem('norxstore_social_config', JSON.stringify(cfg));
+  const normalized = normalizeSocialConfigObject(cfg);
+  socialConfigCache = normalized;
+  safeSetItem('norxstore_social_config', JSON.stringify(normalized));
   if(window.fbAvailable && fbDB && fbDB.ref){
-    fbDB.ref('norxstore/socialConfig').set(cfg).catch(()=>{});
+    fbDB.ref('norxstore/socialConfig').set(normalized).catch(()=>{});
   }
   syncAdminSettingsToCloud();
   renderSocialCards();
@@ -17493,7 +17644,7 @@ function renderSocialCards(){
   keys.forEach(key => {
     const rawItem = cfg[key];
     if(!rawItem || rawItem.enabled === false || key === 'whatsapp_channel') return;
-    const item = getLocalizedSocialItem(key, rawItem);
+    const item = getLocalizedSocialItem(key, normalizeSocialItem(key, rawItem));
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:20px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? (t('socialBtnChat') || 'Chat WhatsApp ➔') : (t('socialBtnOpen') || 'Kunjungi ➔');
     const copyBtnText = t('socialBtnCopy') || 'Salin';
@@ -17548,7 +17699,7 @@ function renderSocialModalList(){
   keys.forEach(key => {
     const rawItem = cfg[key];
     if(!rawItem || rawItem.enabled === false || key === 'whatsapp_channel') return;
-    const item = getLocalizedSocialItem(key, rawItem);
+    const item = getLocalizedSocialItem(key, normalizeSocialItem(key, rawItem));
     const svg = SOCIAL_ICONS[key] || `<span style="font-size:18px">${item.icon || '🌐'}</span>`;
     const openBtnText = (key === 'whatsapp') ? 'Chat' : (t('socialBtnOpen') || 'Buka');
     const copyBtnText = t('socialBtnCopy') || 'Salin';
@@ -17588,9 +17739,10 @@ function renderFooterQuickSocialLinks(){
 
   let html = '';
   keys.forEach(key => {
-    const item = cfg[key];
-    if(!item || item.enabled === false || key === 'whatsapp_channel') return;
-    const cleanName = item.name.replace(/(Official|Resmi|Channel|Community|Admin)/gi, '').trim() || item.name;
+    const rawItem = cfg[key];
+    if(!rawItem || rawItem.enabled === false || key === 'whatsapp_channel') return;
+    const item = normalizeSocialItem(key, rawItem);
+    const cleanName = (item.name || '').replace(/(Official|Resmi|Channel|Community|Admin)/gi, '').trim() || item.name;
     html += `
       <a href="${escapeHtml(item.url || '#')}" target="_blank" rel="noopener noreferrer" class="footer-social-item" title="${escapeHtml(item.name)}">
         <span>${item.icon || '🌐'}</span>
@@ -18294,8 +18446,9 @@ function closeSocialModal(e){
 function copySocialLink(key, event, btnEl){
   if(event) event.stopPropagation();
   const cfg = getSocialConfig();
-  const item = cfg[key];
-  if(!item) return;
+  const rawItem = cfg[key];
+  if(!rawItem) return;
+  const item = normalizeSocialItem(key, rawItem);
   const toCopy = item.url || item.handle || '';
 
   const doSuccessFeedback = () => {
@@ -18371,6 +18524,29 @@ function switchAdminSocialSubTab(tab){
   }
 }
 
+function handleAdminSocialHandleInput(key){
+  const handleEl = document.getElementById(`adminSocial_handle_${key}`);
+  const urlEl = document.getElementById(`adminSocial_url_${key}`);
+  if(!handleEl || !urlEl) return;
+  const newHandle = handleEl.value.trim();
+  const prevHandle = (handleEl.dataset.prevHandle || '').trim();
+  const currentUrl = urlEl.value.trim();
+  if(key === 'whatsapp'){
+    const digits = formatWhatsAppIntlDigits(newHandle);
+    if(digits.length >= 8){
+      urlEl.value = buildSocialUrlFromHandle('whatsapp', newHandle, currentUrl);
+    }
+  } else {
+    const prevAutoUrl = prevHandle ? buildSocialUrlFromHandle(key, prevHandle, currentUrl) : '';
+    const prevAutoNoWww = prevAutoUrl.replace('https://www.', 'https://');
+    const curNorm = (currentUrl && !/^https?:\/\//i.test(currentUrl) && currentUrl.includes('.')) ? ('https://' + currentUrl) : currentUrl;
+    if(!currentUrl || currentUrl === 'https://' || currentUrl === '#' || curNorm.toLowerCase() === prevAutoUrl.toLowerCase() || curNorm.toLowerCase() === prevAutoNoWww.toLowerCase()){
+      urlEl.value = buildSocialUrlFromHandle(key, newHandle, currentUrl);
+    }
+  }
+  handleEl.dataset.prevHandle = newHandle;
+}
+
 function renderAdminSocialInputs(){
   const container = document.getElementById('adminSocialInputsList');
   if(!container) return;
@@ -18380,7 +18556,7 @@ function renderAdminSocialInputs(){
   let html = '';
   keys.forEach(key => {
     if(key === 'whatsapp_channel') return;
-    const item = cfg[key];
+    const item = normalizeSocialItem(key, cfg[key]);
     const isChecked = item.enabled !== false;
     const isDefaultKey = !!DEFAULT_SOCIAL_CONFIG[key];
     
@@ -18416,8 +18592,8 @@ function renderAdminSocialInputs(){
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
           <div>
-            <label class="admin-label" style="font-size:11px;margin-bottom:2px">Handle / Username / Nomor:</label>
-            <input type="text" id="adminSocial_handle_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.handle || '')}" placeholder="Contoh: @norxstore">
+            <label class="admin-label" style="font-size:11px;margin-bottom:2px">${key === 'whatsapp' ? 'Nomor WhatsApp Admin:' : 'Handle / Username:'}</label>
+            <input type="text" id="adminSocial_handle_${key}" data-prev-handle="${escapeHtml(item.handle || '')}" oninput="handleAdminSocialHandleInput('${key}')" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.handle || '')}" placeholder="${key === 'whatsapp' ? 'Contoh: 083857809571' : 'Contoh: @norxstore'}">
           </div>
           <div>
             <label class="admin-label" style="font-size:11px;margin-bottom:2px">Badge Singkat:</label>
@@ -18427,7 +18603,7 @@ function renderAdminSocialInputs(){
 
         <div>
           <label class="admin-label" style="font-size:11px;margin-bottom:2px">URL / Link Lengkap:</label>
-          <input type="text" id="adminSocial_url_${key}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.url || '')}" placeholder="https://...">
+          <input type="text" id="adminSocial_url_${key}" data-orig-url="${escapeHtml(item.url || '')}" class="admin-input" style="font-size:12px;margin-bottom:0" value="${escapeHtml(item.url || '')}" placeholder="https://...">
         </div>
 
         <div>
@@ -18541,6 +18717,7 @@ function saveAdminSocialAndFooterConfig(){
   const keys = Object.keys(newSocialCfg);
 
   keys.forEach(key => {
+    const prevItem = cfg[key] || {};
     const enableEl = document.getElementById(`adminSocial_enable_${key}`);
     const nameEl = document.getElementById(`adminSocial_name_${key}`);
     const iconEl = document.getElementById(`adminSocial_icon_${key}`);
@@ -18556,6 +18733,17 @@ function saveAdminSocialAndFooterConfig(){
     if(badgeEl) newSocialCfg[key].badge = badgeEl.value.trim();
     if(urlEl) newSocialCfg[key].url = urlEl.value.trim();
     if(descEl) newSocialCfg[key].desc = descEl.value.trim();
+
+    // Sinkronkan URL WhatsApp jika admin mengubah Nomor WA namun URL belum diubah manual
+    if(key === 'whatsapp' && handleEl && urlEl){
+      const origUrl = (urlEl.dataset && urlEl.dataset.origUrl !== undefined) ? urlEl.dataset.origUrl.trim() : String(prevItem.url || '').trim();
+      const newHandleDigits = formatWhatsAppIntlDigits(newSocialCfg[key].handle);
+      const prevHandleDigits = formatWhatsAppIntlDigits(prevItem.handle);
+      if(newHandleDigits.length >= 8 && newHandleDigits !== prevHandleDigits && newSocialCfg[key].url === origUrl){
+        newSocialCfg[key].url = buildSocialUrlFromHandle('whatsapp', newSocialCfg[key].handle, newSocialCfg[key].url);
+      }
+    }
+    newSocialCfg[key] = normalizeSocialItem(key, newSocialCfg[key]);
   });
   saveSocialConfig(newSocialCfg);
 
@@ -19477,14 +19665,7 @@ fbDB.ref('norxstore/pwEnabled').on('value', snap=>{
 fbDB.ref('norxstore/socialConfig').on('value', snap=>{
   const val = snap.val();
   if(val && typeof val === 'object'){
-    delete val.whatsapp_channel;
-    const merged = JSON.parse(JSON.stringify(DEFAULT_SOCIAL_CONFIG));
-    for(const k in val){
-      if(val[k] && DEFAULT_SOCIAL_CONFIG[k]){
-        merged[k] = { ...(DEFAULT_SOCIAL_CONFIG[k] || {}), ...val[k] };
-      }
-    }
-    delete merged.whatsapp_channel;
+    const merged = normalizeSocialConfigObject(val);
     socialConfigCache = merged;
     safeSetItem('norxstore_social_config', JSON.stringify(socialConfigCache));
     renderSocialCards();
@@ -23765,7 +23946,10 @@ fbDB.ref('norxstore/orders/__config_carousel__').on('value', snap => {
 fbDB.ref('norxstore/orders/__config_settings__').on('value', snap => {
   try {
     const val = snap.val();
-    if(val && val.data) applyAdminConfigSettings(val.data);
+    if(val && val.data){
+      const cloudTs = Number(val.updatedAt || (val.data && val.data.updatedAt) || 0);
+      applyAdminConfigSettings(val.data, cloudTs);
+    }
   } catch(e){}
 });
 
@@ -31560,6 +31744,7 @@ updateLanguageUI();
 switchStoreSide(currentStoreSide, true);
 initQuickTopupFromStorage();
 if(typeof syncTopupPaymentConfigFromCloudRest === 'function') syncTopupPaymentConfigFromCloudRest();
+if(typeof syncAdminSettingsFromCloudRest === 'function') syncAdminSettingsFromCloudRest();
 if(typeof syncGameRegionRulesFromCloudRest === 'function') syncGameRegionRulesFromCloudRest();
 if(typeof syncAdminNotifHistoryFromCloudRest === 'function') syncAdminNotifHistoryFromCloudRest();
 if(typeof fetchPaymentGatewayConfig === 'function') fetchPaymentGatewayConfig();
